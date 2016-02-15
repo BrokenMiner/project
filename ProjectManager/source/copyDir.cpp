@@ -8,7 +8,7 @@ void CopyDir::run()
    bool success = true;
 
    QStringList::const_iterator it;
-   for(it = mSrcDirs.cbegin(); it != mSrcDirs.cend(); ++it)
+   for(it = mSrcDirs.begin(); it != mSrcDirs.end(); ++it)
    {
       QString srcDir = *it;
       mRootDir = srcDir;

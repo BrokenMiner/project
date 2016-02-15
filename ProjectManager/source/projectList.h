@@ -1,7 +1,7 @@
 #ifndef _PROJECT_LIST_H_
 #define _PROJECT_LIST_H_
 
-#include <QtWidgets>
+#include <QMessageBox>
 #include <QtCore>
 
 #ifdef Q_OS_WIN
