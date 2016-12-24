@@ -24,6 +24,9 @@
 // a server is constructed.
 exec("./camera.cs");
 exec("./triggers.cs");
+//VolumetricFog
+exec("./VolumetricFog.cs");
+//VolumetricFog
 exec("./inventory.cs");
 exec("./shapeBase.cs");
 exec("./item.cs");
@@ -56,3 +59,8 @@ exec("./turret.cs");
 // Load our gametypes
 exec("./gameCore.cs"); // This is the 'core' of the gametype functionality.
 exec("./gameDM.cs"); // Overrides GameCore with DeathMatch functionality.
+
+// Load scripts for walkable shapes
+exec("./tsPathShape.cs");
+exec("./walkables.cs");
+exec("./walkableDemo.cs");

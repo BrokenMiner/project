@@ -1293,7 +1293,11 @@ void Precipitation::interpolateTick(F32 delta)
 void Precipitation::processTick(const Move *)
 {
    //nothing to do on the server
+<<<<<<< HEAD
    if (isServerObject() || mDataBlock == NULL || isHidden())
+=======
+   if (isServerObject() || mDataBlock == NULL)
+>>>>>>> omni_engine
       return;
 
    const U32 currTime = Platform::getVirtualMilliseconds();
@@ -1666,7 +1670,11 @@ void Precipitation::renderObject(ObjectRenderInst *ri, SceneRenderState *state, 
    }
    else
    {
+<<<<<<< HEAD
       GFX->setupGenericShaders(GFXDevice::GSTexture);
+=======
+      GFX->disableShaders();
+>>>>>>> omni_engine
 
       // We don't support distance fade or lighting without shaders.
       GFX->setStateBlock(mDistantSB);
@@ -1799,7 +1807,11 @@ void Precipitation::renderObject(ObjectRenderInst *ri, SceneRenderState *state, 
       GFX->setShaderConstBuffer(mSplashShaderConsts);
    }
    else
+<<<<<<< HEAD
       GFX->setupGenericShaders(GFXDevice::GSTexture);
+=======
+      GFX->disableShaders();
+>>>>>>> omni_engine
 
    while (curr)
    {
@@ -1864,3 +1876,93 @@ void Precipitation::renderObject(ObjectRenderInst *ri, SceneRenderState *state, 
 
    PROFILE_END();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPrecipitation_modifyStorm(char * x__object, F32 percentage, F32 seconds)
+{
+Precipitation* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->modifyStorm(percentage, S32(seconds * 1000.0f));
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPrecipitation_setPercentage(char * x__object, F32 percentage)
+{
+Precipitation* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setPercentage(percentage);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPrecipitation_setTurbulence(char * x__object, F32 max, F32 speed, F32 seconds)
+{
+Precipitation* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setTurbulence( max, speed, S32(seconds * 1000.0f));
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

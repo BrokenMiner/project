@@ -25,7 +25,11 @@
 
 #include "core/frameAllocator.h"
 #include "console/console.h"
+<<<<<<< HEAD
 #include "console/engineAPI.h"
+=======
+#include "console/engineApi.h"
+>>>>>>> omni_engine
 #include "core/stringTable.h"
 #include "console/consoleInternal.h"
 #include "console/ast.h"
@@ -922,3 +926,90 @@ void TelnetDebugger::clearCodeBlockPointers(CodeBlock *code)
       walk = &cur->next;
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_dbgDisconnect()
+{
+{
+   if (TelDebugger)
+	   TelDebugger->disconnect();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_dbgIsConnected()
+{
+bool wle_returnObject;
+{
+   {wle_returnObject =TelDebugger && TelDebugger->isConnected();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_dbgSetParameters(S32 port, char * x__password, bool waitForClient)
+{
+const char* password = (const char*)x__password;
+
+{
+   if (TelDebugger)
+   {
+      TelDebugger->setDebugParameters(port, password, waitForClient );
+   }
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

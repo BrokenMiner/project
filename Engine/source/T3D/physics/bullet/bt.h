@@ -24,6 +24,7 @@
 #define _BULLET_H_
 
 // NOTE: We set these defines which bullet needs here.
+<<<<<<< HEAD
 #if defined TORQUE_OS_WIN && !defined(WIN32)
 #define WIN32
 #endif
@@ -32,6 +33,12 @@
 #define __BT_SKIP_UINT64_H
 #endif
 
+=======
+#ifdef TORQUE_OS_WIN
+#define WIN32
+#endif
+
+>>>>>>> omni_engine
 // NOTE: All the Bullet includes we use should be here and
 // nowhere else.... beware!
 

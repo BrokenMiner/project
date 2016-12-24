@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #ifndef TORQUE_SDL
+
 #include "platformX86UNIX/platformX86UNIX.h"
 #include "platform/platformInput.h"
 #include "platform/platformVideo.h"
@@ -335,7 +336,11 @@ void Input::log( const char* format, ... )
 ConsoleFunction( inputLog, void, 2, 2, "inputLog( string )" )
 {
    argc;
+<<<<<<< HEAD
    Input::log( "%s\n", (const char*)argv[1] );
+=======
+   Input::log( "%s\n", argv[1] );
+>>>>>>> omni_engine
 }
 #endif // LOG_INPUT
 

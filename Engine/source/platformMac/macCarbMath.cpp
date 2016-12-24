@@ -34,6 +34,7 @@ static MRandomLCG sgPlatRandom;
 
 U32 Platform::getMathControlState()
 {
+<<<<<<< HEAD
    U16 cw;
    asm("fstcw %0" : "=m" (cw) :);
    return cw;
@@ -49,6 +50,19 @@ void Platform::setMathControlStateKnown()
 {
    U16 cw = 0x27F;
    asm("fldcw %0" : : "m" (cw));
+=======
+   return 0;
+}
+
+void Platform::setMathControlStateKnown()
+{
+   
+}
+
+void Platform::setMathControlState(U32 state)
+{
+   
+>>>>>>> omni_engine
 }
 
 //--------------------------------------

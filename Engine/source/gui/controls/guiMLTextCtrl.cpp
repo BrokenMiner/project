@@ -73,7 +73,11 @@ IMPLEMENT_CALLBACK( GuiMLTextCtrl, onURL, void, ( const char* url ),( url ),
    "@see GuiControl\n\n"
 );
 
+<<<<<<< HEAD
 IMPLEMENT_CALLBACK( GuiMLTextCtrl, onResize, void, ( S32 width, S32 maxY ),( width, maxY ),
+=======
+IMPLEMENT_CALLBACK( GuiMLTextCtrl, onResize, void, ( const char* width, const char* maxY ),( width, maxY ),
+>>>>>>> omni_engine
    "@brief Called whenever the control size changes.\n\n"
    "@param width The new width value for the control\n"
    "@param maxY The current maximum allowed Y value for the control\n\n"
@@ -168,7 +172,11 @@ DefineEngineMethod( GuiMLTextCtrl, scrollToTag, void, (S32 tagID),,
    object->scrollToTag( tagID );
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiMLTextCtrl, scrollToTop, void, (),,
+=======
+DefineEngineMethod( GuiMLTextCtrl, scrollToTop, void, ( S32 param1, S32 param2),,
+>>>>>>> omni_engine
    "@brief Scroll to the top of the text.\n\n"
    "@tsexample\n"
    "// Inform GuiMLTextCtrl object to scroll to its top\n"
@@ -298,6 +306,14 @@ void GuiMLTextCtrl::initPersistFields()
    endGroup( "Text" );
    
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+   // @Copyright end
 }
 
 DefineEngineMethod( GuiMLTextCtrl, setAlpha, void, (F32 alphaVal),,
@@ -440,7 +456,11 @@ void GuiMLTextCtrl::onRender(Point2I offset, const RectI& updateRect)
       if(!screenBounds.overlaps(updateRect))
          continue;
 
+<<<<<<< HEAD
       drawer->clearBitmapModulation();
+=======
+      //drawer->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
       drawer->drawBitmap(walk->bitmap->bitmapObject, screenBounds.point);
       //GFX->drawRectFill(screenBounds, mProfile->mFillColor);
    }
@@ -460,6 +480,26 @@ void GuiMLTextCtrl::onRender(Point2I offset, const RectI& updateRect)
 
       for(Atom *awalk = lwalk->atomList; awalk; awalk = awalk->next)
       {
+
+          // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+          //  @Copyright start
+
+    		  // Setting alpha
+    		  if( mControlFontColor != ColorI::ZERO)
+          {
+            awalk->style->color = mControlFontColor ;
+            awalk->style->color.alpha = mControlFontColor.alpha * mRenderAlpha;
+          }
+          else
+            awalk->style->color.alpha = 255 * mRenderAlpha;
+          awalk->style->linkColor.alpha = mRenderAlpha * 255;
+          awalk->style->linkColorHL.alpha =  mRenderAlpha * 255;
+
+          // Font size
+          awalk->style->font->size = mControlFontSize;
+
+          // @Copyright end
+
          if(!mSelectionActive || mSelectionEnd < awalk->textStart || mSelectionStart >= awalk->textStart + awalk->len)
             drawAtomText(false, awalk->textStart, awalk->textStart + awalk->len, awalk, lwalk, offset);
          else
@@ -631,7 +671,11 @@ bool GuiMLTextCtrl::setCursorPosition(const S32 newPosition)
       mCursorPosition = 0;
       return true;
    }
+<<<<<<< HEAD
    else if (newPosition >= mTextBuffer.length() - 1)
+=======
+   else if (newPosition >= mTextBuffer.length()) 
+>>>>>>> omni_engine
    {
       mCursorPosition = mTextBuffer.length();
       return true;
@@ -669,11 +713,19 @@ void GuiMLTextCtrl::getCursorPositionAndColor(Point2I &cursorTop, Point2I &curso
 {
    S32 x = 0;
    S32 y = 0;
+<<<<<<< HEAD
    S32 height = (mProfile && mProfile->mFont) ? mProfile->mFont->getHeight() : 0;
    color = mProfile->mCursorColor;
    for(Line *walk = mLineList; walk; walk = walk->next)
    {
       if ((mCursorPosition < walk->textStart + walk->len) || (walk->next == NULL))
+=======
+   S32 height = mProfile->mFont->getHeight();
+   color = mProfile->mCursorColor;
+   for(Line *walk = mLineList; walk; walk = walk->next)
+   {
+      if ((mCursorPosition <= walk->textStart + walk->len) || (walk->next == NULL))
+>>>>>>> omni_engine
       {
          // it's in the atoms on this line...
          y = walk->y;
@@ -768,7 +820,11 @@ void GuiMLTextCtrl::onMouseDown(const GuiEvent& event)
    mSelectionAnchorDropped = event.mousePoint;
    if (mSelectionAnchor < 0)
       mSelectionAnchor = 0;
+<<<<<<< HEAD
    else if (mSelectionAnchor >= mTextBuffer.length() - 1)
+=======
+   else if (mSelectionAnchor >= mTextBuffer.length())
+>>>>>>> omni_engine
       mSelectionAnchor = mTextBuffer.length();
 
    mVertMoveAnchorValid = false;
@@ -2133,7 +2189,11 @@ textemit:
    processEmitAtoms();
    emitNewLine(mScanPos);
    setHeight( mMaxY );
+<<<<<<< HEAD
    onResize_callback( getWidth(), mMaxY );
+=======
+   onResize_callback(Con::getIntArg( getWidth() ), Con::getIntArg( mMaxY ) );
+>>>>>>> omni_engine
 	
    //make sure the cursor is still visible - this handles if we're a child of a scroll ctrl...
    ensureCursorOnScreen();
@@ -2377,3 +2437,175 @@ bool GuiMLTextCtrl::resize( const Point2I& newPosition, const Point2I& newExtent
    
    return false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_StripMLControlChars(char * x__inString,  char* retval)
+{
+dSprintf(retval,16384,"");
+const char* inString = (const char*)x__inString;
+const char* wle_returnObject;
+{
+   {wle_returnObject =GuiMLTextCtrl::stripControlChars(inString);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMLTextCtrl_addText(char * x__object, char * x__text, bool reformat)
+{
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* text = (const char*)x__text;
+
+{
+   object->addText(text, dStrlen(text), reformat);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMLTextCtrl_forceReflow(char * x__object)
+{
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if(!object->isAwake())
+      Con::errorf("GuiMLTextCtrl::forceReflow can only be called on visible controls.");
+   else
+      object->reflow();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMLTextCtrl_getText(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =( object->getTextContent() );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMLTextCtrl_scrollToBottom(char * x__object)
+{
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->scrollToBottom();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMLTextCtrl_scrollToTag(char * x__object, S32 tagID)
+{
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->scrollToTag( tagID );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMLTextCtrl_scrollToTop(char * x__object, S32 param1, S32 param2)
+{
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->scrollToTop();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMLTextCtrl_setAlpha(char * x__object, F32 alphaVal)
+{
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setAlpha(alphaVal);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiMLTextCtrl_setCursorPosition(char * x__object, S32 newPos)
+{
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->setCursorPosition(newPos);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMLTextCtrl_setText(char * x__object, char * x__text)
+{
+GuiMLTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* text = (const char*)x__text;
+{
+   object->setText(text, dStrlen(text));
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -240,8 +240,12 @@ GFXShader* ShaderData::_createShader( const Vector<GFXShaderMacro> &macros )
          success = shader->init( mDXVertexShaderName, 
                                  mDXPixelShaderName, 
                                  pixver,
+<<<<<<< HEAD
                                  macros,
                                  samplers);
+=======
+                                 macros );
+>>>>>>> omni_engine
          break;
       }
 
@@ -250,8 +254,12 @@ GFXShader* ShaderData::_createShader( const Vector<GFXShaderMacro> &macros )
          success = shader->init( mOGLVertexShaderName,
                                  mOGLPixelShaderName,
                                  pixver,
+<<<<<<< HEAD
                                  macros,
                                  samplers);
+=======
+                                 macros );
+>>>>>>> omni_engine
          break;
       }
          
@@ -319,6 +327,7 @@ void ShaderData::_onLMActivate( const char *lm, bool activate )
    reloadAllShaders();
 }
 
+<<<<<<< HEAD
 bool ShaderData::hasSamplerDef(const String &_samplerName, int &pos) const
 {
    String samplerName = _samplerName.startsWith("$") ? _samplerName : "$"+_samplerName;   
@@ -392,3 +401,85 @@ DefineEngineMethod( ShaderData, reload, void, (),,
 {
 	object->reloadShaders();
 }
+=======
+DefineEngineMethod( ShaderData, reload, void, (),,
+				   "@brief Rebuilds all the vertex and pixel shader instances created from this ShaderData.\n\n"
+
+				   "@tsexample\n"
+				   "// Rebuild the shader instances from ShaderData CloudLayerShader\n"
+				   "CloudLayerShader.reload();\n"
+				   "@endtsexample\n\n")
+{
+	object->reloadShaders();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShaderData_reload(char * x__object)
+{
+ShaderData* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->reloadShaders();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

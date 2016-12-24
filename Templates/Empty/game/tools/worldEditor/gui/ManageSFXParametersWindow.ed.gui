@@ -16,6 +16,9 @@
    isDecoy = "0";
 
    new GuiWindowCollapseCtrl(EManageSFXParameters) {
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       CollapseGroup = "-1";
       CollapseGroupNum = "-1";
       resizeWidth = "1";

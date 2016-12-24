@@ -236,15 +236,27 @@ function EditorNewLevel( %file )
 
 function EditorSaveMissionMenu()
 {
-   if(EditorGui.saveAs)
-      EditorSaveMissionAs();
+   if(!$Pref::disableSaving )
+   {
+      if(EditorGui.saveAs)
+         EditorSaveMissionAs();
+      else
+         EditorSaveMission();
+   }
    else
-      EditorSaveMission();
+   {
+      EditorSaveMissionMenuDisableSave();
+   }
 }
 
 function EditorSaveMission()
 {
    // just save the mission without renaming it
+   if(isFunction("getObjectLimit") && MissionGroup.getFullCount() >= getObjectLimit())
+   {
+      MessageBoxOKBuy( "Object Limit Reached", "You have exceeded the object limit of " @ getObjectLimit() @ " for this demo. You can remove objects if you would like to add more.", "", "Canvas.showPurchaseScreen(\"objectlimit\");" );
+      return;
+   }
    
    // first check for dirty and read-only files:
    if((EWorldEditor.isDirty || ETerrainEditor.isMissionDirty) && !isWriteableFileName($Server::MissionFile))
@@ -299,120 +311,141 @@ function EditorSaveMission()
    return true;
 }
 
+function EditorSaveMissionMenuDisableSave()
+{
+   GenericPromptDialog-->GenericPromptWindow.text = "Warning";
+   GenericPromptDialog-->GenericPromptText.setText("Saving disabled in demo mode."); 
+   Canvas.pushDialog( GenericPromptDialog ); 
+}
+
 function EditorSaveMissionAs( %missionName )
 {
-   // If we didn't get passed a new mission name then
-   // prompt the user for one.
-   if ( %missionName $= "" )
+   if(isFunction("getObjectLimit") && MissionGroup.getFullCount() >= getObjectLimit())
    {
-      %dlg = new SaveFileDialog()
-      {
-         Filters        = $Pref::WorldEditor::FileSpec;
-         DefaultPath    = EditorSettings.value("LevelInformation/levelsDirectory");
-         ChangePath     = false;
-         OverwritePrompt   = true;
-      };
-
-      %ret = %dlg.Execute();
-      if(%ret)
-      {
-         // Immediately override/set the levelsDirectory
-         EditorSettings.setValue( "LevelInformation/levelsDirectory", collapseFilename(filePath( %dlg.FileName )) );
-         
-         %missionName = %dlg.FileName;
-      }
-      
-      %dlg.delete();
-      
-      if(! %ret)
-         return;
+      MessageBoxOKBuy( "Object Limit Reached", "You have exceeded the object limit of " @ getObjectLimit() @ " for this demo. You can remove objects if you would like to add more.", "", "Canvas.showPurchaseScreen(\"objectlimit\");" );
+      return;
    }
-               
-   if( fileExt( %missionName ) !$= ".mis" )
-      %missionName = %missionName @ ".mis";
-
-   EWorldEditor.isDirty = true;
-   %saveMissionFile = $Server::MissionFile;
-
-   $Server::MissionFile = %missionName;
-
-   %copyTerrainsFailed = false;
-
-   // Rename all the terrain files.  Save all previous names so we can
-   // reset them if saving fails.
-   %newMissionName = fileBase(%missionName);
-   %oldMissionName = fileBase(%saveMissionFile);
    
-   initContainerTypeSearch( $TypeMasks::TerrainObjectType );
-   %savedTerrNames = new ScriptObject();
-   for( %i = 0;; %i ++ )
+   if(!$Pref::disableSaving)
    {
-      %terrainObject = containerSearchNext();
-      if( !%terrainObject )
-         break;
-
-      %savedTerrNames.array[ %i ] = %terrainObject.terrainFile;
-      
-      %terrainFilePath = makeRelativePath( filePath( %terrainObject.terrainFile ), getMainDotCsDir() );
-      %terrainFileName = fileName( %terrainObject.terrainFile );
-               
-      // Workaround to have terrains created in an unsaved "New Level..." mission
-      // moved to the correct place.
-      
-      if( EditorGui.saveAs && %terrainFilePath $= "tools/art/terrains" )
-         %terrainFilePath = "art/terrains";
-      
-      // Try and follow the existing naming convention.
-      // If we can't, use systematic terrain file names.
-      if( strstr( %terrainFileName, %oldMissionName ) >= 0 )
-         %terrainFileName = strreplace( %terrainFileName, %oldMissionName, %newMissionName );
-      else
-         %terrainFileName = %newMissionName @ "_" @ %i @ ".ter";
-
-      %newTerrainFile = %terrainFilePath @ "/" @ %terrainFileName;
-
-      if (!isWriteableFileName(%newTerrainFile))
+      // If we didn't get passed a new mission name then
+      // prompt the user for one.
+      if ( %missionName $= "" )
       {
-         if (MessageBox("Error", "Terrain file \""@ %newTerrainFile @ "\" is read-only.  Continue?", "Ok", "Stop") == $MROk)
-            continue;
-         else
+         %dlg = new SaveFileDialog()
          {
-            %copyTerrainsFailed = true;
-            break;
+            Filters        = $Pref::WorldEditor::FileSpec;
+            DefaultPath    = EditorSettings.value("LevelInformation/levelsDirectory");
+            ChangePath     = false;
+            OverwritePrompt   = true;
+         };
+
+         %ret = %dlg.Execute();
+         if(%ret)
+         {
+            // Immediately override/set the levelsDirectory
+            EditorSettings.setValue( "LevelInformation/levelsDirectory", collapseFilename(filePath( %dlg.FileName )) );
+            
+            %missionName = %dlg.FileName;
          }
+         
+         %dlg.delete();
+         
+         if(! %ret)
+            return;
       }
-      
-      if( !%terrainObject.save( %newTerrainFile ) )
-      {
-         error( "Failed to save '" @ %newTerrainFile @ "'" );
-         %copyTerrainsFailed = true;
-         break;
-      }
-      
-      %terrainObject.terrainFile = %newTerrainFile;
-   }
+                  
+      if( fileExt( %missionName ) !$= ".mis" )
+         %missionName = %missionName @ ".mis";
 
-   ETerrainEditor.isDirty = false;
-   
-   // Save the mission.
-   if(%copyTerrainsFailed || !EditorSaveMission())
-   {
-      // It failed, so restore the mission and terrain filenames.
-      
-      $Server::MissionFile = %saveMissionFile;
+      EWorldEditor.isDirty = true;
+      %saveMissionFile = $Server::MissionFile;
 
+      $Server::MissionFile = %missionName;
+
+      %copyTerrainsFailed = false;
+
+      // Rename all the terrain files.  Save all previous names so we can
+      // reset them if saving fails.
+      %newMissionName = fileBase(%missionName);
+      %oldMissionName = fileBase(%saveMissionFile);
+      
       initContainerTypeSearch( $TypeMasks::TerrainObjectType );
+      %savedTerrNames = new ScriptObject();
       for( %i = 0;; %i ++ )
       {
          %terrainObject = containerSearchNext();
          if( !%terrainObject )
             break;
-            
-         %terrainObject.terrainFile = %savedTerrNames.array[ %i ];
+
+         %savedTerrNames.array[ %i ] = %terrainObject.terrainFile;
+         
+         %terrainFilePath = makeRelativePath( filePath( %terrainObject.terrainFile ), getMainDotCsDir() );
+         %terrainFileName = fileName( %terrainObject.terrainFile );
+                  
+         // Workaround to have terrains created in an unsaved "New Level..." mission
+         // moved to the correct place.
+         
+         if( EditorGui.saveAs && %terrainFilePath $= "tools/art/terrains" )
+            %terrainFilePath = "art/terrains";
+         
+         // Try and follow the existing naming convention.
+         // If we can't, use systematic terrain file names.
+         if( strstr( %terrainFileName, %oldMissionName ) >= 0 )
+            %terrainFileName = strreplace( %terrainFileName, %oldMissionName, %newMissionName );
+         else
+            %terrainFileName = %newMissionName @ "_" @ %i @ ".ter";
+
+         %newTerrainFile = %terrainFilePath @ "/" @ %terrainFileName;
+
+         if (!isWriteableFileName(%newTerrainFile))
+         {
+            if (MessageBox("Error", "Terrain file \""@ %newTerrainFile @ "\" is read-only.  Continue?", "Ok", "Stop") == $MROk)
+               continue;
+            else
+            {
+               %copyTerrainsFailed = true;
+               break;
+            }
+         }
+         
+         if( !%terrainObject.save( %newTerrainFile ) )
+         {
+            error( "Failed to save '" @ %newTerrainFile @ "'" );
+            %copyTerrainsFailed = true;
+            break;
+         }
+         
+         %terrainObject.terrainFile = %newTerrainFile;
       }
+
+      ETerrainEditor.isDirty = false;
+      
+      // Save the mission.
+      if(%copyTerrainsFailed || !EditorSaveMission())
+      {
+         // It failed, so restore the mission and terrain filenames.
+         
+         $Server::MissionFile = %saveMissionFile;
+
+         initContainerTypeSearch( $TypeMasks::TerrainObjectType );
+         for( %i = 0;; %i ++ )
+         {
+            %terrainObject = containerSearchNext();
+            if( !%terrainObject )
+               break;
+               
+            %terrainObject.terrainFile = %savedTerrNames.array[ %i ];
+         }
+      }
+      
+      %savedTerrNames.delete();
+   }
+   else
+   {
+      EditorSaveMissionMenuDisableSave();
    }
    
-   %savedTerrNames.delete();
 }
 
 function EditorOpenMission(%filename)
@@ -485,67 +518,72 @@ function EditorOpenMission(%filename)
 
 function EditorExportToCollada()
 {
-
-   %dlg = new SaveFileDialog()
+   if ( !$Pref::disableSaving )
    {
-      Filters        = "COLLADA Files (*.dae)|*.dae|";
-      DefaultPath    = $Pref::WorldEditor::LastPath;
-      DefaultFile    = "";
-      ChangePath     = false;
-      OverwritePrompt   = true;
-   };
+      %dlg = new SaveFileDialog()
+      {
+         Filters        = "COLLADA Files (*.dae)|*.dae|";
+         DefaultPath    = $Pref::WorldEditor::LastPath;
+         DefaultFile    = "";
+         ChangePath     = false;
+         OverwritePrompt   = true;
+      };
 
-   %ret = %dlg.Execute();
-   if ( %ret )
-   {
-      $Pref::WorldEditor::LastPath = filePath( %dlg.FileName );
-      %exportFile = %dlg.FileName;
+      %ret = %dlg.Execute();
+      if ( %ret )
+      {
+         $Pref::WorldEditor::LastPath = filePath( %dlg.FileName );
+         %exportFile = %dlg.FileName;
+      }
+
+      if( fileExt( %exportFile ) !$= ".dae" )
+         %exportFile = %exportFile @ ".dae";
+
+      %dlg.delete();
+
+      if ( !%ret )
+         return;
+
+      if ( EditorGui.currentEditor.getId() == ShapeEditorPlugin.getId() )
+         ShapeEdShapeView.exportToCollada( %exportFile );
+      else
+         EWorldEditor.colladaExportSelection( %exportFile );
    }
-
-   if( fileExt( %exportFile ) !$= ".dae" )
-      %exportFile = %exportFile @ ".dae";
-
-   %dlg.delete();
-
-   if ( !%ret )
-      return;
-
-   if ( EditorGui.currentEditor.getId() == ShapeEditorPlugin.getId() )
-      ShapeEdShapeView.exportToCollada( %exportFile );
-   else
-      EWorldEditor.colladaExportSelection( %exportFile );
 }
 
 function EditorMakePrefab()
 {
-
-   %dlg = new SaveFileDialog()
+   // Should this be protected or not?
+   if ( !$Pref::disableSaving )
    {
-      Filters        = "Prefab Files (*.prefab)|*.prefab|";
-      DefaultPath    = $Pref::WorldEditor::LastPath;
-      DefaultFile    = "";
-      ChangePath     = false;
-      OverwritePrompt   = true;
-   };
-         
-   %ret = %dlg.Execute();
-   if ( %ret )
-   {
-      $Pref::WorldEditor::LastPath = filePath( %dlg.FileName );
-      %saveFile = %dlg.FileName;
+      %dlg = new SaveFileDialog()
+      {
+         Filters        = "Prefab Files (*.prefab)|*.prefab|";
+         DefaultPath    = $Pref::WorldEditor::LastPath;
+         DefaultFile    = "";
+         ChangePath     = false;
+         OverwritePrompt   = true;
+      };
+            
+      %ret = %dlg.Execute();
+      if ( %ret )
+      {
+         $Pref::WorldEditor::LastPath = filePath( %dlg.FileName );
+         %saveFile = %dlg.FileName;
+      }
+      
+      if( fileExt( %saveFile ) !$= ".prefab" )
+         %saveFile = %saveFile @ ".prefab";
+      
+      %dlg.delete();
+      
+      if ( !%ret )
+         return;
+      
+      EWorldEditor.makeSelectionPrefab( %saveFile );    
+      
+      EditorTree.buildVisibleTree( true );  
    }
-   
-   if( fileExt( %saveFile ) !$= ".prefab" )
-      %saveFile = %saveFile @ ".prefab";
-   
-   %dlg.delete();
-   
-   if ( !%ret )
-      return;
-   
-   EWorldEditor.makeSelectionPrefab( %saveFile );    
-   
-   EditorTree.buildVisibleTree( true );  
 }
 
 function EditorExplodePrefab()

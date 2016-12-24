@@ -315,10 +315,17 @@ bool HoverVehicleData::preload(bool server, String &errorStr)
    if (!server) {
       for (S32 i = 0; i < MaxSounds; i++)
          if (sound[i])
+<<<<<<< HEAD
             Sim::findObject(SimObjectId((uintptr_t)sound[i]),sound[i]);
       for (S32 j = 0; j < MaxJetEmitters; j++)
          if (jetEmitter[j])
             Sim::findObject(SimObjectId((uintptr_t)jetEmitter[j]),jetEmitter[j]);
+=======
+            Sim::findObject(SimObjectId(sound[i]),sound[i]);
+      for (S32 j = 0; j < MaxJetEmitters; j++)
+         if (jetEmitter[j])
+            Sim::findObject(SimObjectId(jetEmitter[j]),jetEmitter[j]);
+>>>>>>> omni_engine
    }
 
    if( !dustTrailEmitter && dustTrailID != 0 )
@@ -364,14 +371,22 @@ void HoverVehicleData::packData(BitStream* stream)
 
    for (S32 i = 0; i < MaxSounds; i++)
       if (stream->writeFlag(sound[i]))
+<<<<<<< HEAD
          stream->writeRangedU32(packed? SimObjectId((uintptr_t)sound[i]):
+=======
+         stream->writeRangedU32(packed? SimObjectId(sound[i]):
+>>>>>>> omni_engine
                                 sound[i]->getId(),DataBlockObjectIdFirst,DataBlockObjectIdLast);
 
    for (S32 j = 0; j < MaxJetEmitters; j++)
    {
       if (stream->writeFlag(jetEmitter[j]))
       {
+<<<<<<< HEAD
          SimObjectId writtenId = packed ? SimObjectId((uintptr_t)jetEmitter[j]) : jetEmitter[j]->getId();
+=======
+         SimObjectId writtenId = packed ? SimObjectId(jetEmitter[j]) : jetEmitter[j]->getId();
+>>>>>>> omni_engine
          stream->writeRangedU32(writtenId, DataBlockObjectIdFirst,DataBlockObjectIdLast);
       }
    }

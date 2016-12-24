@@ -41,6 +41,18 @@ ConsoleDocClass( GuiInspector,
 
 //#define DEBUG_SPEW
 
+IMPLEMENT_CALLBACK( GuiInspector, onClear, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiInspector, beginCompoundUndo, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiInspector, endCompoundUndo, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiInspector, onBeginCompoundEdit, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiInspector, onEndCompoundEdit, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiInspector, onFieldSelected, void, ( const char* fieldName, const char* fieldTypeStr, const char* fieldDoc ), ( fieldName, fieldTypeStr, fieldDoc ), "" );
+IMPLEMENT_CALLBACK( GuiInspector, onFieldRightClick, void, ( const char* field ), ( field ), "");
+IMPLEMENT_CALLBACK( GuiInspector, onFieldAdded, void, ( const char* object, const char* fieldName ), ( object, fieldName ), "" );
+IMPLEMENT_CALLBACK( GuiInspector, onFieldRemoved, void, ( const char* object, const char* fieldName ), ( object, fieldName ), "" );
+IMPLEMENT_CALLBACK( GuiInspector, onFieldRenameAlreadyDefined, void, ( const char* object, const char* oldFieldName, const char* newFieldName ), ( object, oldFieldName, newFieldName ),"" );
+IMPLEMENT_CALLBACK( GuiInspector, onFieldRenamed, void, ( const char* object, const char* oldFieldName, const char* newFieldName ), ( object, oldFieldName, newFieldName ), "" );
+IMPLEMENT_CALLBACK( GuiInspector, onInspectorFieldModified, void, ( const char* object, const char* fieldName, const char * arrayIndex, const char* oldValue, const char* newValue ), ( object, fieldName, arrayIndex, oldValue, newValue ), "" );
 
 //-----------------------------------------------------------------------------
 
@@ -263,8 +275,12 @@ void GuiInspector::clearGroups()
 
    mHLField = NULL;
    
+<<<<<<< HEAD
    if( isMethod( "onClear" ) )
       Con::executef( this, "onClear" );
+=======
+   onClear_callback();
+>>>>>>> omni_engine
 
    Vector<GuiInspectorGroup*>::iterator i = mGroups.begin();
 
@@ -343,8 +359,12 @@ void GuiInspector::addInspectObject( SimObject* object, bool autoSync )
    #endif
 
    // Give users a chance to customize fields on this object
+<<<<<<< HEAD
    if( object->isMethod("onDefineFieldTypes") )
       Con::executef( object, "onDefineFieldTypes" );
+=======
+   object->onDefineFieldTypes_callback();
+>>>>>>> omni_engine
 
    // Set Target
    mTargets.push_back( object );
@@ -564,14 +584,24 @@ void GuiInspector::refresh()
       ungroup = new GuiInspectorGroup( "Ungrouped", this );
       ungroup->setHeaderHidden( true );
       ungroup->setCanCollapse( false );
+<<<<<<< HEAD
 
       ungroup->registerObject();
       mGroups.push_back( ungroup );
       addObject( ungroup );
+=======
+      if( ungroup != NULL )
+      {
+         ungroup->registerObject();
+         mGroups.push_back( ungroup );
+         addObject( ungroup );
+      }   
+>>>>>>> omni_engine
    }
 
    // Put the 'transform' group first
    GuiInspectorGroup *transform = new GuiInspectorGroup( "Transform", this );
+<<<<<<< HEAD
 
    transform->registerObject();
    mGroups.push_back(transform);
@@ -583,6 +613,23 @@ void GuiInspector::refresh()
    general->registerObject();
    mGroups.push_back(general);
    addObject(general);
+=======
+   if( transform != NULL )
+   {
+      transform->registerObject();
+      mGroups.push_back( transform );
+      addObject( transform );
+   }
+
+   // Always create the 'general' group (for fields without a group)      
+   GuiInspectorGroup *general = new GuiInspectorGroup( "General", this );
+   if( general != NULL )
+   {
+      general->registerObject();
+      mGroups.push_back( general );
+      addObject( general );
+   }
+>>>>>>> omni_engine
 
    // Create the inspector groups for static fields.
 
@@ -600,6 +647,7 @@ void GuiInspector::refresh()
             if( !group && !isGroupFiltered( itr->pGroupname ) )
             {
                GuiInspectorGroup *group = new GuiInspectorGroup( itr->pGroupname, this );
+<<<<<<< HEAD
 
                group->registerObject();
                if( !group->getNumFields() )
@@ -617,6 +665,27 @@ void GuiInspector::refresh()
                   mGroups.push_back( group );
                   addObject( group );
                }
+=======
+               if( group != NULL )
+               {
+                  group->registerObject();
+                  if( !group->getNumFields() )
+                  {
+                     #ifdef DEBUG_SPEW
+                     Platform::outputDebugString( "[GuiInspector] Removing empty group '%s'",
+                        group->getCaption().c_str() );
+                     #endif
+                     
+                     // The group ended up having no fields.  Remove it.
+                     group->deleteObject();
+                  }
+                  else
+                  {
+                     mGroups.push_back( group );
+                     addObject( group );
+                  }
+               }            
+>>>>>>> omni_engine
             }
          }
       }
@@ -626,10 +695,19 @@ void GuiInspector::refresh()
    if ( !isGroupFiltered( "Dynamic Fields" ) )
    {
       GuiInspectorGroup *dynGroup = new GuiInspectorDynamicGroup( "Dynamic Fields", this);
+<<<<<<< HEAD
 
       dynGroup->registerObject();
       mGroups.push_back( dynGroup );
       addObject( dynGroup );
+=======
+      if( dynGroup != NULL )
+      {
+         dynGroup->registerObject();
+         mGroups.push_back( dynGroup );
+         addObject( dynGroup );
+      }
+>>>>>>> omni_engine
    }
 
    if( mShowCustomFields && mTargets.size() == 1 )
@@ -761,6 +839,7 @@ void GuiInspector::sendInspectPostApply()
 // MARK: ---- Console Methods ----
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, inspect, void, (const char* simObject), (""),
    "Inspect the given object.\n"
    "@param simObject Object to inspect.")
@@ -771,6 +850,16 @@ DefineEngineMethod( GuiInspector, inspect, void, (const char* simObject), (""),
       if(dAtoi(simObject) > 0)
          Con::warnf("%s::inspect(): invalid object: %s", object->getClassName(), simObject);
 
+=======
+
+DefineConsoleMethod( GuiInspector, inspect, void, (const char * className), , "Inspect(Object)")
+{
+   SimObject * target = Sim::findObject(className);
+   if(!target)
+   {
+      if(dAtoi(className) > 0)
+         Con::warnf("GuiInspector::inspect(): invalid object: %s", className);
+>>>>>>> omni_engine
       object->clearInspectObjects();
       return;
    }
@@ -780,6 +869,7 @@ DefineEngineMethod( GuiInspector, inspect, void, (const char* simObject), (""),
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, addInspect, void, (const char* simObject, bool autoSync), (true),
    "Add the object to the list of objects being inspected.\n"
    "@param simObject Object to add to the inspection."
@@ -789,6 +879,14 @@ DefineEngineMethod( GuiInspector, addInspect, void, (const char* simObject, bool
    if( !Sim::findObject( simObject, obj ) )
    {
       Con::errorf( "%s::addInspect(): invalid object: %s", object->getClassName(), simObject );
+=======
+DefineConsoleMethod( GuiInspector, addInspect, void, (const char * className, bool autoSync), (true), "( id object, (bool autoSync = true) ) - Add the object to the list of objects being inspected." )
+{
+   SimObject* obj;
+   if( !Sim::findObject( className, obj ) )
+   {
+      Con::errorf( "GuiInspector::addInspect(): invalid object: %s", className );
+>>>>>>> omni_engine
       return;
    }
 
@@ -797,6 +895,7 @@ DefineEngineMethod( GuiInspector, addInspect, void, (const char* simObject, bool
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, removeInspect, void, (const char* simObject), ,
    "Remove the object from the list of objects being inspected.\n"
    "@param simObject Object to remove from the inspection.")
@@ -808,13 +907,22 @@ DefineEngineMethod( GuiInspector, removeInspect, void, (const char* simObject), 
       return;
    }
 
+=======
+DefineConsoleMethod( GuiInspector, removeInspect, void, (SimObject* obj), , "( id object ) - Remove the object from the list of objects being inspected." )
+{
+	if (object)
+>>>>>>> omni_engine
    object->removeInspectObject( obj );
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, refresh, void, (), ,
    "Re-inspect the currently selected object.\n")
+=======
+DefineConsoleMethod( GuiInspector, refresh, void, (), , "Reinspect the currently selected object." )
+>>>>>>> omni_engine
 {
    if ( object->getNumInspectObjects() == 0 )
       return;
@@ -826,6 +934,7 @@ DefineEngineMethod( GuiInspector, refresh, void, (), ,
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, getInspectObject, const char*, (S32 index), (0),
    "Returns currently inspected object.\n"
    "@param index Index of object in inspection list you want to get."
@@ -833,6 +942,12 @@ DefineEngineMethod( GuiInspector, getInspectObject, const char*, (S32 index), (0
 {
       
    if( index < 0 || index >= object->getNumInspectObjects() )
+=======
+DefineConsoleMethod( GuiInspector, getInspectObject, const char*, (U32 index), (0), "getInspectObject( int index=0 ) - Returns currently inspected object" )
+{
+      
+   if( index >= object->getNumInspectObjects() )
+>>>>>>> omni_engine
    {
       Con::errorf( "GuiInspector::getInspectObject() - index out of range: %i", index );
       return "";
@@ -843,42 +958,60 @@ DefineEngineMethod( GuiInspector, getInspectObject, const char*, (S32 index), (0
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, getNumInspectObjects, S32, (), ,
    "Return the number of objects currently being inspected.\n"
    "@return number of objects currently being inspected.")
+=======
+DefineConsoleMethod( GuiInspector, getNumInspectObjects, S32, (), , "() - Return the number of objects currently being inspected." )
+>>>>>>> omni_engine
 {
    return object->getNumInspectObjects();
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, setName, void, (const char* newObjectName), ,
 	"Rename the object being inspected (first object in inspect list).\n"
 	"@param newObjectName new name for object being inspected.")
+=======
+DefineConsoleMethod( GuiInspector, setName, void, (const char * newObjectName), , "setName(NewObjectName)")
+>>>>>>> omni_engine
 {
    object->setName(newObjectName);
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, apply, void, (), ,
 	"Force application of inspected object's attributes.\n")
+=======
+DefineConsoleMethod( GuiInspector, apply, void, (), , "apply() - Force application of inspected object's attributes" )
+>>>>>>> omni_engine
 {
    object->sendInspectPostApply();
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, setObjectField, void, (const char* fieldname, const char* data ), ,
 	"Set a named fields value on the inspected object if it exists. This triggers all the usual callbacks that would occur if the field had been changed through the gui..\n"
 	"@param fieldname Field name on object we are inspecting we want to change."
 	"@param data New Value for the given field.")
+=======
+DefineConsoleMethod( GuiInspector, setObjectField, void, (const char * fieldname, const char * data ), , 
+   "setObjectField( fieldname, data ) - Set a named fields value on the inspected object if it exists. This triggers all the usual callbacks that would occur if the field had been changed through the gui." )
+>>>>>>> omni_engine
 {
    object->setObjectField( fieldname, data );
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiInspector, findByObject, S32, (SimObject* object), ,
 	"Returns the id of an awake inspector that is inspecting the passed object if one exists\n"
 	"@param object Object to find away inspector for."
@@ -894,3 +1027,206 @@ DefineEngineMethod( GuiInspector, findByObject, S32, (SimObject* object), ,
 
    return inspector->getId();
 }
+=======
+DefineConsoleStaticMethod( GuiInspector, findByObject, S32, (const char * className ), , 
+   "findByObject( SimObject ) - returns the id of an awake inspector that is inspecting the passed object if one exists." )
+{
+   SimObject *obj;
+   if ( !Sim::findObject( className, obj ) )   
+      return NULL;
+   
+   obj = GuiInspector::findByObject( obj );
+
+   if ( !obj )
+      return NULL;
+
+   return obj->getId();      
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspector_addInspect(char * x__object, char * x__className, bool autoSync)
+{
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* className = (const char*)x__className;
+
+{
+   SimObject* obj;
+   if( !Sim::findObject( className, obj ) )
+   {
+      Con::errorf( "GuiInspector::addInspect(): invalid object: %s", className );
+      return;
+   }
+	object->addInspectObject( obj, autoSync );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspector_apply(char * x__object)
+{
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->sendInspectPostApply();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspector_getInspectObject(char * x__object, U32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+      
+   if( index >= object->getNumInspectObjects() )
+   {
+      Con::errorf( "GuiInspector::getInspectObject() - index out of range: %i", index );
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   }
+   
+   {wle_returnObject =object->getInspectObject( index )->getIdString();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiInspector_getNumInspectObjects(char * x__object)
+{
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getNumInspectObjects());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspector_inspect(char * x__object, char * x__className)
+{
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* className = (const char*)x__className;
+{
+   SimObject * target = Sim::findObject(className);
+   if(!target)
+   {
+      if(dAtoi(className) > 0)
+         Con::warnf("GuiInspector::inspect(): invalid object: %s", className);
+      object->clearInspectObjects();
+      return;
+   }
+   object->inspectObject(target);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspector_refresh(char * x__object)
+{
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if ( object->getNumInspectObjects() == 0 )
+      return;
+   SimObject *target = object->getInspectObject();
+   if ( target )
+      object->inspectObject( target );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspector_removeInspect(char * x__object, char * x__obj)
+{
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+SimObject* obj; Sim::findObject(x__obj, obj ); 
+{
+	if (object)
+   object->removeInspectObject( obj );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspector_setName(char * x__object, char * x__newObjectName)
+{
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* newObjectName = (const char*)x__newObjectName;
+{
+   object->setName(newObjectName);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspector_setObjectField(char * x__object, char * x__fieldname, char * x__data)
+{
+GuiInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* fieldname = (const char*)x__fieldname;
+const char* data = (const char*)x__data;
+{
+   object->setObjectField( fieldname, data );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

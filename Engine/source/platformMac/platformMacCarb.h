@@ -29,7 +29,11 @@
 #include "platform/platform.h"
 #include "math/mMath.h"
 
+<<<<<<< HEAD
 #include "gfx/gl/tGL/tGL.h"
+=======
+#include "gfx/gl/ggl/ggl.h"
+>>>>>>> omni_engine
 #define __gl_h_
 #include <AGL/agl.h>
 

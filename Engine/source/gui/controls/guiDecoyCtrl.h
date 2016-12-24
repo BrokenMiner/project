@@ -38,10 +38,20 @@ public:
 
    DECLARE_CONOBJECT(GuiDecoyCtrl);
    DECLARE_CATEGORY( "Gui Other" );
+<<<<<<< HEAD
    
    static void initPersistFields();
 
    bool	mMouseOver;
+=======
+
+   DECLARE_CALLBACK(void, onMouseEnter, ());
+   DECLARE_CALLBACK(void, onMouseLeave, ());
+   
+   static void initPersistFields();
+
+   //bool	mMouseOver;      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    bool mIsDecoy;
    GuiControl* mDecoyReference;
    bool mMouseOverDecoy;

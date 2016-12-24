@@ -36,8 +36,13 @@ singleton ShaderData( PFX_PassthruShader )
    DXVertexShaderFile 	= "shaders/common/postFx/postFxV.hlsl";
    DXPixelShaderFile 	= "shaders/common/postFx/passthruP.hlsl";
          
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/postFx/gl/postFxV.glsl";
    OGLPixelShaderFile   = "shaders/common/postFx/gl/passthruP.glsl";
+=======
+//   OGLVertexShaderFile  = "shaders/common/postFx/gl//postFxV.glsl";
+//   OGLPixelShaderFile   = "shaders/common/postFx/gl/passthruP.glsl";
+>>>>>>> omni_engine
       
    samplerNames[0] = "$inputTex";
    

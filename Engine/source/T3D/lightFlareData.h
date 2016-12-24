@@ -49,6 +49,7 @@ class LightInfo;
 struct ObjectRenderInst;
 class SceneRenderState;
 class BaseMatInstance;
+class GFXOcclusionQuery;
 
 struct LightFlareState
 {  
@@ -67,8 +68,13 @@ struct LightFlareState
    bool visible;   
    F32 occlusion;
    GFXVertexBufferHandle<GFXVertexPCT> vertBuffer;   
+<<<<<<< HEAD
    GFXOcclusionQueryHandle occlusionQuery;
    GFXOcclusionQueryHandle fullPixelQuery;
+=======
+   GFXOcclusionQuery *occlusionQuery;
+   GFXOcclusionQuery *fullPixelQuery;   
+>>>>>>> omni_engine
 };
 
 class LightFlareData : public SimDataBlock

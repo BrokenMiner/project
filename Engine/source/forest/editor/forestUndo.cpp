@@ -68,7 +68,11 @@ void ForestCreateUndoAction::redo()
       // We store the datablock ID rather than the actual pointer
       // since the pointer could go bad.
       ForestItemData *data;
+<<<<<<< HEAD
       if ( !Sim::findObject( (SimObjectId)(uintptr_t)(item.getData()), data ) )
+=======
+      if ( !Sim::findObject( (SimObjectId)(item.getData()), data ) )
+>>>>>>> omni_engine
       {
          Con::errorf( "ForestCreateUndoAction::redo() - ForestItemData for item to restore does not seem to exist. Undo stack may be hosed." );
          continue;
@@ -140,7 +144,11 @@ void ForestDeleteUndoAction::undo()
       // We store the datablock ID rather than the actual pointer
       // since the pointer could go bad.
       ForestItemData *data;
+<<<<<<< HEAD
       if ( !Sim::findObject( (SimObjectId)(uintptr_t)(item.getData()), data ) )
+=======
+      if ( !Sim::findObject( (SimObjectId)(item.getData()), data ) )
+>>>>>>> omni_engine
       {
          Con::errorf( "ForestDeleteUndoAction::undo() - ForestItemData for item to restore does not seem to exist. Undo stack may be hosed." );
          continue;
@@ -201,7 +209,11 @@ void ForestUpdateAction::_swapState()
       // We store the datablock ID rather than the actual pointer
       // since the pointer could go bad.
       ForestItemData *data;
+<<<<<<< HEAD
       if ( !Sim::findObject( (SimObjectId)(uintptr_t)(item.getData()), data ) )
+=======
+      if ( !Sim::findObject( (SimObjectId)(item.getData()), data ) )
+>>>>>>> omni_engine
       {
          Con::errorf( "ForestUpdateAction::_swapState() - ForestItemData for item to restore does not seem to exist. Undo stack may be hosed." );
          continue;

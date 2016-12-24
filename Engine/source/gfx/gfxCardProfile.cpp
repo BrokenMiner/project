@@ -53,7 +53,11 @@ void GFXCardProfiler::loadProfileScript(const char* aScriptName)
 
    Con::printf("      - Loaded card profile %s", scriptName.c_str());
 
+<<<<<<< HEAD
    Con::evaluate(script, false, NULL);
+=======
+	Con::evaluate(script, false, NULL);
+>>>>>>> omni_engine
    delete[] script;
 }
 

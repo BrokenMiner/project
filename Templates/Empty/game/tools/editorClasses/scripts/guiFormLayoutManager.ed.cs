@@ -284,7 +284,11 @@ function GuiFormManager::ActivateLayout( %library, %layoutName, %parent )
 
    // Size to fit parent container.
    %extent = %parent.getExtent();
+<<<<<<< HEAD
    %layoutObj.setExtent( GetWord(%extent, 0), GetWord(%extent, 1) );
+=======
+   %layoutObj.setExtent( GetWord(%extent, 0) @ " " @ GetWord(%extent, 1) );
+>>>>>>> omni_engine
 
    // Add to parent.
    %parent.add( %layoutObj );

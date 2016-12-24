@@ -87,6 +87,9 @@ function MeshRoadEditorPlugin::onWorldEditorStartup( %this )
 
 function MeshRoadEditorPlugin::onActivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   MeshRoadEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    %this.readSettings();
    
    ToolsPaletteArray->MeshRoadEditorAddRoadMode.performClick();
@@ -116,6 +119,11 @@ function MeshRoadEditorPlugin::onActivated( %this )
 
 function MeshRoadEditorPlugin::onDeactivated( %this )
 {   
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!MeshRoadEditorPlugin.isActive)
+      return;
+   MeshRoadEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    %this.writeSettings();
    
    MeshRoadEditorGui.setVisible( false );

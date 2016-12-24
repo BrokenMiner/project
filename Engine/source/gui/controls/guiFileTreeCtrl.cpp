@@ -26,6 +26,7 @@
 #include "core/strings/stringUnit.h"
 #include "console/consoleTypes.h"
 #include "console/engineAPI.h"
+#include "gui/worldEditor/editorIconRegistry.h"
 
 
 IMPLEMENT_CONOBJECT(GuiFileTreeCtrl);
@@ -57,6 +58,8 @@ static bool _hasChildren(const char* path)
    
    return dummy.size() > 0;
 }
+
+IMPLEMENT_CALLBACK(GuiFileTreeCtrl, onSelectPath, void, (const char* path), (path), "");
 
 GuiFileTreeCtrl::GuiFileTreeCtrl()
    : Parent()
@@ -223,7 +226,11 @@ void GuiFileTreeCtrl::addPathToTree( StringTableEntry path )
 
 void GuiFileTreeCtrl::onItemSelected( Item *item )
 {
+<<<<<<< HEAD
    Con::executef( this, "onSelectPath", avar("%s",item->getValue()) );
+=======
+   onSelectPath_callback( avar("%s",item->getValue()) );
+>>>>>>> omni_engine
 
    mSelPath = item->getValue();
    if( _hasChildren( mSelPath ) )
@@ -292,8 +299,16 @@ void GuiFileTreeCtrl::recurseInsert( Item* parent, StringTableEntry path )
    }
    else
    {
+<<<<<<< HEAD
       dStrncpy( szValue, curPos, sizeof( szValue ) );
       szValue[ sizeof( szValue ) - 1 ] = 0;
+=======
+	   if( !mRootPath.isEmpty())
+		   dSprintf( szValue, sizeof( szValue ), "%s/%s", mRootPath.c_str(), curPos );
+	   else
+		   dStrncpy( szValue, curPos, sizeof( szValue ) );
+	   szValue[ sizeof( szValue ) - 1 ] = 0;
+>>>>>>> omni_engine
    }
    
    const U32 valueLen = dStrlen( szValue );
@@ -310,7 +325,16 @@ void GuiFileTreeCtrl::recurseInsert( Item* parent, StringTableEntry path )
    S32 itemIndex = 0;
    // only insert blindly if we have no root
    if( !parent )
+<<<<<<< HEAD
       itemIndex = insertItem( 0, curPos, curPos );
+=======
+   {
+	   bool allowed = true;
+	   if( String::ToString("%s", value ).find(".") != String::NPos )
+		   allowed = matchesFilters(value);
+	   itemIndex = allowed ? insertItem( 0, curPos, curPos ) : -1;
+   }
+>>>>>>> omni_engine
    else
    {
       bool allowed = (_isDirInMainDotCsPath(value) || matchesFilters(value));
@@ -336,14 +360,33 @@ void GuiFileTreeCtrl::recurseInsert( Item* parent, StringTableEntry path )
       newitem->setValue( value );
       if( _isDirInMainDotCsPath( value ) )
       {
+<<<<<<< HEAD
          newitem->setNormalImage( Icon_FolderClosed );
          newitem->setExpandedImage( Icon_Folder );
+=======
+         newitem->setNormalImage( Icon_Folder );
+         newitem->setExpandedImage( Icon_FolderOpen );
+>>>>>>> omni_engine
          newitem->setVirtualParent(true);
          newitem->setExpanded(false);
       }
       else
       {
+<<<<<<< HEAD
          newitem->setNormalImage( Icon_Doc );
+=======
+         const char* val = newitem->getValue();
+		  if( matchesFilters(val) )
+		  {
+			String ext = dStrrchr(val, '.');
+			ext = String::ToLower(ext);
+
+			if( !dStricmp(ext, ".dts") )
+				newitem->setNormalImage( Icon_TsStatic );
+			else
+				newitem->setNormalImage( Icon_Collada );
+		  }
+>>>>>>> omni_engine
       }
    }
    // since we're only dealing with volumes and directories, all end nodes will be virtual parents
@@ -379,6 +422,7 @@ void GuiFileTreeCtrl::recurseInsert( Item* parent, StringTableEntry path )
 
 }
 
+//ConsoleMethod( GuiFileTreeCtrl, getSelectedPath, const char*, 2, 2, "getSelectedPath() - returns the currently selected path in the tree")
 DefineConsoleMethod( GuiFileTreeCtrl, getSelectedPath, const char*, (), , "getSelectedPath() - returns the currently selected path in the tree")
 {
    const String& path = object->getSelectedPath();
@@ -429,3 +473,102 @@ bool GuiFileTreeCtrl::setSelectedPath( const char* path )
    }
    return false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiFileTreeCtrl_getSelectedPath(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiFileTreeCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   const String& path = object->getSelectedPath();
+   {wle_returnObject =Con::getStringArg( path );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiFileTreeCtrl_reload(char * x__object)
+{
+GuiFileTreeCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->updateTree();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiFileTreeCtrl_setSelectedPath(char * x__object, char * x__path)
+{
+GuiFileTreeCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* path = (const char*)x__path;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->setSelectedPath( path );
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

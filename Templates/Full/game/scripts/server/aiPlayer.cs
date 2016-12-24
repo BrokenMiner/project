@@ -215,7 +215,7 @@ function AIPlayer::singleShot(%this)
    %delay = %this.getDataBlock().shootingDelay;
    if (%delay $= "")
       %delay = 1000;
-   %this.trigger = %this.schedule(%delay, singleShot);
+   %this.trigger = %this.schedule(%this.shootingDelay, singleShot);
 }
 
 //-----------------------------------------------------------------------------

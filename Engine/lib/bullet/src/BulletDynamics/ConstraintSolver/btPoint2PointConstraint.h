@@ -24,10 +24,17 @@ class btRigidBody;
 
 
 #ifdef BT_USE_DOUBLE_PRECISION
+<<<<<<< HEAD
 #define btPoint2PointConstraintData2	btPoint2PointConstraintDoubleData2
 #define btPoint2PointConstraintDataName	"btPoint2PointConstraintDoubleData2"
 #else
 #define btPoint2PointConstraintData2	btPoint2PointConstraintFloatData
+=======
+#define btPoint2PointConstraintData	btPoint2PointConstraintDoubleData
+#define btPoint2PointConstraintDataName	"btPoint2PointConstraintDoubleData"
+#else
+#define btPoint2PointConstraintData	btPoint2PointConstraintFloatData
+>>>>>>> omni_engine
 #define btPoint2PointConstraintDataName	"btPoint2PointConstraintFloatData"
 #endif //BT_USE_DOUBLE_PRECISION
 
@@ -156,14 +163,22 @@ struct	btPoint2PointConstraintDoubleData
 
 SIMD_FORCE_INLINE	int	btPoint2PointConstraint::calculateSerializeBufferSize() const
 {
+<<<<<<< HEAD
 	return sizeof(btPoint2PointConstraintData2);
+=======
+	return sizeof(btPoint2PointConstraintData);
+>>>>>>> omni_engine
 
 }
 
 	///fills the dataBuffer and returns the struct name (and 0 on failure)
 SIMD_FORCE_INLINE	const char*	btPoint2PointConstraint::serialize(void* dataBuffer, btSerializer* serializer) const
 {
+<<<<<<< HEAD
 	btPoint2PointConstraintData2* p2pData = (btPoint2PointConstraintData2*)dataBuffer;
+=======
+	btPoint2PointConstraintData* p2pData = (btPoint2PointConstraintData*)dataBuffer;
+>>>>>>> omni_engine
 
 	btTypedConstraint::serialize(&p2pData->m_typeConstraintData,serializer);
 	m_pivotInA.serialize(p2pData->m_pivotInA);

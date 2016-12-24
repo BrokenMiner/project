@@ -69,6 +69,21 @@ class GuiMessageVectorCtrl : public GuiControl
    bool onWake();
    void onSleep();
    void onRender(Point2I offset, const RectI &updateRect);
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   /// Copy information
+   ColorI mSpecialColorCopy;
+
+   void applyProfileSettings();
+
+   void copyProfileSettings();
+
+   void resetProfileSettings();
+
+   // @Copyright end
+
    void inspectPostApply();
    void parentResized(const RectI& oldParentRect, const RectI& newParentRect);
 
@@ -149,8 +164,16 @@ class GuiMessageVectorCtrl : public GuiControl
    DECLARE_CONOBJECT(GuiMessageVectorCtrl);
    DECLARE_CATEGORY( "Gui Game" );
    DECLARE_DESCRIPTION( "A chat HUD control that displays messages from a MessageVector." );
+<<<<<<< HEAD
    
    static void initPersistFields();
+=======
+
+   DECLARE_CALLBACK( void, urlClickCallback, (const char * url) );
+   
+   static void initPersistFields();
+   void onStaticModified( const char *slotName, const char *newValue );       // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 };
 
 #endif  // _H_GUIMESSAGEVECTORCTRL_

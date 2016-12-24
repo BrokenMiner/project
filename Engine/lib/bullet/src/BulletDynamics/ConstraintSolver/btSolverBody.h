@@ -105,7 +105,11 @@ operator+(const btSimdScalar& v1, const btSimdScalar& v2)
 #endif
 
 ///The btSolverBody is an internal datastructure for the constraint solver. Only necessary data is packed to increase cache coherence/performance.
+<<<<<<< HEAD
 ATTRIBUTE_ALIGNED16 (struct)	btSolverBody
+=======
+ATTRIBUTE_ALIGNED64 (struct)	btSolverBody
+>>>>>>> omni_engine
 {
 	BT_DECLARE_ALIGNED_ALLOCATOR();
 	btTransform		m_worldTransform;

@@ -205,8 +205,13 @@ bool GFXD3D9TextureObject::copyToBmp(GBitmap* bmp)
    // check format limitations
    // at the moment we only support RGBA for the source (other 4 byte formats should
    // be easy to add though)
+<<<<<<< HEAD
    AssertFatal(mFormat == GFXFormatR8G8B8A8 || mFormat == GFXFormatR8G8B8, "copyToBmp: invalid format");
    if (mFormat != GFXFormatR8G8B8A8 && mFormat != GFXFormatR8G8B8)
+=======
+   AssertFatal(mFormat == GFXFormatR8G8B8A8, "copyToBmp: invalid format");
+   if (mFormat != GFXFormatR8G8B8A8)
+>>>>>>> omni_engine
       return false;
 
    PROFILE_START(GFXD3D9TextureObject_copyToBmp);

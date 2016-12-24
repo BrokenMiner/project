@@ -23,10 +23,16 @@
 #include "core/strings/stringFunctions.h"
 
 #include "console/consoleTypes.h"
+<<<<<<< HEAD
 #include "console/simBase.h"
 #include "console/engineAPI.h"
 #include "app/badWordFilter.h"
 #include "core/module.h"
+=======
+#include "app/badWordFilter.h"
+#include "core/module.h"
+#include "console/engineAPI.h"
+>>>>>>> omni_engine
 
 MODULE_BEGIN( BadWordFilter )
 
@@ -329,4 +335,105 @@ DefineEngineFunction(containsBadWords, bool, (const char* text),,
 {
 	return gBadWordFilter->containsBadWords(text);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_addBadWord(char * x__badWord)
+{
+const char* badWord = (const char*)x__badWord;
+bool wle_returnObject;
+{
+	{wle_returnObject =gBadWordFilter->addBadWord(badWord);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_containsBadWords(char * x__text)
+{
+const char* text = (const char*)x__text;
+bool wle_returnObject;
+{
+	{wle_returnObject =gBadWordFilter->containsBadWords(text);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_filterString(char * x__baseString, char * x__replacementChars,  char* retval)
+{
+dSprintf(retval,16384,"");
+const char* baseString = (const char*)x__baseString;
+const char* replacementChars = (const char*)x__replacementChars;
+const char * wle_returnObject;
+{
+	const char *replaceStr = NULL;
+	if(replacementChars)
+		replaceStr = replacementChars;
+	else
+		replaceStr = gBadWordFilter->getDefaultReplaceStr();
+	char *ret = Con::getReturnBuffer(dStrlen(baseString) + 1);
+	dStrcpy(ret, baseString);
+	gBadWordFilter->filterString(ret, replaceStr);
+	{wle_returnObject =ret;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

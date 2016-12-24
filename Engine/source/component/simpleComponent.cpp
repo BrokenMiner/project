@@ -28,4 +28,8 @@ ConsoleDocClass( SimpleComponent,
 				"@brief The purpose of this component is to provide a minimalistic component that "
 				"exposes a simple, cached interface\n\n"
 				"Soon to be deprecated, internal only.\n\n "
+<<<<<<< HEAD
 				"@internal");
+=======
+				"@internal");
+>>>>>>> omni_engine

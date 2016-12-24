@@ -187,10 +187,15 @@ void GuiTextCtrl::setText(const char *txt)
    //make sure we don't call this before onAdd();
    if( !mProfile )
       return;
+<<<<<<< HEAD
 
    // The txt pointer is sometimes the same as the mText pointer, so make sure
    // we don't call strncpy with overlapping src and dest.
    if (txt && txt != mText)
+=======
+   
+   if (txt)
+>>>>>>> omni_engine
       dStrncpy(mText, (UTF8*)txt, MAX_STRING_LENGTH);
    mText[MAX_STRING_LENGTH] = '\0';
    
@@ -246,3 +251,84 @@ void GuiTextCtrl::setScriptValue(const char *val)
 {
    setText(val);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextCtrl_setText(char * x__object, char * x__text)
+{
+GuiTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* text = (const char*)x__text;
+{
+   object->setText( text );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextCtrl_setTextID(char * x__object, char * x__textID)
+{
+GuiTextCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* textID = (const char*)x__textID;
+{
+	object->setTextID( textID );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

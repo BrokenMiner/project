@@ -60,7 +60,11 @@ struct BITMAPFILEHEADER
    U32 bfSize;
    U16 bfReserved1;
    U16 bfReserved2;
+<<<<<<< HEAD
    U32 bfOffBits;
+=======
+   U64 bfOffBits;
+>>>>>>> omni_engine
 };
 
 struct BITMAPINFOHEADER

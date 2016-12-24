@@ -58,7 +58,11 @@ class RawDataT
       }
 
       RawDataT( T* data, U32 size, bool ownMemory = false )
+<<<<<<< HEAD
          : ownMemory( ownMemory ), data( data ), size( size ) {}
+=======
+         : data( data ), size( size ), ownMemory( ownMemory ) {}
+>>>>>>> omni_engine
 
       RawDataT(const ThisType& rd)
       {

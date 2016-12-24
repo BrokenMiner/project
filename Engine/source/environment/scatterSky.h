@@ -179,7 +179,11 @@ protected:
 
    F32 mExposure;
    F32 mNightInterpolant;
+<<<<<<< HEAD
    F32 mZOffset;
+=======
+   F32 mZOffset; // Added
+>>>>>>> omni_engine
 
    VectorF mLightDir;
    VectorF mSunDir;

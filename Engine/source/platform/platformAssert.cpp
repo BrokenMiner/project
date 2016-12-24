@@ -95,6 +95,7 @@ bool PlatformAssert::process(Type         assertType,
                              U32          lineNumber,
                              const char  *message)
 {
+<<<<<<< HEAD
     // If we're somehow recursing, just die.
     if(processing)
         Platform::debugBreak();
@@ -146,6 +147,49 @@ bool PlatformAssert::process(Type         assertType,
     processing = false;
     
     return ret;
+=======
+   // If we're somehow recursing, just die.
+   if(processing)
+      Platform::debugBreak();
+
+   processing = true;
+   bool ret = true;
+
+   // always dump to the Assert to the Console
+   if (Con::isActive())
+   {
+      if (assertType == Warning)
+         Con::warnf(ConsoleLogEntry::Assert, "%s(%ld) : %s - %s", filename, lineNumber, typeName[assertType], message);
+      else
+	      Con::errorf(ConsoleLogEntry::Assert, "%s(%ld) : %s - %s", filename, lineNumber, typeName[assertType], message);
+   }
+
+   // if not a WARNING pop-up a dialog box
+   if (assertType != Warning)
+   {
+      // used for processing navGraphs (an assert won't botch the whole build)
+      if(Con::getBoolVariable("$FP::DisableAsserts", false) == true)
+         Platform::forceShutdown(1);
+
+      char buffer[2048];
+      dSprintf(buffer, 2048, "%s(%ld) : %s", filename, lineNumber, typeName[assertType] );
+
+#ifdef TORQUE_DEBUG
+      // In debug versions, allow a retry even for ISVs...
+      bool retry = displayMessageBox(buffer, message, true);
+#else
+      bool retry = displayMessageBox(buffer, message, ((assertType == Fatal) ? true : false) );
+#endif
+      if(!retry)
+         Platform::forceShutdown(1);
+      
+      ret = askToEnterDebugger(message);
+   }
+
+   processing = false;
+
+   return ret;
+>>>>>>> omni_engine
 }
 
 bool PlatformAssert::processingAssert()
@@ -179,6 +223,7 @@ const char* avar(const char *message, ...)
    va_list args;
    va_start(args, message);
    dVsprintf(buffer, sizeof(buffer), message, args);
+<<<<<<< HEAD
    va_end(args);
    return( buffer );
 }
@@ -190,3 +235,7 @@ ConsoleFunction( Assert, void, 3, 3, "(condition, message) - Fatal Script Assert
     // Process Assertion.
     AssertISV( dAtob(argv[1]), argv[2] );
 }
+=======
+   return( buffer );
+}
+>>>>>>> omni_engine

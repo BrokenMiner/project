@@ -142,11 +142,16 @@ ConsoleDocFragment _getTerrainUnderWorldPoint2(
    "bool getTerrainUnderWorldPoint( F32 x, F32 y, F32 z);"
 );
 
+<<<<<<< HEAD
 DefineConsoleFunction( getTerrainUnderWorldPoint, S32, (const char* ptOrX, const char* y, const char* z), ("", ""),
+=======
+DefineConsoleFunction( getTerrainUnderWorldPoint, S32, (Point3F position), , 
+>>>>>>> omni_engine
                                                       "(Point3F x/y/z) Gets the terrain block that is located under the given world point.\n"
                                                       "@param x/y/z The world coordinates (floating point values) you wish to query at. " 
                                                       "These can be formatted as either a string (\"x y z\") or separately as (x, y, z)\n"
                                                       "@return Returns the ID of the requested terrain block (0 if not found).\n\n"
+<<<<<<< HEAD
                                                       "@hide")
 {
    Point3F pos;
@@ -159,10 +164,17 @@ DefineConsoleFunction( getTerrainUnderWorldPoint, S32, (const char* ptOrX, const
       pos.z = dAtof(z);
    }
    TerrainBlock* terrain = getTerrainUnderWorldPoint(pos);
+=======
+													  "@hide")
+{
+
+   TerrainBlock* terrain = getTerrainUnderWorldPoint(position);
+>>>>>>> omni_engine
    if(terrain != NULL)
    {
       return terrain->getId();
    }
+<<<<<<< HEAD
    return 0;
 }
 
@@ -178,6 +190,13 @@ ImplementEnumType(baseTexFormat,
 { TerrainBlock::PNG, "PNG", "Cache the terrain in a PNG format.\n" },
 { TerrainBlock::JPG, "JPG", "Cache the terrain in a JPG format.\n" },
 EndImplementEnumType;
+=======
+
+   return 0;
+
+}
+
+>>>>>>> omni_engine
 
 TerrainBlock::TerrainBlock()
  : mSquareSize( 1.0f ),
@@ -265,7 +284,8 @@ bool TerrainBlock::_setBaseTexSize( void *obj, const char *index, const char *da
    // base texture with your installer.
    //
 
-   S32 texSize = mClamp( dAtoi( data ), 0, 2048 );
+   //Increase Terrain Base Texture size to 4096. 
+   S32 texSize = mClamp( dAtoi( data ), 0, 4096 );
    if ( terrain->mBaseTexSize != texSize )
    {
       terrain->mBaseTexSize = texSize;
@@ -513,10 +533,21 @@ bool TerrainBlock::getHeight( const Point2F &pos, F32 *height ) const
    if ( sq->flags & TerrainSquare::Empty )
       return false;
 
+<<<<<<< HEAD
    F32 zBottomLeft = fixedToFloat( mFile->getHeight( x, y ) );
    F32 zBottomRight = fixedToFloat( mFile->getHeight( x + 1, y ) );
    F32 zTopLeft = fixedToFloat( mFile->getHeight( x, y + 1 ) );
    F32 zTopRight = fixedToFloat( mFile->getHeight( x + 1, y + 1 ) );
+=======
+   F32  zBottomLeft, zBottomRight, zTopLeft, zTopRight;
+   mFile->getHeight4(
+      &zBottomLeft, &zBottomRight, &zTopLeft, &zTopRight,
+      Point2I( x, y ),
+      Point2I( x + 1, y ),
+      Point2I( x, y + 1 ),
+      Point2I( x + 1, y + 1 )
+   );
+>>>>>>> omni_engine
 
    if ( sq->flags & TerrainSquare::Split45 )
    {
@@ -564,10 +595,22 @@ bool TerrainBlock::getNormal( const Point2F &pos, Point3F *normal, bool normaliz
    if ( skipEmpty && sq->flags & TerrainSquare::Empty )
       return false;
 
+<<<<<<< HEAD
    F32 zBottomLeft = fixedToFloat( mFile->getHeight( x, y ) );
    F32 zBottomRight = fixedToFloat( mFile->getHeight( x + 1, y ) );
    F32 zTopLeft = fixedToFloat( mFile->getHeight( x, y + 1 ) );
    F32 zTopRight = fixedToFloat( mFile->getHeight( x + 1, y + 1 ) );
+=======
+
+   F32  zBottomLeft, zBottomRight, zTopLeft, zTopRight;
+   mFile->getHeight4(
+      &zBottomLeft, &zBottomRight, &zTopLeft, &zTopRight,
+      Point2I( x, y ),
+      Point2I( x + 1, y ),
+      Point2I( x, y + 1 ),
+      Point2I( x + 1, y + 1 )
+   );
+>>>>>>> omni_engine
 
    if ( sq->flags & TerrainSquare::Split45 )
    {
@@ -619,10 +662,21 @@ bool TerrainBlock::getSmoothNormal( const Point2F &pos,
    if ( skipEmpty && sq->flags & TerrainSquare::Empty )
       return false;
 
+<<<<<<< HEAD
    F32 h1 = fixedToFloat( mFile->getHeight( x + 1, y ) );
    F32 h2 = fixedToFloat( mFile->getHeight( x, y + 1 ) );
    F32 h3 = fixedToFloat( mFile->getHeight( x - 1, y ) );
    F32 h4 = fixedToFloat( mFile->getHeight( x, y - 1 ) );
+=======
+   F32  h1, h2, h3, h4;
+   mFile->getHeight4(
+      &h1, &h2, &h3, &h4,
+      Point2I( x + 1, y     ),
+      Point2I( x,     y + 1 ),
+      Point2I( x - 1, y     ),
+      Point2I( x,     y - 1 )
+   );
+>>>>>>> omni_engine
 
    normal->set( h3 - h1, h4 - h2, mSquareSize * 2.0f );
 
@@ -656,10 +710,21 @@ bool TerrainBlock::getNormalAndHeight( const Point2F &pos, Point3F *normal, F32 
    if ( sq->flags & TerrainSquare::Empty )
       return false;
 
+<<<<<<< HEAD
    F32 zBottomLeft  = fixedToFloat( mFile->getHeight(x, y) );
    F32 zBottomRight = fixedToFloat( mFile->getHeight(x + 1, y) );
    F32 zTopLeft     = fixedToFloat( mFile->getHeight(x, y + 1) );
    F32 zTopRight    = fixedToFloat( mFile->getHeight(x + 1, y + 1) );
+=======
+   F32  zBottomLeft, zBottomRight, zTopLeft, zTopRight;
+   mFile->getHeight4(
+      &zBottomLeft, &zBottomRight, &zTopLeft, &zTopRight,
+      Point2I( x, y ),
+      Point2I( x + 1, y ),
+      Point2I( x, y + 1 ),
+      Point2I( x + 1, y + 1 )
+   );
+>>>>>>> omni_engine
 
    if ( sq->flags & TerrainSquare::Split45 )
    {
@@ -728,10 +793,21 @@ bool TerrainBlock::getNormalHeightMaterial(  const Point2F &pos,
    if ( sq->flags & TerrainSquare::Empty )
       return false;
 
+<<<<<<< HEAD
    F32 zBottomLeft  = fixedToFloat( mFile->getHeight(x, y) );
    F32 zBottomRight = fixedToFloat( mFile->getHeight(x + 1, y) );
    F32 zTopLeft     = fixedToFloat( mFile->getHeight(x, y + 1) );
    F32 zTopRight    = fixedToFloat( mFile->getHeight(x + 1, y + 1) );
+=======
+   F32  zBottomLeft, zBottomRight, zTopLeft, zTopRight;
+   mFile->getHeight4(
+      &zBottomLeft, &zBottomRight, &zTopLeft, &zTopRight,
+      Point2I( x, y ),
+      Point2I( x + 1, y ),
+      Point2I( x, y + 1 ),
+      Point2I( x + 1, y + 1 )
+   );
+>>>>>>> omni_engine
 
    matName = mFile->getMaterialName( xm, ym );
 
@@ -994,7 +1070,11 @@ String TerrainBlock::_getBaseTexCacheFileName() const
 {
    Torque::Path basePath( mTerrFileName );
    basePath.setFileName( basePath.getFileName() + "_basetex" );
+<<<<<<< HEAD
    basePath.setExtension( formatToExtension(mBaseTexFormat) );
+=======
+   basePath.setExtension( "dds" );
+>>>>>>> omni_engine
    return basePath.getFullPath();
 }
 
@@ -1239,7 +1319,11 @@ void TerrainBlock::unpackUpdate(NetConnection* con, BitStream *stream)
       {
          mBaseTexSize = baseTexSize;
          if ( isProperlyAdded() )
+<<<<<<< HEAD
             _updateBaseTexture( NONE );
+=======
+            _updateBaseTexture( false );
+>>>>>>> omni_engine
       }
 
       U32 lightMapSize;
@@ -1325,11 +1409,16 @@ ConsoleDocFragment _getTerrainHeight2(
    "bool getTerrainHeight( F32 x, F32 y);"
 );
 
+<<<<<<< HEAD
 DefineConsoleFunction( getTerrainHeight, F32, (const char* ptOrX, const char* y), (""), "(Point2 pos) - gets the terrain height at the specified position."
+=======
+DefineConsoleFunction( getTerrainHeight, F32, (Point2F pos), , "(Point2 pos) - gets the terrain height at the specified position."
+>>>>>>> omni_engine
 				"@param pos The world space point, minus the z (height) value\n Can be formatted as either (\"x y\") or (x,y)\n"
 				"@return Returns the terrain height at the given point as an F32 value.\n"
 				"@hide")
 {
+<<<<<<< HEAD
    F32 height = 0.0f;
 
    Point2F pos;
@@ -1350,6 +1439,21 @@ DefineConsoleFunction( getTerrainHeight, F32, (const char* ptOrX, const char* y)
       terrain->getHeight(pos, &height);
    }
    return height;
+=======
+	F32 height = 0.0f;
+
+
+	TerrainBlock * terrain = getTerrainUnderWorldPoint(Point3F(pos.x, pos.y, 5000.0f));
+	if(terrain)
+		if(terrain->isServerObject())
+		{
+			Point3F offset;
+			terrain->getTransform().getColumn(3, &offset);
+			pos -= Point2F(offset.x, offset.y);
+			terrain->getHeight(pos, &height);
+		}
+		return height;
+>>>>>>> omni_engine
 }
 
 ConsoleDocFragment _getTerrainHeightBelowPosition1(
@@ -1370,7 +1474,11 @@ ConsoleDocFragment _getTerrainHeightBelowPosition2(
    "bool getTerrainHeightBelowPosition( F32 x, F32 y);"
 );
 
+<<<<<<< HEAD
 DefineConsoleFunction( getTerrainHeightBelowPosition, F32, (const char* ptOrX, const char* y, const char* z), ("", ""),
+=======
+DefineConsoleFunction( getTerrainHeightBelowPosition, F32, (Point3F pos), , 
+>>>>>>> omni_engine
             "(Point3F pos) - gets the terrain height at the specified position."
 				"@param pos The world space point. Can be formatted as either (\"x y z\") or (x,y,z)\n"
 				"@note This function is useful if you simply want to grab the terrain height underneath an object.\n"
@@ -1406,3 +1514,135 @@ DefineConsoleFunction( getTerrainHeightBelowPosition, F32, (const char* ptOrX, c
 	
 	return height;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) F32  __cdecl wle_fn_getTerrainHeight(char * x__pos)
+{
+Point2F pos = Point2F();
+sscanf(x__pos,"%f %f",&pos.x,&pos.y);
+{
+	F32 height = 0.0f;
+	TerrainBlock * terrain = getTerrainUnderWorldPoint(Point3F(pos.x, pos.y, 5000.0f));
+	if(terrain)
+		if(terrain->isServerObject())
+		{
+			Point3F offset;
+			terrain->getTransform().getColumn(3, &offset);
+			pos -= Point2F(offset.x, offset.y);
+			terrain->getHeight(pos, &height);
+		}
+		return height;
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fn_getTerrainHeightBelowPosition(char * x__pos)
+{
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+{
+	F32 height = 0.0f;
+	TerrainBlock * terrain = getTerrainUnderWorldPoint(pos);
+	
+	Point2F nohghtPos(pos.x, pos.y);
+	if(terrain)
+	{
+		if(terrain->isServerObject())
+		{
+			Point3F offset;
+			terrain->getTransform().getColumn(3, &offset);
+			nohghtPos -= Point2F(offset.x, offset.y);
+			terrain->getHeight(nohghtPos, &height);
+		}
+	}
+	
+	return height;
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_getTerrainUnderWorldPoint(char * x__position)
+{
+Point3F position = Point3F();
+sscanf(x__position,"%f %f %f",&position.x,&position.y,&position.z);
+{
+   TerrainBlock* terrain = getTerrainUnderWorldPoint(position);
+   if(terrain != NULL)
+   {
+     return (S32)( terrain->getId());
+   }
+  return (S32)( 0);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnTerrainBlock_save(char * x__object, char * x__fileName)
+{
+TerrainBlock* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* fileName = (const char*)x__fileName;
+bool wle_returnObject;
+{
+	char filename[256];
+	dStrcpy(filename,fileName);
+   char *ext = dStrrchr(filename, '.');
+   if (!ext || dStricmp(ext, ".ter") != 0)
+      dStrcat(filename, ".ter");
+   {wle_returnObject =static_cast<TerrainBlock*>(object)->save(filename);
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

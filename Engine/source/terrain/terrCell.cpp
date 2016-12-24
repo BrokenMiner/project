@@ -140,6 +140,7 @@ void TerrCell::createPrimBuffer( GFXPrimitiveBufferHandle *primBuffer )
       }
    }
 
+#if 1
    // Now add indices for the 'skirts'.
    // These could probably be reduced to a loop.
 
@@ -262,7 +263,11 @@ void TerrCell::createPrimBuffer( GFXPrimitiveBufferHandle *primBuffer )
       maxIndex = b1;
       counter += 6;
    }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
    primBuffer->unlock();
 }
 
@@ -435,6 +440,7 @@ void TerrCell::_updateVertexBuffer()
 
    TerrVertex *vert = mVertexBuffer.lock();
 
+<<<<<<< HEAD
    Point2I gridPt;
    Point2F point;
    F32 height;
@@ -444,11 +450,21 @@ void TerrCell::_updateVertexBuffer()
 
    for ( U32 y = 0; y < smVBStride; y++ )
    {
+=======
+   
+   const TerrainFile *file = mTerrain->getFile();
+
+   Point2I gridPt = Point2I::Zero;
+   for ( U32 y = 0; y < smVBStride; y++ )
+   {
+	   gridPt.y = mPoint.y + y * stepSize;
+>>>>>>> omni_engine
       for ( U32 x = 0; x < smVBStride; x++ )
       {
          // We clamp here to keep the geometry from reading across
          // one side of the height map to the other causing walls
          // around the edges of the terrain.
+<<<<<<< HEAD
          gridPt.x = mClamp( mPoint.x + x * stepSize, 0, blockSize - 1 );
          gridPt.y = mClamp( mPoint.y + y * stepSize, 0, blockSize - 1 );
 
@@ -469,6 +485,38 @@ void TerrCell::_updateVertexBuffer()
 
          // Test the empty state for this vert.
          if ( file->isEmptyAt( gridPt.x, gridPt.y ) )
+=======
+		 gridPt.x = mPoint.x + x * stepSize;
+
+         // Corrected calc the position for height.
+         const Point2I  p(
+            (gridPt.x < blockSize) ? gridPt.x : (blockSize - 1),
+            (gridPt.y < blockSize) ? gridPt.y : (blockSize - 1)
+         );
+         F32 height;
+         file->getHeight( &height, p );
+
+         // Setup this point.
+		 vert->point.x = (F32)gridPt.x * squareSize;
+		 vert->point.y = (F32)gridPt.y * squareSize;
+         vert->point.z = height;
+
+         // Get the normal.
+		 const Point2F pn(
+            (F32)p.x * squareSize,
+            (F32)p.y * squareSize
+         );
+		 mTerrain->getSmoothNormal( pn, &vert->normal, true, false );
+
+         // Get the tangent z.
+		 const Point2I  p1( p.x + 1, p.y );
+		 F32 height1;
+         file->getHeight( &height1, p1 );
+         vert->tangentZ = height1 - height;
+
+         // Test the empty state for this vert.
+		 if ( file->isEmptyAt( p.x, p.y ) )
+>>>>>>> omni_engine
          {
             mHasEmpty = true;
             mEmptyVertexList.push_back( vbcounter );
@@ -479,8 +527,17 @@ void TerrCell::_updateVertexBuffer()
       }
    }
 
+<<<<<<< HEAD
    // Add verts for 'skirts' around/beneath the edge verts of this cell.
    // This could probably be reduced to a loop...
+=======
+#if 1
+   // Add verts for 'skirts' around/beneath the edge verts of this cell.
+   // This could probably be reduced to a loop...
+
+   Point2F point  = Point2F::Zero;
+   Point3F normal = Point3F::Zero;
+>>>>>>> omni_engine
    
    const F32 skirtDepth = mSize / smMinCellSize * mTerrain->getSquareSize();
 
@@ -492,7 +549,11 @@ void TerrCell::_updateVertexBuffer()
       
       point.x = (F32)gridPt.x * squareSize;
       point.y = (F32)gridPt.y * squareSize;
+<<<<<<< HEAD
       height = fixedToFloat( file->getHeight( gridPt.x, gridPt.y ) );
+=======
+      const F32 height = fixedToFloat( file->getHeight( gridPt.x, gridPt.y ) );
+>>>>>>> omni_engine
       vert->point.x = point.x;
       vert->point.y = point.y;
       vert->point.z = height - skirtDepth;
@@ -516,7 +577,11 @@ void TerrCell::_updateVertexBuffer()
 
       point.x = (F32)gridPt.x * squareSize;
       point.y = (F32)gridPt.y * squareSize;
+<<<<<<< HEAD
       height = fixedToFloat( file->getHeight( gridPt.x, gridPt.y ) );
+=======
+      const F32 height = fixedToFloat( file->getHeight( gridPt.x, gridPt.y ) );
+>>>>>>> omni_engine
       vert->point.x = point.x;
       vert->point.y = point.y;
       vert->point.z = height - skirtDepth;
@@ -540,7 +605,11 @@ void TerrCell::_updateVertexBuffer()
 
       point.x = (F32)gridPt.x * squareSize;
       point.y = (F32)gridPt.y * squareSize;
+<<<<<<< HEAD
       height = fixedToFloat( file->getHeight( gridPt.x, gridPt.y ) );
+=======
+      const F32 height = fixedToFloat( file->getHeight( gridPt.x, gridPt.y ) );
+>>>>>>> omni_engine
       vert->point.x = point.x;
       vert->point.y = point.y;
       vert->point.z = height - skirtDepth;
@@ -564,7 +633,11 @@ void TerrCell::_updateVertexBuffer()
 
       point.x = (F32)gridPt.x * squareSize;
       point.y = (F32)gridPt.y * squareSize;
+<<<<<<< HEAD
       height = fixedToFloat( file->getHeight( gridPt.x, gridPt.y ) );
+=======
+      const F32 height = fixedToFloat( file->getHeight( gridPt.x, gridPt.y ) );
+>>>>>>> omni_engine
       vert->point.x = point.x;
       vert->point.y = point.y;
       vert->point.z = height - skirtDepth;
@@ -579,8 +652,12 @@ void TerrCell::_updateVertexBuffer()
       vbcounter++;
       ++vert;      
    }
+<<<<<<< HEAD
 
    AssertFatal( vbcounter == smVBSize, "bad" );
+=======
+#endif
+>>>>>>> omni_engine
    mVertexBuffer.unlock();
 }
 
@@ -663,7 +740,11 @@ void TerrCell::_updatePrimitiveBuffer()
          mTriCount += 2;
       }
    }
+<<<<<<< HEAD
 
+=======
+#if 1
+>>>>>>> omni_engine
    // Now add indices for the 'skirts'.
    // These could probably be reduced to a loop.
 
@@ -818,7 +899,11 @@ void TerrCell::_updatePrimitiveBuffer()
 
       mTriCount += 2;
    }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
    mPrimBuffer.unlock();
    prim->numPrimitives = mTriCount;
 }
@@ -827,6 +912,7 @@ void TerrCell::_updateMaterials()
 {
    PROFILE_SCOPE( TerrCell_UpdateMaterials );
 
+<<<<<<< HEAD
    // This should really only be called for cells of smMinCellSize,
    // in which case stepSize is always one.
    U32 stepSize = mSize / smMinCellSize;
@@ -843,13 +929,39 @@ void TerrCell::_updateMaterials()
       {
          index = file->getLayerIndex(  mPoint.x + x * stepSize, 
                                        mPoint.y + y * stepSize );
+=======
+   const U32 blockSize = mTerrain->getBlockSize();
+
+   // This should really only be called for cells of smMinCellSize,
+   // in which case stepSize is always one.
+   const U32 stepSize = mSize / smMinCellSize;
+   mMaterials = 0;
+
+   const TerrainFile *file = mTerrain->getFile();
+
+   // Calc 'gridPt' by analogy with _updateVertexBuffer().
+   Point2I  gridPt = Point2I::Zero;
+   for ( U32 y = 0; y < smVBStride; y++ )
+   {
+	   gridPt.y = mPoint.y + y * stepSize;
+      for ( U32 x = 0; x < smVBStride; x++ )
+      {
+         gridPt.x = mPoint.x + x * stepSize;
+         const U32 lx = (gridPt.x < blockSize) ? gridPt.x : (blockSize - 1);
+         const U32 ly = (gridPt.y < blockSize) ? gridPt.y : (blockSize - 1);
+         const U8 index = file->getLayerIndex( lx, ly );
+>>>>>>> omni_engine
          
          // Skip empty layers and anything that doesn't fit
          // the 64bit material flags.
          if ( index == U8_MAX || index > 63 )
             continue;
 
+<<<<<<< HEAD
          mMaterials |= (U64)((U64)1<<index);
+=======
+		 mMaterials |= (U64)(1<<index);
+>>>>>>> omni_engine
       }
    }
 

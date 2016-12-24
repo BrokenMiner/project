@@ -433,7 +433,11 @@ int XMessageBox::show()
    XSetWMName(mDisplay, mWin, &wtitle);
 
    // show window
+<<<<<<< HEAD
    XMapRaised(mDisplay, mWin);
+=======
+   XMapWindow(mDisplay, mWin);
+>>>>>>> omni_engine
    // move it in case some bozo window manager repositioned it
    XMoveWindow(mDisplay, mWin, 
       (mScreenWidth - mMBWidth) / 2,  (mScreenHeight - mMBHeight) / 2);

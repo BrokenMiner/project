@@ -33,5 +33,9 @@ void main()
    vec3 lightcolor;   
    float nl_Att, specular;   
    lightinfoUncondition( texture( lightInfoBuffer, uv0 ), lightcolor, nl_Att, specular );   
+<<<<<<< HEAD
    OUT_col = vec4( lightcolor, 1.0 ); 
+=======
+   OUT_FragColor0 = vec4( lightcolor, 1.0 ); 
+>>>>>>> omni_engine
 }

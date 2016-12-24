@@ -212,7 +212,11 @@ ConsoleStaticMethod( EditorIconRegistry, findIconBySimObject, const char*, 2, 2,
    SimObject *obj = NULL;
    if ( !Sim::findObject( argv[1], obj ) )
    {
+<<<<<<< HEAD
       Con::warnf( "EditorIconRegistry::findIcon, parameter %d was not a SimObject!", (const char*)argv[1] );
+=======
+      Con::warnf( "EditorIconRegistry::findIcon, parameter %d was not a SimObject!", argv[1] );
+>>>>>>> omni_engine
       return NULL;
    }
 

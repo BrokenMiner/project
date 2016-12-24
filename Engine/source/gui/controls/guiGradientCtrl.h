@@ -99,7 +99,11 @@ private:
 	PickMode mSaveDisplayMode;
 
    bool mPositionChanged;	///< Current position has changed since last render?
+<<<<<<< HEAD
    bool mMouseOver;		///< Mouse is over?
+=======
+  //bool mMouseOver;		///< Mouse is over?
+>>>>>>> omni_engine
    bool mMouseDown;		///< Mouse button down?
    bool mActionOnMove;		///< Perform onAction() when position has changed?
 
@@ -112,6 +116,21 @@ private:
 	ColorF colorAlphaW;
    /// @}
 	String mColorFunction;
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+	/// Copy information
+   ColorF mPickColorCopy;
+   ColorF mBaseColorCopy;
+
+   void applyProfileSettings();
+
+   void copyProfileSettings();
+
+   void resetProfileSettings();
+
+   // @Copyright end
 	
 public:   
    
@@ -121,6 +140,7 @@ public:
    GuiGradientCtrl();
 
    static void initPersistFields();
+   void onStaticModified( const char *slotName, const char* newValue );    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    void onRender(Point2I offset, const RectI &updateRect);
    bool mShowReticle;       ///< Show reticle on render
    /// @name Color Value Functions
@@ -148,7 +168,11 @@ public:
 	void inspectPreApply();
 	void inspectPostApply();
 	void reInitSwatches( GuiGradientCtrl::PickMode );
+<<<<<<< HEAD
    void addColorRange(Point2I pos, const ColorF& color);
+=======
+	void addColorRange( Point2I pos, ColorF color );
+>>>>>>> omni_engine
 	void removeColorRange( GuiGradientSwatchCtrl* swatch );
 	void sortColorRange();
 

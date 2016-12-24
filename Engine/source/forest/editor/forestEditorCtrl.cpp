@@ -40,6 +40,8 @@ ConsoleDocClass( ForestEditorCtrl,
    "@internal"
 );
 
+IMPLEMENT_CALLBACK(ForestEditorCtrl, onActiveForestUpdated, void, (const char* forest, const char* createNew), (forest, createNew), "");
+
 ForestEditorCtrl::ForestEditorCtrl()
 {   
    dMemset( &mLastEvent, 0, sizeof(Gui3DMouseEvent) );
@@ -97,7 +99,12 @@ void ForestEditorCtrl::onSleep()
 
 bool ForestEditorCtrl::updateActiveForest( bool createNew )
 {
+<<<<<<< HEAD
    Con::executef( this, "onActiveForestUpdated", mForest ? mForest->getIdString() : "", createNew ? "1" : "0" );  
+=======
+   mForest = dynamic_cast<Forest*>( Sim::findObject( "theForest" ) );
+   onActiveForestUpdated_callback( mForest ? mForest->getIdString() : "", createNew ? "1" : "0" );  
+>>>>>>> omni_engine
 
    if ( mTool )
       mTool->setActiveForest( mForest );
@@ -245,9 +252,16 @@ void ForestEditorCtrl::updateGuiInfo()
    if ( !mForest )
    {
       if ( statusbar )
+<<<<<<< HEAD
          Con::executef( statusbar, "setInfo", "Forest Editor. You have no Forest in your level; click anywhere in the scene to create one." );
       if ( selectionBar )
          Con::executef( selectionBar, "setInfo", "" );
+=======
+      { statusbar->setInfo_callback("Forest Editor. You have no Forest in your level; click anywhere in the scene to create one."); }
+      if ( selectionBar )
+      { selectionBar->setInfo_callback(""); }
+
+>>>>>>> omni_engine
       return;
    }
 
@@ -260,9 +274,16 @@ void ForestEditorCtrl::updateGuiInfo()
    // Tool did not handle the update so we will.
 
    if ( statusbar )
+<<<<<<< HEAD
       Con::executef( statusbar, "setInfo", "Forest Editor." );
    if ( selectionBar )
       Con::executef( selectionBar, "setInfo", "" );
+=======
+   { statusbar->setInfo_callback("Forest Editor."); }
+
+   if ( selectionBar )
+   { selectionBar->setInfo_callback(""); }
+>>>>>>> omni_engine
 }
             
 void ForestEditorCtrl::renderScene( const RectI &updateRect )
@@ -401,6 +422,7 @@ DefineConsoleMethod( ForestEditorCtrl, isDirty, bool, (), , "" )
    return object->isDirty();
 }
 
+<<<<<<< HEAD
 DefineConsoleMethod(ForestEditorCtrl, setActiveForest, void, (const char * obj), , "( Forest obj )")
 {
    Forest *forestObject;
@@ -409,3 +431,119 @@ DefineConsoleMethod(ForestEditorCtrl, setActiveForest, void, (const char * obj),
 
    object->setActiveForest(forestObject);
 }
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestEditorCtrl_deleteMeshSafe(char * x__object, char * x__obj)
+{
+ForestEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* obj = (const char*)x__obj;
+{
+   ForestItemData *db;
+   if ( !Sim::findObject( obj, db ) )
+      return;
+   object->deleteMeshSafe( db );   
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_ForestEditorCtrl_getActiveTool(char * x__object)
+{
+ForestEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   ForestTool *tool = object->getActiveTool();
+  return (S32)( tool ? tool->getId() : 0);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_ForestEditorCtrl_isDirty(char * x__object)
+{
+ForestEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isDirty();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestEditorCtrl_setActiveTool(char * x__object, char * x__toolName)
+{
+ForestEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* toolName = (const char*)x__toolName;
+{
+   ForestTool *tool = dynamic_cast<ForestTool*>( Sim::findObject( toolName ) );
+   object->setActiveTool( tool );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestEditorCtrl_updateActiveForest(char * x__object)
+{
+ForestEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->updateActiveForest( true );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

@@ -78,9 +78,15 @@ LangElement *ConditionerFeature::assignOutput( Var *unconditionedOutput, ShaderF
       {
          color->setName( getOutputTargetVarName(outputTarget) );
          color->setType( "vec4" );
+<<<<<<< HEAD
          color->setStructName( "OUT" );
 
          assign = new GenOp( "@ = vec4(@)", color, conditionedOutput );
+=======
+         DecOp* colDecl = new DecOp(color);
+
+         assign = new GenOp( "@ = vec4(@)", colDecl, conditionedOutput );
+>>>>>>> omni_engine
       }
       else
       {

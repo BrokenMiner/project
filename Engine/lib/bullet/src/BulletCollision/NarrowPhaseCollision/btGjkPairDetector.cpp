@@ -50,8 +50,12 @@ m_marginA(objectA->getMargin()),
 m_marginB(objectB->getMargin()),
 m_ignoreMargin(false),
 m_lastUsedMethod(-1),
+<<<<<<< HEAD
 m_catchDegeneracies(1),
 m_fixContactNormalDirection(1)
+=======
+m_catchDegeneracies(1)
+>>>>>>> omni_engine
 {
 }
 btGjkPairDetector::btGjkPairDetector(const btConvexShape* objectA,const btConvexShape* objectB,int shapeTypeA,int shapeTypeB,btScalar marginA, btScalar marginB, btSimplexSolverInterface* simplexSolver,btConvexPenetrationDepthSolver*	penetrationDepthSolver)
@@ -66,8 +70,12 @@ m_marginA(marginA),
 m_marginB(marginB),
 m_ignoreMargin(false),
 m_lastUsedMethod(-1),
+<<<<<<< HEAD
 m_catchDegeneracies(1),
 m_fixContactNormalDirection(1)
+=======
+m_catchDegeneracies(1)
+>>>>>>> omni_engine
 {
 }
 
@@ -355,7 +363,11 @@ void btGjkPairDetector::getClosestPointsNonVirtual(const ClosestPointInput& inpu
 					m_minkowskiA,m_minkowskiB,
 					localTransA,localTransB,
 					m_cachedSeparatingAxis, tmpPointOnA, tmpPointOnB,
+<<<<<<< HEAD
 					debugDraw
+=======
+					debugDraw,input.m_stackAlloc
+>>>>>>> omni_engine
 					);
 
 

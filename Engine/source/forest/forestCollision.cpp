@@ -355,7 +355,11 @@ bool ForestData::castRay( const Point3F &start, const Point3F &end, RayInfo *out
    shortest.t = F32_MAX;
 
    BucketTable::ConstIterator iter = mBuckets.begin();
+<<<<<<< HEAD
    for (; iter != mBuckets.end(); ++iter)
+=======
+   for ( ; iter != mBuckets.end(); iter++ )
+>>>>>>> omni_engine
    {
       if ( iter->value->castRay( start, end, outInfo, rendered ) )
       {

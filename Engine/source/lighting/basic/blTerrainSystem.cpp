@@ -159,9 +159,13 @@ blTerrainProxy::blTerrainProxy( SceneObject *obj ) :
    Parent( obj ),
    mLightMapSize( getObject()->getLightMapSize() ),
    mTerrainBlockSize( getObject()->getBlockSize() ),
+<<<<<<< HEAD
    mShadowVolume( NULL ),
    mLightmap( NULL ),
    sgBakedLightmap( NULL )
+=======
+   mLightmap( NULL )
+>>>>>>> omni_engine
 {
 }
 

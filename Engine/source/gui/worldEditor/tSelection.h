@@ -66,7 +66,11 @@ template<class T> inline void Selection<T>::offset( const Point3F &delta )
 {
    typename Selection<T>::iterator itr = this->begin();
 
+<<<<<<< HEAD
    for (; itr != this->end(); ++itr)
+=======
+   for ( ; itr != this->end(); itr++ )   
+>>>>>>> omni_engine
       offsetObject( *itr, delta );      
 }
 
@@ -75,7 +79,11 @@ template<class T> inline void Selection<T>::rotate( const EulerF &delta )
    typename Selection<T>::iterator itr = this->begin();
    Point3F origin = getOrigin();
 
+<<<<<<< HEAD
    for (; itr != this->end(); ++itr)
+=======
+   for ( ; itr != this->end(); itr++ )   
+>>>>>>> omni_engine
       rotateObject( *itr, delta, origin );
 }
 

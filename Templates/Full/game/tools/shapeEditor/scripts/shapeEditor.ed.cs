@@ -366,7 +366,11 @@ function ShapeEdSelectWindow::navigate( %this, %address )
    %this-->shapeLibrary.clear();
    ShapeEdSelectMenu.clear();
 
+   // ATTENTION! From Torque3D
    %filePatterns = getFormatExtensions();
+   ////////
+   // %filePatterns = "*.dts" TAB "*.dae" TAB "*.kmz";
+   // ATTENTION! From OMNI
    %fullPath = findFirstFileMultiExpr( %filePatterns );
 
    while ( %fullPath !$= "" )
@@ -1632,7 +1636,11 @@ function ShapeEdSequences::onAddSequence( %this, %name )
    if ( %from $= "" )
    {
       // No sequence selected => open dialog to browse for one
+      // ATTENTION! From Torque
       getLoadFormatFilename( %this @ ".onAddSequenceFromBrowse", ShapeEdFromMenu.lastPath );
+      /////////
+      //getLoadFilename( "DSQ Files|*.dsq|COLLADA Files|*.dae|Google Earth Files|*.kmz", %this @ ".onAddSequenceFromBrowse", ShapeEdFromMenu.lastPath );
+	  // ATTENTION! From OMNI
       return;
    }
    else
@@ -1740,7 +1748,11 @@ function ShapeEdSeqFromMenu::onSelect( %this, %id, %text )
       %this.setText( %seqFrom );
 
       // Allow the user to browse for an external source of animation data
+	  // ATTENTION! From Torque
       getLoadFormatFilename( %this @ ".onBrowseSelect", %this.lastPath );
+      /////////
+      //getLoadFilename( "DSQ Files|*.dsq|COLLADA Files|*.dae|Google Earth Files|*.kmz", %this @ ".onBrowseSelect", %this.lastPath );
+	  // ATTENTION! From OMNI
    }
    else
    {
@@ -2862,7 +2874,11 @@ function ShapeEdDetails::onAddMeshFromFile( %this, %path )
 {
    if ( %path $= "" )
    {
+	  // ATTENTION! From Torque
       getLoadFormatFilename( %this @ ".onAddMeshFromFile", %this.lastPath );
+      ///////
+      //getLoadFilename( "DTS Files|*.dts|COLLADA Files|*.dae|Google Earth Files|*.kmz", %this @ ".onAddMeshFromFile", %this.lastPath );
+	  // ATTENTION! From OMNI
       return;
    }
 
@@ -3291,7 +3307,11 @@ function ShapeEdMountShapeMenu::onSelect( %this, %id, %text )
    if ( %text $= "Browse..." )
    {
       // Allow the user to browse for an external model file
+	  // ATTENTION! From Torque
       getLoadFormatFilename( %this @ ".onBrowseSelect", %this.lastPath );
+	  /////////
+      // getLoadFilename( "DTS Files|*.dts|COLLADA Files|*.dae|Google Earth Files|*.kmz", %this @ ".onBrowseSelect", %this.lastPath );
+	  // ATTENTION! From OMNI
    }
    else
    {

@@ -79,7 +79,11 @@ static LRESULT PASCAL OKBtnFolderHackProc(HWND hWnd, UINT uMsg, WPARAM wParam, L
             char *filePath;
 #ifdef UNICODE
             char fileBuf[MAX_PATH];
+<<<<<<< HEAD
             convertUTF16toUTF8(ofn->lpstrFile, fileBuf);
+=======
+            convertUTF16toUTF8(ofn->lpstrFile, fileBuf, sizeof(fileBuf));
+>>>>>>> omni_engine
             filePath = fileBuf;
 #else
             filePath = ofn->lpstrFile;
@@ -113,7 +117,11 @@ static UINT_PTR CALLBACK FolderHookProc(HWND hdlg, UINT uMsg, WPARAM wParam, LPA
             SendMessage(hParent, CDM_HIDECONTROL, cmb1, 0);
             SendMessage(hParent, CDM_HIDECONTROL, stc2, 0);
 
+<<<<<<< HEAD
             LONG oldProc = SetWindowLong(hParent, GWLP_WNDPROC, (LONG)OKBtnFolderHackProc);
+=======
+            LONG_PTR oldProc = SetWindowLongPtr( hParent, GWLP_WNDPROC, ( LONG_PTR )OKBtnFolderHackProc );
+>>>>>>> omni_engine
             SetProp(hParent, dT("OldWndProc"), (HANDLE)oldProc);
             SetProp(hParent, dT("OFN"), (HANDLE)lpofn);
          }
@@ -140,7 +148,11 @@ static UINT_PTR CALLBACK FolderHookProc(HWND hdlg, UINT uMsg, WPARAM wParam, LPA
 
                      char filePath[MAX_PATH];
 #ifdef UNICODE
+<<<<<<< HEAD
                      convertUTF16toUTF8(buf, filePath);
+=======
+                     convertUTF16toUTF8(buf, filePath, sizeof(filePath));
+>>>>>>> omni_engine
 #else
                      dStrcpy( filePath, buf );
 #endif
@@ -158,7 +170,11 @@ static UINT_PTR CALLBACK FolderHookProc(HWND hdlg, UINT uMsg, WPARAM wParam, LPA
                            
 #ifdef UNICODE
                            char buf2[MAX_PATH];
+<<<<<<< HEAD
                            convertUTF16toUTF8(buf, buf2);
+=======
+                           convertUTF16toUTF8(buf, buf2, sizeof(buf2));
+>>>>>>> omni_engine
 #else
                            char *buf2 = buf;
 #endif
@@ -324,10 +340,17 @@ bool FileDialog::Execute()
    UTF16 pszFileTitle[MAX_PATH];
    UTF16 pszDefaultExtension[MAX_PATH];
    // Convert parameters to UTF16*'s
+<<<<<<< HEAD
    convertUTF8toUTF16((UTF8 *)mData.mDefaultFile, pszFile);
    convertUTF8toUTF16((UTF8 *)mData.mDefaultPath, pszInitialDir);
    convertUTF8toUTF16((UTF8 *)mData.mTitle, pszTitle);
    convertUTF8toUTF16((UTF8 *)mData.mFilters, pszFilter);
+=======
+   convertUTF8toUTF16((UTF8 *)mData.mDefaultFile, pszFile, sizeof(pszFile));
+   convertUTF8toUTF16((UTF8 *)mData.mDefaultPath, pszInitialDir, sizeof(pszInitialDir));
+   convertUTF8toUTF16((UTF8 *)mData.mTitle, pszTitle, sizeof(pszTitle));
+   convertUTF8toUTF16((UTF8 *)mData.mFilters, pszFilter, sizeof(pszFilter) );
+>>>>>>> omni_engine
 #else
    // Not Unicode, All char*'s!
    char pszFile[MAX_PATH];
@@ -442,7 +465,11 @@ bool FileDialog::Execute()
    // Handle Result Properly for Unicode as well as ANSI
 #ifdef UNICODE
    if(pszFileTitle[0] || ! ( mData.mStyle & FileDialogData::FDS_OPEN && mData.mStyle & FileDialogData::FDS_MULTIPLEFILES ))
+<<<<<<< HEAD
       convertUTF16toUTF8( (UTF16*)pszFile, pszResult);
+=======
+      convertUTF16toUTF8( (UTF16*)pszFile, (UTF8*)pszResult, sizeof(pszResult));
+>>>>>>> omni_engine
    else
       convertUTF16toUTF8DoubleNULL( (UTF16*)pszFile, (UTF8*)pszResult, sizeof(pszResult));
 #else
@@ -946,3 +973,75 @@ void OpenFolderDialog::initPersistFields()
 }
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnFileDialog_Execute(char * x__object)
+{
+FileDialog* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->Execute();
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

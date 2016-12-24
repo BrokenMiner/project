@@ -64,6 +64,8 @@ class SFXSource : public SimGroup
       typedef SimGroup Parent;
          
       friend class SFXSystem; // _init
+
+	   DECLARE_CALLBACK( void, onMarkerPassed, (const char* idString) );
          
    protected:
 
@@ -382,7 +384,11 @@ class SFXSource : public SimGroup
 
       /// We overload this to disable creation of 
       /// a source via script 'new'.
+<<<<<<< HEAD
       virtual bool processArguments( S32 argc, ConsoleValueRef *argv );
+=======
+      virtual bool processArguments( S32 argc, const char **argv );
+>>>>>>> omni_engine
       
       // Console getters/setters.
       static bool _setDescription( void *obj, const char *index, const char *data );
@@ -434,7 +440,11 @@ class SFXSource : public SimGroup
       virtual bool isVirtualized() const { return false; }
       
       /// Returns true if this is a looping source.
+<<<<<<< HEAD
       bool isLooping() const { return mDescription.isValid() && mDescription->mIsLooping; }
+=======
+      bool isLooping() const { return mDescription->mIsLooping; }
+>>>>>>> omni_engine
 
       /// @}
       

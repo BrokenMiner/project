@@ -173,7 +173,11 @@ public:
       inline bool hasValidTex() const
       {
          TextureTable::ConstIterator iter = mTextures.begin();
+<<<<<<< HEAD
          for (; iter != mTextures.end(); ++iter)
+=======
+         for ( ; iter != mTextures.end(); iter++ )
+>>>>>>> omni_engine
          {
             if ( iter->value.isValid() )
                return true;
@@ -199,12 +203,18 @@ public:
    // Data
    //-----------------------------------------------------------------------
    FileName mDiffuseMapFilename[MAX_STAGES];
+<<<<<<< HEAD
    bool     mAccuEnabled[MAX_STAGES];
+=======
+   //Sahara   
+   String   mAccuMapFilename[MAX_STAGES];
+>>>>>>> omni_engine
    F32      mAccuScale[MAX_STAGES];
    F32      mAccuDirection[MAX_STAGES];
    F32      mAccuStrength[MAX_STAGES];
    F32      mAccuCoverage[MAX_STAGES];
    F32      mAccuSpecular[MAX_STAGES];
+   //Sahara   
    FileName mOverlayMapFilename[MAX_STAGES];
    FileName mLightMapFilename[MAX_STAGES];
    FileName mToneMapFilename[MAX_STAGES];

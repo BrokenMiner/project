@@ -52,6 +52,7 @@ class GuiShapeNameHud : public GuiControl {
    ColorF   mTextColor;
    ColorF   mLabelFillColor;
    ColorF   mLabelFrameColor;
+   Point2I   mLabelPadding;
 
    F32      mVerticalOffset;
    F32      mDistanceFade;
@@ -60,7 +61,25 @@ class GuiShapeNameHud : public GuiControl {
    bool     mShowLabelFrame;
    bool     mShowLabelFill;
 
+<<<<<<< HEAD
    Point2I  mLabelPadding;
+=======
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+   
+   /// Copy information
+   ColorF mTextColorCopy;
+   ColorF mFrameColorCopy;
+   ColorF mShapeNameFillColorCopy;
+
+   void applyProfileSettings();
+
+   void copyProfileSettings();
+
+   void resetProfileSettings();
+
+   // @Copyright end
+>>>>>>> omni_engine
 
 protected:
    void drawName( Point2I offset, const char *buf, F32 opacity);
@@ -72,6 +91,7 @@ public:
    virtual void onRender(Point2I offset, const RectI &updateRect);
 
    static void initPersistFields();
+   void onStaticModified( const char *slotName, const char *newValue );    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    DECLARE_CONOBJECT( GuiShapeNameHud );
    DECLARE_CATEGORY( "Gui Game" );
    DECLARE_DESCRIPTION( "Displays name and damage of ShapeBase objects in its bounds.\n"
@@ -117,11 +137,16 @@ GuiShapeNameHud::GuiShapeNameHud()
 {
    mFillColor.set( 0.25f, 0.25f, 0.25f, 0.25f );
    mFrameColor.set( 0, 1, 0, 1 );
+<<<<<<< HEAD
    mLabelFillColor.set( 0.25f, 0.25f, 0.25f, 0.25f );
    mLabelFrameColor.set( 0, 1, 0, 1 );
    mTextColor.set( 0, 1, 0, 1 );
    mShowFrame = mShowFill = true;
    mShowLabelFrame = mShowLabelFill = false;
+=======
+   mTextColor.set( 0, 1, 0, 1 );
+   mShowFrame = mShowFill = true;
+>>>>>>> omni_engine
    mVerticalOffset = 0.5f;
    mDistanceFade = 0.1f;
    mLabelPadding.set(0, 0);
@@ -147,8 +172,91 @@ void GuiShapeNameHud::initPersistFields()
    addField( "distanceFade", TypeF32, Offset( mDistanceFade, GuiShapeNameHud ), "Visibility distance (how far the player must be from the ShapeBase object in focus) for this control to render." );
    endGroup("Misc");
    Parent::initPersistFields();
+<<<<<<< HEAD
 }
 
+=======
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor" );
+
+   removeField( "controlFillColor" );
+
+   removeField( "backgroundColor" );
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   removeField( "contextFillColor" );
+
+   // @Copyright end
+}
+
+//----------------------------------------------------------------------------
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiShapeNameHud::copyProfileSettings()
+{
+	if(!mProfileSettingsCopied)
+	{
+		mTextColorCopy = mTextColor;
+		mShapeNameFillColorCopy = mFillColor;
+		mFrameColorCopy = mFrameColor;
+		
+		Parent::copyProfileSettings();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiShapeNameHud::resetProfileSettings()
+{
+	mFrameColor = mFrameColorCopy;
+	mTextColor = mTextColorCopy;
+	mFillColor = mShapeNameFillColorCopy;
+	
+	Parent::resetProfileSettings();
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiShapeNameHud::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   //Set the alpha value
+   if(mTextColor)
+	   mTextColor.alpha = mTextColorCopy.alpha *mRenderAlpha;
+   if(mFrameColor)
+	   mFrameColor.alpha = mFrameColorCopy.alpha * mRenderAlpha;
+   if(mFillColor)
+	   mFillColor.alpha = mShapeNameFillColorCopy.alpha * mRenderAlpha;
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiShapeNameHud::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "textColor" ) || !dStricmp( slotName, "frameColor" ) || !dStricmp( slotName, "fillColor" ))
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+	
+		if( !dStricmp( slotName, "textColor" ) )
+			mTextColorCopy = color;
+		else if( !dStricmp( slotName, "frameColor" ) )
+			mFrameColorCopy = color;
+		else if( !dStricmp( slotName, "fillColor" ) )
+			mShapeNameFillColorCopy = color;
+	}
+}
+
+// @Copyright end
+>>>>>>> omni_engine
 
 //----------------------------------------------------------------------------
 /// Core rendering method for this control.
@@ -185,9 +293,15 @@ void GuiShapeNameHud::onRender( Point2I, const RectI &updateRect)
    cam.getColumn(3, &camPos);
    cam.getColumn(1, &camDir);
 
+<<<<<<< HEAD
    F32 camFovCos;
    conn->getControlCameraFov(&camFovCos);
    camFovCos = mCos(mDegToRad(camFovCos) / 2);
+=======
+   F32 camFov;
+   conn->getControlCameraFov(&camFov);
+   camFov = mDegToRad(camFov) / 2;
+>>>>>>> omni_engine
 
    // Visible distance info & name fading
    F32 visDistance = gClientSceneGraph->getVisibleDistance();
@@ -196,7 +310,11 @@ void GuiShapeNameHud::onRender( Point2I, const RectI &updateRect)
 
    // Collision info. We're going to be running LOS tests and we
    // don't want to collide with the control object.
+<<<<<<< HEAD
    static U32 losMask = TerrainObjectType | ShapeBaseObjectType | StaticObjectType;
+=======
+   static U32 losMask = TerrainObjectType | ShapeBaseObjectType;
+>>>>>>> omni_engine
    control->disableCollision();
 
    // All ghosted objects are added to the server connection group,
@@ -239,7 +357,11 @@ void GuiShapeNameHud::onRender( Point2I, const RectI &updateRect)
             // projection and box test.
             shapeDir.normalize();
             F32 dot = mDot(shapeDir, camDir);
+<<<<<<< HEAD
             if (dot < camFovCos)
+=======
+            if (dot < camFov)
+>>>>>>> omni_engine
                continue;
 
             // Test to see if it's behind something, and we want to
@@ -301,6 +423,7 @@ void GuiShapeNameHud::drawName(Point2I offset, const char *name, F32 opacity)
    offset.x -= width / 2;
    offset.y -= height / 2;
 
+<<<<<<< HEAD
    GFXDrawUtil* drawUtil = GFX->getDrawUtil();
 
    // Background fill first
@@ -316,5 +439,20 @@ void GuiShapeNameHud::drawName(Point2I offset, const char *name, F32 opacity)
    // Border last
    if (mShowLabelFrame)
       drawUtil->drawRect(RectI(offset, extent), mLabelFrameColor);
+=======
+   // Background fill first
+   if (mShowLabelFill)
+      GFX->getDrawUtil()->drawRectFill(RectI(offset, extent), mLabelFillColor);
+
+   // Deal with opacity and draw.
+   mTextColor.alpha = opacity;
+   GFX->getDrawUtil()->setBitmapModulation(mTextColor);
+   GFX->getDrawUtil()->drawText(mProfile->mFont, offset + mLabelPadding, name);
+   GFX->getDrawUtil()->clearBitmapModulation();
+
+   // Border last
+   if (mShowLabelFrame)
+      GFX->getDrawUtil()->drawRect(RectI(offset, extent), mLabelFrameColor);
+>>>>>>> omni_engine
 }
 

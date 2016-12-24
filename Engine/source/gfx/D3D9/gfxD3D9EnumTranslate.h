@@ -55,7 +55,11 @@ extern _D3DDECLTYPE GFXD3D9DeclType[GFXDeclType_COUNT];
 
 #define GFXREVERSE_LOOKUP( tablearray, enumprefix, val ) \
    for( S32 i = enumprefix##_FIRST; i < enumprefix##_COUNT; i++ ) \
+<<<<<<< HEAD
       if( (S32)tablearray[i] == val ) \
+=======
+      if( (S32)tablearray##[i] == val ) \
+>>>>>>> omni_engine
       { \
          val = i; \
          break; \

@@ -199,8 +199,10 @@
             Extent = "86 18";
             text = "Actions";
          };
-         new GuiStackControl()
+         new GuiFlexibleArrayControl()
          {
+            colSpacing = 2;
+            rowSpacing = 2;
             internalName = "SelectActions";
             position = "7 21";
             extent = "190 64";
@@ -267,7 +269,7 @@
                profile = "GuiCheckBoxProfile";
                visible = "1";
                active = "1";
-               variable = "NavEditorGui.playSoundWhenDone";
+               variable = "$Nav::Editor::playSoundWhenDone";
                tooltipProfile = "GuiToolTipProfile";
                hovertime = "1000";
                isContainer = "0";
@@ -275,8 +277,10 @@
                canSaveDynamicFields = "0";
             };
          };
-         new GuiStackControl()
+         new GuiFlexibleArrayControl()
          {
+            colSpacing = 2;
+            rowSpacing = 2;
             internalName = "LinkActions";
             position = "7 21";
             extent = "190 64";
@@ -291,8 +295,10 @@
                command = "NavEditorGui.buildLinks();";
             };
          };
-         new GuiStackControl()
+         new GuiFlexibleArrayControl()
          {
+            colSpacing = 2;
+            rowSpacing = 2;
             internalName = "CoverActions";
             position = "7 21";
             extent = "190 64";
@@ -316,8 +322,10 @@
                command = "NavEditorGui.deleteCoverPoints();";
             };
          };
-         new GuiStackControl()
+         new GuiFlexibleArrayControl()
          {
+            colSpacing = 2;
+            rowSpacing = 2;
             internalName = "TileActions";
             position = "7 21";
             extent = "190 64";
@@ -332,8 +340,10 @@
                command = "NavEditorGui.buildTile();";
             };
          };
-         new GuiStackControl()
+         new GuiFlexibleArrayControl()
          {
+            colSpacing = 2;
+            rowSpacing = 2;
             internalName = "TestActions";
             position = "7 21";
             extent = "190 64";
@@ -347,53 +357,41 @@
                text = "Spawn";
                command = "NavEditorGui.spawnPlayer();";
             };
-            new GuiControl() {
-               profile = "GuiDefaultProfile";
-               Extent = "190 18";
-
-               new GuiButtonCtrl() {
-                  Profile = "GuiButtonProfile";
-                  buttonType = "PushButton";
-                  HorizSizing = "right";
-                  VertSizing = "bottom";
-                  Extent = "90 18";
-                  text = "Delete";
-                  command = "NavEditorGui.getPlayer().delete();";
-               };
-               new GuiButtonCtrl() {
-                  position = "100 0";
-                  Profile = "GuiButtonProfile";
-                  buttonType = "PushButton";
-                  HorizSizing = "right";
-                  VertSizing = "bottom";
-                  Extent = "90 18";
-                  text = "Find cover";
-                  command = "NavEditorGui.findCover();";
-               };
+            new GuiButtonCtrl() {
+               Profile = "GuiButtonProfile";
+               buttonType = "PushButton";
+               HorizSizing = "right";
+               VertSizing = "bottom";
+               Extent = "90 18";
+               text = "Delete";
+               command = "NavEditorGui.getPlayer().delete();";
             };
-            new GuiControl() {
-               profile = "GuiDefaultProfile";
-               Extent = "190 18";
-
-               new GuiButtonCtrl() {
-                  Profile = "GuiButtonProfile";
-                  buttonType = "PushButton";
-                  HorizSizing = "right";
-                  VertSizing = "bottom";
-                  Extent = "90 18";
-                  text = "Follow";
-                  command = "NavEditorGui.followObject();";
-               };
-               new GuiButtonCtrl() {
-                  position = "100 0";
-                  Profile = "GuiButtonProfile";
-                  buttonType = "PushButton";
-                  HorizSizing = "right";
-                  VertSizing = "bottom";
-                  Extent = "90 18";
-                  text = "Stop";
-                  command = "NavEditorGui.getPlayer().stop();";
-               };
+            new GuiButtonCtrl() {
+               Profile = "GuiButtonProfile";
+               buttonType = "PushButton";
+               HorizSizing = "right";
+               VertSizing = "bottom";
+               Extent = "90 18";
+               text = "Find cover";
+               command = "NavEditorGui.findCover();";
+            };
+            new GuiButtonCtrl() {
+               Profile = "GuiButtonProfile";
+               buttonType = "PushButton";
+               HorizSizing = "right";
+               VertSizing = "bottom";
+               Extent = "90 18";
+               text = "Follow";
+               command = "NavEditorGui.followObject();";
+            };
+            new GuiButtonCtrl() {
+               Profile = "GuiButtonProfile";
+               buttonType = "PushButton";
+               HorizSizing = "right";
+               VertSizing = "bottom";
+               Extent = "90 18";
+               text = "Stop";
+               command = "NavEditorGui.getPlayer().stop();";
             };
          };
       };
@@ -469,15 +467,17 @@
             dividerMargin = "5";
          };
          
-         new GuiStackControl() {
+         new GuiFlexibleArrayControl() {
+            colSpacing = 2;
+            rowSpacing = 2;
             internalName = "LinkProperties";
             position = "7 21";
             extent = "186 64";
             padding = "2 2 2 2";
             
             new GuiCheckBoxCtrl() {
-               internalName = "LinkWalkFlag";
-               class = "NavMeshLinkFlagButton";
+			   internalName = "LinkWalkFlag";
+			   class = "NavMeshLinkFlagButton";
                text = " Walk";
                buttonType = "ToggleButton";
                useMouseEvents = "0";
@@ -489,15 +489,15 @@
                visible = "1";
                active = "0";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "This link is just ordinary flat ground.";
+			   toolTip = "This link is just ordinary flat ground.";
                hovertime = "1000";
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
             };
             new GuiCheckBoxCtrl() {
-               internalName = "LinkJumpFlag";
-               class = "NavMeshLinkFlagButton";
+			   internalName = "LinkJumpFlag";
+			   class = "NavMeshLinkFlagButton";
                text = " Jump";
                buttonType = "ToggleButton";
                useMouseEvents = "0";
@@ -516,8 +516,8 @@
                canSaveDynamicFields = "0";
             };
             new GuiCheckBoxCtrl() {
-               internalName = "LinkDropFlag";
-               class = "NavMeshLinkFlagButton";
+			   internalName = "LinkDropFlag";
+			   class = "NavMeshLinkFlagButton";
                text = " Drop";
                buttonType = "ToggleButton";
                useMouseEvents = "0";
@@ -529,15 +529,15 @@
                visible = "1";
                active = "0";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "Does this link involve a significant drop?";
+			   toolTip = "Does this link involve a significant drop?";
                hovertime = "1000";
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
             };
             new GuiCheckBoxCtrl() {
-               internalName = "LinkLedgeFlag";
-               class = "NavMeshLinkFlagButton";
+			   internalName = "LinkLedgeFlag";
+			   class = "NavMeshLinkFlagButton";
                text = " Ledge";
                buttonType = "ToggleButton";
                useMouseEvents = "0";
@@ -549,15 +549,15 @@
                visible = "1";
                active = "0";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "Should the character jump at the next ledge?";
+			   toolTip = "Should the character jump at the next ledge?";
                hovertime = "1000";
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
             };
             new GuiCheckBoxCtrl() {
-               internalName = "LinkClimbFlag";
-               class = "NavMeshLinkFlagButton";
+			   internalName = "LinkClimbFlag";
+			   class = "NavMeshLinkFlagButton";
                text = " Climb";
                buttonType = "ToggleButton";
                useMouseEvents = "0";
@@ -569,15 +569,15 @@
                visible = "1";
                active = "0";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "Does this link involve climbing?";
+			   toolTip = "Does this link involve climbing?";
                hovertime = "1000";
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
             };
             new GuiCheckBoxCtrl() {
-               internalName = "LinkTeleportFlag";
-               class = "NavMeshLinkFlagButton";
+			   internalName = "LinkTeleportFlag";
+			   class = "NavMeshLinkFlagButton";
                text = " Teleport";
                buttonType = "ToggleButton";
                useMouseEvents = "0";
@@ -589,14 +589,16 @@
                visible = "1";
                active = "0";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "Is this link a teleporter?";
+			   toolTip = "Is this link a teleporter?";
                hovertime = "1000";
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
             };
          };
-         new GuiStackControl() {
+         new GuiFlexibleArrayControl() {
+            colSpacing = 2;
+            rowSpacing = 2;
             internalName = "TileProperties";
             position = "7 21";
             extent = "186 64";
@@ -618,7 +620,7 @@
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
-               variable = "$Nav::Editor::renderInput";
+			   variable = "$Nav::Editor::renderInput";
             };
             new GuiCheckBoxCtrl() {
                text = " Display voxels";
@@ -636,22 +638,24 @@
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
-               variable = "$Nav::Editor::renderVoxels";
+			   variable = "$Nav::Editor::renderVoxels";
             };
          };
-         new GuiStackControl() {
+         new GuiFlexibleArrayControl() {
+            colSpacing = 2;
+            rowSpacing = 2;
             internalName = "TestProperties";
             position = "7 21";
             extent = "186 64";
             padding = "2 2 2 2";
             
 			new GuiTextCtrl() {
-               text = "Cover";
+			   text = "Cover";
                profile = "GuiTextProfile";
                extent = "180 20";
                minExtent = "8 2";
                visible = "1";
-            };
+			};
             new GuiTextEditCtrl() {
                internalName = "CoverRadius";
                text = "10";
@@ -660,9 +664,9 @@
                minExtent = "8 2";
                visible = "1";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "Radius for cover-finding.";
+			   toolTip = "Radius for cover-finding.";
             };
-            new GuiTextEditCtrl() {
+			new GuiTextEditCtrl() {
                internalName = "CoverPosition";
                text = "LocalClientConnection.getControlObject().getPosition();";
                profile = "GuiTextEditProfile";
@@ -670,15 +674,15 @@
                minExtent = "8 2";
                visible = "1";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "Position to find cover from.";
-            };
-            new GuiTextCtrl() {
-               text = "Follow";
+			   toolTip = "Position to find cover from.";
+			};
+			new GuiTextCtrl() {
+			   text = "Follow";
                profile = "GuiTextProfile";
                extent = "180 20";
                minExtent = "8 2";
                visible = "1";
-            };
+			};
             new GuiTextEditCtrl() {
                internalName = "FollowRadius";
                text = "1";
@@ -687,9 +691,9 @@
                minExtent = "8 2";
                visible = "1";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "Radius for following.";
+			   toolTip = "Radius for following.";
             };
-            new GuiTextEditCtrl() {
+			new GuiTextEditCtrl() {
                internalName = "FollowObject";
                text = "LocalClientConnection.player";
                profile = "GuiTextEditProfile";
@@ -697,18 +701,18 @@
                minExtent = "8 2";
                visible = "1";
                tooltipProfile = "GuiToolTipProfile";
-               toolTip = "Object to follow.";
-            };
-            new GuiTextCtrl() {
-               text = "Movement";
+			   toolTip = "Object to follow.";
+			};
+			new GuiTextCtrl() {
+			   text = "Movement";
                profile = "GuiTextProfile";
                extent = "180 20";
                minExtent = "8 2";
                visible = "1";
-            };
+			};
             new GuiCheckBoxCtrl() {
-               internalName = "LinkWalkFlag";
-               class = "NavMeshTestFlagButton";
+			   internalName = "LinkWalkFlag";
+			   class = "NavMeshTestFlagButton";
                text = " Walk";
                buttonType = "ToggleButton";
                useMouseEvents = "0";

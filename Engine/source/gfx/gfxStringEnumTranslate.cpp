@@ -87,9 +87,15 @@ _STRING_VALUE_LOOKUP_FXN(GFXStringBlendOp);
 
 #define VALIDATE_LOOKUPTABLE( tablearray, enumprefix ) \
    for( S32 i = enumprefix##_FIRST; i < enumprefix##_COUNT; i++ ) \
+<<<<<<< HEAD
       if( (intptr_t)tablearray[i] == GFX_UNINIT_VAL ) \
          Con::warnf( "GFXStringEnumTranslate: Unassigned value in " #tablearray ": %i", i ); \
       else if( (intptr_t)tablearray[i] == GFX_UNSUPPORTED_VAL ) \
+=======
+      if( (S32)tablearray[i] == GFX_UNINIT_VAL ) \
+         Con::warnf( "GFXStringEnumTranslate: Unassigned value in " #tablearray ": %i", i ); \
+      else if( (S32)tablearray[i] == GFX_UNSUPPORTED_VAL ) \
+>>>>>>> omni_engine
          Con::warnf( "GFXStringEnumTranslate: Unsupported value in " #tablearray ": %i", i );
 
 //------------------------------------------------------------------------------

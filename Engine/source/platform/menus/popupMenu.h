@@ -64,6 +64,15 @@ public:
    
    DECLARE_CONOBJECT(PopupMenu);
 
+	DECLARE_CALLBACK( void, onAdd, () );
+	DECLARE_CALLBACK( void, onRemove, () );
+	DECLARE_CALLBACK( void, onMenuSelect, () );
+   DECLARE_CALLBACK( void, onRemoveFromMenuBar, (const char* canvas) );
+	DECLARE_CALLBACK( void, onAttachToMenuBar, (const char* canvas, const char* pos, const char* title) );
+   DECLARE_CALLBACK( bool, onMessageReceived, (const char* queue, const char* event, const char* data) );
+
+	DECLARE_CALLBACK( bool, onSelectItem, (S32 pos,const char* text));
+
    static void initPersistFields();
 
    virtual bool onAdd();
@@ -85,11 +94,19 @@ public:
    /// returns the menu item's ID, or -1 on failure.
    /// implementd on a per-platform basis.
    /// TODO: factor out common code
+<<<<<<< HEAD
    S32 insertItem(S32 pos, const char *title, const char* accelerator, const char* cmd);
 
    /// Sets the name title and accelerator for 
    /// an existing item.
    bool setItem(S32 pos, const char *title, const char* accelerator, const char* cmd);
+=======
+   S32 insertItem(S32 pos, const char *title, const char* accelerator);
+
+   /// Sets the name title and accelerator for 
+   /// an existing item.
+   bool setItem(S32 pos, const char *title, const char* accelerator);
+>>>>>>> omni_engine
 
    /// pass NULL for @p title to insert a separator
    /// returns the menu item's ID, or -1 on failure.

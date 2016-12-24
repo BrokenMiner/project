@@ -570,7 +570,11 @@ bool CodeBlock::compile(const char *codeFileName, StringTableEntry fileName, con
 
 }
 
+<<<<<<< HEAD
 ConsoleValueRef CodeBlock::compileExec(StringTableEntry fileName, const char *inString, bool noCalls, S32 setFrame)
+=======
+const char *CodeBlock::compileExec(StringTableEntry fileName, const char *inString, bool noCalls, S32 setFrame)
+>>>>>>> omni_engine
 {
 	AssertFatal(Con::isMainThread(), "Compiling code on a secondary thread");
 	
@@ -635,7 +639,11 @@ ConsoleValueRef CodeBlock::compileExec(StringTableEntry fileName, const char *in
    if(!gStatementList)
    {
       delete this;
+<<<<<<< HEAD
       return ConsoleValueRef();
+=======
+      return "";
+>>>>>>> omni_engine
    }
 
    resetTables();

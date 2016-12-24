@@ -77,7 +77,12 @@ TEST_FIX(ThreadPool, BasicAPI)
       pool->queueWorkItem(item);
    }
 
+<<<<<<< HEAD
    pool->waitForAllItems();
+=======
+   // Wait for all items to complete.
+   pool->flushWorkItems();
+>>>>>>> omni_engine
 
    // Verify.
    for (U32 i = 0; i < numItems; i++)

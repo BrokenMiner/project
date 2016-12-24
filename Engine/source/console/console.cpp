@@ -39,10 +39,16 @@
 #include "console/engineAPI.h"
 #include <stdarg.h>
 #include "platform/threads/mutex.h"
+<<<<<<< HEAD
 
 
 extern StringStack STR;
 extern ConsoleValueStack CSTK;
+=======
+#include "OMNI/Omni.h"
+
+extern StringStack STR;
+>>>>>>> omni_engine
 
 ConsoleDocFragment* ConsoleDocFragment::smFirst;
 ExprEvalState gEvalState;
@@ -396,6 +402,30 @@ bool isActive()
 {
    return active;
 }
+//WLE Added a couple functions to simplify.
+S32 getFileCRC(const char* filename)
+{
+		char sgScriptFilenameBuffer[1024];
+		String cleanfilename(Torque::Path::CleanSeparators(filename));
+		Con::expandScriptFilename(sgScriptFilenameBuffer, sizeof(sgScriptFilenameBuffer), cleanfilename.c_str());
+		Torque::Path givenPath(Torque::Path::CompressPath(sgScriptFilenameBuffer));
+		Torque::FS::FileNodeRef fileRef = Torque::FS::GetFileNode( givenPath );
+		if ( fileRef == NULL )
+		{
+			Con::errorf("getFileCRC() - could not access file: [%s]", givenPath.getFullPath().c_str() );
+			return 0;
+		}
+		else
+			return fileRef->getChecksum();
+}
+
+bool deleteFile(const char* filename)
+{
+	char filePath[1024];
+	Platform::makeFullPathName(filename, filePath, sizeof(filePath));
+	return dFileDelete(filePath);
+}
+//WLE End
 
 bool isMainThread()
 {
@@ -712,11 +742,18 @@ void errorf(const char* fmt,...)
 
 //---------------------------------------------------------------------------
 
+<<<<<<< HEAD
 bool getVariableObjectField(const char *name, SimObject **object, const char **field)
 {
    // get the field info from the object..
    const char *dot = dStrchr(name, '.');
    if(name[0] != '$' && dot)
+=======
+void setVariable(const char *name, const char *value)
+{
+   // get the field info from the object..
+   if(name[0] != '$' && dStrchr(name, '.') && !isFunction(name))
+>>>>>>> omni_engine
    {
       S32 len = dStrlen(name);
       AssertFatal(len < sizeof(scratchBuffer)-1, "Sim::getVariable - name too long");
@@ -725,17 +762,29 @@ bool getVariableObjectField(const char *name, SimObject **object, const char **f
       char * token = dStrtok(scratchBuffer, ".");
       SimObject * obj = Sim::findObject(token);
       if(!obj)
+<<<<<<< HEAD
          return false;
 
       token = dStrtok(0, ".\0");
       if(!token)
          return false;
+=======
+         return;
+
+      token = dStrtok(0, ".\0");
+      if(!token)
+         return;
+>>>>>>> omni_engine
 
       while(token != NULL)
       {
          const char * val = obj->getDataField(StringTable->insert(token), 0);
          if(!val)
+<<<<<<< HEAD
             return false;
+=======
+            return;
+>>>>>>> omni_engine
 
          char *fieldToken = token;
          token = dStrtok(0, ".\0");
@@ -743,6 +792,7 @@ bool getVariableObjectField(const char *name, SimObject **object, const char **f
          {
             obj = Sim::findObject(token);
             if(!obj)
+<<<<<<< HEAD
                return false;
          }
          else
@@ -750,10 +800,18 @@ bool getVariableObjectField(const char *name, SimObject **object, const char **f
             *object = obj;
             *field = fieldToken;
             return true;
+=======
+               return;
+         }
+         else
+         {
+            obj->setDataField(StringTable->insert(fieldToken), 0, value);
+>>>>>>> omni_engine
          }
       }
    }
 
+<<<<<<< HEAD
    return false;
 }
 
@@ -809,6 +867,10 @@ void setVariable(const char *name, const char *value)
       name = prependDollar(name);
       gEvalState.globalVars.setVariable(StringTable->insert(name), value);
    }
+=======
+   name = prependDollar(name);
+   gEvalState.globalVars.setVariable(StringTable->insert(name), value);
+>>>>>>> omni_engine
 }
 
 void setLocalVariable(const char *name, const char *value)
@@ -819,6 +881,7 @@ void setLocalVariable(const char *name, const char *value)
 
 void setBoolVariable(const char *varName, bool value)
 {
+<<<<<<< HEAD
    SimObject *obj = NULL;
    const char *objField = NULL;
 
@@ -832,10 +895,14 @@ void setBoolVariable(const char *varName, bool value)
       Dictionary::Entry *entry = getAddVariableEntry(varName);
 	  entry->setStringValue(value ? "1" : "0");
    }
+=======
+   setVariable(varName, value ? "1" : "0");
+>>>>>>> omni_engine
 }
 
 void setIntVariable(const char *varName, S32 value)
 {
+<<<<<<< HEAD
    SimObject *obj = NULL;
    const char *objField = NULL;
 
@@ -851,10 +918,16 @@ void setIntVariable(const char *varName, S32 value)
       Dictionary::Entry *entry = getAddVariableEntry(varName);
       entry->setIntValue(value);
    }
+=======
+   char scratchBuffer[32];
+   dSprintf(scratchBuffer, sizeof(scratchBuffer), "%d", value);
+   setVariable(varName, scratchBuffer);
+>>>>>>> omni_engine
 }
 
 void setFloatVariable(const char *varName, F32 value)
 {
+<<<<<<< HEAD
    SimObject *obj = NULL;
    const char *objField = NULL;
 
@@ -870,6 +943,11 @@ void setFloatVariable(const char *varName, F32 value)
       Dictionary::Entry *entry = getAddVariableEntry(varName);
 	  entry->setFloatValue(value);
    }
+=======
+   char scratchBuffer[32];
+   dSprintf(scratchBuffer, sizeof(scratchBuffer), "%g", value);
+   setVariable(varName, scratchBuffer);
+>>>>>>> omni_engine
 }
 
 //---------------------------------------------------------------------------
@@ -920,6 +998,7 @@ void stripColorChars(char* line)
    }
 }
 
+<<<<<<< HEAD
 // 
 const char *getObjectTokenField(const char *name)
 {
@@ -928,6 +1007,15 @@ const char *getObjectTokenField(const char *name)
    {
       S32 len = dStrlen(name);
       AssertFatal(len < sizeof(scratchBuffer)-1, "Sim::getVariable - object name too long");
+=======
+const char *getVariable(const char *name)
+{
+   // get the field info from the object..
+   if(name[0] != '$' && dStrchr(name, '.') && !isFunction(name))
+   {
+      S32 len = dStrlen(name);
+      AssertFatal(len < sizeof(scratchBuffer)-1, "Sim::getVariable - name too long");
+>>>>>>> omni_engine
       dMemcpy(scratchBuffer, name, len+1);
 
       char * token = dStrtok(scratchBuffer, ".");
@@ -957,6 +1045,7 @@ const char *getObjectTokenField(const char *name)
       }
    }
 
+<<<<<<< HEAD
    return NULL;
 }
 
@@ -972,6 +1061,10 @@ const char *getVariable(const char *name)
       Dictionary::Entry *entry = getVariableEntry(name);
       return entry ? entry->getStringValue() : "";
    }
+=======
+   name = prependDollar(name);
+   return gEvalState.globalVars.getVariable(StringTable->insert(name));
+>>>>>>> omni_engine
 }
 
 const char *getLocalVariable(const char *name)
@@ -983,6 +1076,7 @@ const char *getLocalVariable(const char *name)
 
 bool getBoolVariable(const char *varName, bool def)
 {
+<<<<<<< HEAD
    const char *objField = getObjectTokenField(varName);
    if (objField)
    {
@@ -994,10 +1088,15 @@ bool getBoolVariable(const char *varName, bool def)
       objField = entry ? entry->getStringValue() : "";
       return *objField ? dAtob(objField) : def;
    }
+=======
+   const char *value = getVariable(varName);
+   return *value ? dAtob(value) : def;
+>>>>>>> omni_engine
 }
 
 S32 getIntVariable(const char *varName, S32 def)
 {
+<<<<<<< HEAD
    const char *objField = getObjectTokenField(varName);
    if (objField)
    {
@@ -1008,10 +1107,15 @@ S32 getIntVariable(const char *varName, S32 def)
       Dictionary::Entry *entry = getVariableEntry(varName);
       return entry ? entry->getIntValue() : def;
    }
+=======
+   const char *value = getVariable(varName);
+   return *value ? dAtoi(value) : def;
+>>>>>>> omni_engine
 }
 
 F32 getFloatVariable(const char *varName, F32 def)
 {
+<<<<<<< HEAD
    const char *objField = getObjectTokenField(varName);
    if (objField)
    {
@@ -1022,6 +1126,23 @@ F32 getFloatVariable(const char *varName, F32 def)
       Dictionary::Entry *entry = getVariableEntry(varName);
 	   return entry ? entry->getFloatValue() : def;
    }
+=======
+   const char *value = getVariable(varName);
+   return *value ? dAtof(value) : def;
+}
+
+Point3F getPoint3FVariable(const char *varName, Point3F def)
+{
+   const char *value = getVariable(varName);
+   if(*value)
+   {
+      Point3F dptr(def);
+      dSscanf(value, "%g %g %g", &dptr.x, &dptr.y, &dptr.z);
+      return dptr;
+   }
+   
+   return def;
+>>>>>>> omni_engine
 }
 
 //---------------------------------------------------------------------------
@@ -1138,11 +1259,16 @@ void addCommand( const char *name,BoolCallback cb,const char *usage, S32 minArgs
    Namespace::global()->addCommand( StringTable->insert(name), cb, usage, minArgs, maxArgs, isToolOnly, header );
 }
 
+<<<<<<< HEAD
 ConsoleValueRef evaluate(const char* string, bool echo, const char *fileName)
 {
    ConsoleStackFrameSaver stackSaver;
    stackSaver.save();
 
+=======
+const char *evaluate(const char* string, bool echo, const char *fileName)
+{
+>>>>>>> omni_engine
    if (echo)
    {
       if (string[0] == '%')
@@ -1159,11 +1285,16 @@ ConsoleValueRef evaluate(const char* string, bool echo, const char *fileName)
 }
 
 //------------------------------------------------------------------------------
+<<<<<<< HEAD
 ConsoleValueRef evaluatef(const char* string, ...)
 {
    ConsoleStackFrameSaver stackSaver;
    stackSaver.save();
 
+=======
+const char *evaluatef(const char* string, ...)
+{
+>>>>>>> omni_engine
    char buffer[4096];
    va_list args;
    va_start(args, string);
@@ -1173,6 +1304,7 @@ ConsoleValueRef evaluatef(const char* string, ...)
    return newCodeBlock->compileExec(NULL, buffer, false, 0);
 }
 
+<<<<<<< HEAD
 //------------------------------------------------------------------------------
 
 // Internal execute for global function which does not save the stack
@@ -1193,14 +1325,59 @@ ConsoleValueRef _internalExecute(S32 argc, ConsoleValueRef argv[])
 }
 
 ConsoleValueRef execute(S32 argc, ConsoleValueRef argv[])
+=======
+static char sbuffer[8000];
+
+const char *execute(S32 argc, const char *argv[])
+	{
+	if (!Winterleaf_EngineCallback::mWLE_GlobalFunction)
+		return executeScript(argc, argv);
+
+#ifdef TORQUE_MULTITHREAD
+	if(isMainThread())
+		{
+#endif
+		sbuffer[0] = 0;
+		Winterleaf_EngineCallback::mWLE_GlobalFunction(argc,argv,sbuffer);
+		return StringTable->insert(sbuffer);
+#ifdef TORQUE_MULTITHREAD
+		}
+	else
+		{
+		SimConsoleThreadExecCallback cb;
+		SimConsoleThreadExecEvent *evt = new SimConsoleThreadExecEvent(argc, argv, false, &cb);
+		Sim::postEvent(Sim::getRootGroup(), evt, Sim::getCurrentTime());
+		return cb.waitForResult();
+		}
+#endif
+	}
+
+const char *executeScript(S32 argc, const char *argv[])
+>>>>>>> omni_engine
 {
 #ifdef TORQUE_MULTITHREAD
    if(isMainThread())
    {
 #endif
+<<<<<<< HEAD
       ConsoleStackFrameSaver stackSaver;
       stackSaver.save();
 	   return _internalExecute(argc, argv);
+=======
+      Namespace::Entry *ent;
+      StringTableEntry funcName = StringTable->insert(argv[0]);
+      ent = Namespace::global()->lookup(funcName);
+
+      if(!ent)
+      {
+         warnf(ConsoleLogEntry::Script, "%s: Unknown command.", argv[0]);
+
+         // Clean up arg buffers, if any.
+         STR.clearFunctionOffset();
+         return "";
+      }
+      return ent->execute(argc, argv, &gEvalState);
+>>>>>>> omni_engine
 #ifdef TORQUE_MULTITHREAD
    }
    else
@@ -1214,6 +1391,7 @@ ConsoleValueRef execute(S32 argc, ConsoleValueRef argv[])
 #endif
 }
 
+<<<<<<< HEAD
 ConsoleValueRef execute(S32 argc, const char *argv[])
 {
    ConsoleStackFrameSaver stackSaver;
@@ -1232,6 +1410,15 @@ ConsoleValueRef _internalExecute(SimObject *object, S32 argc, ConsoleValueRef ar
       STR.clearFunctionOffset();
       return ConsoleValueRef();
    }
+=======
+//------------------------------------------------------------------------------
+//This is a WLE Function.
+const char *executeScript(SimObject *object, S32 argc, const char *argv[], bool thisCallOnly)
+{
+   static char idBuf[16];
+   if(argc < 2)
+      return "";
+>>>>>>> omni_engine
 
    // [neo, 10/05/2007 - #3010]
    // Make sure we don't get recursive calls, respect the flag!   
@@ -1240,6 +1427,7 @@ ConsoleValueRef _internalExecute(SimObject *object, S32 argc, ConsoleValueRef ar
    {
       ICallMethod *com = dynamic_cast<ICallMethod *>(object);
       if(com)
+<<<<<<< HEAD
       {
          STR.pushFrame();
          CSTK.pushFrame();
@@ -1247,12 +1435,20 @@ ConsoleValueRef _internalExecute(SimObject *object, S32 argc, ConsoleValueRef ar
          STR.popFrame();
          CSTK.popFrame();
       }
+=======
+         com->callMethodArgList(argc, argv, false);
+>>>>>>> omni_engine
    }
 
    if(object->getNamespace())
    {
+<<<<<<< HEAD
       U32 ident = object->getId();
       ConsoleValueRef oldIdent = argv[1];
+=======
+      dSprintf(idBuf, sizeof(idBuf), "%d", object->getId());
+      argv[1] = idBuf;
+>>>>>>> omni_engine
 
       StringTableEntry funcName = StringTable->insert(argv[0]);
       Namespace::Entry *ent = object->getNamespace()->lookup(funcName);
@@ -1261,6 +1457,7 @@ ConsoleValueRef _internalExecute(SimObject *object, S32 argc, ConsoleValueRef ar
       {
          //warnf(ConsoleLogEntry::Script, "%s: undefined for object '%s' - id %d", funcName, object->getName(), object->getId());
 
+<<<<<<< HEAD
          STR.clearFunctionOffset();
          return ConsoleValueRef();
       }
@@ -1339,10 +1536,182 @@ inline ConsoleValueRef _executef(S32 checkArgc, S32 argc, ConsoleValueRef *argv)
    AssertFatal(argc <= maxArg, "Too many args passed to Con::_executef(). Please update the function to handle more.");
    return execute(argc, argv);
 }
+=======
+         // Clean up arg buffers, if any.
+         STR.clearFunctionOffset();
+         return "";
+      }
+
+      // Twiddle %this argument
+      const char *oldArg1 = argv[1];
+      dSprintf(idBuf, sizeof(idBuf), "%d", object->getId());
+      argv[1] = idBuf;
+
+      SimObject *save = gEvalState.thisObject;
+      gEvalState.thisObject = object;
+      const char *ret = ent->execute(argc, argv, &gEvalState);
+      gEvalState.thisObject = save;
+
+      // Twiddle it back
+      argv[1] = oldArg1;
+
+      return ret;
+   }
+   warnf(ConsoleLogEntry::Script, "Con::execute - %d has no namespace: %s", object->getId(), argv[0]);
+   return "";
+}
+
+
+const char *execute(SimObject *object, S32 argc, const char *argv[], bool thisCallOnly)
+{
+	if (!Winterleaf_EngineCallback::mWLE_EngineCallBack)
+		return executeScript(object, argc, argv, thisCallOnly);
+
+
+   static char idBuf[16];
+   if(argc < 2)
+      return "";
+   // [neo, 10/05/2007 - #3010]
+   // Make sure we don't get recursive calls, respect the flag!   
+   // Should we be calling handlesMethod() first?
+   if( !thisCallOnly )
+   {
+      ICallMethod *com = dynamic_cast<ICallMethod *>(object);
+      if(com)
+         com->callMethodArgList(argc, argv, false);
+   }
+   //WLE Vince
+   if (Winterleaf_EngineCallback::mWLE_EngineCallBack)
+	   if (((int)object->getId())>=0)
+		   {
+		   sbuffer[0]=0;
+		   Winterleaf_EngineCallback::mWLE_EngineCallBack(object->getId(),object->getmWLE_OMNI_ARRAY_POSTION(), argc,argv,sbuffer);
+		   STR.clearFunctionOffset();
+		   return sbuffer;
+		   }
+	   
+   if(object->getNamespace())
+   {
+      dSprintf(idBuf, sizeof(idBuf), "%d", object->getId());
+      argv[1] = idBuf;
+
+      StringTableEntry funcName = StringTable->insert(argv[0]);
+      Namespace::Entry *ent = object->getNamespace()->lookup(funcName);
+
+      if(ent == NULL)
+      {
+	     //warnf(ConsoleLogEntry::Script, "%s: undefined for object '%s' - id %d", funcName, object->getName(), object->getId());
+
+         // Clean up arg buffers, if any.
+         STR.clearFunctionOffset();
+         return "";
+      }
+
+      // Twiddle %this argument
+      const char *oldArg1 = argv[1];
+      dSprintf(idBuf, sizeof(idBuf), "%d", object->getId());
+      argv[1] = idBuf;
+
+      SimObject *save = gEvalState.thisObject;
+      gEvalState.thisObject = object;
+      const char *ret = ent->execute(argc, argv, &gEvalState);
+      gEvalState.thisObject = save;
+
+      // Twiddle it back
+      argv[1] = oldArg1;
+
+      return ret;
+   }
+   warnf(ConsoleLogEntry::Script, "Con::execute - %d has no namespace: %s", object->getId(), argv[0]);
+   return "";
+}
+
+#define B( a ) const char* a = NULL
+#define A const char*
+inline const char*_executef(SimObject *obj, S32 checkArgc, S32 argc, 
+                            A a, B(b), B(c), B(d), B(e), B(f), B(g), B(h), B(i), B(j), B(k))
+{
+#undef A
+#undef B
+   const U32 maxArg = 12;
+   AssertWarn(checkArgc == argc, "Incorrect arg count passed to Con::executef(SimObject*)");
+   AssertFatal(argc <= maxArg - 1, "Too many args passed to Con::_executef(SimObject*). Please update the function to handle more.");
+   const char* argv[maxArg];
+   argv[0] = a;
+   argv[1] = a;
+   argv[2] = b;
+   argv[3] = c;
+   argv[4] = d;
+   argv[5] = e;
+   argv[6] = f;
+   argv[7] = g;
+   argv[8] = h;
+   argv[9] = i;
+   argv[10] = j;
+   argv[11] = k;
+   return execute(obj, argc+1, argv);
+}
+
+#define A const char*
+#define OBJ SimObject* obj
+const char *executef(OBJ, A a)                                    { return _executef(obj, 1, 1, a); }
+const char *executef(OBJ, A a, A b)                               { return _executef(obj, 2, 2, a, b); }
+const char *executef(OBJ, A a, A b, A c)                          { return _executef(obj, 3, 3, a, b, c); }
+const char *executef(OBJ, A a, A b, A c, A d)                     { return _executef(obj, 4, 4, a, b, c, d); }
+const char *executef(OBJ, A a, A b, A c, A d, A e)                { return _executef(obj, 5, 5, a, b, c, d, e); }
+const char *executef(OBJ, A a, A b, A c, A d, A e, A f)           { return _executef(obj, 6, 6, a, b, c, d, e, f); }
+const char *executef(OBJ, A a, A b, A c, A d, A e, A f, A g)      { return _executef(obj, 7, 7, a, b, c, d, e, f, g); }
+const char *executef(OBJ, A a, A b, A c, A d, A e, A f, A g, A h) { return _executef(obj, 8, 8, a, b, c, d, e, f, g, h); }
+const char *executef(OBJ, A a, A b, A c, A d, A e, A f, A g, A h, A i) { return _executef(obj, 9, 9, a, b, c, d, e, f, g, h, i); }
+const char *executef(OBJ, A a, A b, A c, A d, A e, A f, A g, A h, A i, A j) { return _executef(obj,10,10, a, b, c, d, e, f, g, h, i, j); }
+const char *executef(OBJ, A a, A b, A c, A d, A e, A f, A g, A h, A i, A j, A k) { return _executef(obj,11,11, a, b, c, d, e, f, g, h, i, j, k); }
+#undef A
+
+//------------------------------------------------------------------------------
+#define B( a ) const char* a = NULL
+#define A const char*
+inline const char*_executef(S32 checkArgc, S32 argc, A a, B(b), B(c), B(d), B(e), B(f), B(g), B(h), B(i), B(j))
+{
+#undef A
+#undef B
+   const U32 maxArg = 10;
+   AssertFatal(checkArgc == argc, "Incorrect arg count passed to Con::executef()");
+   AssertFatal(argc <= maxArg, "Too many args passed to Con::_executef(). Please update the function to handle more.");
+   const char* argv[maxArg];
+   argv[0] = a;
+   argv[1] = b;
+   argv[2] = c;
+   argv[3] = d;
+   argv[4] = e;
+   argv[5] = f;
+   argv[6] = g;
+   argv[7] = h;
+   argv[8] = i;
+   argv[9] = j;
+   return execute(argc, argv);
+}
+   
+#define A const char*
+const char *executef(A a)                                    { return _executef(1, 1, a); }
+const char *executef(A a, A b)                               { return _executef(2, 2, a, b); }
+const char *executef(A a, A b, A c)                          { return _executef(3, 3, a, b, c); }
+const char *executef(A a, A b, A c, A d)                     { return _executef(4, 4, a, b, c, d); }
+const char *executef(A a, A b, A c, A d, A e)                { return _executef(5, 5, a, b, c, d, e); }
+const char *executef(A a, A b, A c, A d, A e, A f)           { return _executef(6, 6, a, b, c, d, e, f); }
+const char *executef(A a, A b, A c, A d, A e, A f, A g)      { return _executef(7, 7, a, b, c, d, e, f, g); }
+const char *executef(A a, A b, A c, A d, A e, A f, A g, A h) { return _executef(8, 8, a, b, c, d, e, f, g, h); }
+const char *executef(A a, A b, A c, A d, A e, A f, A g, A h, A i) { return _executef(9, 9, a, b, c, d, e, f, g, h, i); }
+const char *executef(A a, A b, A c, A d, A e, A f, A g, A h, A i, A j) { return _executef(10,10,a, b, c, d, e, f, g, h, i, j); }
+#undef A
+
+>>>>>>> omni_engine
 
 //------------------------------------------------------------------------------
 bool isFunction(const char *fn)
 {
+	//WLE Vince
+	if (Winterleaf_EngineCallback::mWLE_gIsFunction && Winterleaf_EngineCallback::mWLE_gIsFunction(fn) == 1)
+		return true;
    const char *string = StringTable->lookup(fn);
    if(!string)
       return false;
@@ -1534,6 +1903,7 @@ StringTableEntry getModNameFromPath(const char *path)
 void postConsoleInput( RawData data )
 {
    // Schedule this to happen at the next time event.
+<<<<<<< HEAD
    ConsoleValue values[2];
    ConsoleValueRef argv[2];
 
@@ -1545,6 +1915,12 @@ void postConsoleInput( RawData data )
    argv[1].value = &values[1];
 
    Sim::postCurrentEvent(Sim::getRootGroup(), new SimConsoleEvent(2, argv, false));
+=======
+   char *argv[2];
+   argv[0] = "eval";
+   argv[1] = ( char* ) data.data;
+   Sim::postCurrentEvent(Sim::getRootGroup(), new SimConsoleEvent(2, const_cast<const char**>(argv), false));
+>>>>>>> omni_engine
 }
 
 //------------------------------------------------------------------------------
@@ -1608,6 +1984,7 @@ DefineEngineFunction( logWarning, void, ( const char* message ),,
    Con::warnf( "%s", message );
 }
 
+<<<<<<< HEAD
 //------------------------------------------------------------------------------
 
 extern ConsoleValueStack CSTK;
@@ -1887,3 +2264,108 @@ void ConsoleStackFrameSaver::restore()
       STR.popFrame();
    }
 }
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getClipboard(char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+	{wle_returnObject =Platform::getClipboard();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_log(char * x__message)
+{
+const char* message = (const char*)x__message;
+{
+   Con::printf( "%s", message );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_logError(char * x__message)
+{
+const char* message = (const char*)x__message;
+{
+   Con::errorf( "%s", message );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_logWarning(char * x__message)
+{
+const char* message = (const char*)x__message;
+{
+   Con::warnf( "%s", message );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_setClipboard(char * x__text)
+{
+const char* text = (const char*)x__text;
+bool wle_returnObject;
+{
+	{wle_returnObject =Platform::setClipboard(text);
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

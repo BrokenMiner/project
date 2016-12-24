@@ -14,6 +14,10 @@
    canSaveDynamicFields = "0";
 
    new GuiWindowCollapseCtrl(DatablockEditorInspectorWindow) {
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      internalName =        "DatablockEditorInspectorWindow";    
+      AllowPopWindow = "1";  
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       resizeWidth = "1";
       resizeHeight = "1";
       canMove = "1";
@@ -43,6 +47,7 @@
       tooltipprofile = "ToolsGuiToolTipProfile";
       hovertime = "1000";
       internalName = "DatablockEditorInspectorWindow";
+      
       canSaveDynamicFields = "0";
 
       new GuiContainer() {

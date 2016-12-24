@@ -63,7 +63,11 @@ void dRealFree(void* p)
    free(p);
 }
 
+<<<<<<< HEAD
 void *dMalloc_aligned(dsize_t in_size, S32 alignment)
+=======
+void *dMalloc_aligned(dsize_t in_size, intptr_t alignment)
+>>>>>>> omni_engine
 {
    return _mm_malloc(in_size, alignment);
 }

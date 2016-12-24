@@ -55,6 +55,10 @@ bool GameTSCtrl::onAdd()
    if ( !Parent::onAdd() )
       return false;
 
+#ifdef TORQUE_DEMO_WATERMARK
+   mWatermark.init();
+#endif
+
    return true;
 }
 
@@ -166,8 +170,17 @@ void GameTSCtrl::onRender(Point2I offset, const RectI &updateRect)
    GameConnection * con = GameConnection::getConnectionToServer();
    bool skipRender = !con || (con->getWhiteOut() >= 1.f) || (con->getDamageFlash() >= 1.f) || (con->getBlackOut() >= 1.f);
 
+<<<<<<< HEAD
    if(!skipRender || true)
       Parent::onRender(offset, updateRect);
+=======
+   if(!skipRender)
+      Parent::onRender(offset, updateRect);
+
+#ifdef TORQUE_DEMO_WATERMARK
+   mWatermark.render(getExtent());
+#endif
+>>>>>>> omni_engine
 }
 
 //--------------------------------------------------------------------------
@@ -199,3 +212,70 @@ DefineEngineFunction(snapToggle, void, (),,
 //{
 //   gSnapLine = !gSnapLine;
 //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_snapToggle()
+{
+{
+	gSnapLine = !gSnapLine;
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

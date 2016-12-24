@@ -77,7 +77,11 @@ protected:
 
 	virtual void	solveConstraints(btContactSolverInfo& solverInfo);
 	
+<<<<<<< HEAD
 	virtual void	updateActivationState(btScalar timeStep);
+=======
+	void	updateActivationState(btScalar timeStep);
+>>>>>>> omni_engine
 
 	void	updateActions(btScalar timeStep);
 

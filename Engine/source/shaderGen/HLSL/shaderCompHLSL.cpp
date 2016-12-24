@@ -335,9 +335,9 @@ void PixelParamsDefHLSL::print( Stream &stream, bool isVerterShader )
 
             U8 output[256];
             if (var->arraySize <= 1)
-               dSprintf( (char*)output, sizeof(output), "uniform %-9s %-15s %s", var->type, var->name, varNum );
+               dSprintf( (char*)output, sizeof(output), "uniform %-9s %-15s : %s", var->type, var->name, varNum );
             else
-               dSprintf( (char*)output, sizeof(output), "uniform %-9s %s[%d] %s", var->type, var->name, var->arraySize, varNum );
+               dSprintf( (char*)output, sizeof(output), "uniform %-9s %s[%d] : %s", var->type, var->name, var->arraySize, varNum );
 
             WRITESTR( (char*) output );
          }

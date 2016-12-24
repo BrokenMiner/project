@@ -36,7 +36,10 @@
    GizmoProfile = "GlobalGizmoProfile";
 
    new GuiWindowCollapseCtrl(MissionAreaEditorTerrainWindow) {
-      internalName = "";
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      internalName = "MissionAreaEditorTerrainWindow";
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       canSaveDynamicFields = "0";
       Enabled = "1";
       isContainer = "1";
@@ -109,7 +112,10 @@
       };
    };
    new GuiWindowCollapseCtrl(MissionAreaEditorPropertiesWindow) {
-      internalName = "Window";
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      internalName = "MissionAreaEditorPropertiesWindow";
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       canSaveDynamicFields = "0";
       Enabled = "1";
       isContainer = "1";

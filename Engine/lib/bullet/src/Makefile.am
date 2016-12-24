@@ -225,7 +225,11 @@ libBulletCollision_la_SOURCES = \
 		BulletCollision/NarrowPhaseCollision/btManifoldPoint.h \
 		BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h \
 		BulletCollision/CollisionDispatch/btCollisionObject.h \
+<<<<<<< HEAD
 		BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h \
+=======
+        BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h \
+>>>>>>> omni_engine
 		BulletCollision/CollisionDispatch/btGhostObject.h \
 		BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h \
 		BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.h \
@@ -361,6 +365,7 @@ libBulletDynamics_la_SOURCES = \
 		BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.h \
 		BulletDynamics/Vehicle/btVehicleRaycaster.h \
 		BulletDynamics/Vehicle/btRaycastVehicle.h \
+<<<<<<< HEAD
 		BulletDynamics/Vehicle/btWheelInfo.h \
 		BulletDynamics/Featherstone/btMultiBody.cpp \
 		BulletDynamics/Featherstone/btMultiBodyConstraintSolver.cpp \
@@ -390,6 +395,9 @@ libBulletDynamics_la_SOURCES = \
 
 
 
+=======
+		BulletDynamics/Vehicle/btWheelInfo.h
+>>>>>>> omni_engine
 
 libBulletSoftBody_la_SOURCES = \
 		BulletSoftBody/btDefaultSoftBodySolver.cpp \

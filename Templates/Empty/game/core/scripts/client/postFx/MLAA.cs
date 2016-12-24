@@ -47,11 +47,15 @@ singleton ShaderData( MLAA_EdgeDetectionShader )
    DXVertexShaderFile 	= "shaders/common/postFx/mlaa/offsetV.hlsl";
    DXPixelShaderFile 	= "shaders/common/postFx/mlaa/edgeDetectionP.hlsl";
 
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/postFx/mlaa/gl/offsetV.glsl";
    OGLPixelShaderFile   = "shaders/common/postFx/mlaa/gl/edgeDetectionP.glsl";
 
    samplerNames[0] = "$colorMapG";
    samplerNames[1] = "$prepassMap";
+=======
+   samplerNames[0] = "$colorMapG";
+>>>>>>> omni_engine
 
    pixVersion = 3.0;
 };

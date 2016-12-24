@@ -214,6 +214,7 @@ Profiler::~Profiler()
 void Profiler::reset()
 {
    mEnabled = false; // in case we're in a profiler call.
+<<<<<<< HEAD
    ProfilerData * head = mProfileList;
    ProfilerData * curr = NULL;
    while ((curr = head) != NULL)
@@ -222,6 +223,13 @@ void Profiler::reset()
       free(curr);
    }
 
+=======
+   while(mProfileList)
+   {
+      free(mProfileList);
+      mProfileList = NULL;
+   }
+>>>>>>> omni_engine
    for(ProfilerRootData *walk = ProfilerRootData::sRootList; walk; walk = walk->mNextRoot)
    {
       walk->mFirstProfilerData = 0;
@@ -763,3 +771,102 @@ DefineEngineFunction( profilerReset, void, (),,
 }
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_profilerDump()
+{
+{
+   if(gProfiler)
+      gProfiler->dumpToConsole();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_profilerDumpToFile(char * x__fileName)
+{
+const char* fileName = (const char*)x__fileName;
+{
+   if(gProfiler)
+      gProfiler->dumpToFile(fileName);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_profilerEnable(bool enable)
+{
+{
+   if(gProfiler)
+      gProfiler->enable(enable);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_profilerMarkerEnable(char * x__markerName, bool enable)
+{
+const char* markerName = (const char*)x__markerName;
+
+{
+   if( gProfiler )
+      gProfiler->enableMarker( markerName, enable );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_profilerReset()
+{
+{
+   if(gProfiler)
+      gProfiler->reset();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

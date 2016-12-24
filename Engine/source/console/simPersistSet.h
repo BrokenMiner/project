@@ -58,7 +58,11 @@ class SimPersistSet : public SimSet
       // SimSet.
       virtual void addObject( SimObject* );
       virtual void write( Stream &stream, U32 tabStop, U32 flags = 0 );
+<<<<<<< HEAD
       virtual bool processArguments( S32 argc, ConsoleValueRef *argv );
+=======
+      virtual bool processArguments( S32 argc, const char** argv );
+>>>>>>> omni_engine
       
       DECLARE_CONOBJECT( SimPersistSet );
       DECLARE_CATEGORY( "Console" );

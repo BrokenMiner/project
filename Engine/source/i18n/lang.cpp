@@ -88,11 +88,20 @@ bool LangFile::load(Stream *s)
 {
 	freeTable();
 	
+<<<<<<< HEAD
 	while(s->getStatus() != Stream::EOS)
 	{
 		char buf[256];
 		s->readString(buf);
 		addString((const UTF8*)buf);
+=======
+	while(s->getStatus() == Stream::Ok)
+	{
+		char buf[2048];
+		s->readLongString(2048,buf);
+		if( s->getStatus() == Stream::Ok )
+			addString( ( const UTF8* )buf );
+>>>>>>> omni_engine
 	}
 	return true;
 }
@@ -121,7 +130,11 @@ bool LangFile::save(Stream *s)
 	U32 i;
 	for(i = 0;i < mStringTable.size();i++)
 	{
+<<<<<<< HEAD
 		s->writeString((char*)mStringTable[i]);
+=======
+		s->writeLongString( 2048, ( char* )mStringTable[i] );
+>>>>>>> omni_engine
 	}
 	return true;
 }
@@ -250,6 +263,7 @@ S32 LangTable::addLanguage(LangFile *lang, const UTF8 *name /* = NULL */)
 S32 LangTable::addLanguage(const UTF8 *filename, const UTF8 *name /* = NULL */)
 {
 	LangFile * lang = new LangFile(name);
+<<<<<<< HEAD
 
    if(Torque::FS::IsFile(filename))
 	{
@@ -260,6 +274,20 @@ S32 LangTable::addLanguage(const UTF8 *filename, const UTF8 *name /* = NULL */)
 			return ret;
 	}
 	delete lang;
+=======
+	if(lang != NULL)
+	{
+      if(Torque::FS::IsFile(filename))
+		{
+			lang->setLangFile(filename);
+			
+      	S32 ret = addLanguage(lang);
+			if(ret >= 0)
+				return ret;
+		}
+		delete lang;
+	}
+>>>>>>> omni_engine
 
 	return -1;
 }
@@ -477,3 +505,172 @@ const LangTable *getModLangTable(const UTF8 *mod)
 	}
 	return NULL;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_LangTable_addLanguage(char * x__object, char * x__filename, char * x__languageName)
+{
+LangTable* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+String filename = String( x__filename);
+String languageName = String( x__languageName);
+{
+	UTF8 scriptFilenameBuffer[1024];
+	
+	Con::expandScriptFilename((char*)scriptFilenameBuffer, sizeof(scriptFilenameBuffer), filename);
+	return object->addLanguage(scriptFilenameBuffer, (const UTF8*)languageName);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_LangTable_getCurrentLanguage(char * x__object)
+{
+LangTable* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	return object->getCurrentLanguage();
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_LangTable_getLangName(char * x__object, S32 langId,  char* retval)
+{
+dSprintf(retval,16384,"");
+LangTable* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+	const char * str = (const char*)object->getLangName(langId);
+	if(str != NULL)
+	{
+		char * ret = Con::getReturnBuffer(dStrlen(str) + 1);
+		dStrcpy(ret, str);
+		{wle_returnObject =ret;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+	}
+	
+	{wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_LangTable_getNumLang(char * x__object)
+{
+LangTable* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	return object->getNumLang();
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_LangTable_getString(char * x__object, U32 id,  char* retval)
+{
+dSprintf(retval,16384,"");
+LangTable* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+	const char * str =	(const char*)object->getString(id);
+	if(str != NULL)
+	{
+		char * ret = Con::getReturnBuffer(dStrlen(str) + 1);
+		dStrcpy(ret, str);
+		{wle_returnObject =ret;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+	}
+	
+	{wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_LangTable_setCurrentLanguage(char * x__object, S32 langId)
+{
+LangTable* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setCurrentLanguage(langId);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_LangTable_setDefaultLanguage(char * x__object, S32 langId)
+{
+LangTable* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setDefaultLanguage(langId);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

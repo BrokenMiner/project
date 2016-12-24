@@ -26,6 +26,7 @@
 #include "gfx/gl/gfxGLDevice.h"
 #include "gfx/gl/gfxGLEnumTranslate.h"
 #include "gfx/gl/gfxGLUtils.h"
+<<<<<<< HEAD
 #include "gfx/gl/gfxGLVertexAttribLocation.h"
 
 #include "gfx/gl/gfxGLCircularVolatileBuffer.h"
@@ -35,6 +36,9 @@ GLCircularVolatileBuffer* getCircularVolatileVertexBuffer()
    static GLCircularVolatileBuffer sCircularVolatileVertexBuffer(GL_ARRAY_BUFFER);
    return &sCircularVolatileVertexBuffer;
 }
+=======
+
+>>>>>>> omni_engine
 
 GFXGLVertexBuffer::GFXGLVertexBuffer(  GFXDevice *device, 
                                        U32 numVerts, 
@@ -42,6 +46,7 @@ GFXGLVertexBuffer::GFXGLVertexBuffer(  GFXDevice *device,
                                        U32 vertexSize, 
                                        GFXBufferType bufferType )
    :  GFXVertexBuffer( device, numVerts, vertexFormat, vertexSize, bufferType ), 
+<<<<<<< HEAD
       mZombieCache(NULL),
       mBufferOffset(0),
       mBufferVertexOffset(0)
@@ -59,20 +64,36 @@ GFXGLVertexBuffer::GFXGLVertexBuffer(  GFXDevice *device,
    PRESERVE_VERTEX_BUFFER();
    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
    glBufferData(GL_ARRAY_BUFFER, numVerts * vertexSize, NULL, GFXGLBufferType[bufferType]);
+=======
+      mZombieCache(NULL)
+{
+   PRESERVE_VERTEX_BUFFER();
+	// Generate a buffer and allocate the needed memory.
+	glGenBuffers(1, &mBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+	glBufferData(GL_ARRAY_BUFFER, numVerts * vertexSize, NULL, GFXGLBufferType[bufferType]);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+>>>>>>> omni_engine
 }
 
 GFXGLVertexBuffer::~GFXGLVertexBuffer()
 {
 	// While heavy handed, this does delete the buffer and frees the associated memory.
+<<<<<<< HEAD
    if( mBufferType != GFXBufferTypeVolatile )
       glDeleteBuffers(1, &mBuffer);
 
+=======
+   glDeleteBuffers(1, &mBuffer);
+   
+>>>>>>> omni_engine
    if( mZombieCache )
       delete [] mZombieCache;
 }
 
 void GFXGLVertexBuffer::lock( U32 vertexStart, U32 vertexEnd, void **vertexPtr )
 {
+<<<<<<< HEAD
    PROFILE_SCOPE(GFXGLVertexBuffer_lock);
 
    if( mBufferType == GFXBufferTypeVolatile )
@@ -96,12 +117,21 @@ void GFXGLVertexBuffer::lock( U32 vertexStart, U32 vertexEnd, void **vertexPtr )
       *vertexPtr = lockedVertexPtr;
    }
 
+=======
+   PRESERVE_VERTEX_BUFFER();
+	// Bind us, get a pointer into the buffer, then
+	// offset it by vertexStart so we act like the D3D layer.
+	glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+   glBufferData(GL_ARRAY_BUFFER, mNumVerts * mVertexSize, NULL, GFXGLBufferType[mBufferType]);
+	*vertexPtr = (void*)((U8*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY) + (vertexStart * mVertexSize));
+>>>>>>> omni_engine
 	lockedVertexStart = vertexStart;
 	lockedVertexEnd   = vertexEnd;
 }
 
 void GFXGLVertexBuffer::unlock()
 {
+<<<<<<< HEAD
    PROFILE_SCOPE(GFXGLVertexBuffer_unlock);
 
    if( mBufferType == GFXBufferTypeVolatile )
@@ -127,10 +157,21 @@ void GFXGLVertexBuffer::unlock()
    lockedVertexStart = 0;
 	lockedVertexEnd   = 0;
    lockedVertexPtr = NULL;
+=======
+   PRESERVE_VERTEX_BUFFER();
+	// Unmap the buffer and bind 0 to GL_ARRAY_BUFFER
+   glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+	bool res = glUnmapBuffer(GL_ARRAY_BUFFER);
+   AssertFatal(res, "GFXGLVertexBuffer::unlock - shouldn't fail!");
+
+   lockedVertexStart = 0;
+	lockedVertexEnd   = 0;
+>>>>>>> omni_engine
 }
 
 void GFXGLVertexBuffer::prepare()
 {
+<<<<<<< HEAD
    AssertFatal(0, "GFXGLVertexBuffer::prepare - use GFXGLVertexBuffer::prepare(U32 stream, U32 divisor)");
 }
 
@@ -141,12 +182,74 @@ void GFXGLVertexBuffer::prepare(U32 stream, U32 divisor)
       glBindVertexBuffer( stream, mBuffer, mBufferOffset, mVertexSize );
       glVertexBindingDivisor( stream, divisor );
       return;
+=======
+	// Bind the buffer...
+	glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+   U8* buffer = (U8*)getBuffer();
+
+   // Loop thru the vertex format elements adding the array state...
+   U32 texCoordIndex = 0;
+   for ( U32 i=0; i < mVertexFormat.getElementCount(); i++ )
+   {
+      const GFXVertexElement &element = mVertexFormat.getElement( i );
+      
+      if ( element.isSemantic( GFXSemantic::POSITION ) )
+      {
+         glEnableClientState( GL_VERTEX_ARRAY );
+         glVertexPointer( element.getSizeInBytes() / 4, GL_FLOAT, mVertexSize, buffer );
+         buffer += element.getSizeInBytes();
+      }
+      else if ( element.isSemantic( GFXSemantic::NORMAL ) )
+      {
+         glEnableClientState( GL_NORMAL_ARRAY );
+         glNormalPointer( GL_FLOAT, mVertexSize, buffer );
+         buffer += element.getSizeInBytes();
+      }
+      else if ( element.isSemantic( GFXSemantic::COLOR ) )
+      {
+         glEnableClientState( GL_COLOR_ARRAY );
+         glColorPointer( element.getSizeInBytes(), GL_UNSIGNED_BYTE, mVertexSize, buffer );
+         buffer += element.getSizeInBytes();
+      }
+      else // Everything else is a texture coordinate.
+      {
+         glClientActiveTexture( GL_TEXTURE0 + texCoordIndex );
+         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+         glTexCoordPointer( element.getSizeInBytes() / 4, GL_FLOAT, mVertexSize, buffer );
+         buffer += element.getSizeInBytes();
+         ++texCoordIndex;
+      }
+      
+>>>>>>> omni_engine
    }
 }
 
 void GFXGLVertexBuffer::finish()
 {
+<<<<<<< HEAD
    
+=======
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   
+   U32 texCoordIndex = 0;
+   for ( U32 i=0; i < mVertexFormat.getElementCount(); i++ )
+   {
+      const GFXVertexElement &element = mVertexFormat.getElement( i );
+
+      if ( element.isSemantic( GFXSemantic::POSITION ) )
+         glDisableClientState( GL_VERTEX_ARRAY );
+      else if ( element.isSemantic( GFXSemantic::NORMAL ) )
+         glDisableClientState( GL_NORMAL_ARRAY );
+      else if ( element.isSemantic( GFXSemantic::COLOR ) )
+         glDisableClientState( GL_COLOR_ARRAY );
+      else
+      {
+         glClientActiveTexture( GL_TEXTURE0 + texCoordIndex );
+         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+         ++texCoordIndex;
+      }
+   }
+>>>>>>> omni_engine
 }
 
 GLvoid* GFXGLVertexBuffer::getBuffer()

@@ -1931,6 +1931,7 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 	}
 }
 
+<<<<<<< HEAD
 class pointCmp
 {
 	public:
@@ -1940,6 +1941,13 @@ class pointCmp
 			return (p.y < q.y) || ((p.y == q.y) && ((p.x < q.x) || ((p.x == q.x) && (p.z < q.z))));
 		}
 };
+=======
+
+static bool pointCmp(const btConvexHullInternal::Point32& p, const btConvexHullInternal::Point32& q)
+{
+	return (p.y < q.y) || ((p.y == q.y) && ((p.x < q.x) || ((p.x == q.x) && (p.z < q.z))));
+}
+>>>>>>> omni_engine
 
 void btConvexHullInternal::compute(const void* coords, bool doubleCoords, int stride, int count)
 {
@@ -2030,7 +2038,11 @@ void btConvexHullInternal::compute(const void* coords, bool doubleCoords, int st
 			points[i].index = i;
 		}
 	}
+<<<<<<< HEAD
 	points.quickSort(pointCmp());
+=======
+	points.quickSort(pointCmp);
+>>>>>>> omni_engine
 
 	vertexPool.reset();
 	vertexPool.setArraySize(count);

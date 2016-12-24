@@ -51,6 +51,9 @@ class SimComponent : public NetObject
 {
    typedef NetObject Parent;
 
+   DECLARE_CALLBACK(void, onComponentAdd, (const char* targetId));
+   DECLARE_CALLBACK(void, onComponentRemove, (const char* targetId));
+
 private:
    VectorPtr<SimComponent *> mComponentList; ///< The Component List
    void *mMutex;                             ///< Component List Mutex
@@ -65,7 +68,11 @@ private:
    bool _registerComponents( SimComponent *owner );
    void _unregisterComponents();
 
+<<<<<<< HEAD
 protected:
+=======
+public:
+>>>>>>> omni_engine
    ComponentInterfaceCache mInterfaceCache;  ///< Stores the interfaces exposed by this component. 
    
    bool mEnabled;
@@ -150,7 +157,11 @@ public:
 
    static void initPersistFields();
 
+<<<<<<< HEAD
    virtual bool processArguments(S32 argc, ConsoleValueRef *argv);
+=======
+   virtual bool processArguments(S32 argc, const char **argv);
+>>>>>>> omni_engine
    
    bool isEnabled() const { return mEnabled; }
    

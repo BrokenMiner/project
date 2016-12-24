@@ -75,4 +75,8 @@ public:
    virtual void print( Stream &stream, bool isVerterShader );
 };
 
+<<<<<<< HEAD
 #endif // _SHADERCOMP_GLSL_H_
+=======
+#endif // _SHADERCOMP_GLSL_H_
+>>>>>>> omni_engine

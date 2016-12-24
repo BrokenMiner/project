@@ -36,6 +36,7 @@
    #include "sfx/sfxCommon.h"
 #endif
 
+
 class SFXAmbience;
 class SFXSoundscape;
 
@@ -54,11 +55,18 @@ class LevelInfo : public NetObject
 
       F32 mVisibleDistance;
 
+<<<<<<< HEAD
       F32 mVisibleGhostDistance;
+=======
+	  //Modification By Vince
+	  F32 mVisibleDistance_Ghost;
+>>>>>>> omni_engine
 
       F32 mDecalBias;
 
       ColorI mCanvasClearColor;
+
+	  Point4F mFrustumOffset;
 
       /// @name Lighting Properties
       /// @{
@@ -98,6 +106,8 @@ class LevelInfo : public NetObject
       void _onLMActivate(const char *lm, bool enable);
 
    public:
+
+	  void setNearClip( F32 nearClip );
 
       LevelInfo();
       virtual ~LevelInfo();

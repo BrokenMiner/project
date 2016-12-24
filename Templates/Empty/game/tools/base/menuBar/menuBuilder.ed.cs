@@ -132,15 +132,35 @@ function MenuBuilder::addItem(%this, %pos, %item)
    }
    else
    {
+<<<<<<< HEAD
       %this.insertItem(%pos, %name !$= "-" ? %name : "", %accel, %cmd);
+=======
+      %this.insertItem(%pos, %name !$= "-" ? %name : "", %accel);
+>>>>>>> omni_engine
    }
 }
 
 function MenuBuilder::appendItem(%this, %item)
 {
    %this.addItem(%this.getItemCount(), %item);
+<<<<<<< HEAD
 }
 
+=======
+   return %this.getItemCount()-1;      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+}
+
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+function MenuBuilder::removeAllItems(%this)
+{
+   %itemCount = %this.getItemCount();
+   for( %i = 0; %i < %itemCount; %i++)
+      %this.removeItem(%i);
+}
+// @Copyright end
+
+>>>>>>> omni_engine
 function MenuBuilder::onAdd(%this)
 {
    if(! isObject(%this.canvas))
@@ -162,6 +182,7 @@ function MenuBuilder::onRemove(%this)
 function MenuBuilder::onSelectItem(%this, %id, %text)
 {
    %cmd = getField(%this.item[%id], 2);
+   %this.canvas.setPopupShown(false);     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    if(%cmd !$= "")
    {
       eval( %cmd );

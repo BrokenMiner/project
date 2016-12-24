@@ -176,7 +176,11 @@ void Frustum::set( const MatrixF &projMat, bool normalize )
          mPlanes[ i ].normalize();
    }
 
+<<<<<<< HEAD
    /*// Create the corner points via plane intersections.
+=======
+   /* // Create the corner points via plane intersections.
+>>>>>>> omni_engine
    mPlanes[ PlaneNear ].intersect( mPlanes[ PlaneTop ], mPlanes[ PlaneLeft ], &mPoints[ NearTopLeft ] );
    mPlanes[ PlaneNear ].intersect( mPlanes[ PlaneTop ], mPlanes[ PlaneRight ], &mPoints[ NearTopRight ] );
    mPlanes[ PlaneNear ].intersect( mPlanes[ PlaneBottom ], mPlanes[ PlaneLeft ], &mPoints[ NearBottomLeft ] );
@@ -565,6 +569,26 @@ void Frustum::tileFrustum(U32 numTiles, const Point2I& curTile, Point2F overlap)
    mTileOverlap = overlap;
    
    tile(&mNearLeft, &mNearRight, &mNearTop, &mNearBottom, mNumTiles, mCurrTile, mTileOverlap);
+}
+
+void Frustum::offsetFrustum(Point4F offset)
+{
+   Point2F tileSize( ( mNearRight - mNearLeft ), 
+                     ( mNearTop - mNearBottom ));
+   
+   F32 leftOffset   = tileSize.x*offset.x;
+   F32 bottomOffset = tileSize.y*(1.0f-offset.w);
+   F32 rightOffset  = tileSize.x*offset.z;
+   F32 topOffset    = tileSize.y*(1.0f-offset.y);
+
+   mNearLeft += leftOffset;
+   mNearRight = mNearLeft + rightOffset;
+   mNearBottom += bottomOffset;
+   mNearTop = mNearBottom + topOffset;
+
+   // todo: update planes also
+//   mDirty = true;
+//   _update(); // maybe
 }
 
 //-----------------------------------------------------------------------------

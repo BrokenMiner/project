@@ -62,8 +62,13 @@ new ShaderData( ReflectBump )
    DXVertexShaderFile 	= "shaders/common/planarReflectBumpV.hlsl";
    DXPixelShaderFile 	= "shaders/common/planarReflectBumpP.hlsl";
    
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/gl/planarReflectBumpV.glsl";
    OGLPixelShaderFile   = "shaders/common/gl/planarReflectBumpP.glsl";
+=======
+   OGLVertexShaderFile 	= "shaders/common/gl/planarReflectBumpV.glsl";
+   OGLPixelShaderFile 	= "shaders/common/gl/planarReflectBumpP.glsl";
+>>>>>>> omni_engine
               
    samplerNames[0] = "$diffuseMap";
    samplerNames[1] = "$refractMap";
@@ -77,8 +82,13 @@ new ShaderData( Reflect )
    DXVertexShaderFile 	= "shaders/common/planarReflectV.hlsl";
    DXPixelShaderFile 	= "shaders/common/planarReflectP.hlsl";
    
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/gl/planarReflectV.glsl";
    OGLPixelShaderFile   = "shaders/common/gl/planarReflectP.glsl";
+=======
+   OGLVertexShaderFile 	= "shaders/common/gl/planarReflectV.glsl";
+   OGLPixelShaderFile 	= "shaders/common/gl/planarReflectP.glsl";
+>>>>>>> omni_engine
    
    samplerNames[0] = "$diffuseMap";
    samplerNames[1] = "$refractMap";

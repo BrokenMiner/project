@@ -61,8 +61,13 @@ IMPLEMENT_CALLBACK( GuiButtonBaseCtrl, onMouseUp, void, (), (),
    "@note To trigger actions, better use onClick() since onMouseUp() will also be called when the mouse was "
       "not originally pressed on the button." );
 
+<<<<<<< HEAD
 IMPLEMENT_CALLBACK( GuiButtonBaseCtrl, onClick, void, (), (),
    "Called when the primary action of the button is triggered (e.g. by a left mouse click)." );
+=======
+//IMPLEMENT_CALLBACK( GuiButtonBaseCtrl, onClick, void, (), (),
+//   "Called when the primary action of the button is triggered (e.g. by a left mouse click)." );
+>>>>>>> omni_engine
 
 IMPLEMENT_CALLBACK( GuiButtonBaseCtrl, onDoubleClick, void, (), (),
    "Called when the left mouse button is double-clicked on the button." );
@@ -132,10 +137,39 @@ void GuiButtonBaseCtrl::initPersistFields()
          "Button behavior type.\n" );
       addField( "useMouseEvents", TypeBool, Offset(mUseMouseEvents, GuiButtonBaseCtrl),
          "If true, mouse events will be passed on to script.  Default is false.\n" );
+<<<<<<< HEAD
       
    endGroup( "Button" );
    
    Parent::initPersistFields();
+=======
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+	  addProtectedField( "changeTexture", TypeImageFilename, Offset(mControlTexture, GuiButtonBaseCtrl),
+		  &setProtectedTexture, &getProtectedTexture,
+         "Changes the texture of the control" );
+
+   // @Copyright end
+      
+   endGroup( "Button" );
+
+   Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "contextFillColor");
+
+   removeField( "controlFillColor" );
+
+   removeField( "moveControl" );
+
+   removeField( "lockControl" );
+
+   // @Copyright endd
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -171,6 +205,21 @@ void GuiButtonBaseCtrl::setTextID(const char *id)
 		mButtonTextID = StringTable->insert(id);
 		setTextID(n);
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+bool GuiButtonBaseCtrl::setProtectedTexture(void* object, const char* index, const char* data)
+{
+	static_cast<GuiControl* >( object )->setControlTexture( (data) ); 
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+
+const char* GuiButtonBaseCtrl::getProtectedTexture(void* object, const char* data)
+{
+	return static_cast<GuiControl* >( object )->getControlTextureFile( ); 
 }
 
 //-----------------------------------------------------------------------------
@@ -297,6 +346,9 @@ void GuiButtonBaseCtrl::onMouseEnter(const GuiEvent &event)
 
       mMouseOver = true;
    }
+
+   /// Fade Control
+   fadeControl(); // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 //-----------------------------------------------------------------------------
@@ -309,7 +361,13 @@ void GuiButtonBaseCtrl::onMouseLeave(const GuiEvent &)
       onMouseLeave_callback();
    if( isMouseLocked() )
       mDepressed = false;
+<<<<<<< HEAD
    mMouseOver = false;
+=======
+
+   smCapturedControl = this;  // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   mMouseOver = false;     
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -362,7 +420,11 @@ void GuiButtonBaseCtrl::onMouseDragged( const GuiEvent& event )
          onMouseDragged_callback();
    }
       
+<<<<<<< HEAD
    Parent::onMouseDragged( event );
+=======
+   //Parent::onMouseDragged( event );     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -449,7 +511,11 @@ void GuiButtonBaseCtrl::onAction()
    if ( mConsoleVariable[0] )
       Con::setBoolVariable( mConsoleVariable, mStateOn );
 
+<<<<<<< HEAD
     onClick_callback();
+=======
+    onClick_callback("");
+>>>>>>> omni_engine
     Parent::onAction();
 }
 
@@ -542,3 +608,127 @@ DefineEngineMethod( GuiButtonBaseCtrl, resetState, void, (),,
 {
    object->resetState();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiButtonBaseCtrl_getText(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiButtonBaseCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getText( );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiButtonBaseCtrl_performClick(char * x__object)
+{
+GuiButtonBaseCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->onAction();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiButtonBaseCtrl_resetState(char * x__object)
+{
+GuiButtonBaseCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->resetState();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiButtonBaseCtrl_setStateOn(char * x__object, bool isOn)
+{
+GuiButtonBaseCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setStateOn( isOn );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiButtonBaseCtrl_setText(char * x__object, char * x__text)
+{
+GuiButtonBaseCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* text = (const char*)x__text;
+{
+   object->setText( text );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiButtonBaseCtrl_setTextID(char * x__object, char * x__id)
+{
+GuiButtonBaseCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* id = (const char*)x__id;
+{
+	object->setTextID( id );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

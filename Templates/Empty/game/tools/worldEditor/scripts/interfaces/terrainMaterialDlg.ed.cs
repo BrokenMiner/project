@@ -131,7 +131,8 @@ function TerrainMaterialDlg::dialogApply( %this )
       if( %matIndex != -1 )
       {
          ETerrainEditor.removeMaterial( %matIndex );
-         EPainter.updateLayers();
+         //EPainter.updateLayers();
+         TerrainPainter.updateLayers();
       }
       
       %mat.delete();

@@ -110,6 +110,15 @@ void GuiTextEditSliderBitmapCtrl::initPersistFields()
    addField("bitmap",    TypeFilename,Offset(mBitmapName, GuiTextEditSliderBitmapCtrl), "Unused" );
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
 }
 
 void GuiTextEditSliderBitmapCtrl::getText(char *dest)
@@ -415,7 +424,11 @@ void GuiTextEditSliderBitmapCtrl::onRender(Point2I offset, const RectI &updateRe
 		Point2I(arrowUpStart.x -2, arrowUpStart.y + getExtent().y),
 		mProfile->mBorderColor);
 
+<<<<<<< HEAD
 	GFX->getDrawUtil()->clearBitmapModulation();
+=======
+	//GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 	
 	if(mNumberOfBitmaps == 0)
 		Con::warnf("No image provided for GuiTextEditSliderBitmapCtrl; do not render");

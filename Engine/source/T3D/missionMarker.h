@@ -215,11 +215,20 @@ class CameraBookmark : public MissionMarker
       static void initPersistFields();
 
       DECLARE_CONOBJECT(CameraBookmark);
+<<<<<<< HEAD
 	  /*DECLARE_CALLBACK( void, onAdd, () );
 	  DECLARE_CALLBACK( void, onRemove, () );
 	  DECLARE_CALLBACK( void, onGroupAdd, () );
 	  DECLARE_CALLBACK( void, onGroupRemove, () );
 	  DECLARE_CALLBACK( void, onInspectPostApply, () );*/
+=======
+	  /**/
+      DECLARE_CALLBACK( void, onAdd, () );
+      DECLARE_CALLBACK( void, onRemove, () );
+      DECLARE_CALLBACK( void, onGroupAdd, () );
+      DECLARE_CALLBACK( void, onGroupRemove, () );
+      DECLARE_CALLBACK( void, onInspectPostApply, () );
+>>>>>>> omni_engine
 };
 
 #endif // _MISSIONMARKER_H_

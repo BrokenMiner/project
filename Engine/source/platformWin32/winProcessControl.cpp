@@ -22,12 +22,24 @@
 
 #include "platformWin32/platformWin32.h"
 #include "core/strings/stringFunctions.h"
+<<<<<<< HEAD
 #include "core/util/journal/process.h"
 
 void Platform::postQuitMessage(const S32 in_quitVal)
 {
    if (!Platform::getWebDeployment())
       Process::requestShutdown();
+=======
+#include "OMNI/Omni.h"
+
+void Platform::postQuitMessage(const U32 in_quitVal)
+{
+   //We don't want T3D ending the program we want OMNI to.
+   if (Winterleaf_EngineCallback::mWLE_IsFunction)
+      return;
+   if (!Platform::getWebDeployment())
+      PostQuitMessage(in_quitVal);
+>>>>>>> omni_engine
 }
 
 void Platform::debugBreak()
@@ -59,7 +71,7 @@ void Platform::outputDebugString( const char *string, ... )
    // twice as in a multi-threaded environment, some other thread may output some
    // stuff in between the two calls.
 
-   U32 length = strlen( buffer );
+   dsize_t length = strlen( buffer );
    if( length == ( sizeof( buffer ) - 1 ) )
       length --;
 

@@ -230,5 +230,4 @@ void main()
    #endif
    
    OUT_col = lightinfoCondition( lightColorOut, Sat_NL_Att, specular, addToResult );  
-   
 }

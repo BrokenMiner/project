@@ -101,8 +101,13 @@ S32 Platform::messageBox(const UTF8 *title, const UTF8 *message, MBButtons butto
       pWindow->setCursorVisible(true);
 
 #ifdef UNICODE
+<<<<<<< HEAD
    const UTF16 *msg = createUTF16string(message);
    const UTF16 *t = createUTF16string(title);
+=======
+   const UTF16 *msg = convertUTF8toUTF16(message);
+   const UTF16 *t = convertUTF8toUTF16(title);
+>>>>>>> omni_engine
 #else
    const UTF8 *msg = message;
    const UTF8 *t = title;

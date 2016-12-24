@@ -59,7 +59,11 @@ GuiInspectorField::GuiInspectorField( GuiInspector* inspector,
    setCanSave( false );
    setBounds(0,0,100,18);
    
+<<<<<<< HEAD
    if( field != NULL )
+=======
+   if( field )
+>>>>>>> omni_engine
       _setFieldDocs( field->pFieldDocs );
 }
 
@@ -235,9 +239,15 @@ void GuiInspectorField::onMouseDown( const GuiEvent &event )
 void GuiInspectorField::onRightMouseUp( const GuiEvent &event )
 {
    if ( mCaptionRect.pointInRect( globalToLocalCoord( event.mousePoint ) ) ) 
+<<<<<<< HEAD
       Con::executef( mInspector, "onFieldRightClick", getIdString() );
    else
       Parent::onMouseDown( event );
+=======
+   { mInspector->onFieldRightClick_callback( getIdString() ); }
+   else
+   { Parent::onMouseDown( event ); }
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -253,7 +263,11 @@ void GuiInspectorField::setData( const char* data, bool callbacks )
       const U32 numTargets = mInspector->getNumInspectObjects();
       
       if( callbacks && numTargets > 1 )
+<<<<<<< HEAD
          Con::executef( mInspector, "onBeginCompoundEdit" );
+=======
+      { mInspector->onBeginCompoundEdit_callback(); }
+>>>>>>> omni_engine
             
       for( U32 i = 0; i < numTargets; ++ i )
       {
@@ -269,7 +283,11 @@ void GuiInspectorField::setData( const char* data, bool callbacks )
          {
             char buffer[ 2048 ];
             expandEscape( buffer, newValue );
+<<<<<<< HEAD
             newValue = (const char*)Con::evaluatef( "%%f = \"%s\"; return ( %s );", oldValue.c_str(), buffer );
+=======
+            newValue = Con::evaluatef( "%%f = \"%s\"; return ( %s );", oldValue.c_str(), buffer );
+>>>>>>> omni_engine
          }
          else if(    type == TypeS32Vector
                   || type == TypeF32Vector
@@ -321,12 +339,19 @@ void GuiInspectorField::setData( const char* data, bool callbacks )
          // Fire callback single-object undo.
          
          if( callbacks )
+<<<<<<< HEAD
             Con::executef( mInspector, "onInspectorFieldModified", 
+=======
+         {
+           mInspector->onInspectorFieldModified_callback( 
+>>>>>>> omni_engine
                                           target->getIdString(), 
                                           mField->pFieldname, 
                                           mFieldArrayIndex ? mFieldArrayIndex : "(null)", 
                                           oldValue.c_str(), 
                                           newValue.c_str() );
+         }
+            
 
          target->setDataField( mField->pFieldname, mFieldArrayIndex, newValue );
          
@@ -335,7 +360,11 @@ void GuiInspectorField::setData( const char* data, bool callbacks )
       }
       
       if( callbacks && numTargets > 1 )
+<<<<<<< HEAD
          Con::executef( mInspector, "onEndCompoundEdit" );
+=======
+      { mInspector->onEndCompoundEdit_callback(); }
+>>>>>>> omni_engine
    }
 
    // Force our edit to update
@@ -456,7 +485,11 @@ void GuiInspectorField::setInspectorProfile()
 {
    GuiControlProfile *profile = NULL;   
    
+<<<<<<< HEAD
    if( mInspector && (mInspector->getNumInspectObjects() > 1) )
+=======
+   if( mInspector->getNumInspectObjects() > 1 )
+>>>>>>> omni_engine
    {
       if( !hasSameValueInAllObjects() )
          Sim::findObject( "GuiInspectorMultiFieldDifferentProfile", profile );
@@ -578,7 +611,11 @@ bool GuiInspectorField::hasSameValueInAllObjects()
 void GuiInspectorField::_executeSelectedCallback()
 {
    if( mField )
+<<<<<<< HEAD
       Con::executef( mInspector, "onFieldSelected", mField->pFieldname, ConsoleBaseType::getType(mField->type)->getTypeName(), mFieldDocs.c_str() );
+=======
+   { mInspector->onFieldSelected_callback( mField->pFieldname, ConsoleBaseType::getType(mField->type)->getTypeName(), mFieldDocs.c_str() ); } 
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -637,7 +674,11 @@ DefineConsoleMethod( GuiInspectorField, getInspectedFieldType, const char*, (), 
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineConsoleMethod( GuiInspectorField, apply, void, ( const char * newValue, bool callbacks ), (true), "( string newValue, bool callbacks=true ) - Set the field's value. Suppress callbacks for undo if callbacks=false." )
+=======
+DefineConsoleMethod( GuiInspectorField, apply, void, ( const char * newValue, bool callbacks ), ("", true), "( string newValue, bool callbacks=true ) - Set the field's value. Suppress callbacks for undo if callbacks=false." )
+>>>>>>> omni_engine
 {
    object->setData( newValue, callbacks );
 }
@@ -662,3 +703,151 @@ DefineConsoleMethod( GuiInspectorField, reset, void, (), , "() - Reset to defaul
 {
    object->resetData();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspectorField_apply(char * x__object, char * x__newValue, bool callbacks)
+{
+GuiInspectorField* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* newValue = (const char*)x__newValue;
+
+{
+   object->setData( newValue, callbacks );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspectorField_applyWithoutUndo(char * x__object, char * x__data)
+{
+GuiInspectorField* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* data = (const char*)x__data;
+{
+   object->setData( data, false );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspectorField_getData(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiInspectorField* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getData();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspectorField_getInspectedFieldName(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiInspectorField* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getFieldName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspectorField_getInspectedFieldType(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiInspectorField* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getFieldType();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiInspectorField_getInspector(char * x__object)
+{
+GuiInspectorField* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getInspector()->getId());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspectorField_reset(char * x__object)
+{
+GuiInspectorField* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->resetData();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

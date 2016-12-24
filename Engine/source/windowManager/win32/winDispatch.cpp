@@ -453,6 +453,7 @@ static bool _dispatch(HWND hWnd,UINT message,WPARAM wParam,WPARAM lParam)
 		// Therefore, it's appropriate to flag our event loop for exit as well,
 		// since we won't be getting any more messages.
 		Process::requestShutdown((S32)wParam);
+		//Process::requestShutdown();
 		break;
 				  }
 
@@ -593,6 +594,4 @@ void DispatchRemove(HWND hWnd)
 {
 	_MessageQueue.remove(hWnd);
 }
-
-
 #endif

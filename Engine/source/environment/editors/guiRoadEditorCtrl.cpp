@@ -47,6 +47,12 @@ ConsoleDocClass( GuiRoadEditorCtrl,
    "@internal"
 );
 
+IMPLEMENT_CALLBACK(GuiRoadEditorCtrl, onNodeModified, void, (const char* nodeIdx), (nodeIdx), "");
+IMPLEMENT_CALLBACK(GuiRoadEditorCtrl, onNodeSelected, void, (const char* nodeIdx, const char* nodeWidth), (nodeIdx, nodeWidth), "");
+IMPLEMENT_CALLBACK(GuiRoadEditorCtrl, paletteSync, void, (const char* mode), (mode), "");
+IMPLEMENT_CALLBACK(GuiRoadEditorCtrl, onRoadCreation, void, (), (), "");
+IMPLEMENT_CALLBACK(GuiRoadEditorCtrl, onRoadSelected, void, (const char* road), (road), "");
+
 GuiRoadEditorCtrl::GuiRoadEditorCtrl()
 {
 	// Each of the mode names directly correlates with the River Editor's
@@ -446,7 +452,11 @@ void GuiRoadEditorCtrl::on3DMouseDown(const Gui3DMouseEvent & event)
 		
 		//send a callback to script after were done here if one exists
 		if ( isMethod( "onRoadCreation" ) )
+<<<<<<< HEAD
          Con::executef( this, "onRoadCreation" );
+=======
+        { onRoadCreation_callback(); }
+>>>>>>> omni_engine
 
 		return;
    }
@@ -676,7 +686,11 @@ void GuiRoadEditorCtrl::on3DMouseDragged(const Gui3DMouseEvent & event)
       mIsDirty = true;
    }   
 
+<<<<<<< HEAD
    Con::executef( this, "onNodeModified", Con::getIntArg(mSelNode) );
+=======
+   onNodeModified_callback( Con::getIntArg(mSelNode) );
+>>>>>>> omni_engine
 }
 
 void GuiRoadEditorCtrl::on3DMouseEnter(const Gui3DMouseEvent & event)
@@ -946,7 +960,11 @@ void GuiRoadEditorCtrl::setMode( String mode, bool sourceShortcut = false )
    mMode = mode;
 
 	if( sourceShortcut )
+<<<<<<< HEAD
 		Con::executef( this, "paletteSync", mode );
+=======
+    { paletteSync_callback(mode); }
+>>>>>>> omni_engine
 }
 
 void GuiRoadEditorCtrl::setSelectedRoad( DecalRoad *road )
@@ -954,9 +972,15 @@ void GuiRoadEditorCtrl::setSelectedRoad( DecalRoad *road )
    mSelRoad = road;
 
    if ( road != NULL )
+<<<<<<< HEAD
       Con::executef( this, "onRoadSelected", road->getIdString() );
    else
       Con::executef( this, "onRoadSelected" );
+=======
+   { onRoadSelected_callback( road->getIdString() ); }
+   else
+   { onRoadSelected_callback(""); }
+>>>>>>> omni_engine
 
 	if ( mSelRoad != road )
       setSelectedNode(-1);
@@ -979,7 +1003,11 @@ F32 GuiRoadEditorCtrl::getNodeWidth()
    return 0.0f;   
 }
 
+<<<<<<< HEAD
 void GuiRoadEditorCtrl::setNodePosition(const Point3F& pos)
+=======
+void GuiRoadEditorCtrl::setNodePosition( Point3F &pos )
+>>>>>>> omni_engine
 {
    if ( mSelRoad && mSelNode != -1 )
    {
@@ -1004,9 +1032,15 @@ void GuiRoadEditorCtrl::setSelectedNode( S32 node )
    mSelNode = node;
    
    if ( mSelNode != -1 && mSelRoad != NULL )
+<<<<<<< HEAD
       Con::executef( this, "onNodeSelected", Con::getIntArg(mSelNode), Con::getFloatArg(mSelRoad->mNodes[mSelNode].width) );
    else
       Con::executef( this, "onNodeSelected", Con::getIntArg(-1) );
+=======
+   { onNodeSelected_callback( Con::getIntArg(mSelNode), Con::getFloatArg(mSelRoad->mNodes[mSelNode].width) ); }
+   else
+   { onNodeSelected_callback( Con::getIntArg(-1) ); }
+>>>>>>> omni_engine
 }
 
 void GuiRoadEditorCtrl::submitUndo( const UTF8 *name )
@@ -1105,3 +1139,191 @@ DefineConsoleMethod( GuiRoadEditorCtrl, deleteRoad, void, (), , "" )
 {
    object->deleteSelectedRoad();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiRoadEditorCtrl_deleteNode(char * x__object)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->deleteSelectedNode();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiRoadEditorCtrl_deleteRoad(char * x__object)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->deleteSelectedRoad();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiRoadEditorCtrl_getMode(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getMode();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiRoadEditorCtrl_getNodePosition(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F wle_returnObject;
+{
+	{wle_returnObject =object->getNodePosition();
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fn_GuiRoadEditorCtrl_getNodeWidth(char * x__object)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getNodeWidth());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiRoadEditorCtrl_getSelectedNode(char * x__object)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getSelectedNode());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiRoadEditorCtrl_getSelectedRoad(char * x__object)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   DecalRoad *road = object->getSelectedRoad();
+   if ( road )
+     return (S32)( road->getId());
+   
+  return (S32)( NULL);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiRoadEditorCtrl_setMode(char * x__object, char * x__mode)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* mode = (const char*)x__mode;
+{
+   String newMode = ( mode );
+   object->setMode( newMode );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiRoadEditorCtrl_setNodePosition(char * x__object, char * x__pos)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+{
+   object->setNodePosition( pos );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiRoadEditorCtrl_setNodeWidth(char * x__object, F32 width)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setNodeWidth( width );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiRoadEditorCtrl_setSelectedRoad(char * x__object, char * x__pathRoad)
+{
+GuiRoadEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* pathRoad = (const char*)x__pathRoad;
+{
+   if (dStrcmp( pathRoad,"")==0 )
+      object->setSelectedRoad(NULL);
+   else
+   {
+      DecalRoad *road = NULL;
+      if ( Sim::findObject( pathRoad, road ) )
+         object->setSelectedRoad(road);
+   }
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

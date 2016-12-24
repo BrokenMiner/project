@@ -259,6 +259,12 @@ function sfxCompareProvider( %providerA, %providerB )
          else
             return 0;
             
+      case "XAudio":
+         if( %providerB !$= "FMOD" && %providerB !$= "OpenAL" && %providerB !$= "DirectSound" )
+            return 1;
+         else
+            return -1;
+         
       default:
          return -1;
    }

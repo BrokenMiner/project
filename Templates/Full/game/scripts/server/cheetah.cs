@@ -155,7 +155,7 @@ function CheetahCar::onTrigger(%this, %obj, %index, %state)
    }
 }
 
-function TurretImage::onMount(%this, %obj, %slot)
+function TurretImage::onImageMount(%this, %obj, %slot)
 {
    // Load the gun
    %obj.setImageAmmo(%slot, true);

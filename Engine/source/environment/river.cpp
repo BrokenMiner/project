@@ -52,6 +52,7 @@
 #include "postFx/postEffect.h"
 #include "math/util/matrixSet.h"
 #include "environment/nodeListManager.h"
+#include "console/SimXMLDocument.h"    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 
 ConsoleDocClass( River,
    "@brief A water volume defined by a 3D spline.\n\n"
@@ -227,8 +228,13 @@ void RiverNodeEvent::padListToSize()
       newlist->mDepths.merge(list->mDepths);
       newlist->mNormals.merge(list->mNormals);
 
+<<<<<<< HEAD
       delete list;
       mNodeList = list = newlist;
+=======
+      mNodeList = newlist;
+      delete list;
+>>>>>>> omni_engine
    }
 
    // Pad our list end?
@@ -748,6 +754,7 @@ SimSet* River::getServerSet()
    return smServerRiverSet;
 }
 
+<<<<<<< HEAD
 void River::writeFields( Stream &stream, U32 tabStop )
 {
    Parent::writeFields( stream, tabStop );
@@ -755,15 +762,53 @@ void River::writeFields( Stream &stream, U32 tabStop )
    // Now write all nodes
 
    stream.write(2, "\r\n");   
+=======
+void River::writeFields( Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput  )
+{
+   Parent::writeFields( stream, tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */XMLOutput );
+
+   // Now write all nodes
+
+
+   if(!XMLOutput) // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      stream.write(2, "\r\n");   
+>>>>>>> omni_engine
 
    for ( U32 i = 0; i < mNodes.size(); i++ )
    {
       const RiverNode &node = mNodes[i];
 
+<<<<<<< HEAD
       stream.writeTabs(tabStop);
 
       char buffer[1024];
       dMemset( buffer, 0, 1024 );
+=======
+      char buffer[1024];
+      dMemset( buffer, 0, 1024 );
+
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+     /// For XML Output
+     if(XMLOutput)
+     {
+        dSprintf( buffer, 1024, "%f %f %f %f %f %f %f %f", node.point.x, node.point.y, node.point.z, 
+                                                                     node.width, 
+                                                                     node.depth, 
+                                                                     node.normal.x, node.normal.y, node.normal.z );
+        getcurrentXML()->pushNewElement( "Node" );
+        getcurrentXML()->addData( buffer );
+        getcurrentXML()->popElement();
+        continue;
+     }
+
+     // @Copyright end
+
+     /// For Stream Output
+     stream.writeTabs(tabStop);
+
+>>>>>>> omni_engine
       dSprintf( buffer, 1024, "Node = \"%f %f %f %f %f %f %f %f\";", node.point.x, node.point.y, node.point.z, 
                                                                      node.width, 
                                                                      node.depth, 
@@ -2540,3 +2585,110 @@ DefineEngineMethod( River, setMaxDivisionSize, void, ( F32 meters ),,
 {
    object->setMaxDivisionSize( meters );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRiver_regenerate(char * x__object)
+{
+River* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->regenerate();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRiver_setBatchSize(char * x__object, F32 meters)
+{
+River* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setBatchSize( meters );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRiver_setMaxDivisionSize(char * x__object, F32 meters)
+{
+River* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setMaxDivisionSize( meters );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRiver_setMetersPerSegment(char * x__object, F32 meters)
+{
+River* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setMetersPerSegment( meters );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRiver_setNodeDepth(char * x__object, S32 idx, F32 meters)
+{
+River* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setNodeDepth( idx, meters );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

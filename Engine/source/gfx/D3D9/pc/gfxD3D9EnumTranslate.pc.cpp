@@ -47,6 +47,7 @@ _D3DDECLTYPE GFXD3D9DeclType[GFXDeclType_COUNT];
 
 #define INIT_LOOKUPTABLE( tablearray, enumprefix, type ) \
    for( S32 i = enumprefix##_FIRST; i < enumprefix##_COUNT; i++ ) \
+<<<<<<< HEAD
       tablearray[i] = (type)GFX_UNINIT_VAL;
 
 #define VALIDATE_LOOKUPTABLE( tablearray, enumprefix ) \
@@ -54,6 +55,15 @@ _D3DDECLTYPE GFXD3D9DeclType[GFXDeclType_COUNT];
       if( (S32)tablearray[i] == GFX_UNINIT_VAL ) \
          Con::warnf( "GFXD3D9EnumTranslate: Unassigned value in " #tablearray ": %i", i ); \
       else if( (S32)tablearray[i] == GFX_UNSUPPORTED_VAL ) \
+=======
+      tablearray##[i] = (##type##)GFX_UNINIT_VAL;
+
+#define VALIDATE_LOOKUPTABLE( tablearray, enumprefix ) \
+   for( S32 i = enumprefix##_FIRST; i < enumprefix##_COUNT; i++ ) \
+      if( (S32)tablearray##[i] == GFX_UNINIT_VAL ) \
+         Con::warnf( "GFXD3D9EnumTranslate: Unassigned value in " #tablearray ": %i", i ); \
+      else if( (S32)tablearray##[i] == GFX_UNSUPPORTED_VAL ) \
+>>>>>>> omni_engine
          Con::warnf( "GFXD3D9EnumTranslate: Unsupported value in " #tablearray ": %i", i );
 
 //------------------------------------------------------------------------------

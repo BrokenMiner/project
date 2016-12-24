@@ -95,7 +95,15 @@ namespace DictHash
 
    inline U32 hash(const void *data)
    {
+<<<<<<< HEAD
       return (uintptr_t)data;
+=======
+#if defined _M_X64
+	  return (U64)data;
+#else
+      return (U32)data;
+#endif
+>>>>>>> omni_engine
    }
 
    template<class A, class B>

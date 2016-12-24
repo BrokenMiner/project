@@ -271,6 +271,11 @@ private:
 	virtual void	sortOverlappingPairs(btDispatcher* dispatcher);
 	
 
+protected:
+	
+	btAlignedObjectArray<int>	m_hashTable;
+	btAlignedObjectArray<int>	m_next;
+	btOverlappingPairCallback*	m_ghostPairCallback;
 	
 };
 

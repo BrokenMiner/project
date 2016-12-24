@@ -60,11 +60,18 @@ public:
    U32 mOffset;
    U32 mSize;  
    S32 mSamplerNum; 
+<<<<<<< HEAD
    bool mInstancingConstant;
 };
 
 GFXGLShaderConstHandle::GFXGLShaderConstHandle( GFXGLShader *shader )
  : mShader( shader ), mLocation(0), mOffset(0), mSize(0), mSamplerNum(-1), mInstancingConstant(false)
+=======
+};
+
+GFXGLShaderConstHandle::GFXGLShaderConstHandle( GFXGLShader *shader )
+ : mShader( shader ), mSamplerNum(-1)
+>>>>>>> omni_engine
 {
    mValid = false;
 }
@@ -100,7 +107,11 @@ static U32 shaderConstTypeSize(GFXShaderConstType type)
 }
 
 GFXGLShaderConstHandle::GFXGLShaderConstHandle( GFXGLShader *shader, const GFXShaderConstDesc &desc, GLuint loc, S32 samplerNum ) 
+<<<<<<< HEAD
  : mShader(shader), mInstancingConstant(false)
+=======
+ : mShader(shader)
+>>>>>>> omni_engine
 {
    reinit(desc, loc, samplerNum);
 }
@@ -159,12 +170,17 @@ void GFXGLShaderConstBuffer::internalSet(GFXShaderConstHandle* handle, const Con
 
    GFXGLShaderConstHandle* _glHandle = static_cast<GFXGLShaderConstHandle*>(handle);
    AssertFatal(mShader == _glHandle->mShader, "GFXGLShaderConstBuffer::set - Should only set handles which are owned by our shader");
+<<<<<<< HEAD
    U8 *buf = mBuffer + _glHandle->mOffset;
 
    if(_glHandle->mInstancingConstant)            
       buf = mInstPtr + _glHandle->mOffset;
 
    dMemcpy(buf, &param, sizeof(ConstType));
+=======
+   
+   dMemcpy(mBuffer + _glHandle->mOffset, &param, sizeof(ConstType));
+>>>>>>> omni_engine
 }
 
 void GFXGLShaderConstBuffer::set(GFXShaderConstHandle* handle, const F32 fv)
@@ -305,6 +321,7 @@ void GFXGLShaderConstBuffer::set(GFXShaderConstHandle* handle, const MatrixF& ma
       reinterpret_cast<F32*>(mBuffer + _glHandle->mOffset)[8] = mat[10];
       break;
    case GFXSCT_Float4x4:
+<<<<<<< HEAD
    {      
       if(_glHandle->mInstancingConstant)
       {
@@ -317,6 +334,10 @@ void GFXGLShaderConstBuffer::set(GFXShaderConstHandle* handle, const MatrixF& ma
       dMemcpy(mBuffer + _glHandle->mOffset, (const F32*)mat, sizeof(MatrixF));
       break;
    }
+=======
+      dMemcpy(mBuffer + _glHandle->mOffset, (const F32*)mat, sizeof(MatrixF));
+      break;
+>>>>>>> omni_engine
    default:
       AssertFatal(false, "GFXGLShaderConstBuffer::set - Invalid matrix type");
       break;
@@ -329,9 +350,14 @@ void GFXGLShaderConstBuffer::set(GFXShaderConstHandle* handle, const MatrixF* ma
    AssertFatal(handle->isValid(), "GFXGLShaderConstBuffer::set - Handle is not valid!" );
 
    GFXGLShaderConstHandle* _glHandle = static_cast<GFXGLShaderConstHandle*>(handle);
+<<<<<<< HEAD
    AssertFatal(mShader == _glHandle->mShader, "GFXGLShaderConstBuffer::set - Should only set handles which are owned by our shader");  
    AssertFatal(!_glHandle->mInstancingConstant, "GFXGLShaderConstBuffer::set - Instancing not supported for matrix arrays");
 
+=======
+   AssertFatal(mShader == _glHandle->mShader, "GFXGLShaderConstBuffer::set - Should only set handles which are owned by our shader");
+   
+>>>>>>> omni_engine
    switch (matrixType) {
       case GFXSCT_Float4x4:
          dMemcpy(mBuffer + _glHandle->mOffset, (F32*)mat, _glHandle->getSize());
@@ -599,11 +625,13 @@ void GFXGLShader::initHandles()
 
    // Loop through all ConstantDescriptions, 
    // if they aren't in the HandleMap add them, if they are reinitialize them.
+   S32 assignedSamplerNum = 0;
    for ( U32 i = 0; i < mConstants.size(); i++ )
    {
       GFXShaderConstDesc &desc = mConstants[i];            
 
       // Index element 1 of the name to skip the '$' we inserted earier.
+<<<<<<< HEAD
       GLint loc = glGetUniformLocation(mProgram, &desc.name.c_str()[1]);
 
       AssertFatal(loc != -1, "");
@@ -616,6 +644,13 @@ void GFXGLShader::initHandles()
          AssertFatal(idx != -1, "");
          sampler = idx; //assignedSamplerNum++;
       }
+=======
+      U32 loc = glGetUniformLocation(mProgram, &desc.name.c_str()[1]);
+
+      HandleMap::Iterator handle = mHandles.find(desc.name);
+      S32 sampler = (desc.constType == GFXSCT_Sampler || desc.constType == GFXSCT_SamplerCube) ?
+         assignedSamplerNum++ : -1;
+>>>>>>> omni_engine
       if ( handle != mHandles.end() )
       {
          handle->value->reinit( desc, loc, sampler );         
@@ -658,6 +693,7 @@ void GFXGLShader::initHandles()
          // Set sampler number on our program.
          glUniform1i(handle->mLocation, handle->mSamplerNum);
          // Set sampler in constant buffer so it does not get unset later.
+<<<<<<< HEAD
          dMemcpy(mConstBuffer + handle->mOffset, &handle->mSamplerNum, handle->getSize());
       }
    }
@@ -721,6 +757,12 @@ void GFXGLShader::initHandles()
       }
 
    }
+=======
+         dMemcpy(mConstBuffer + handle->mOffset, &handle->mLocation, handle->getSize());
+      }
+   }
+   glUseProgram(0);
+>>>>>>> omni_engine
 }
 
 GFXShaderConstHandle* GFXGLShader::getShaderConstHandle(const String& name)
@@ -929,7 +971,11 @@ char* GFXGLShader::_handleIncludes( const Torque::Path& path, FileStream *s )
          dFree(includedText);
          manip.insert(q-buffer, sItx);
          char* manipBuf = dStrdup(manip.c_str());
+<<<<<<< HEAD
          p = manipBuf + (q - buffer);
+=======
+         p = manipBuf + (p - buffer);
+>>>>>>> omni_engine
          dFree(buffer);
          buffer = manipBuf;
       }
@@ -948,6 +994,7 @@ bool GFXGLShader::_loadShaderFromStream(  GLuint shader,
    Vector<U32> lengths;
    
    // The GLSL version declaration must go first!
+<<<<<<< HEAD
    const char *versionDecl = "#version 150\r\n";
    buffers.push_back( dStrdup( versionDecl ) );
    lengths.push_back( dStrlen( versionDecl ) );
@@ -976,6 +1023,15 @@ bool GFXGLShader::_loadShaderFromStream(  GLuint shader,
       if(macros[i].name.isEmpty())  // TODO OPENGL
          continue;
 
+=======
+   const char *versionDecl = "#version 120\r\n\r\n";
+   buffers.push_back( dStrdup( versionDecl ) );
+   lengths.push_back( dStrlen( versionDecl ) );
+
+   // Now add all the macros.
+   for( U32 i = 0; i < macros.size(); i++ )
+   {
+>>>>>>> omni_engine
       String define = String::ToString( "#define %s %s\n", macros[i].name.c_str(), macros[i].value.c_str() );
       buffers.push_back( dStrdup( define.c_str() ) );
       lengths.push_back( define.length() );

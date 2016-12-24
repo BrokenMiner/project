@@ -63,15 +63,24 @@ F32 PSSMLightShadowMap::smSmallestVisiblePixelSize = 25.0f;
 
 PSSMLightShadowMap::PSSMLightShadowMap( LightInfo *light )
    :  LightShadowMap( light ),
+<<<<<<< HEAD
       mNumSplits( 1 )
+=======
+      mNumSplits( 0 )
+>>>>>>> omni_engine
 {  
    mIsViewDependent = true;
 }
 
 void PSSMLightShadowMap::_setNumSplits( U32 numSplits, U32 texSize )
 {
+<<<<<<< HEAD
    AssertFatal(numSplits > 0 && numSplits <= MAX_SPLITS,
       avar("PSSMLightShadowMap::_setNumSplits() - Splits must be between 1 and %d!", MAX_SPLITS));
+=======
+   AssertFatal( numSplits > 0 && numSplits <= MAX_SPLITS, 
+      "PSSMLightShadowMap::_setNumSplits() - Splits must be between 1 and 4!" );
+>>>>>>> omni_engine
 
    releaseTextures();
   
@@ -204,10 +213,14 @@ void PSSMLightShadowMap::_render(   RenderPassManager* renderPass,
    if (  mShadowMapTex.isNull() || 
          mNumSplits != params->numSplits || 
          mTexSize != texSize )
+<<<<<<< HEAD
    {
       _setNumSplits( params->numSplits, texSize );
       mShadowMapDepth = _getDepthTarget( mShadowMapTex->getWidth(), mShadowMapTex->getHeight() );   
    }
+=======
+      _setNumSplits( params->numSplits, texSize );
+>>>>>>> omni_engine
    mLogWeight = params->logWeight;
 
    Frustum fullFrustum( diffuseState->getCameraFrustum() );
@@ -219,7 +232,12 @@ void PSSMLightShadowMap::_render(   RenderPassManager* renderPass,
    // Set our render target
    GFX->pushActiveRenderTarget();
    mTarget->attachTexture( GFXTextureTarget::Color0, mShadowMapTex );
+<<<<<<< HEAD
    mTarget->attachTexture( GFXTextureTarget::DepthStencil, mShadowMapDepth );
+=======
+   mTarget->attachTexture( GFXTextureTarget::DepthStencil, 
+      _getDepthTarget( mShadowMapTex->getWidth(), mShadowMapTex->getHeight() ) );
+>>>>>>> omni_engine
    GFX->setActiveRenderTarget( mTarget );
    GFX->clear( GFXClearStencil | GFXClearZBuffer | GFXClearTarget, ColorI(255,255,255), 1.0f, 0 );
 

@@ -138,7 +138,11 @@ void main()
    distortPos.xy += bumpNorm.xy * distortAmt;   
  
  #ifdef UNDERWATER
+<<<<<<< HEAD
    OUT_col = hdrEncode( textureProj( refractBuff, distortPos ) );   
+=======
+   OUT_FragColor0 = hdrEncode( textureProj( refractBuff, distortPos ) );   
+>>>>>>> omni_engine
  #else
 
    vec3 eyeVec = IN_objPos.xyz - eyePos;
@@ -210,7 +214,11 @@ void main()
 
    #endif
    
+<<<<<<< HEAD
    OUT_col = hdrEncode( OUT );
+=======
+   OUT_FragColor0 = OUT;
+>>>>>>> omni_engine
    
 #endif   
 }

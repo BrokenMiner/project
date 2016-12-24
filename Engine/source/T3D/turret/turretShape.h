@@ -23,7 +23,11 @@
 #ifndef _TURRETSHAPE_H_
 #define _TURRETSHAPE_H_
 
+<<<<<<< HEAD
 #ifndef _ITEM_H_
+=======
+#ifndef _SHAPEBASE_H_
+>>>>>>> omni_engine
    #include "T3D/item.h"
 #endif
 

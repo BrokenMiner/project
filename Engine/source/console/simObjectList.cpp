@@ -23,8 +23,12 @@
 #include "platform/platform.h"
 #include "console/simObjectList.h"
 
+<<<<<<< HEAD
 #include "console/simBase.h"
 #include "console/engineAPI.h"
+=======
+#include "console/console.h"
+>>>>>>> omni_engine
 #include "console/sim.h"
 #include "console/simObject.h"
 
@@ -118,7 +122,11 @@ S32 QSORT_CALLBACK SimObjectList::_callbackSort( const void *a, const void *b )
    static char idB[64];
    dSprintf( idB, sizeof( idB ), "%d", objB->getId() );
 
+<<<<<<< HEAD
    return dAtoi( Con::executef( (const char*)smSortScriptCallbackFn, idA, idB ) );
+=======
+   return dAtoi( Con::executef( smSortScriptCallbackFn, idA, idB ) );
+>>>>>>> omni_engine
 }
 
 void SimObjectList::scriptSort( const String &scriptCallback )

@@ -39,6 +39,7 @@ local.properties
 # User-specific files
 *.suo
 *.user
+!Models.User/
 *.sln.docstates
 *.sln
 *.vcxproj
@@ -182,4 +183,8 @@ console.log
 My Projects/
 Project Manager.exe
 projects.xml
+
+*.debug.*
+*.release.*
+My Projects/
 Qt*.dll

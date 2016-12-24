@@ -101,4 +101,8 @@ private:
 void dGetStackTrace(char * traceBuffer, CONTEXT const & ContextRecord);
 
 #endif
+<<<<<<< HEAD
 #endif
+=======
+#endif
+>>>>>>> omni_engine

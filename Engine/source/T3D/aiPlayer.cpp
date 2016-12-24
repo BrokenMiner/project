@@ -28,10 +28,19 @@
 #include "T3D/gameBase/moveManager.h"
 #include "console/engineAPI.h"
 
+<<<<<<< HEAD
 #include <cfloat>
 
 static U32 sAIPlayerLoSMask = TerrainObjectType | StaticShapeObjectType | StaticObjectType;
 
+=======
+static U32 sAIPlayerLoSMask = TerrainObjectType | StaticShapeObjectType | StaticObjectType;
+
+#include "terrain/terrdata.h"
+
+#include "player.h"
+
+>>>>>>> omni_engine
 IMPLEMENT_CO_NETOBJECT_V1(AIPlayer);
 
 ConsoleDocClass( AIPlayer,
@@ -83,6 +92,31 @@ ConsoleDocClass( AIPlayer,
 
 	"@ingroup AI\n"
 	"@ingroup gameObjects\n");
+
+IMPLEMENT_CALLBACK(AIPlayer, onMoveStuck, void, ( AIPlayer* obj ), (obj),
+   "@brief While in motion, if an AIPlayer has moved less than moveStuckTolerance within a single tick, this "
+   "callback is called.\n\n"
+   "@param AIPlayer Object\n"
+   );
+
+IMPLEMENT_CALLBACK(AIPlayer, onReachDestination, void, ( AIPlayer* obj ), (obj),
+   "@brief Called when the player has reached its set destination using the setMoveDestination() method.\n\n"
+   "The actual point at which this callback is called is when the AIPlayer is within the mMoveTolerance.\n"
+   "@param AIPlayer Object\n"
+   );
+
+IMPLEMENT_CALLBACK(AIPlayer, onTargetEnterLOS, void, ( AIPlayer* obj ), (obj),
+   "@brief When an object is being aimed at (following a call to setAimObject()) and the targeted object enters "
+   "the AIPlayer's line of sight, this callback is called.\n\n"
+   "@param AIPlayer Object\n"
+   );
+
+IMPLEMENT_CALLBACK(AIPlayer, onTargetExitLOS, void, ( AIPlayer* obj ), (obj),
+   "@brief When an object is being aimed at (following a call to setAimObject()) and the targeted object leaves "
+   "the AIPlayer's line of sight, this callback is called.\n\n"
+   "@param AIPlayer Object\n"
+   );
+
 /**
  * Constructor
  */
@@ -102,6 +136,7 @@ AIPlayer::AIPlayer()
    mTargetInLOS = false;
    mAimOffset = Point3F(0.0f, 0.0f, 0.0f);
 
+<<<<<<< HEAD
 #ifdef TORQUE_NAVIGATION_ENABLED
    mJump = None;
    mNavSize = Regular;
@@ -112,6 +147,15 @@ AIPlayer::AIPlayer()
 
    for( S32 i = 0; i < MaxTriggerKeys; i ++ )
       mMoveTriggers[ i ] = false;
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+   mJump = None;
+   mNavSize = Regular;
+   mLinkTypes = LinkData(AllFlags);
+#endif // TORQUE_WALKABOUT_ENABLED
+
+   mIsAiControlled = true;
+>>>>>>> omni_engine
 }
 
 /**
@@ -147,6 +191,7 @@ void AIPlayer::initPersistFields()
 
    endGroup( "AI" );
 
+<<<<<<< HEAD
 #ifdef TORQUE_NAVIGATION_ENABLED
    addGroup("Pathfinding");
 
@@ -167,6 +212,28 @@ void AIPlayer::initPersistFields()
 
    endGroup("Pathfinding");
 #endif // TORQUE_NAVIGATION_ENABLED
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+   addGroup("Pathfinding");
+
+   addField("allowWalk", TypeBool, Offset(mLinkTypes.walk, AIPlayer),
+      "Allow the character to walk on dry land.");
+   addField("allowJump", TypeBool, Offset(mLinkTypes.jump, AIPlayer),
+      "Allow the character to use jump links.");
+   addField("allowDrop", TypeBool, Offset(mLinkTypes.drop, AIPlayer),
+      "Allow the character to use drop links.");
+   addField("allowSwim", TypeBool, Offset(mLinkTypes.swim, AIPlayer),
+      "Allow the character tomove in water.");
+   addField("allowLedge", TypeBool, Offset(mLinkTypes.ledge, AIPlayer),
+      "Allow the character to jump ledges.");
+   addField("allowClimb", TypeBool, Offset(mLinkTypes.climb, AIPlayer),
+      "Allow the character to use climb links.");
+   addField("allowTeleport", TypeBool, Offset(mLinkTypes.teleport, AIPlayer),
+      "Allow the character to use teleporters.");
+
+   endGroup("Pathfinding");
+#endif // TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 
    Parent::initPersistFields();
 }
@@ -184,6 +251,7 @@ bool AIPlayer::onAdd()
    return true;
 }
 
+<<<<<<< HEAD
 void AIPlayer::onRemove()
 {
 #ifdef TORQUE_NAVIGATION_ENABLED
@@ -193,6 +261,17 @@ void AIPlayer::onRemove()
 #endif
    Parent::onRemove();
 }
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+void AIPlayer::onRemove()
+{
+   clearPath();
+   clearCover();
+   clearFollow();
+   Parent::onRemove();
+}
+#endif // TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 
 /**
  * Sets the speed at which this AI moves
@@ -210,11 +289,19 @@ void AIPlayer::setMoveSpeed( F32 speed )
 void AIPlayer::stopMove()
 {
    mMoveState = ModeStop;
+<<<<<<< HEAD
 #ifdef TORQUE_NAVIGATION_ENABLED
    clearPath();
    clearCover();
    clearFollow();
 #endif
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+   clearPath();
+   clearCover();
+   clearFollow();
+#endif // TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 }
 
 /**
@@ -253,13 +340,23 @@ void AIPlayer::setAimObject( GameBase *targetObject )
    mAimOffset = Point3F(0.0f, 0.0f, 0.0f);
 }
 
+void AIPlayer::onCollision( SceneObject *object, const VectorF &vec )
+{
+	if (dynamic_cast<TerrainBlock*>(object)==0)
+		Parent::onCollision(object,vec);
+}
+
 /**
  * Sets the object the bot is targeting and an offset to add to target location
  *
  * @param targetObject The object to target
  * @param offset       The offest from the target location to aim at
  */
+<<<<<<< HEAD
 void AIPlayer::setAimObject(GameBase *targetObject, const Point3F& offset)
+=======
+void AIPlayer::setAimObject( GameBase *targetObject, Point3F offset )
+>>>>>>> omni_engine
 {
    mAimObject = targetObject;
    mTargetInLOS = false;
@@ -352,7 +449,11 @@ bool AIPlayer::getAIMove(Move *movePtr)
    Point3F location = eye.getPosition();
    Point3F rotation = getRotation();
 
+<<<<<<< HEAD
 #ifdef TORQUE_NAVIGATION_ENABLED
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
    if(mDamageState == Enabled)
    {
       if(mMoveState != ModeStop)
@@ -376,7 +477,11 @@ bool AIPlayer::getAIMove(Move *movePtr)
          }
       }
    }
+<<<<<<< HEAD
 #endif // TORQUE_NAVIGATION_ENABLED
+=======
+#endif // TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 
    // Orient towards the aim point, aim object, or towards
    // our destination.
@@ -460,7 +565,15 @@ bool AIPlayer::getAIMove(Move *movePtr)
       if (mFabs(xDiff) < mMoveTolerance && mFabs(yDiff) < mMoveTolerance) 
       {
          mMoveState = ModeStop;
+<<<<<<< HEAD
          onReachDestination();
+=======
+		 #ifdef TORQUE_WALKABOUT_ENABLED
+         onReachDestination();
+		#else
+		 onReachDestination_callback(this);
+		#endif // TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
       }
       else 
       {
@@ -529,7 +642,16 @@ bool AIPlayer::getAIMove(Move *movePtr)
                if ( mMoveState != ModeSlowing || locationDelta == 0 )
                {
                   mMoveState = ModeStuck;
+<<<<<<< HEAD
                   onStuck();
+=======
+				  #ifdef TORQUE_WALKABOUT_ENABLED
+                  onStuck();
+				#else
+				  onMoveStuck_callback(this);
+				#endif // TORQUE_WALKABOUT_ENABLED
+                  
+>>>>>>> omni_engine
                }
             }
          }
@@ -539,6 +661,7 @@ bool AIPlayer::getAIMove(Move *movePtr)
    // Test for target location in sight if it's an object. The LOS is
    // run from the eye position to the center of the object's bounding,
    // which is not very accurate.
+<<<<<<< HEAD
    if (mAimObject) {
       MatrixF eyeMat;
       getEyeTransform(&eyeMat);
@@ -561,14 +684,39 @@ bool AIPlayer::getAIMove(Move *movePtr)
             throwCallback( "onTargetEnterLOS" );
             mTargetInLOS = true;
          }
+=======
+   if (mAimObject)
+   {
+      if (checkInLos(mAimObject.getPointer()))
+      {
+         if (!mTargetInLOS)
+         {
+            throwCallback("onTargetEnterLOS");
+            mTargetInLOS = true;
+         }
+      }
+      else if (mTargetInLOS)
+      {
+            onTargetEnterLOS_callback(this);
+         mTargetInLOS = false;
+      }
+>>>>>>> omni_engine
    }
 
    // Replicate the trigger state into the move so that
    // triggers can be controlled from scripts.
+<<<<<<< HEAD
    for( U32 i = 0; i < MaxTriggerKeys; i++ )
       movePtr->trigger[ i ] = mMoveTriggers[ i ];
 
 #ifdef TORQUE_NAVIGATION_ENABLED
+=======
+   for( S32 i = 0; i < MaxTriggerKeys; i++ )
+      movePtr->trigger[i] = getImageTriggerState(i);
+
+
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
    if(mJump == Now)
    {
       movePtr->trigger[2] = true;
@@ -584,12 +732,124 @@ bool AIPlayer::getAIMove(Move *movePtr)
          mJump = None;
       }
    }
+<<<<<<< HEAD
 #endif // TORQUE_NAVIGATION_ENABLED
+=======
+#endif // TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 
    mLastLocation = location;
 
    return true;
 }
+
+void AIPlayer::AISearch(F32 fOV,F32 farDist,SimSet* ObjToSearch,SimSet* result)
+	{
+	if (ObjToSearch==0)
+		return;
+	if (result==0)
+		return;
+
+	//Box used for temporarily storing the object to compare's bounding box.
+	//This object is passed into a helper function "BoxToPlane" for using the
+	// half space test on the 6 planes of the view frustum
+	Box3F bounds;
+
+	//Camera vectors for easy use.
+	//The camera's up, right vector, and forward vector
+	Point3F up, right;
+
+	//Near & Far Plane distances from the camera
+	//float nearDist, 		farDist;
+
+	//Camera's Field of View
+	//float fOV;
+
+	//The four corners of the near distance plane
+	//These corners are used for generating the 4 side planes
+	Point3F pTR, pTL, pBR, pBL; 
+
+	//This variable will be used as the camera's position for generating the view frustum sides.
+	//It will also be used as the center of the near plane for finding the corners first.
+	Point3F pCP; 
+
+	//Four side planes to be created
+	PlaneF plTop;		//Top of view Frustum
+	PlaneF plBottom;	//Bottom of view Frustum
+	PlaneF plRight;		//Right side of view Frustum
+	PlaneF plLeft;		//Left side of view Frustum
+	PlaneF plNear;		//Near clipping plane
+	PlaneF plFar;		//Far clipping plane
+
+	//Amount to incriment to determine corners of near frustum
+	//These are based on the resolution of the screen and the distance of
+	// the near clipping plane.
+	float xAdd, yAdd;
+
+	F32 nearDist =1.0f;
+	yAdd = tan(fOV/2)*nearDist;
+	xAdd = yAdd*(4.0f/3.0f);
+
+	//Far Plane generation
+	Point3F pPos, pView;
+	MatrixF mTrans;
+	 F32 posf = 0.0f;
+	getCameraTransform(&posf, &mTrans);
+	pView = mTrans.getForwardVector();
+	pPos = mTrans.getPosition();
+	
+	pCP = pPos + (pView)*farDist;
+	plFar.set(pCP, (-1*pView));
+
+	//Near Plane generation
+	pCP = pPos + pView*nearDist;
+	plNear.set(pCP, pView);
+
+	//Getting the camera's orientation vectors
+	right = mTrans.getRightVector();
+	up = mTrans.getUpVector();
+
+	//4 corners of near Plane
+	pTR = pCP + (right*xAdd) + (up*yAdd);
+	pTL = pCP - (right*xAdd) + (up*yAdd);
+	pBR = pCP + (right*xAdd) - (up*yAdd);
+	pBL = pCP - (right*xAdd) - (up*yAdd);
+
+	//Finally set this to the camera position
+	pCP = pPos;
+
+	//Generate the side, top, and bottom planes
+	plLeft.set(pCP, pTL, pBL);
+	plTop.set(pCP, pTR, pTL);
+	plRight.set(pCP, pBR, pTR);
+	plBottom.set(pCP, pBL, pBR);
+
+	
+	for (int i = 0;i<ObjToSearch->size();i++)
+		{
+		SceneObject *object =dynamic_cast<SceneObject *>(ObjToSearch->at(i));
+		//I only care about player objects in this search.
+		if (dynamic_cast<Player*>(object))
+			{
+			bounds = object->getWorldBox();
+			if(plNear.whichSide(bounds) < 0.0f)
+				continue;
+			if(plFar.whichSide(bounds) < 0.0f)
+				continue;
+			if(plLeft.whichSide(bounds) < 0.0f)
+				continue;
+			if(plRight.whichSide(bounds) < 0.0f)
+				continue;
+			if(plBottom.whichSide(bounds) < 0.0f)
+				continue;
+			if(plTop.whichSide(bounds) < 0.0f)
+				continue;
+			}
+		if (this!=object)
+			result->pushObject(object);
+		}
+	}
+
 
 /**
  * Utility function to throw callbacks. Callbacks always occure
@@ -602,6 +862,7 @@ void AIPlayer::throwCallback( const char *name )
    Con::executef(getDataBlock(), name, getIdString());
 }
 
+#ifdef TORQUE_WALKABOUT_ENABLED
 /**
  * Called when we get within mMoveTolerance of our destination set using
  * setMoveDestination(). Only fires the script callback if we are at the end
@@ -643,6 +904,7 @@ void AIPlayer::onReachDestination()
  */
 void AIPlayer::onStuck()
 {
+<<<<<<< HEAD
 #ifdef TORQUE_NAVIGATION_ENABLED
    if(!mPathData.path.isNull())
       repath();
@@ -652,6 +914,14 @@ void AIPlayer::onStuck()
 }
 
 #ifdef TORQUE_NAVIGATION_ENABLED
+=======
+   if(!mPathData.path.isNull())
+      repath();
+   else
+      throwCallback("onMoveStuck");
+}
+
+>>>>>>> omni_engine
 // --------------------------------------------------------------------------------------------
 // Pathfinding
 // --------------------------------------------------------------------------------------------
@@ -725,6 +995,7 @@ bool AIPlayer::setPathDestination(const Point3F &pos)
 
    // Create a new path.
    NavPath *path = new NavPath();
+<<<<<<< HEAD
 
    path->mMesh = getNavMesh();
    path->mFrom = getPosition();
@@ -739,6 +1010,26 @@ bool AIPlayer::setPathDestination(const Point3F &pos)
       delete path;
       return false;
    }
+=======
+   if(path)
+   {
+      path->mMesh = getNavMesh();
+      path->mFrom = getPosition();
+      path->mTo = pos;
+      path->mFromSet = path->mToSet = true;
+      path->mAlwaysRender = true;
+      path->mLinkTypes = mLinkTypes;
+      path->mXray = true;
+      // Paths plan automatically upon being registered.
+      if(!path->registerObject())
+      {
+         delete path;
+         return false;
+      }
+   }
+   else
+      return false;
+>>>>>>> omni_engine
 
    if(path->success())
    {
@@ -763,7 +1054,11 @@ bool AIPlayer::setPathDestination(const Point3F &pos)
       return false;
    }
 }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
 DefineEngineMethod(AIPlayer, setPathDestination, bool, (Point3F goal),,
    "@brief Tells the AI to find a path to the location provided\n\n"
 
@@ -773,16 +1068,30 @@ DefineEngineMethod(AIPlayer, setPathDestination, bool, (Point3F goal),,
    "@see getPathDestination()\n"
    "@see setMoveDestination()\n")
 {
+<<<<<<< HEAD
    return object->setPathDestination(goal);
 }
 
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+   return object->setPathDestination(goal);
+#else
+	return false;
+#endif
+}
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 Point3F AIPlayer::getPathDestination() const
 {
    if(!mPathData.path.isNull())
       return mPathData.path->mTo;
    return Point3F(0, 0, 0);
 }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
 DefineEngineMethod(AIPlayer, getPathDestination, Point3F, (),,
    "@brief Get the AIPlayer's current pathfinding destination.\n\n"
 
@@ -792,9 +1101,19 @@ DefineEngineMethod(AIPlayer, getPathDestination, Point3F, (),,
 
    "@see setPathDestination()\n")
 {
+<<<<<<< HEAD
 	return object->getPathDestination();
 }
 
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+	return object->getPathDestination();
+#else
+	return Point3F::Zero;
+#endif
+}
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 void AIPlayer::followNavPath(NavPath *path)
 {
    if(!isServerObject())
@@ -811,17 +1130,31 @@ void AIPlayer::followNavPath(NavPath *path)
    // Start from 0 since we might not already be there.
    moveToNode(0);
 }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
 DefineEngineMethod(AIPlayer, followNavPath, void, (SimObjectId obj),,
    "@brief Tell the AIPlayer to follow a path.\n\n"
 
    "@param obj ID of a NavPath object for the character to follow.")
 {
+<<<<<<< HEAD
    NavPath *path;
    if(Sim::findObject(obj, path))
       object->followNavPath(path);
 }
 
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+   NavPath *path;
+   if(Sim::findObject(obj, path))
+      object->followNavPath(path);
+#endif
+}
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 void AIPlayer::followObject(SceneObject *obj, F32 radius)
 {
    if(!isServerObject())
@@ -835,21 +1168,37 @@ void AIPlayer::followObject(SceneObject *obj, F32 radius)
       clearCover();
       mFollowData.object = obj;
       mFollowData.radius = radius;
+<<<<<<< HEAD
       mFollowData.lastPos = obj->getPosition();
    }
 }
 
+=======
+   }
+}
+#endif
+>>>>>>> omni_engine
 DefineEngineMethod(AIPlayer, followObject, void, (SimObjectId obj, F32 radius),,
    "@brief Tell the AIPlayer to follow another object.\n\n"
 
    "@param obj ID of the object to follow.\n"
    "@param radius Maximum distance we let the target escape to.")
 {
+<<<<<<< HEAD
    SceneObject *follow;
    if(Sim::findObject(obj, follow))
       object->followObject(follow, radius);
 }
 
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+   SceneObject *follow;
+   if(Sim::findObject(obj, follow))
+      object->followObject(follow, radius);
+#endif
+}
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 void AIPlayer::repath()
 {
    // Ineffectual if we don't have a path, or are using someone else's.
@@ -865,14 +1214,26 @@ void AIPlayer::repath()
    // Move to first node (skip start pos).
    moveToNode(1);
 }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
 DefineEngineMethod(AIPlayer, repath, void, (),,
    "@brief Tells the AI to re-plan its path. Does nothing if the character "
    "has no path, or if it is following a mission path.\n\n")
 {
+<<<<<<< HEAD
    object->repath();
 }
 
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+   object->repath();
+#endif
+}
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 struct CoverSearch
 {
    Point3F loc;
@@ -939,7 +1300,11 @@ bool AIPlayer::findCover(const Point3F &from, F32 radius)
    }
    return false;
 }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
 DefineEngineMethod(AIPlayer, findCover, S32, (Point3F from, F32 radius),,
    "@brief Tells the AI to find cover nearby.\n\n"
 
@@ -947,6 +1312,7 @@ DefineEngineMethod(AIPlayer, findCover, S32, (Point3F from, F32 radius),,
    "@param radius Distance to search for cover.\n"
    "@return Cover point ID if cover was found, -1 otherwise.\n\n")
 {
+#ifdef TORQUE_WALKABOUT_ENABLED
    if(object->findCover(from, radius))
    {
       CoverPoint* cover = object->getCover();
@@ -956,8 +1322,16 @@ DefineEngineMethod(AIPlayer, findCover, S32, (Point3F from, F32 radius),,
    {
       return -1;
    }
+<<<<<<< HEAD
 }
 
+=======
+#else
+	return -1;
+#endif
+}
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 NavMesh *AIPlayer::findNavMesh() const
 {
    // Search for NavMeshes that contain us entirely with the smallest possible
@@ -988,7 +1362,11 @@ NavMesh *AIPlayer::findNavMesh() const
    }
    return mesh;
 }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
 DefineEngineMethod(AIPlayer, findNavMesh, S32, (),,
    "@brief Get the NavMesh object this AIPlayer is currently using.\n\n"
 
@@ -997,10 +1375,21 @@ DefineEngineMethod(AIPlayer, findNavMesh, S32, (),,
    "navigation type and other factors. Returns -1 if no NavMesh is "
    "found.")
 {
+<<<<<<< HEAD
    NavMesh *mesh = object->getNavMesh();
    return mesh ? mesh->getId() : -1;
 }
 
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+   NavMesh *mesh = object->getNavMesh();
+   return mesh ? mesh->getId() : -1;
+#else
+	return -1;
+#endif
+}
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
 void AIPlayer::updateNavMesh()
 {
    NavMesh *old = mNavMesh;
@@ -1017,17 +1406,32 @@ void AIPlayer::updateNavMesh()
       setPathDestination(mPathData.path->mTo);
    }
 }
+<<<<<<< HEAD
 
 DefineEngineMethod(AIPlayer, getNavMesh, S32, (),,
    "@brief Return the NavMesh this AIPlayer is using to navigate.\n\n")
 {
    NavMesh *m = object->getNavMesh();
    return m ? m->getId() : 0;
+=======
+#endif
+DefineEngineMethod(AIPlayer, getNavMesh, S32, (),,
+   "@brief Return the NavMesh this AIPlayer is using to navigate.\n\n")
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   NavMesh *m = object->getNavMesh();
+   return m ? m->getId() : 0;
+#else
+   return 0;
+#endif
+
+>>>>>>> omni_engine
 }
 
 DefineEngineMethod(AIPlayer, setNavSize, void, (const char *size),,
    "@brief Set the size of NavMesh this character uses. One of \"Small\", \"Regular\" or \"Large\".")
 {
+#ifdef TORQUE_WALKABOUT_ENABLED
    if(!dStrcmp(size, "Small"))
       object->setNavSize(AIPlayer::Small);
    else if(!dStrcmp(size, "Regular"))
@@ -1036,11 +1440,13 @@ DefineEngineMethod(AIPlayer, setNavSize, void, (const char *size),,
       object->setNavSize(AIPlayer::Large);
    else
       Con::errorf("AIPlayer::setNavSize: no such size '%s'.", size);
+#endif
 }
 
 DefineEngineMethod(AIPlayer, getNavSize, const char*, (),,
    "@brief Return the size of NavMesh this character uses for pathfinding.")
 {
+#ifdef TORQUE_WALKABOUT_ENABLED
    switch(object->getNavSize())
    {
    case AIPlayer::Small:
@@ -1051,12 +1457,26 @@ DefineEngineMethod(AIPlayer, getNavSize, const char*, (),,
       return "Large";
    }
    return "";
+<<<<<<< HEAD
 }
 #endif // TORQUE_NAVIGATION_ENABLED
+=======
+#else
+	return "";
+#endif
+}
+
+
+>>>>>>> omni_engine
 
 // --------------------------------------------------------------------------------------------
 // Console Functions
 // --------------------------------------------------------------------------------------------
+DefineEngineMethod( AIPlayer, AISearchSimSet, void, (F32 fOV,F32 farDist,SimSet* ObjToSearch,SimSet* result ),,
+	"")
+	{
+	object->AISearch(fOV,farDist,ObjToSearch,result);
+	}
 
 DefineEngineMethod( AIPlayer, stop, void, ( ),,
    "@brief Tells the AIPlayer to stop moving.\n\n")
@@ -1297,7 +1717,11 @@ bool AIPlayer::checkInFoV(GameBase* target, F32 camFov, bool _checkEnabled)
    // projection and box test.
    shapeDir.normalize();
    F32 dot = mDot(shapeDir, camDir);
+<<<<<<< HEAD
    return (dot > mCos(camFov));
+=======
+   return (dot > camFov);
+>>>>>>> omni_engine
 }
 
 DefineEngineMethod(AIPlayer, checkInFoV, bool, (ShapeBase* obj, F32 fov, bool checkEnabled), (NULL, 45.0f, false),
@@ -1309,6 +1733,7 @@ DefineEngineMethod(AIPlayer, checkInFoV, bool, (ShapeBase* obj, F32 fov, bool ch
    return object->checkInFoV(obj, fov, checkEnabled);
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( AIPlayer, setMoveTrigger, void, ( U32 slot ),,
    "@brief Sets a movement trigger on an AI object.\n\n"
    "@param slot The trigger slot to set.\n"
@@ -1348,3 +1773,413 @@ DefineEngineMethod( AIPlayer, clearMoveTriggers, void, ( ),,
 {
    object->clearMoveTriggers();
 }
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIPlayer_setAimObject(char * x__object, char * x__objName, char * x__offset)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* objName = (const char*)x__objName;
+Point3F offset = Point3F();
+sscanf(x__offset,"%f %f %f",&offset.x,&offset.y,&offset.z);
+{
+      GameBase *targetObject;
+   if( Sim::findObject( objName, targetObject ) )
+   {
+      object->setAimObject( targetObject, offset );
+   }
+   else
+      object->setAimObject( 0, offset );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_AISearchSimSet(char * x__object, F32 fOV, F32 farDist, char * x__ObjToSearch, char * x__result)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+SimSet* ObjToSearch; Sim::findObject(x__ObjToSearch, ObjToSearch ); 
+SimSet* result; Sim::findObject(x__result, result ); 
+{
+	object->AISearch(fOV,farDist,ObjToSearch,result);
+	}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnAIPlayer_checkInFoV(char * x__object, char * x__obj, F32 fov, bool checkEnabled)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+ShapeBase* obj; Sim::findObject(x__obj, obj ); 
+
+bool wle_returnObject;
+{
+   {wle_returnObject =object->checkInFoV(obj, fov, checkEnabled);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnAIPlayer_checkInLos(char * x__object, char * x__obj, bool useMuzzle, bool checkEnabled)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+ShapeBase* obj; Sim::findObject(x__obj, obj ); 
+
+bool wle_returnObject;
+{
+   {wle_returnObject =object->checkInLos(obj, useMuzzle, checkEnabled);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_clearAim(char * x__object)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->clearAim();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnAIPlayer_findCover(char * x__object, char * x__from, F32 radius)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+Point3F from = Point3F();
+sscanf(x__from,"%f %f %f",&from.x,&from.y,&from.z);
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   if(object->findCover(from, radius))
+   {
+      CoverPoint* cover = object->getCover();
+     return (S32)( cover ? cover->getId() : -1);
+   }
+   else
+   {
+     return (S32)( -1);
+   }
+#else
+	return -1;
+#endif
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnAIPlayer_findNavMesh(char * x__object)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   NavMesh *mesh = object->getNavMesh();
+  return (S32)( mesh ? mesh->getId() : -1);
+#else
+	return -1;
+#endif
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_followNavPath(char * x__object, U32 obj)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   NavPath *path;
+   if(Sim::findObject(obj, path))
+      object->followNavPath(path);
+#endif
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_followObject(char * x__object, U32 obj, F32 radius)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   SceneObject *follow;
+   if(Sim::findObject(obj, follow))
+      object->followObject(follow, radius);
+#endif
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_getAimLocation(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F wle_returnObject;
+{
+	{wle_returnObject =object->getAimLocation();
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnAIPlayer_getAimObject(char * x__object)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	GameBase* obj = object->getAimObject();
+  return (S32)( obj? obj->getId(): -1);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_getMoveDestination(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F wle_returnObject;
+{
+	{wle_returnObject =object->getMoveDestination();
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnAIPlayer_getMoveSpeed(char * x__object)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getMoveSpeed());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnAIPlayer_getNavMesh(char * x__object)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   NavMesh *m = object->getNavMesh();
+  return (S32)( m ? m->getId() : 0);
+#else
+  return (S32)( 0);
+#endif
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_getNavSize(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   switch(object->getNavSize())
+   {
+   case AIPlayer::Small:
+      {wle_returnObject ="Small";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   case AIPlayer::Regular:
+      {wle_returnObject ="Regular";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   case AIPlayer::Large:
+      {wle_returnObject ="Large";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   }
+   {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+#else
+	{wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+#endif
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_getPathDestination(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F wle_returnObject;
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+	{wle_returnObject =object->getPathDestination();
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+#else
+	{wle_returnObject =Point3F::Zero;
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+#endif
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_repath(char * x__object)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   object->repath();
+#endif
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_setAimLocation(char * x__object, char * x__target)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F target = Point3F();
+sscanf(x__target,"%f %f %f",&target.x,&target.y,&target.z);
+{
+	object->setAimLocation(target);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_setMoveDestination(char * x__object, char * x__goal, bool slowDown)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F goal = Point3F();
+sscanf(x__goal,"%f %f %f",&goal.x,&goal.y,&goal.z);
+{
+   object->setMoveDestination( goal, slowDown);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_setMoveSpeed(char * x__object, F32 speed)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setMoveSpeed(speed);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_setNavSize(char * x__object, char * x__size)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* size = (const char*)x__size;
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   if(!dStrcmp(size, "Small"))
+      object->setNavSize(AIPlayer::Small);
+   else if(!dStrcmp(size, "Regular"))
+      object->setNavSize(AIPlayer::Regular);
+   else if(!dStrcmp(size, "Large"))
+      object->setNavSize(AIPlayer::Large);
+   else
+      Con::errorf("AIPlayer::setNavSize: no such size '%s'.", size);
+#endif
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnAIPlayer_setPathDestination(char * x__object, char * x__goal)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+Point3F goal = Point3F();
+sscanf(x__goal,"%f %f %f",&goal.x,&goal.y,&goal.z);
+bool wle_returnObject;
+{
+#ifdef TORQUE_WALKABOUT_ENABLED
+   {wle_returnObject =object->setPathDestination(goal);
+return (S32)(wle_returnObject);}
+#else
+	{wle_returnObject =false;
+return (S32)(wle_returnObject);}
+#endif
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnAIPlayer_stop(char * x__object)
+{
+AIPlayer* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->stopMove();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

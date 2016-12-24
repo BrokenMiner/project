@@ -1373,7 +1373,11 @@ GFXShaderConstBufferRef GFXD3D9Shader::allocConstBuffer()
    }
 }
 
+<<<<<<< HEAD
 /// Returns a shader constant handle for name
+=======
+/// Returns a shader constant handle for name, if the variable doesn't exist NULL is returned.
+>>>>>>> omni_engine
 GFXShaderConstHandle* GFXD3D9Shader::getShaderConstHandle(const String& name)
 {
    HandleMap::Iterator i = mHandles.find(name);   

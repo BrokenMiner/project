@@ -30,6 +30,7 @@
 #include "console/console.h"
 #include "console/consoleTypes.h"
 #include "console/engineAPI.h"
+#include "T3D/shapeBase.h"
 
 #define DebugChecksum 0xF00DBAAD
 
@@ -37,6 +38,10 @@ Signal<void()>    NetConnection::smGhostAlwaysDone;
 
 extern U32 gGhostUpdates;
 
+IMPLEMENT_GLOBAL_CALLBACK( onGhostAlwaysObjectReceived, void, (), (),  	   "A callback called by the engine.\n");
+IMPLEMENT_GLOBAL_CALLBACK( onGhostAlwaysStarted, void, (S32 ghostCount), (ghostCount),  	   "A callback called by the engine.\n");
+
+IMPLEMENT_CALLBACK(NetConnection, onGhostAlwaysObjectsReceived, void, (), (),"");
 class GhostAlwaysObjectEvent : public NetEvent
 {
    SimObjectId objectId;
@@ -138,7 +143,11 @@ public:
    }
    void process(NetConnection *ps)
    {
+<<<<<<< HEAD
       Con::executef("onGhostAlwaysObjectReceived");
+=======
+      onGhostAlwaysObjectReceived_callback();
+>>>>>>> omni_engine
 
       ps->setGhostAlwaysObject(object, ghostIndex);
       object = NULL;
@@ -353,6 +362,7 @@ void NetConnection::ghostWritePacket(BitStream *bstream, PacketNotify *notify)
    camInfo.fov = (F32)(3.1415f / 4.0f);
    camInfo.sinFov = 0.7071f;
    camInfo.cosFov = 0.7071f;
+   camInfo.offset.set(0.0f,0.0f,1.0f,1.0f); 
 
    GhostInfo *walk;
 
@@ -545,10 +555,20 @@ void NetConnection::ghostReadPacket(BitStream *bstream)
       index = (U32) bstream->readInt(idSize);
       if(bstream->readFlag()) // is this ghost being deleted?
       {
+<<<<<<< HEAD
 		 mGhostsActive--;
          AssertFatal(mLocalGhosts[index] != NULL, "Error, NULL ghost encountered.");
          mLocalGhosts[index]->deleteObject();
          mLocalGhosts[index] = NULL;
+=======
+         AssertWarn(mLocalGhosts[index] != NULL, "Error, NULL ghost encountered.");
+         if(mLocalGhosts[index])
+         {
+		    mGhostsActive--;
+            mLocalGhosts[index]->deleteObject();
+            mLocalGhosts[index] = NULL;
+         }
+>>>>>>> omni_engine
       }
       else
       {
@@ -862,12 +882,21 @@ void NetConnection::handleConnectionMessage(U32 message, U32 sequence, U32 ghost
          mGhostAlwaysSaveList.push_back(sv);
          if(mGhostAlwaysSaveList.size() == 1)
             loadNextGhostAlwaysObject(true);
+            //based on - http://www.garagegames.com/community/forums/viewthread/76743
+            NetConnection::smGhostAlwaysDone.trigger();
          break;
       case ReadyForNormalGhosts:
          if(sequence != mGhostingSequence)
             return;
+<<<<<<< HEAD
          Con::executef(this, "onGhostAlwaysObjectsReceived");
          Con::printf("Ghost Always objects received.");
+=======
+		 this->onGhostAlwaysObjectsReceived_callback();
+         Con::printf("Ghost Always objects received.");
+         //based on - http://www.garagegames.com/community/forums/viewthread/76743
+         NetConnection::smGhostAlwaysDone.trigger();
+>>>>>>> omni_engine
          mGhosting = true;
          for(i = 0; i < mGhostFreeIndex; i++)
          {
@@ -894,7 +923,11 @@ void NetConnection::handleConnectionMessage(U32 message, U32 sequence, U32 ghost
          }
          break;
       case GhostAlwaysStarting:
+<<<<<<< HEAD
          Con::executef("onGhostAlwaysStarted", Con::getIntArg(ghostCount));
+=======
+		 onGhostAlwaysStarted_callback(ghostCount);
+>>>>>>> omni_engine
          break;
       case SendNextDownloadRequest:
          sendNextFileDownloadRequest();
@@ -955,7 +988,11 @@ void NetConnection::activateGhosting()
         // Get a pointer to the local client.
         NetConnection* pClient = NetConnection::getConnectionToServer();
 
+<<<<<<< HEAD
         Con::executef("onGhostAlwaysStarted", Con::getIntArg(mGhostZeroUpdateIndex));
+=======
+		onGhostAlwaysStarted_callback(mGhostZeroUpdateIndex);
+>>>>>>> omni_engine
 
         // Set up a buffer for the object send.
         U8 iBuffer[4096];
@@ -1004,7 +1041,11 @@ void NetConnection::activateGhosting()
             }
 
             // Execute the appropriate console callback.
+<<<<<<< HEAD
             Con::executef("onGhostAlwaysObjectReceived");
+=======
+			onGhostAlwaysObjectReceived_callback();
+>>>>>>> omni_engine
 
             // Set the ghost always object for the client.
             pClient->setGhostAlwaysObject(pObject, mGhostArray[j]->index);
@@ -1298,3 +1339,73 @@ void NetConnection::ghostReadStartBlock(BitStream *stream)
    // MARKF - TODO - looks like we could have memory leaks here
    // if there are errors.
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnNetConnection_getGhostsActive(char * x__object)
+{
+NetConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	return object->getGhostsActive();
+};
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

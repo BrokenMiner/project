@@ -166,7 +166,11 @@ U32 DDSFile::getSurfaceSize( U32 height, U32 width, U32 mipLevel ) const
    if(mFlags.test(CompressedData))
    {
       // From the directX docs:
+<<<<<<< HEAD
       // max(1, width ÷ 4) x max(1, height ÷ 4) x 8(DXT1) or 16(DXT2-5)
+=======
+      // max(1, width Ã· 4) x max(1, height Ã· 4) x 8(DXT1) or 16(DXT2-5)
+>>>>>>> omni_engine
 
       U32 sizeMultiple = 0;
 
@@ -212,7 +216,11 @@ U32 DDSFile::getSizeInBytes( GFXFormat format, U32 height, U32 width, U32 mipLev
       "DDSFile::getSizeInBytes - Must be a DXT format!" );
 
    // From the directX docs:
+<<<<<<< HEAD
    // max(1, width ÷ 4) x max(1, height ÷ 4) x 8(DXT1) or 16(DXT2-5)
+=======
+   // max(1, width Ã· 4) x max(1, height Ã· 4) x 8(DXT1) or 16(DXT2-5)
+>>>>>>> omni_engine
 
    U32 sizeMultiple = 0;
    if ( format == GFXFormatDXT1 )
@@ -606,6 +614,8 @@ bool DDSFile::read(Stream &s, U32 dropMipCount)
          mPitchOrLinearSize = getSurfaceSize( dropMipCount );
       else if ( mFlags.test( PitchSizeFlag ) )
          mPitchOrLinearSize = getSurfacePitch( dropMipCount );
+      else
+         mPitchOrLinearSize = mPitchOrLinearSize; // Do nothing?
 
       // Now fix up the rest of the 
       mMipMapCount = getMax( (U32)1, mMipMapCount - dropMipCount );
@@ -917,4 +927,75 @@ DefineEngineFunction( getActiveDDSFiles, S32, (),,
    "@ingroup Rendering\n" )
 {
    return DDSFile::smActiveCopies;
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_getActiveDDSFiles()
+{
+{
+  return (S32)( DDSFile::smActiveCopies);
+};
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

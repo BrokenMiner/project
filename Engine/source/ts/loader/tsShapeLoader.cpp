@@ -46,6 +46,7 @@ const F64 TSShapeLoader::MaxFrameRate = 60.0f;
 const F64 TSShapeLoader::AppGroundFrameRate = 10.0f;
 Torque::Path TSShapeLoader::shapePath;
 
+IMPLEMENT_GLOBAL_CALLBACK( updateTSShapeLoadProgress, void, ( const char * progress, const char * msg ), ( progress, msg ), "");
 Vector<TSShapeLoader::ShapeFormat> TSShapeLoader::smFormats;
 
 //------------------------------------------------------------------------------
@@ -125,7 +126,7 @@ void TSShapeLoader::updateProgress(S32 major, const char* msg, S32 numMinor, S32
       progressMsg = avar("%s (%d of %d)", msg, minor + 1, numMinor);
    }
 
-   Con::executef("updateTSShapeLoadProgress", Con::getFloatArg(progress), progressMsg);
+   updateTSShapeLoadProgress_callback( Con::getFloatArg(progress), progressMsg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1337,3 +1338,90 @@ DefineConsoleFunction( getFormatFilters, const char*, ( ),,
 {
    return Con::getReturnBuffer(TSShapeLoader::getFormatFilters());
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getFormatExtensions(char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+   {wle_returnObject =Con::getReturnBuffer(TSShapeLoader::getFormatExtensions());
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getFormatFilters(char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+   {wle_returnObject =Con::getReturnBuffer(TSShapeLoader::getFormatFilters());
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

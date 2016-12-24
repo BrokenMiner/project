@@ -113,7 +113,9 @@ function GuiOffscreenCanvas::popDialog(%this, %ctrl)
 
 function oculusSensorMetricsCallback()
 {
-   return ovrDumpMetrics(0);
+   //return ovrDumpMetrics(0);
+   return "  | OVR Sensor 0 |" @
+          "  rot: " @ getOVRSensorEulerRotation(0);
 }
 
 
@@ -151,6 +153,7 @@ function enableOculusVRDisplay(%gameConnection, %trueStereoRendering)
 {
    setOVRHMDAsGameConnectionDisplayDevice(%gameConnection);
    PlayGui.renderStyle = "stereo side by side";
+   
    setOptimalOVRCanvasSize(Canvas);
 
    if (!isObject(OculusCanvas))
@@ -179,6 +182,23 @@ function enableOculusVRDisplay(%gameConnection, %trueStereoRendering)
    $OculusMouseScaleY = 512.0 / 1060.0;
    
    //$gfx::wireframe = true;
+   
+   if(%trueStereoRendering)
+   {
+      if($pref::OculusVR::UseChromaticAberrationCorrection)
+      {
+         OVRBarrelDistortionChromaPostFX.isEnabled = true;
+      }
+      else
+      {
+         OVRBarrelDistortionPostFX.isEnabled = true;
+      }
+   }
+   else
+   {
+      OVRBarrelDistortionMonoPostFX.isEnabled = true;
+   }
+   
    // Reset all sensors
    ovrResetAllSensors();
 }
@@ -196,6 +216,12 @@ function disableOculusVRDisplay(%gameConnection)
       %gameConnection.clearDisplayDevice();
    }
    PlayGui.renderStyle = "standard";
+
+   %gameConnection.clearDisplayDevice();
+   PlayGui.renderStyle = "standard";
+   OVRBarrelDistortionPostFX.isEnabled = false;
+   OVRBarrelDistortionChromaPostFX.isEnabled = false;
+   OVRBarrelDistortionMonoPostFX.isEnabled = false;
 }
 
 // Helper function to set the standard Rift control scheme.  You could place
@@ -203,7 +229,7 @@ function disableOculusVRDisplay(%gameConnection)
 // you call enableOculusVRDisplay().
 function setStandardOculusVRControlScheme(%gameConnection)
 {
-   if($OculusVR::SimulateInput)
+   if(isOVRHMDSimulated(0))
    {
       // We are simulating a HMD so allow the mouse and gamepad to control
       // both yaw and pitch.

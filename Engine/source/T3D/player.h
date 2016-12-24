@@ -616,8 +616,16 @@ protected:
    virtual void onUnmount( ShapeBase *obj, S32 node );
    virtual void unmount();
    /// @}
+<<<<<<< HEAD
 
    void setPosition(const Point3F& pos,const Point3F& viewRot);
+=======
+//Walkable Shapes
+public:
+   void setPosition(const Point3F& pos,const Point3F& viewRot);
+protected:
+//Walkable Shapes
+>>>>>>> omni_engine
    void setRenderPosition(const Point3F& pos,const Point3F& viewRot,F32 dt=-1);
    void _findContact( SceneObject **contactObject, VectorF *contactNormal, Vector<SceneObject*> *outOverlapObjects );
    void findContact( bool *run, bool *jump, VectorF *contactNormal );
@@ -766,6 +774,11 @@ public:
    virtual void prepRenderImage( SceneRenderState* state );
    virtual void renderConvex( ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat );   
    virtual void renderMountedImage( U32 imageSlot, TSRenderState &rstate, SceneRenderState *state );
+//Walkable Shapes
+   void setDeltas(Point3F pos, Point3F rot);
+   void writeAttachedPacketData(GameConnection *conn, BitStream *stream);
+   void readAttachedPacketData (GameConnection *conn, BitStream *stream);
+//Walkable Shapes
 };
 
 typedef Player::Pose PlayerPose;

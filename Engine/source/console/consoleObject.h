@@ -460,6 +460,7 @@ public:
    enum FieldFlags
    {
       FIELD_HideInInspectors     = BIT( 0 ),    ///< Do not show the field in inspectors.
+	  FIELD_ReadOnly			 = BIT( 1 )		///< Show as a readonly field in inspector.
    };
 
    struct Field 
@@ -863,7 +864,11 @@ public:
    /// @param fmt A printf style format string.
    /// @param args A va_list containing the args passed ot a log function.
    /// @note It is suggested that you use String::VToString.
+<<<<<<< HEAD
    virtual String _getLogMessage(const char* fmt, va_list args) const;
+=======
+   virtual String _getLogMessage(const char* fmt, void* args) const;
+>>>>>>> omni_engine
    
    /// @}
 

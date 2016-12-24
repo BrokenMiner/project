@@ -400,7 +400,11 @@ void CodeStream::reset()
    {
       CodeData *next = itr->next;
       dFree(itr->data);
+<<<<<<< HEAD
       delete(itr);
+=======
+      dFree(itr);
+>>>>>>> omni_engine
       itr = next;
    }
    

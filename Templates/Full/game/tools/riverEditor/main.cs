@@ -88,6 +88,9 @@ function RiverEditorPlugin::onWorldEditorStartup( %this )
 
 function RiverEditorPlugin::onActivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   RiverEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    %this.readSettings();
    
    $River::EditorOpen = true;   
@@ -125,6 +128,11 @@ function RiverEditorPlugin::onActivated( %this )
 
 function RiverEditorPlugin::onDeactivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!RiverEditorPlugin.isActive)
+      return;
+   RiverEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    %this.writeSettings();
    
    $River::EditorOpen = false;   

@@ -26,6 +26,8 @@
 
 IMPLEMENT_CONOBJECT(GuiMissionAreaEditorCtrl);
 
+IMPLEMENT_CALLBACK( GuiMissionAreaEditorCtrl, onMissionAreaSelected, void, (const char * missionArea), (missionArea), "" );
+
 ConsoleDocClass( GuiMissionAreaEditorCtrl,
    "@brief Specialized GUI used for editing the MissionArea in a level\n\n"
    "Editor use only.\n\n"
@@ -90,14 +92,24 @@ void GuiMissionAreaEditorCtrl::setSelectedMissionArea( MissionArea *missionArea 
    mSelMissionArea = missionArea;
 
    if ( mSelMissionArea != NULL )
+<<<<<<< HEAD
       Con::executef( this, "onMissionAreaSelected", missionArea->getIdString() );
    else
       Con::executef( this, "onMissionAreaSelected" );
+=======
+   { onMissionAreaSelected_callback( missionArea->getIdString() ); }
+   else
+   { onMissionAreaSelected_callback( "" ); }
+>>>>>>> omni_engine
 }
 
 DefineConsoleMethod( GuiMissionAreaEditorCtrl, setSelectedMissionArea, void, (const char * missionAreaName), (""), "" )
 {
+<<<<<<< HEAD
    if ( dStrcmp( missionAreaName, "" )==0 )
+=======
+   if ( missionAreaName == "" )
+>>>>>>> omni_engine
       object->setSelectedMissionArea(NULL);
    else
    {
@@ -115,3 +127,105 @@ DefineConsoleMethod( GuiMissionAreaEditorCtrl, getSelectedMissionArea, const cha
 
    return missionArea->getIdString();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiMissionAreaEditorCtrl_getSelectedMissionArea(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiMissionAreaEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   MissionArea *missionArea = object->getSelectedMissionArea();
+   if ( !missionArea )
+      {wle_returnObject =NULL;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   {wle_returnObject =missionArea->getIdString();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiMissionAreaEditorCtrl_setSelectedMissionArea(char * x__object, char * x__missionAreaName)
+{
+GuiMissionAreaEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* missionAreaName = (const char*)x__missionAreaName;
+{
+   if ( missionAreaName == "" )
+      object->setSelectedMissionArea(NULL);
+   else
+   {
+      MissionArea *missionArea = NULL;
+      if ( Sim::findObject( missionAreaName, missionArea ) )
+         object->setSelectedMissionArea(missionArea);
+   }
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

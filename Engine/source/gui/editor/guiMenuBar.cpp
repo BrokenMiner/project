@@ -111,7 +111,11 @@ IMPLEMENT_CALLBACK( GuiMenuBar, onMouseInMenu, void, (bool isInMenu),( isInMenu 
    "@see GuiTickCtrl\n\n"
 );
 
+<<<<<<< HEAD
 IMPLEMENT_CALLBACK( GuiMenuBar, onMenuSelect, void, ( S32 menuId, const char* menuText ),( menuId , menuText ),
+=======
+IMPLEMENT_CALLBACK( GuiMenuBar, onMenuSelect, void, ( const char* menuId, const char* menuText ),( menuId , menuText ),
+>>>>>>> omni_engine
    "@brief Called whenever a menu is selected.\n\n"
    "@param menuId Index id of the clicked menu\n"
    "@param menuText Text of the clicked menu\n\n"
@@ -125,7 +129,11 @@ IMPLEMENT_CALLBACK( GuiMenuBar, onMenuSelect, void, ( S32 menuId, const char* me
    "@see GuiTickCtrl\n\n"
 );
 
+<<<<<<< HEAD
 IMPLEMENT_CALLBACK( GuiMenuBar, onMenuItemSelect, void, ( S32 menuId, const char* menuText, S32 menuItemId, const char* menuItemText ),
+=======
+IMPLEMENT_CALLBACK( GuiMenuBar, onMenuItemSelect, void, ( const char* menuId, const char* menuText, const char* menuItemId, const char* menuItemText ),
+>>>>>>> omni_engine
 												   ( menuId, menuText, menuItemId, menuItemText ),
    "@brief Called whenever an item in a menu is selected.\n\n"
    "@param menuId Index id of the menu which contains the selected menu item\n"
@@ -142,7 +150,11 @@ IMPLEMENT_CALLBACK( GuiMenuBar, onMenuItemSelect, void, ( S32 menuId, const char
    "@see GuiTickCtrl\n\n"
 );
 
+<<<<<<< HEAD
 IMPLEMENT_CALLBACK( GuiMenuBar, onSubmenuSelect, void, ( S32 submenuId, const char* submenuText ),( submenuId, submenuText ),
+=======
+IMPLEMENT_CALLBACK( GuiMenuBar, onSubmenuSelect, void, ( const char* submenuId, const char* submenuText ),( submenuId, submenuText ),
+>>>>>>> omni_engine
    "@brief Called whenever a submenu is selected.\n\n"
    "@param submenuId Id of the selected submenu\n"
    "@param submenuText Text of the selected submenu\n\n"
@@ -159,7 +171,11 @@ IMPLEMENT_CALLBACK( GuiMenuBar, onSubmenuSelect, void, ( S32 submenuId, const ch
 // console methods
 //------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiMenuBar, clearMenus, void, (),,
+=======
+DefineEngineMethod( GuiMenuBar, clearMenus, void, ( S32 param1, S32 param2),,
+>>>>>>> omni_engine
    "@brief Clears all the menus from the menu bar.\n\n"
    "@tsexample\n"
    "// Inform the GuiMenuBar control to clear all menus from itself.\n"
@@ -215,8 +231,13 @@ DefineEngineMethod(GuiMenuBar, addMenu, void, (const char* menuText, S32 menuId)
    object->addMenu(menuText, menuId);
 }
 
+<<<<<<< HEAD
 DefineEngineMethod(GuiMenuBar, addMenuItem, void, (const char* targetMenu, const char* menuItemText, S32 menuItemId, const char* accelerator, int checkGroup, const char *cmd),
 												 ("","",0,NULL,-1,""),
+=======
+DefineEngineMethod(GuiMenuBar, addMenuItem, void, (const char* targetMenu, const char* menuItemText, S32 menuItemId, const char* accelerator, int checkGroup),
+												 ("","",0,"",-1),
+>>>>>>> omni_engine
    "@brief Adds a menu item to the specified menu.  The menu argument can be either the text of a menu or its id.\n\n"
    "@param menu Menu name or menu Id to add the new item to.\n"
    "@param menuItemText Text for the new menu item.\n"
@@ -250,7 +271,11 @@ DefineEngineMethod(GuiMenuBar, addMenuItem, void, (const char* targetMenu, const
       Con::errorf("Cannot find menu %s for addMenuItem.", targetMenu);
       return;
    }
+<<<<<<< HEAD
    object->addMenuItem(menu, menuItemText, menuItemId, accelerator != NULL ? accelerator : "", checkGroup == -1 ? -1 : checkGroup, cmd);
+=======
+   object->addMenuItem(menu, menuItemText, menuItemId, accelerator != NULL ? accelerator : "", checkGroup == -1 ? -1 : checkGroup);
+>>>>>>> omni_engine
 }
 
 DefineEngineMethod(GuiMenuBar, setMenuItemEnable, void, (const char* menuTarget, const char* menuItemTarget, bool enabled),,
@@ -767,7 +792,11 @@ DefineEngineMethod(GuiMenuBar, setSubmenuItemChecked, void, (const char* menuTar
    if(checked && submenuItem->checkGroup != -1)
    {
       // first, uncheck everything in the group:
+<<<<<<< HEAD
       for(GuiMenuBar::MenuItem *itemWalk = menuItem->submenu->firstMenuItem; itemWalk; itemWalk = itemWalk->nextMenuItem)
+=======
+      for(GuiMenuBar::MenuItem *itemWalk = menuItem->firstSubmenuItem; itemWalk; itemWalk = itemWalk->nextMenuItem)
+>>>>>>> omni_engine
          if(itemWalk->checkGroup == submenuItem->checkGroup && itemWalk->bitmapIndex == object->mCheckmarkBitmapIndex)
             itemWalk->bitmapIndex = -1;
    }
@@ -777,7 +806,12 @@ DefineEngineMethod(GuiMenuBar, setSubmenuItemChecked, void, (const char* menuTar
 //------------------------------------------------------------------------------
 // menu management methods
 //------------------------------------------------------------------------------
+<<<<<<< HEAD
 GuiMenuBar::Menu* GuiMenuBar::sCreateMenu(const char *menuText, U32 menuId)
+=======
+
+void GuiMenuBar::addMenu(const char *menuText, U32 menuId)
+>>>>>>> omni_engine
 {
    // allocate the menu
    Menu *newMenu = new Menu;
@@ -791,6 +825,7 @@ GuiMenuBar::Menu* GuiMenuBar::sCreateMenu(const char *menuText, U32 menuId)
    newMenu->bitmapIndex = -1;
    newMenu->drawBitmapOnly = false;
    newMenu->drawBorder = true;
+<<<<<<< HEAD
 
    return newMenu;
 }
@@ -810,6 +845,15 @@ void GuiMenuBar::addMenu(const char *menuText, U32 menuId)
    Menu *newMenu = sCreateMenu(menuText, menuId);
    
    addMenu(newMenu);
+=======
+   
+   // add it to the menu list
+   menuBarDirty = true;
+   Menu **walk;
+	for(walk = &menuList; *walk; walk = &(*walk)->nextMenu)
+      ;
+   *walk = newMenu;
+>>>>>>> omni_engine
 }
 
 GuiMenuBar::Menu *GuiMenuBar::findMenu(const char *menu)
@@ -817,16 +861,28 @@ GuiMenuBar::Menu *GuiMenuBar::findMenu(const char *menu)
 	if(dIsdigit(menu[0]))
 	{
 		U32 id = dAtoi(menu);
+<<<<<<< HEAD
       for (U32 i = 0; i < mMenuList.size(); ++i)
          if (id == mMenuList[i]->id)
             return mMenuList[i];
+=======
+		for(Menu *walk = menuList; walk; walk = walk->nextMenu)
+			if(id == walk->id)
+				return walk;
+>>>>>>> omni_engine
 		return NULL;
 	}
 	else
 	{
+<<<<<<< HEAD
       for (U32 i = 0; i < mMenuList.size(); ++i)
          if (!dStricmp(menu, mMenuList[i]->text))
             return mMenuList[i];
+=======
+		for(Menu *walk = menuList; walk; walk = walk->nextMenu)
+			if(!dStricmp(menu, walk->text))
+				return walk;
+>>>>>>> omni_engine
 		return NULL;
 	}
 }
@@ -854,6 +910,7 @@ void GuiMenuBar::removeMenu(Menu *menu)
 {
    menuBarDirty = true;
    clearMenuItems(menu);
+<<<<<<< HEAD
 
    for (U32 i = 0; i < mMenuList.size(); ++i)
    {
@@ -863,6 +920,18 @@ void GuiMenuBar::removeMenu(Menu *menu)
          break;
       }
    }
+=======
+   for(Menu **walk = &menuList; *walk; walk = &(*walk)->nextMenu)
+   {
+      if(*walk == menu)
+      {
+         *walk = menu->nextMenu;
+         break;
+      }
+   }
+   dFree(menu->text);
+   delete menu;
+>>>>>>> omni_engine
 }
 
 void GuiMenuBar::removeMenuItem(Menu *menu, MenuItem *menuItem)
@@ -887,7 +956,11 @@ void GuiMenuBar::removeMenuItem(Menu *menu, MenuItem *menuItem)
    delete menuItem;
 }
 
+<<<<<<< HEAD
 GuiMenuBar::MenuItem* GuiMenuBar::addMenuItem(Menu *menu, const char *text, U32 id, const char *accelerator, S32 checkGroup, const char *cmd )
+=======
+void GuiMenuBar::addMenuItem(Menu *menu, const char *text, U32 id, const char *accelerator, S32 checkGroup)
+>>>>>>> omni_engine
 {
    // allocate the new menu item
    MenuItem *newMenuItem = new MenuItem;
@@ -907,6 +980,7 @@ GuiMenuBar::MenuItem* GuiMenuBar::addMenuItem(Menu *menu, const char *text, U32 
 
    //  Default to not having a submenu
    newMenuItem->isSubmenu = false;
+<<<<<<< HEAD
    newMenuItem->submenu = NULL;
    newMenuItem->submenuParentMenu = NULL;
 
@@ -934,6 +1008,17 @@ GuiMenuBar::MenuItem* GuiMenuBar::addMenuItem(Menu *menu, MenuItem* newMenuItem)
    }
 
    return newMenuItem;
+=======
+   newMenuItem->firstSubmenuItem = NULL;
+   newMenuItem->submenuParentMenu = NULL;
+
+   // link it into the menu's menu item list
+   MenuItem **walk = &menu->firstMenuItem;
+   while(*walk)
+      walk = &(*walk)->nextMenuItem;
+   *walk = newMenuItem;
+
+>>>>>>> omni_engine
 }
 
 void GuiMenuBar::clearMenuItems(Menu *menu)
@@ -944,6 +1029,7 @@ void GuiMenuBar::clearMenuItems(Menu *menu)
 
 void GuiMenuBar::clearMenus()
 {
+<<<<<<< HEAD
    mMenuList.clear();
 }
 
@@ -964,6 +1050,10 @@ void GuiMenuBar::removeFromMenuBar(Menu* menu)
          break;
       }
    }
+=======
+   while(menuList)
+      removeMenu(menuList);
+>>>>>>> omni_engine
 }
 
 //------------------------------------------------------------------------------
@@ -982,9 +1072,22 @@ GuiMenuBar::MenuItem *GuiMenuBar::findSubmenuItem(Menu *menu, const char *menuIt
       for(MenuItem *walk = menu->firstMenuItem; walk; walk = walk->nextMenuItem)
          if(id == walk->id)
 		 {
+<<<<<<< HEAD
 		    if(walk->isSubmenu && walk->submenu)
 			{
             return GuiMenuBar::findMenuItem(walk->submenu, submenuItem);
+=======
+		    if(walk->isSubmenu)
+			{
+               U32 subid = dAtoi(submenuItem);
+	           for(MenuItem *subwalk = walk->firstSubmenuItem; subwalk; subwalk = subwalk->nextMenuItem)
+			   {
+				  if(subid == walk->id)
+				  {
+                     return subwalk;
+				  }
+			   }
+>>>>>>> omni_engine
 			}
 			return NULL;
 		 }
@@ -996,9 +1099,19 @@ GuiMenuBar::MenuItem *GuiMenuBar::findSubmenuItem(Menu *menu, const char *menuIt
       for(MenuItem *walk = menu->firstMenuItem; walk; walk = walk->nextMenuItem)
          if(!dStricmp(menuItem, walk->text))
 		 {
+<<<<<<< HEAD
 		    if(walk->isSubmenu && walk->submenu)
 			{
             return GuiMenuBar::findMenuItem(walk->submenu, submenuItem);
+=======
+		    if(walk->isSubmenu)
+			{
+			   for(MenuItem *subwalk = walk->firstSubmenuItem; subwalk; subwalk = subwalk->nextMenuItem)
+			   {
+			      if(!dStricmp(submenuItem, subwalk->text))
+                      return subwalk;
+			   }
+>>>>>>> omni_engine
 			}
 			return NULL;
 		 }
@@ -1035,18 +1148,27 @@ void GuiMenuBar::addSubmenuItem(Menu *menu, MenuItem *submenu, const char *text,
    newMenuItem->checkGroup = checkGroup;
    newMenuItem->nextMenuItem = NULL;
    newMenuItem->acceleratorIndex = 0;
+<<<<<<< HEAD
    newMenuItem->enabled = (dStrlen(text) > 1 || text[0] != '-');
+=======
+   newMenuItem->enabled = text[0] != '-';
+>>>>>>> omni_engine
    newMenuItem->visible = true;
    newMenuItem->bitmapIndex = -1;
 
    //  Default to not having a submenu
    newMenuItem->isSubmenu = false;
+<<<<<<< HEAD
    newMenuItem->submenu = NULL;
+=======
+   newMenuItem->firstSubmenuItem = NULL;
+>>>>>>> omni_engine
 
    //  Point back to the submenu's menu
    newMenuItem->submenuParentMenu = menu;
 
    // link it into the menu's menu item list
+<<<<<<< HEAD
    MenuItem **walk = &submenu->submenu->firstMenuItem;
    while(*walk)
       walk = &(*walk)->nextMenuItem;
@@ -1065,6 +1187,13 @@ void GuiMenuBar::addSubmenuItem(Menu *menu, MenuItem *submenu, MenuItem *newMenu
    while(*walk)
       walk = &(*walk)->nextMenuItem;
    *walk = newMenuItem;
+=======
+   MenuItem **walk = &submenu->firstSubmenuItem;
+   while(*walk)
+      walk = &(*walk)->nextMenuItem;
+   *walk = newMenuItem;
+
+>>>>>>> omni_engine
 }
 
 //  Remove a submenu item
@@ -1077,7 +1206,21 @@ void GuiMenuBar::removeSubmenuItem(MenuItem *menuItem, MenuItem *submenuItem)
 	  return;
    }
 
+<<<<<<< HEAD
    GuiMenuBar::removeMenuItem(menuItem->submenu, submenuItem);
+=======
+   for(MenuItem **subwalk = &menuItem->firstSubmenuItem; *subwalk; subwalk = &(*subwalk)->nextMenuItem)
+   {
+      if(*subwalk == submenuItem)
+      {
+         *subwalk = submenuItem->nextMenuItem;
+         break;
+      }
+   }
+   dFree(submenuItem->text);
+   dFree(submenuItem->accelerator);
+   delete submenuItem;
+>>>>>>> omni_engine
 }
 
 //  Clear all menuitems from a submenu
@@ -1090,8 +1233,13 @@ void GuiMenuBar::clearSubmenuItems(MenuItem *menuitem)
 	  return;
    }
 
+<<<<<<< HEAD
    while(menuitem->submenu->firstMenuItem)
       removeSubmenuItem(menuitem, menuitem->submenu->firstMenuItem);
+=======
+   while(menuitem->firstSubmenuItem)
+      removeSubmenuItem(menuitem, menuitem->firstSubmenuItem);
+>>>>>>> omni_engine
 }
 
 //------------------------------------------------------------------------------
@@ -1100,7 +1248,11 @@ void GuiMenuBar::clearSubmenuItems(MenuItem *menuitem)
 
 GuiMenuBar::GuiMenuBar()
 {
+<<<<<<< HEAD
    mMenuList.clear();
+=======
+	menuList = NULL;
+>>>>>>> omni_engine
    menuBarDirty = true;
    mouseDownMenu = NULL;
    mouseOverMenu = NULL;
@@ -1130,6 +1282,15 @@ void GuiMenuBar::initPersistFields()
    addField("padding", TypeS32, Offset( mPadding, GuiMenuBar ),"Extra padding to add to the bounds of the control.\n");
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
 }
 
 bool GuiMenuBar::onWake()
@@ -1157,9 +1318,15 @@ GuiMenuBar::Menu *GuiMenuBar::findHitMenu(Point2I mousePoint)
 {
    Point2I pos = globalToLocalCoord(mousePoint);
 
+<<<<<<< HEAD
    for (U32 i = 0; i < mMenuList.size(); ++i)
       if (mMenuList[i]->visible && mMenuList[i]->bounds.pointInRect(pos))
          return mMenuList[i];
+=======
+   for(Menu *walk = menuList; walk; walk = walk->nextMenu)
+      if(walk->visible && walk->bounds.pointInRect(pos))
+         return walk;
+>>>>>>> omni_engine
    return NULL;
 }
 
@@ -1170,6 +1337,7 @@ void GuiMenuBar::onPreRender()
    {
       menuBarDirty = false;
       U32 curX = mPadding;
+<<<<<<< HEAD
       for (U32 i = 0; i < mMenuList.size(); ++i)
       {
          if (!mMenuList[i]->visible)
@@ -1180,25 +1348,53 @@ void GuiMenuBar::onPreRender()
 		 {
             // Text only
             mMenuList[i]->bounds.set(curX, 0, mProfile->mFont->getStrWidth(mMenuList[i]->text) + (mHorizontalMargin * 2), getHeight() - (mVerticalMargin * 2));
+=======
+      for(Menu *walk = menuList; walk; walk = walk->nextMenu)
+      {
+         if(!walk->visible)
+            continue;
+
+		 // Bounds depends on if there is a bitmap to be drawn or not
+		 if(walk->bitmapIndex == -1)
+		 {
+            // Text only
+            walk->bounds.set(curX, 0, mProfile->mFont->getStrWidth(walk->text) + (mHorizontalMargin * 2), getHeight() - (mVerticalMargin * 2));
+>>>>>>> omni_engine
 
          } else
 		 {
             // Will the bitmap and text be draw?
+<<<<<<< HEAD
           if (!mMenuList[i]->drawBitmapOnly)
 			{
                // Draw the bitmap and the text
                RectI *bitmapBounds = mProfile->mBitmapArrayRects.address();
                mMenuList[i]->bounds.set(curX, 0, bitmapBounds[mMenuList[i]->bitmapIndex].extent.x + mProfile->mFont->getStrWidth(mMenuList[i]->text) + (mHorizontalMargin * 2), getHeight() + (mVerticalMargin * 2));
+=======
+            if(!walk->drawBitmapOnly)
+			{
+               // Draw the bitmap and the text
+               RectI *bitmapBounds = mProfile->mBitmapArrayRects.address();
+			   walk->bounds.set(curX, 0, bitmapBounds[walk->bitmapIndex].extent.x + mProfile->mFont->getStrWidth(walk->text) + (mHorizontalMargin * 2), getHeight() + (mVerticalMargin * 2));
+>>>>>>> omni_engine
 
 			} else
 			{
                // Only the bitmap will be drawn
                RectI *bitmapBounds = mProfile->mBitmapArrayRects.address();
+<<<<<<< HEAD
                mMenuList[i]->bounds.set(curX, 0, bitmapBounds[mMenuList[i]->bitmapIndex].extent.x + mBitmapMargin + (mHorizontalMargin * 2), getHeight() + (mVerticalMargin * 2));
 			}
 		 }
 
          curX += mMenuList[i]->bounds.extent.x;
+=======
+               walk->bounds.set(curX, 0, bitmapBounds[walk->bitmapIndex].extent.x + mBitmapMargin + (mHorizontalMargin * 2), getHeight() + (mVerticalMargin * 2));
+			}
+		 }
+
+         curX += walk->bounds.extent.x;
+>>>>>>> omni_engine
       }
 		mouseOverMenu = NULL;
 		mouseDownMenu = NULL;
@@ -1295,6 +1491,7 @@ void GuiMenuBar::onMouseUp(const GuiEvent &event)
 
 void GuiMenuBar::onRender(Point2I offset, const RectI &updateRect)
 {
+<<<<<<< HEAD
    RectI ctrlRect(offset, getExtent());
 
    GFXDrawUtil* drawUtil = GFX->getDrawUtil();
@@ -1302,21 +1499,39 @@ void GuiMenuBar::onRender(Point2I offset, const RectI &updateRect)
    //if opaque, fill the update rect with the fill color
    if (mProfile->mOpaque)
       drawUtil->drawRectFill(RectI(offset, getExtent()), mProfile->mFillColor);
+=======
+
+   RectI ctrlRect(offset, getExtent());
+
+   //if opaque, fill the update rect with the fill color
+   if (mProfile->mOpaque)
+      GFX->getDrawUtil()->drawRectFill(RectI(offset, getExtent()), mProfile->mFillColor);
+>>>>>>> omni_engine
 
    //if there's a border, draw the border
    if (mProfile->mBorder)
       renderBorder(ctrlRect, mProfile);
 
+<<<<<<< HEAD
    for (U32 i = 0; i < mMenuList.size(); ++i)
    {
       if (!mMenuList[i]->visible)
          continue;
       ColorI fontColor = mProfile->mFontColor;
       RectI bounds = mMenuList[i]->bounds;
+=======
+   for(Menu *walk = menuList; walk; walk = walk->nextMenu)
+   {
+      if(!walk->visible)
+         continue;
+      ColorI fontColor = mProfile->mFontColor;
+      RectI bounds = walk->bounds;
+>>>>>>> omni_engine
       bounds.point += offset;
       
       Point2I start;
 
+<<<<<<< HEAD
       start.x = mMenuList[i]->bounds.point.x + mHorizontalMargin;
       start.y = mMenuList[i]->bounds.point.y + (mMenuList[i]->bounds.extent.y - mProfile->mFont->getHeight()) / 2;
 
@@ -1338,11 +1553,35 @@ void GuiMenuBar::onRender(Point2I offset, const RectI &updateRect)
         if (mMenuList[i] == mouseDownMenu)
             ++index;
         else if (mMenuList[i] == mouseOverMenu && mouseDownMenu == NULL)
+=======
+      start.x = walk->bounds.point.x + mHorizontalMargin;
+      start.y = walk->bounds.point.y + ( walk->bounds.extent.y - mProfile->mFont->getHeight() ) / 2;
+
+	  // Draw the border
+	  if(walk->drawBorder)
+	  {
+        RectI highlightBounds = bounds;
+        highlightBounds.inset(1,1);
+         if(walk == mouseDownMenu)
+            renderFilledBorder(highlightBounds, mProfile->mBorderColorHL, mProfile->mFillColorHL );
+         else if(walk == mouseOverMenu && mouseDownMenu == NULL)
+            renderFilledBorder(highlightBounds, mProfile->mBorderColor, mProfile->mFillColor );
+	  }
+
+	  // Do we draw a bitmap?
+	  if(walk->bitmapIndex != -1)
+	  {
+         S32 index = walk->bitmapIndex * 3;
+         if(walk == mouseDownMenu)
+            ++index;
+         else if(walk == mouseOverMenu && mouseDownMenu == NULL)
+>>>>>>> omni_engine
             index += 2;
 
          RectI rect = mProfile->mBitmapArrayRects[index];
 
 		 Point2I bitmapstart(start);
+<<<<<<< HEAD
        bitmapstart.y = mMenuList[i]->bounds.point.y + (mMenuList[i]->bounds.extent.y - rect.extent.y) / 2;
 
          drawUtil->clearBitmapModulation();
@@ -1359,21 +1598,51 @@ void GuiMenuBar::onRender(Point2I offset, const RectI &updateRect)
 	  {
       drawUtil->setBitmapModulation( fontColor );
       drawUtil->drawText(mProfile->mFont, start + offset, mMenuList[i]->text, mProfile->mFontColors);
+=======
+		 bitmapstart.y = walk->bounds.point.y + ( walk->bounds.extent.y - rect.extent.y ) / 2;
+
+         //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+         GFX->getDrawUtil()->drawBitmapSR( mProfile->mTextureObject, offset + bitmapstart, rect);
+
+		 // Should we also draw the text?
+		 if(!walk->drawBitmapOnly)
+		 {
+            start.x += mBitmapMargin;
+      GFX->getDrawUtil()->setBitmapModulation( fontColor );
+      GFX->getDrawUtil()->drawText( mProfile->mFont, start + offset, walk->text, mProfile->mFontColors );
+		 }
+	  } else
+	  {
+      GFX->getDrawUtil()->setBitmapModulation( fontColor );
+      GFX->getDrawUtil()->drawText( mProfile->mFont, start + offset, walk->text, mProfile->mFontColors );
+>>>>>>> omni_engine
 	  }
    }
 
    renderChildControls( offset, updateRect );
 }
 
+<<<<<<< HEAD
 void GuiMenuBar::buildWindowAcceleratorMap( WindowInputGenerator &inputGenerator )
 {
+=======
+void GuiMenuBar::buildAcceleratorMap()
+{
+   Parent::buildAcceleratorMap();
+>>>>>>> omni_engine
    // ok, accelerator map is cleared...
    // add all our keys:
    mCurAcceleratorIndex = 1;
 
+<<<<<<< HEAD
    for (U32 i = 0; i < mMenuList.size(); ++i)
    {
       for (MenuItem *item = mMenuList[i]->firstMenuItem; item; item = item->nextMenuItem)
+=======
+   for(Menu *menu = menuList; menu; menu = menu->nextMenu)
+   {
+      for(MenuItem *item = menu->firstMenuItem; item; item = item->nextMenuItem)
+>>>>>>> omni_engine
       {
          if(!item->accelerator)
          {
@@ -1381,11 +1650,20 @@ void GuiMenuBar::buildWindowAcceleratorMap( WindowInputGenerator &inputGenerator
             continue;
          }
          EventDescriptor accelEvent;
+<<<<<<< HEAD
 		 ActionMap::createEventDescriptor(item->accelerator, &accelEvent);
    
          //now we have a modifier, and a key, add them to the canvas
          inputGenerator.addAcceleratorKey( this, item->cmd, accelEvent.eventCode, accelEvent.flags);
 
+=======
+			ActionMap::createEventDescriptor(item->accelerator, &accelEvent);
+   
+         //now we have a modifier, and a key, add them to the canvas
+         GuiCanvas *root = getRoot();
+         if (root)
+            root->addAcceleratorKey(this, mCurAcceleratorIndex, accelEvent.eventCode, accelEvent.flags);
+>>>>>>> omni_engine
          item->acceleratorIndex = mCurAcceleratorIndex;
          mCurAcceleratorIndex++;
       }
@@ -1401,20 +1679,36 @@ void GuiMenuBar::acceleratorKeyPress(U32 index)
 {
    // loop through all the menus
    // and find the item that corresponds to the accelerator index
+<<<<<<< HEAD
    for (U32 i = 0; i < mMenuList.size(); ++i)
    {
       if (!mMenuList[i]->visible)
          continue;
 
       for (MenuItem *item = mMenuList[i]->firstMenuItem; item; item = item->nextMenuItem)
+=======
+   for(Menu *menu = menuList; menu; menu = menu->nextMenu)
+   {
+      if(!menu->visible)
+         continue;
+
+      for(MenuItem *item = menu->firstMenuItem; item; item = item->nextMenuItem)
+>>>>>>> omni_engine
       {
          if(item->acceleratorIndex == index)
          {
             // first, call the script callback for menu selection:
+<<<<<<< HEAD
             onMenuSelect_callback(mMenuList[i]->id, mMenuList[i]->text);
 			
             if(item->visible)
                menuItemSelected(mMenuList[i], item);
+=======
+            onMenuSelect_callback(Con::getIntArg(menu->id), menu->text);
+			
+            if(item->visible)
+               menuItemSelected(menu, item);
+>>>>>>> omni_engine
             return;
          }
       }
@@ -1484,7 +1778,11 @@ void GuiMenuTextListCtrl::onRenderCell(Point2I offset, Point2I cell, bool select
       Point2I off = mMenuBarCtrl->maxBitmapSize - rect.extent;
       off /= 2;
 
+<<<<<<< HEAD
       GFX->getDrawUtil()->clearBitmapModulation();
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
       GFX->getDrawUtil()->drawBitmapSR(mProfile->mTextureObject, offset + off, rect);
    } 
 
@@ -1593,7 +1891,11 @@ bool GuiSubmenuBackgroundCtrl::pointInControl(const Point2I& parentCoordPoint)
 void GuiMenuBar::menuItemSelected(GuiMenuBar::Menu *menu, GuiMenuBar::MenuItem *item)
 {
    if(item->enabled)
+<<<<<<< HEAD
       onMenuItemSelect_callback(menu->id, menu->text, item->id, item->text);
+=======
+      onMenuItemSelect_callback(Con::getIntArg(menu->id), menu->text, Con::getIntArg(item->id), item->text);
+>>>>>>> omni_engine
 }
 
 void GuiMenuBar::onSleep()
@@ -1641,7 +1943,11 @@ void GuiMenuBar::closeMenu()
 }
 
 //  Called when a menu item is highlighted by the mouse
+<<<<<<< HEAD
 void GuiMenuBar::highlightedMenuItem(S32 selectionIndex, const RectI& bounds, Point2I cellSize)
+=======
+void GuiMenuBar::highlightedMenuItem(S32 selectionIndex, RectI bounds, Point2I cellSize)
+>>>>>>> omni_engine
 {
    S32 selstore = selectionIndex;
 
@@ -1668,7 +1974,11 @@ void GuiMenuBar::highlightedMenuItem(S32 selectionIndex, const RectI& bounds, Po
             if(list->isSubmenu)
 		    {
 			   // If there are submenu items, then open the submenu
+<<<<<<< HEAD
              if(list->submenu->firstMenuItem)
+=======
+			   if(list->firstSubmenuItem)
+>>>>>>> omni_engine
 			   {
 				   mouseOverSubmenu = list;
 				   onSubmenuAction(selstore, bounds, cellSize);
@@ -1686,7 +1996,11 @@ void GuiMenuBar::onAction()
       return;
 
    // first, call the script callback for menu selection:
+<<<<<<< HEAD
    onMenuSelect_callback(mouseDownMenu->id, mouseDownMenu->text);
+=======
+   onMenuSelect_callback(Con::getIntArg(mouseDownMenu->id), mouseDownMenu->text);
+>>>>>>> omni_engine
 
    MenuItem *visWalk = mouseDownMenu->firstMenuItem;
    while(visWalk)
@@ -1795,15 +2109,25 @@ void GuiMenuBar::onAction()
 
 //------------------------------------------------------------------------------
 //  Performs an action when a menu item that is a submenu is selected/highlighted
+<<<<<<< HEAD
 void GuiMenuBar::onSubmenuAction(S32 selectionIndex, const RectI& bounds, Point2I cellSize)
+=======
+void GuiMenuBar::onSubmenuAction(S32 selectionIndex, RectI bounds, Point2I cellSize)
+>>>>>>> omni_engine
 {
    if(!mouseOverSubmenu)
       return;
 
    // first, call the script callback for menu selection:
+<<<<<<< HEAD
    onSubmenuSelect_callback(mouseOverSubmenu->id, mouseOverSubmenu->text);
 
    MenuItem *visWalk = mouseOverSubmenu->submenu->firstMenuItem;
+=======
+   onSubmenuSelect_callback(Con::getIntArg(mouseOverSubmenu->id), mouseOverSubmenu->text);
+
+   MenuItem *visWalk = mouseOverSubmenu->firstSubmenuItem;
+>>>>>>> omni_engine
    while(visWalk)
    {
       if(visWalk->visible)
@@ -1831,7 +2155,11 @@ void GuiMenuBar::onSubmenuAction(S32 selectionIndex, const RectI& bounds, Point2
 
    GFont *font = mProfile->mFont;
 
+<<<<<<< HEAD
    for(MenuItem *walk = mouseOverSubmenu->submenu->firstMenuItem; walk; walk = walk->nextMenuItem)
+=======
+   for(MenuItem *walk = mouseOverSubmenu->firstSubmenuItem; walk; walk = walk->nextMenuItem)
+>>>>>>> omni_engine
    {
       if(!walk->visible)
          continue;
@@ -1854,7 +2182,11 @@ void GuiMenuBar::onSubmenuAction(S32 selectionIndex, const RectI& bounds, Point2
 
    U32 entryCount = 0;
 
+<<<<<<< HEAD
    for(MenuItem *walk = mouseOverSubmenu->submenu->firstMenuItem; walk; walk = walk->nextMenuItem)
+=======
+   for(MenuItem *walk = mouseOverSubmenu->firstSubmenuItem; walk; walk = walk->nextMenuItem)
+>>>>>>> omni_engine
    {
       if(!walk->visible)
          continue;
@@ -1936,7 +2268,11 @@ void GuiMenuBar::closeSubmenu()
       MenuItem *list = NULL;
 	  if(mouseOverSubmenu)
 	  {
+<<<<<<< HEAD
          list = mouseOverSubmenu->submenu->firstMenuItem;
+=======
+         list = mouseOverSubmenu->firstSubmenuItem;
+>>>>>>> omni_engine
 
          while(selectionIndex && list)
          {
@@ -1992,3 +2328,502 @@ void GuiMenuBar::processTick()
 	  }
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_addMenu(char * x__object, char * x__menuText, S32 menuId)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuText = (const char*)x__menuText;
+
+{
+   if(dIsdigit(menuText[0]))
+   {
+      Con::errorf("Cannot add menu %s (id = %s).  First character of a menu's text cannot be a digit.", menuText, menuId);
+      return;
+   }
+   object->addMenu(menuText, menuId);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_addMenuItem(char * x__object, char * x__targetMenu, char * x__menuItemText, S32 menuItemId, char * x__accelerator, int checkGroup)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* targetMenu = (const char*)x__targetMenu;
+const char* menuItemText = (const char*)x__menuItemText;
+
+const char* accelerator = (const char*)x__accelerator;
+
+{
+   if(dIsdigit(menuItemText[0]))
+   {
+      Con::errorf("Cannot add menu item %s (id = %s).  First character of a menu item's text cannot be a digit.", menuItemText, menuItemId);
+      return;
+   }
+   GuiMenuBar::Menu *menu = object->findMenu(targetMenu);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for addMenuItem.", targetMenu);
+      return;
+   }
+   object->addMenuItem(menu, menuItemText, menuItemId, accelerator != NULL ? accelerator : "", checkGroup == -1 ? -1 : checkGroup);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_addSubmenuItem(char * x__object, char * x__menuTarget, char * x__menuItem, char * x__submenuItemText, int submenuItemId, char * x__accelerator, int checkGroup)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItem = (const char*)x__menuItem;
+const char* submenuItemText = (const char*)x__submenuItemText;
+
+const char* accelerator = (const char*)x__accelerator;
+
+{
+   if(dIsdigit(submenuItemText[0]))
+   {
+      Con::errorf("Cannot add submenu item %s (id = %s).  First character of a menu item's text cannot be a digit.", submenuItemText, submenuItemId);
+      return;
+   }
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for addMenuItem.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuitem = object->findMenuItem(menu, menuItem);
+   if(!menuitem)
+   {
+      Con::errorf("Cannot find menuitem %s for addSubmenuItem.", menuItem);
+      return;
+   }
+   object->addSubmenuItem(menu, menuitem, submenuItemText, submenuItemId, !accelerator ? "" : accelerator, checkGroup == -1 ? -1 : checkGroup);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_clearMenuItems(char * x__object, char * x__menuTarget)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+            return;
+   }
+   object->clearMenuItems(menu);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_clearMenus(char * x__object, S32 param1, S32 param2)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->clearMenus();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_clearSubmenuItems(char * x__object, char * x__menuTarget, char * x__menuItem)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItem = (const char*)x__menuItem;
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for clearSubmenuItems.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuitem = object->findMenuItem(menu, menuItem);
+   if(!menuitem)
+   {
+      Con::errorf("Cannot find menuitem %s for clearSubmenuItems.", menuItem);
+      return;
+   }
+   object->clearSubmenuItems(menuitem);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_removeMenu(char * x__object, char * x__menuTarget)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+            return;
+   }
+   object->clearMenuItems(menu);
+   object->menuBarDirty = true;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_removeMenuItem(char * x__object, char * x__menuTarget, char * x__menuItemTarget)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItemTarget = (const char*)x__menuItemTarget;
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for removeMenuItem.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuItem = object->findMenuItem(menu, menuItemTarget);
+   if(!menuItem)
+   {
+      Con::errorf("Cannot find menu item %s for removeMenuItem.", menuItemTarget);
+      return;
+   }
+   object->removeMenuItem(menu, menuItem);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setCheckmarkBitmapIndex(char * x__object, S32 bitmapindex)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->mCheckmarkBitmapIndex = bitmapindex;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuBitmapIndex(char * x__object, char * x__menuTarget, S32 bitmapindex, bool bitmaponly, bool drawborder)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+
+
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuBitmapIndex.", menuTarget);
+      return;
+   }
+   menu->bitmapIndex = bitmapindex;
+   menu->drawBitmapOnly = bitmaponly;
+   menu->drawBorder = drawborder;
+   object->menuBarDirty = true;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuItemBitmap(char * x__object, char * x__menuTarget, char * x__menuItemTarget, S32 bitmapIndex)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItemTarget = (const char*)x__menuItemTarget;
+
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuItemBitmap.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuItem = object->findMenuItem(menu, menuItemTarget);
+   if(!menuItem)
+   {
+      Con::errorf("Cannot find menu item %s for setMenuItemBitmap.", menuItemTarget);
+      return;
+   }
+   menuItem->bitmapIndex = bitmapIndex;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuItemChecked(char * x__object, char * x__menuTarget, char * x__menuItemTarget, bool checked)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItemTarget = (const char*)x__menuItemTarget;
+
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuItemChecked.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuItem = object->findMenuItem(menu, menuItemTarget);
+   if(!menuItem)
+   {
+      Con::errorf("Cannot find menu item %s for setMenuItemChecked.", menuItemTarget);
+      return;
+   }
+   if(checked && menuItem->checkGroup != -1)
+   {
+            for(GuiMenuBar::MenuItem *itemWalk = menu->firstMenuItem; itemWalk; itemWalk = itemWalk->nextMenuItem)
+         if(itemWalk->checkGroup == menuItem->checkGroup && itemWalk->bitmapIndex == object->mCheckmarkBitmapIndex)
+            itemWalk->bitmapIndex = -1;
+   }
+   menuItem->bitmapIndex = checked ? object->mCheckmarkBitmapIndex : -1;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuItemEnable(char * x__object, char * x__menuTarget, char * x__menuItemTarget, bool enabled)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItemTarget = (const char*)x__menuItemTarget;
+
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuItemEnable.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuItem = object->findMenuItem(menu, menuItemTarget);
+   if(!menuItem)
+   {
+      Con::errorf("Cannot find menu item %s for setMenuItemEnable.", menuItemTarget);
+      return;
+   }
+   menuItem->enabled = enabled;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuItemSubmenuState(char * x__object, char * x__menuTarget, char * x__menuItem, bool isSubmenu)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItem = (const char*)x__menuItem;
+
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuItemSubmenuState.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuitem = object->findMenuItem(menu, menuItem);
+   if(!menuitem)
+   {
+      Con::errorf("Cannot find menuitem %s for setMenuItemSubmenuState.", menuItem);
+      return;
+   }
+   menuitem->isSubmenu = isSubmenu;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuItemText(char * x__object, char * x__menuTarget, char * x__menuItemTarget, char * x__newMenuItemText)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItemTarget = (const char*)x__menuItemTarget;
+const char* newMenuItemText = (const char*)x__newMenuItemText;
+{
+   if(dIsdigit(newMenuItemText[0]))
+   {
+      Con::errorf("Cannot name menu item %s to %s.  First character of a menu item's text cannot be a digit.", menuItemTarget, newMenuItemText);
+      return;
+   }
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuItemText.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuItem = object->findMenuItem(menu, menuItemTarget);
+   if(!menuItem)
+   {
+      Con::errorf("Cannot find menu item %s for setMenuItemText.", menuItemTarget);
+      return;
+   }
+   dFree(menuItem->text);
+   menuItem->text = dStrdup(newMenuItemText);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuItemVisible(char * x__object, char * x__menuTarget, char * x__menuItemTarget, bool isVisible)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItemTarget = (const char*)x__menuItemTarget;
+
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuItemVisible.", menuTarget);
+      return;
+   }
+   GuiMenuBar::MenuItem *menuItem = object->findMenuItem(menu, menuItemTarget);
+   if(!menuItem)
+   {
+      Con::errorf("Cannot find menu item %s for setMenuItemVisible.", menuItemTarget);
+      return;
+   }
+   menuItem->visible = isVisible;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuMargins(char * x__object, S32 horizontalMargin, S32 verticalMargin, S32 bitmapToTextSpacing)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->mHorizontalMargin = horizontalMargin;
+   object->mVerticalMargin = verticalMargin;
+   object->mBitmapMargin = bitmapToTextSpacing;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuText(char * x__object, char * x__menuTarget, char * x__newMenuText)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* newMenuText = (const char*)x__newMenuText;
+{
+   if(dIsdigit(menuTarget[0]))
+   {
+      Con::errorf("Cannot name menu %s to %s.  First character of a menu's text cannot be a digit.", menuTarget, newMenuText);
+      return;
+   }
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuText.", menuTarget);
+      return;
+   }
+   dFree(menu->text);
+   menu->text = dStrdup(newMenuText);
+   object->menuBarDirty = true;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setMenuVisible(char * x__object, char * x__menuTarget, bool visible)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+
+{
+   GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setMenuVisible.", menuTarget);
+      return;
+   }
+   menu->visible = visible;
+   object->menuBarDirty = true;
+   object->setUpdate();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMenuBar_setSubmenuItemChecked(char * x__object, char * x__menuTarget, char * x__menuItemTarget, char * x__submenuItemText, bool checked)
+{
+GuiMenuBar* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* menuTarget = (const char*)x__menuTarget;
+const char* menuItemTarget = (const char*)x__menuItemTarget;
+const char* submenuItemText = (const char*)x__submenuItemText;
+
+{
+      GuiMenuBar::Menu *menu = object->findMenu(menuTarget);
+   if(!menu)
+   {
+      Con::errorf("Cannot find menu %s for setSubmenuItemChecked.", menuTarget);
+      return;
+   }
+      GuiMenuBar::MenuItem *menuItem = object->findMenuItem(menu, menuItemTarget);
+   if(!menuItem)
+   {
+      Con::errorf("Cannot find menu item %s for setSubmenuItemChecked.", menuItemTarget);
+      return;
+   }
+      GuiMenuBar::MenuItem *submenuItem = object->findSubmenuItem(menu, menuItemTarget, submenuItemText);
+   if(!submenuItem)
+   {
+      Con::errorf("Cannot find submenu item %s for setSubmenuItemChecked.", submenuItemText);
+      return;
+   }
+   if(checked && submenuItem->checkGroup != -1)
+   {
+            for(GuiMenuBar::MenuItem *itemWalk = menuItem->firstSubmenuItem; itemWalk; itemWalk = itemWalk->nextMenuItem)
+         if(itemWalk->checkGroup == submenuItem->checkGroup && itemWalk->bitmapIndex == object->mCheckmarkBitmapIndex)
+            itemWalk->bitmapIndex = -1;
+   }
+   submenuItem->bitmapIndex = checked ? object->mCheckmarkBitmapIndex : -1;
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

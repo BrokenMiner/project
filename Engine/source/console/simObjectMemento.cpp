@@ -132,7 +132,11 @@ SimObject *SimObjectMemento::restore() const
          char* pLeftParen = dStrchr( mState, '(' );
          if( pLeftParen == NULL )
             return NULL;
+<<<<<<< HEAD
          U32 numCharsToLeftParen = pLeftParen - mState;
+=======
+         U64 numCharsToLeftParen = pLeftParen - mState;
+>>>>>>> omni_engine
 
          tempBuffer = ( char* ) dMalloc( dStrlen( mState ) + uniqueNameLen + 1 );
          dMemcpy( tempBuffer, mState, numCharsToLeftParen );

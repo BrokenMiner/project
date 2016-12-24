@@ -21,6 +21,9 @@ $PE_guielement_ext_colorpicker = "18 18";
 
 //--- OBJECT WRITE BEGIN ---
 %guiContent = new GuiWindowCollapseCtrl(PE_Window) {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    canSaveDynamicFields = "0";
    Enabled = "1";
    isContainer = "1";
@@ -442,7 +445,7 @@ $PE_guielement_ext_colorpicker = "18 18";
                            text = "";
                         };
                      };
-                        
+
                      new GuiControl(){ // Spacer ----------------------------
                         isContainer = "1"; HorizSizing = "width"; Position = "0 0"; Extent = "194 8";
                         new GuiBitmapCtrl(){
@@ -544,7 +547,7 @@ $PE_guielement_ext_colorpicker = "18 18";
                         };
                      };
                      
-                     new GuiControl(){ // Particle glow
+                     new GuiControl() { // Particle glow
                         isContainer = "1";
                         HorizSizing = "width";
                         VertSizing = "bottom";

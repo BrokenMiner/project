@@ -364,7 +364,11 @@ public:
 /// datablock. It is used to control information that does not change
 /// or is unlikely to change during execution of a program. It is also
 /// a level of abstraction between script and GUI control so that you can
+<<<<<<< HEAD
 /// use the same control, say a button, and have it look completely different
+=======
+/// use the same control, say a button, and have it look completly different
+>>>>>>> omni_engine
 /// just with a different profile.
 class GuiControlProfile : public SimObject
 {
@@ -376,7 +380,11 @@ public:
 
    U32  mUseCount;                                 ///< Total number of controls currently referencing this profile.
    U32  mLoadCount;                                ///< Number of controls in woken state using this profile; resources for the profile are loaded when this is >0.
+<<<<<<< HEAD
    bool mTabable;                                  ///< True if this object is accessible from using the tab key
+=======
+   bool mTabable;                                  ///< True if this object is accessable from using the tab key
+>>>>>>> omni_engine
 
    bool mCanKeyFocus;                              ///< True if the object can be given keyboard focus (in other words, made a first responder @see GuiControl)
    bool mModal;                                    ///< True if this is a Modeless dialog meaning it will pass input through instead of taking it all
@@ -395,6 +403,9 @@ public:
 
    ColorI mBevelColorHL;                          ///< Used for the high-light part of the bevel
    ColorI mBevelColorLL;                          ///< Used for the low-light part of the bevel
+
+   //ControlBoundAddition
+   StringTableEntry mBoundControl;					///< Binding a profile to a control
 
    // font members
    StringTableEntry  mFontType;                    ///< Font face name for the control

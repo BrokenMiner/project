@@ -52,7 +52,11 @@ public:
 	int			m_curIter;
 	int			m_degenerateSimplex;
 	int			m_catchDegeneracies;
+<<<<<<< HEAD
 	int			m_fixContactNormalDirection;
+=======
+
+>>>>>>> omni_engine
 
 	btGjkPairDetector(const btConvexShape* objectA,const btConvexShape* objectB,btSimplexSolverInterface* simplexSolver,btConvexPenetrationDepthSolver*	penetrationDepthSolver);
 	btGjkPairDetector(const btConvexShape* objectA,const btConvexShape* objectB,int shapeTypeA,int shapeTypeB,btScalar marginA, btScalar marginB, btSimplexSolverInterface* simplexSolver,btConvexPenetrationDepthSolver*	penetrationDepthSolver);

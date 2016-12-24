@@ -148,7 +148,11 @@ protected:
 
 public:
 
+<<<<<<< HEAD
    GroundCoverCell() : mDirty(false) {}
+=======
+   GroundCoverCell() {}
+>>>>>>> omni_engine
 
    ~GroundCoverCell() 
    {

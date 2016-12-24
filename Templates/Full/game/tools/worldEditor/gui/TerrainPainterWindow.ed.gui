@@ -14,8 +14,10 @@
    Visible = "1";
    tooltipprofile = "ToolsGuiToolTipProfile";
    hovertime = "1000";
-
-   new GuiWindowCollapseCtrl(EPainter) {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   new GuiWindowCollapseCtrl(TerrainPainter) {
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       canSaveDynamicFields = "0";
       internalName = "TerrainPainter";
       Enabled = "1";
@@ -44,7 +46,7 @@
       canMinimize = "0";
       canMaximize = "0";
       minSize = "152 300";
-      closeCommand = "EPainter.parentGroup.setVisible(false);";
+      closeCommand = "TerrainPainter.parentGroup.setVisible(false);";
       EdgeSnap = "1";
       text = "Terrain Painter Material Selector";
       
@@ -101,7 +103,10 @@
          };
       };
    };
-   new GuiWindowCollapseCtrl(EPainterPreview) {
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+   new GuiWindowCollapseCtrl(TerrainPainterPreview) {
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013
       canSaveDynamicFields = "0";
       internalName = "TerrainPainterPreview";
       Enabled = "1";
@@ -130,7 +135,9 @@
       canMinimize = "0";
       canMaximize = "0";
       minSize = "152 300";
-      closeCommand = "EPainter.parentGroup.setVisible(false);";
+//Copyright Winterleaf Entertainment L.L.C. 2013
+      closeCommand = "TerrainPainter.parentGroup.setVisible(false);";
+//Copyright Winterleaf Entertainment L.L.C. 2013
       EdgeSnap = "1";
       text = "Terrain Painter Material Preview";
       

@@ -39,10 +39,16 @@ U32 OculusVRSensorDevice::OVR_SENSORPOSITION[OculusVRConstants::MaxSensors] = {0
 OculusVRSensorDevice::OculusVRSensorDevice()
 {
    mIsValid = false;
+<<<<<<< HEAD
    mDevice = NULL;
    mCurrentTrackingCaps = 0;
    mSupportedTrackingCaps = 0;
    mPositionTrackingDisabled = false;
+=======
+   mIsSimulation = false;
+   mDevice = NULL;
+
+>>>>>>> omni_engine
    for(U32 i=0; i<2; ++i)
    {
       mDataBuffer[i] = new OculusVRSensorData();
@@ -64,6 +70,7 @@ OculusVRSensorDevice::~OculusVRSensorDevice()
 
 void OculusVRSensorDevice::cleanUp()
 {
+<<<<<<< HEAD
    mIsValid = false;
 
    ovrHmd_ConfigureTracking(mDevice, 0, 0);
@@ -91,6 +98,73 @@ void OculusVRSensorDevice::set(ovrHmd sensor, S32 actionCodeIndex)
    mVendorId = sensor->VendorId;
    mProductId = sensor->ProductId;
    mSerialNumber = sensor->SerialNumber;
+=======
+   mSensorFusion.AttachToSensor(NULL);
+
+   if(mDevice)
+   {
+      mDevice->Release();
+      mDevice = NULL;
+   }
+
+   mIsValid = false;
+}
+
+void OculusVRSensorDevice::set(OVR::SensorDevice* sensor, OVR::SensorInfo& info, S32 actionCodeIndex)
+{
+   mIsValid = false;
+
+   mDevice = sensor;
+   mSensorFusion.AttachToSensor(sensor);
+   mYawCorrectionDisabled = !mSensorFusion.IsYawCorrectionEnabled();
+
+   // DeviceInfo
+   mProductName = info.ProductName;
+   mManufacturer = info.Manufacturer;
+   mVersion = info.Version;
+
+   // SensorInfo
+   mVendorId = info.VendorId;
+   mProductId = info.ProductId;
+   mSerialNumber = info.SerialNumber;
+
+   mActionCodeIndex = actionCodeIndex;
+
+   if(mActionCodeIndex >= OculusVRConstants::MaxSensors)
+   {
+      // Cannot declare more sensors than we are able to handle
+      mIsValid = false;
+   }
+   else
+   {
+      mIsValid = true;
+   }
+}
+
+void OculusVRSensorDevice::createSimulation(SimulationTypes simulationType, S32 actionCodeIndex)
+{
+   if(simulationType == ST_RIFT_PREVIEW)
+   {
+      createSimulatedPreviewRift(actionCodeIndex);
+   }
+}
+
+void OculusVRSensorDevice::createSimulatedPreviewRift(S32 actionCodeIndex)
+{
+   mIsValid = false;
+   mIsSimulation = true;
+   mYawCorrectionDisabled = true;
+
+   // DeviceInfo
+   mProductName = "Tracker DK";
+   mManufacturer = "Oculus VR, Inc.";
+   mVersion = 0;
+
+   // SensorInfo
+   mVendorId = 10291;
+   mProductId = 1;
+   mSerialNumber = "000000000000";
+>>>>>>> omni_engine
 
    mActionCodeIndex = actionCodeIndex;
 
@@ -157,11 +231,16 @@ void OculusVRSensorDevice::buildCodeTable()
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 bool OculusVRSensorDevice::process(U32 deviceType, bool generateRotAsAngAxis, bool generateRotAsEuler, bool generateRotationAsAxisEvents, bool generatePositionEvents, F32 maxAxisRadius, bool generateRawSensor)
+=======
+bool OculusVRSensorDevice::process(U32 deviceType, bool generateRotAsAngAxis, bool generateRotAsEuler, bool generateRotationAsAxisEvents, F32 maxAxisRadius, bool generateRawSensor)
+>>>>>>> omni_engine
 {
    if(!mIsValid)
       return false;
 
+<<<<<<< HEAD
    // Grab current state
    ovrTrackingState ts = ovrHmd_GetTrackingState(mDevice, ovr_GetTimeInSeconds());
    mLastStatus = ts.StatusFlags;
@@ -170,6 +249,19 @@ bool OculusVRSensorDevice::process(U32 deviceType, bool generateRotAsAngAxis, bo
    U32 diff;
    OculusVRSensorData* currentBuffer = (mPrevData == mDataBuffer[0]) ? mDataBuffer[1] : mDataBuffer[0];
    currentBuffer->setData(ts, maxAxisRadius);
+=======
+   // Store the current data from the sensor and compare with previous data
+   U32 diff;
+   OculusVRSensorData* currentBuffer = (mPrevData == mDataBuffer[0]) ? mDataBuffer[1] : mDataBuffer[0];
+   if(!mIsSimulation)
+   {
+      currentBuffer->setData(mSensorFusion, maxAxisRadius);
+   }
+   else
+   {
+      currentBuffer->simulateData(maxAxisRadius);
+   }
+>>>>>>> omni_engine
    diff = mPrevData->compare(currentBuffer, generateRawSensor);
 
    // Update the previous data pointer.  We do this here in case someone calls our
@@ -188,7 +280,11 @@ bool OculusVRSensorDevice::process(U32 deviceType, bool generateRotAsAngAxis, bo
       {
          // Convert angles to degrees
          VectorF angles;
+<<<<<<< HEAD
          for(U32 i=0; i<3; ++i)  
+=======
+         for(U32 i=0; i<3; ++i)
+>>>>>>> omni_engine
          {
             angles[i] = mRadToDeg(currentBuffer->mRotEuler[i]);
          }
@@ -249,6 +345,7 @@ void OculusVRSensorDevice::reset()
    if(!mIsValid)
       return;
 
+<<<<<<< HEAD
    ovrHmd_RecenterPose(mDevice);
 }
 
@@ -261,10 +358,25 @@ bool OculusVRSensorDevice::getYawCorrection() const
 }
 
 void OculusVRSensorDevice::setYawCorrection(bool state)
+=======
+   mSensorFusion.Reset();
+}
+
+F32 OculusVRSensorDevice::getPredictionTime() const
+{
+   if(!mIsValid)
+      return 0.0f;
+
+   return mSensorFusion.GetPredictionDelta();
+}
+
+void OculusVRSensorDevice::setPredictionTime(F32 dt)
+>>>>>>> omni_engine
 {
    if(!mIsValid)
       return;
 
+<<<<<<< HEAD
    if (state == !mYawCorrectionDisabled)
       return;
 
@@ -277,10 +389,25 @@ void OculusVRSensorDevice::setYawCorrection(bool state)
 }
 
 void OculusVRSensorDevice::setPositionTracking(bool state)
+=======
+   mSensorFusion.SetPrediction(dt);
+}
+
+bool OculusVRSensorDevice::getGravityCorrection() const
+{
+   if(!mIsValid)
+      return false;
+
+   return mSensorFusion.IsGravityEnabled();
+}
+
+void OculusVRSensorDevice::setGravityCorrection(bool state)
+>>>>>>> omni_engine
 {
    if(!mIsValid)
       return;
 
+<<<<<<< HEAD
    if (state == !mPositionTrackingDisabled)
       return;
 
@@ -292,10 +419,17 @@ void OculusVRSensorDevice::setPositionTracking(bool state)
 }
 
 bool OculusVRSensorDevice::getMagnetometerCalibrationAvailable() const
+=======
+   mSensorFusion.SetGravityEnabled(state);
+}
+
+bool OculusVRSensorDevice::getYawCorrection() const
+>>>>>>> omni_engine
 {
    if(!mIsValid)
       return false;
 
+<<<<<<< HEAD
    return (mSupportedTrackingCaps & ovrTrackingCap_MagYawCorrection) != 0;
 }
 
@@ -308,11 +442,32 @@ bool OculusVRSensorDevice::getOrientationTrackingAvailable() const
 }
 
 bool OculusVRSensorDevice::getPositionTrackingAvailable() const
+=======
+   return mSensorFusion.IsYawCorrectionEnabled();
+}
+
+void OculusVRSensorDevice::setYawCorrection(bool state)
+{
+   if(!mIsValid)
+      return;
+
+   if(mYawCorrectionDisabled || !mSensorFusion.HasMagCalibration())
+      return;
+
+   mSensorFusion.SetYawCorrectionEnabled(state);
+}
+
+bool OculusVRSensorDevice::getMagnetometerCalibrationAvailable() const
+>>>>>>> omni_engine
 {
    if(!mIsValid)
       return false;
 
+<<<<<<< HEAD
    return (mSupportedTrackingCaps & ovrTrackingCap_Position) != 0;
+=======
+   return mSensorFusion.HasMagCalibration();
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -322,8 +477,20 @@ EulerF OculusVRSensorDevice::getEulerRotation()
    if(!mIsValid)
       return Point3F::Zero;
 
+<<<<<<< HEAD
    ovrTrackingState ts = ovrHmd_GetTrackingState(mDevice, ovr_GetTimeInSeconds());
    OVR::Quatf orientation = ts.HeadPose.ThePose.Orientation;
+=======
+   OVR::Quatf orientation;
+   if(mSensorFusion.GetPredictionDelta() > 0)
+   {
+      orientation = mSensorFusion.GetPredictedOrientation();
+   }
+   else
+   {
+      orientation = mSensorFusion.GetOrientation();
+   }
+>>>>>>> omni_engine
 
    // Sensor rotation in Euler format
    EulerF rot;
@@ -337,12 +504,18 @@ EulerF OculusVRSensorDevice::getRawEulerRotation()
    if(!mIsValid)
       return Point3F::Zero;
 
+<<<<<<< HEAD
    ovrTrackingState ts = ovrHmd_GetTrackingState(mDevice, ovr_GetTimeInSeconds());
    OVR::Quatf orientation = ts.HeadPose.ThePose.Orientation;
+=======
+   OVR::Quatf orientation;
+   orientation = mSensorFusion.GetOrientation();
+>>>>>>> omni_engine
 
    // Sensor rotation in Euler format
    EulerF rot;
    OculusVRUtil::convertRotation(orientation, rot);
+
    return rot;
 }
 
@@ -350,10 +523,16 @@ VectorF OculusVRSensorDevice::getAcceleration()
 {
    if(!mIsValid)
       return VectorF::Zero;
+<<<<<<< HEAD
    
    ovrTrackingState ts = ovrHmd_GetTrackingState(mDevice, ovr_GetTimeInSeconds());
    OVR::Vector3f a = ts.HeadPose.LinearAcceleration;
 
+=======
+
+   OVR::Vector3f a = mSensorFusion.GetAcceleration();
+   
+>>>>>>> omni_engine
    // Sensor acceleration in VectorF format
    VectorF acceleration;
    OculusVRUtil::convertAcceleration(a, acceleration);
@@ -365,9 +544,14 @@ EulerF OculusVRSensorDevice::getAngularVelocity()
 {
    if(!mIsValid)
       return EulerF::Zero;
+<<<<<<< HEAD
    
    ovrTrackingState ts = ovrHmd_GetTrackingState(mDevice, ovr_GetTimeInSeconds());
    OVR::Vector3f v = ts.HeadPose.AngularVelocity;
+=======
+
+   OVR::Vector3f v = mSensorFusion.GetAngularVelocity();
+>>>>>>> omni_engine
    
    // Sensor angular velocity in EulerF format
    EulerF vel;
@@ -376,6 +560,7 @@ EulerF OculusVRSensorDevice::getAngularVelocity()
    return vel;
 }
 
+<<<<<<< HEAD
 Point3F OculusVRSensorDevice::getPosition()
 {
    if(!mIsValid)
@@ -400,4 +585,40 @@ void OculusVRSensorDevice::updateTrackingCaps()
       mCurrentTrackingCaps |= ovrTrackingCap_Position;
 
    ovrHmd_ConfigureTracking(mDevice, mCurrentTrackingCaps, 0);
+=======
+VectorF OculusVRSensorDevice::getMagnetometer()
+{
+   if(!mIsValid)
+      return VectorF::Zero;
+
+   OVR::Vector3f m;
+   if(mSensorFusion.HasMagCalibration() && mSensorFusion.IsYawCorrectionEnabled())
+   {
+      m = mSensorFusion.GetCalibratedMagnetometer();
+   }
+   else
+   {
+      m = mSensorFusion.GetMagnetometer();
+   }
+   
+   // Sensor magnetometer reading in VectorF format
+   VectorF mag;
+   OculusVRUtil::convertMagnetometer(m, mag);
+
+   return mag;
+}
+
+VectorF OculusVRSensorDevice::getRawMagnetometer()
+{
+   if(!mIsValid)
+      return VectorF::Zero;
+
+   OVR::Vector3f m = mSensorFusion.GetMagnetometer();
+   
+   // Sensor magnetometer reading in VectorF format
+   VectorF mag;
+   OculusVRUtil::convertMagnetometer(m, mag);
+
+   return mag;
+>>>>>>> omni_engine
 }

@@ -65,6 +65,7 @@ protected:
 
 public:  
 
+<<<<<<< HEAD
    RenderInstType()
       :  mName( Invalid.mName )
    {
@@ -76,6 +77,27 @@ public:
    }
 
    RenderInstType( const String &name )
+=======
+
+#if _MSC_VER < 1800
+	RenderInstType( const RenderInstType &type = Invalid ) 
+		:  mName( type.mName )
+	{
+	}
+#else
+	RenderInstType(const RenderInstType &type)
+	{
+		mName = type.mName;
+	}
+	RenderInstType()
+	{
+		const RenderInstType &type = Invalid;
+		mName = type.mName;
+	}
+#endif
+
+   RenderInstType( const String &name ) 
+>>>>>>> omni_engine
       :  mName( name )
    {
    }
@@ -110,6 +132,9 @@ public:
    static const RenderInstType RIT_Decal;
    static const RenderInstType RIT_Water;
    static const RenderInstType RIT_Foliage;
+   //Volumetric Fog
+   static const RenderInstType RIT_VolumetricFog;
+   //Volumetric Fog
    static const RenderInstType RIT_Translucent;
    static const RenderInstType RIT_Begin;
    static const RenderInstType RIT_Custom;

@@ -39,8 +39,12 @@ enum TypeReq
    TypeReqNone,
    TypeReqUInt,
    TypeReqFloat,
+<<<<<<< HEAD
    TypeReqString,
    TypeReqVar
+=======
+   TypeReqString
+>>>>>>> omni_engine
 };
 
 /// Representation of a node for the scripting language parser.
@@ -575,8 +579,12 @@ struct FunctionDeclStmtNode : StmtNode
 };
 
 extern StmtNode *gStatementList;
+<<<<<<< HEAD
 extern StmtNode *gAnonFunctionList;
 extern U32 gAnonFunctionID;
 extern ExprEvalState gEvalState;
+=======
+extern ExprEvalState gEvalState;;
+>>>>>>> omni_engine
 
 #endif

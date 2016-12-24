@@ -37,6 +37,9 @@
 #include "T3D/gameBase/std/stdMoveList.h"
 #include "T3D/fx/cameraFXMgr.h"
 
+#include "core/threadStatic.h"
+extern bool ATTS(gFreezeSim);
+
 MODULE_BEGIN( ProcessList )
 
    MODULE_INIT
@@ -227,7 +230,14 @@ void StdClientProcessList::onTickObject( ProcessObject *obj )
       }
    }
    else if ( obj->isTicking() )
+<<<<<<< HEAD
       obj->processTick( 0 );
+=======
+	  if(!ATTS(gFreezeSim))
+	  {
+		  obj->processTick( 0 );
+	  }
+>>>>>>> omni_engine
 }
 
 void StdClientProcessList::advanceObjects()
@@ -370,7 +380,14 @@ void StdServerProcessList::onTickObject( ProcessObject *pobj )
       con->mMoveList->clearMoves( m );
    }
    else if ( pobj->isTicking() )
+<<<<<<< HEAD
       pobj->processTick( 0 );
+=======
+	  if(!ATTS(gFreezeSim))
+	  {
+		  pobj->processTick( 0 );
+	  }
+>>>>>>> omni_engine
 }
 
 void StdServerProcessList::advanceObjects()

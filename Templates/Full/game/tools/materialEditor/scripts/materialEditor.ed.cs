@@ -173,10 +173,16 @@ function MaterialEditorGui::quit(%this)
    
    // Now we can delete the preview materials and shaders
    // knowing that there are no matinstances using them.
-   matEdCubeMapPreviewMat.delete();
-   materialEd_previewMaterial.delete();
-   materialEd_justAlphaMaterial.delete();
-   materialEd_justAlphaShader.delete();
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+   if (isobject(matEdCubeMapPreviewMat))
+      matEdCubeMapPreviewMat.delete();
+   if (isobject(materialEd_previewMaterial))   
+      materialEd_previewMaterial.delete();
+   if (isobject(materialEd_previewMaterial))      
+      materialEd_previewMaterial.delete();
+   if (isobject(materialEd_previewMaterial))         
+      materialEd_previewMaterial.delete();
+//Copyright Winterleaf Entertainment L.L.C. 2013	  
 }
 
 function MaterialEditorGui::openFile( %this, %fileType )
@@ -593,6 +599,13 @@ function MaterialEditorGui::convertTextureFields(%this)
       %specMap = MaterialEditorGui.searchForTexture(MaterialEditorGui.currentMaterial, %specMap);
       MaterialEditorGui.currentMaterial.specularMap[%specI] = %specMap;
    }
+
+   for(%accuI = 0; %accuI < 4; %accuI++)
+   {
+      %accuMap = MaterialEditorGui.currentMaterial.accuMap[%accuI];         
+      %accuMap = MaterialEditorGui.searchForTexture(MaterialEditorGui.currentMaterial, %accuMap);      
+      MaterialEditorGui.currentMaterial.accuMap[%accuI] = %accuMap;
+   }
 }
 
 // still needs to be optimized further
@@ -884,6 +897,17 @@ function MaterialEditorGui::guiSync( %this, %material )
    {
       MaterialEditorPropertiesWindow-->specMapNameText.setText( (%material).specularMap[%layer] );
       MaterialEditorPropertiesWindow-->specMapDisplayBitmap.setBitmap( (%material).specularMap[%layer] );
+   }
+   
+   if((%material).accuMap[%layer] $= "") 
+   {
+      MaterialEditorPropertiesWindow-->accuMapNameText.setText( "None" );
+      MaterialEditorPropertiesWindow-->accuMapDisplayBitmap.setBitmap( "tools/materialeditor/gui/unknownImage" );
+   }
+   else
+   {
+      MaterialEditorPropertiesWindow-->accuMapNameText.setText( (%material).accuMap[%layer] );      
+      MaterialEditorPropertiesWindow-->accuMapDisplayBitmap.setBitmap( (%material).accuMap[%layer] );
    }
    
    MaterialEditorPropertiesWindow-->accuScaleTextEdit.setText((%material).accuScale[%layer]);
@@ -1192,6 +1216,32 @@ function MaterialEditorGui::updateSpecMap(%this,%action)
    }
    
    MaterialEditorGui.guiSync( materialEd_previewMaterial );
+}
+
+function MaterialEditorGui::updateAccuMap( %this, %action)
+{
+   %layer = MaterialEditorGui.currentLayer;
+   
+   if( %action )
+   {
+      %texture = MaterialEditorGui.openFile("texture");
+      if( %texture !$= "" )
+      {
+         MaterialEditorPropertiesWindow-->accuMapDisplayBitmap.setBitmap(%texture);
+      
+         %bitmap = MaterialEditorPropertiesWindow-->accuMapDisplayBitmap.bitmap;
+         %bitmap = strreplace(%bitmap,"tools/materialEditor/scripts/","");
+         MaterialEditorPropertiesWindow-->accuMapDisplayBitmap.setBitmap(%bitmap);
+         MaterialEditorPropertiesWindow-->accuMapNameText.setText(%bitmap);
+         MaterialEditorGui.updateActiveMaterial("accuMap[" @ %layer @ "]","\"" @ %bitmap @ "\"");	
+      }
+   }
+   else
+   {
+      MaterialEditorPropertiesWindow-->accuMapNameText.setText("None");
+      MaterialEditorPropertiesWindow-->accuMapDisplayBitmap.setBitmap("tools/materialeditor/gui/unknownImage");
+      MaterialEditorGui.updateActiveMaterial("accuMap[" @ %layer @ "]","");
+   }
 }
 
 function MaterialEditorGui::updateRotationOffset(%this, %isSlider, %onMouseUp)

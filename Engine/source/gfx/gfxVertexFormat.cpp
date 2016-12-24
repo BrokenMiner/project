@@ -114,11 +114,18 @@ void GFXVertexFormat::addElement( const String& semantic, GFXDeclType type, U32 
 { 
    mDirty = true;
    mElements.increment();
+<<<<<<< HEAD
    GFXVertexElement& lastElement = mElements.last();
    lastElement.mStreamIndex = stream;
    lastElement.mSemantic = semantic.intern();
    lastElement.mSemanticIndex = index;
    lastElement.mType = type;
+=======
+   mElements.last().mStreamIndex = stream; 
+   mElements.last().mSemantic = semantic.intern();
+   mElements.last().mSemanticIndex = index;
+   mElements.last().mType = type;      
+>>>>>>> omni_engine
 }
 
 const String& GFXVertexFormat::getDescription() const

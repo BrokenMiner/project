@@ -31,6 +31,9 @@
 
 IMPLEMENT_CONOBJECT( MECreateUndoAction );
 
+IMPLEMENT_CALLBACK( MECreateUndoAction, onUndone, void, (), (), "" );
+IMPLEMENT_CALLBACK( MECreateUndoAction, onRedone, void, (), (), "" );
+
 ConsoleDocClass( MECreateUndoAction,
 				"@brief Material Editor create undo instance\n\n"
 				"Not intended for game development, for editors or internal use only.\n\n "
@@ -58,12 +61,19 @@ void MECreateUndoAction::addObject( SimObject *object )
    mObjects.last().id = object->getId();
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( MECreateUndoAction, addObject, void, ( SimObject* obj),,
    "Add the object being created to an undo action.\n"
    "@param obj Object being created you want to create the undo for.")
 {
 	if (obj)
       object->addObject( obj );
+=======
+DefineConsoleMethod( MECreateUndoAction, addObject, void, (SimObject *obj), , "( SimObject obj )")
+{
+	if (obj)
+   	object->addObject( obj );
+>>>>>>> omni_engine
 }
 
 void MECreateUndoAction::undo()
@@ -89,7 +99,11 @@ void MECreateUndoAction::undo()
       object->deleteObject();
    }
    
+<<<<<<< HEAD
    Con::executef( this, "onUndone" );
+=======
+   onUndone_callback();
+>>>>>>> omni_engine
 }
 
 void MECreateUndoAction::redo()
@@ -110,11 +124,18 @@ void MECreateUndoAction::redo()
          group->addObject( object );
    }
    
+<<<<<<< HEAD
    Con::executef( this, "onRedone" );
+=======
+   onRedone_callback();
+>>>>>>> omni_engine
 }
 
 
 IMPLEMENT_CONOBJECT( MEDeleteUndoAction );
+
+IMPLEMENT_CALLBACK( MEDeleteUndoAction, onUndone, void, (), (), "" );
+IMPLEMENT_CALLBACK( MEDeleteUndoAction, onRedone, void, (), (), "" );
 
 ConsoleDocClass( MEDeleteUndoAction,
 				"@brief Material Editor delete undo instance\n\n"
@@ -165,12 +186,19 @@ void MEDeleteUndoAction::deleteObject( const Vector<SimObject*> &objectList )
       deleteObject( objectList[i] );
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( MEDeleteUndoAction, deleteObject, void, ( SimObject* obj),,
    "Delete the object and add it to the undo action.\n"
    "@param obj Object to delete and add to the undo action.")
 {
 	if (obj)
       object->deleteObject( obj );
+=======
+DefineConsoleMethod( MEDeleteUndoAction, deleteObject, void, (SimObject *obj ), , "( SimObject obj )")
+{
+	if (obj)
+   	object->deleteObject( obj );
+>>>>>>> omni_engine
 }
 
 void MEDeleteUndoAction::undo()
@@ -191,7 +219,11 @@ void MEDeleteUndoAction::undo()
          group->addObject( object );
    }
    
+<<<<<<< HEAD
    Con::executef( this, "onUndone" );
+=======
+   onUndone_callback();
+>>>>>>> omni_engine
 }
 
 void MEDeleteUndoAction::redo()
@@ -204,7 +236,11 @@ void MEDeleteUndoAction::redo()
          object->deleteObject();
    }
    
+<<<<<<< HEAD
    Con::executef( this, "onRedone" );
+=======
+   onRedone_callback();
+>>>>>>> omni_engine
 }
 
 IMPLEMENT_CONOBJECT( InspectorFieldUndoAction );
@@ -272,4 +308,91 @@ void InspectorFieldUndoAction::undo()
    // Now save the previous data in this UndoAction
    // since an undo action must become a redo action and vice-versa
    mData = data;
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_MECreateUndoAction_addObject(char * x__object, char * x__obj)
+{
+MECreateUndoAction* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+SimObject* obj; Sim::findObject(x__obj, obj ); 
+{
+	if (obj)
+   	object->addObject( obj );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_MEDeleteUndoAction_deleteObject(char * x__object, char * x__obj)
+{
+MEDeleteUndoAction* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+SimObject* obj; Sim::findObject(x__obj, obj ); 
+{
+	if (obj)
+   	object->deleteObject( obj );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

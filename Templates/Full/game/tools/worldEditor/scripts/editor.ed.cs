@@ -64,12 +64,19 @@ function Editor::getUndoManager(%this)
 {
    if ( !isObject( %this.undoManager ) )
    {
-      /// This is the global undo manager used by all
-      /// of the mission editor sub-editors.
-      %this.undoManager = new UndoManager( EUndoManager )
-      {
-         numLevels = 200;
-      };
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      if (isobject(EUndoManager))
+         %this.undoManager = EUndoManager;
+      else
+         {   
+         /// This is the global undo manager used by all
+         /// of the mission editor sub-editors.
+         %this.undoManager = new UndoManager( EUndoManager )
+            {
+            numLevels = 200;
+            };
+         }
+//Copyright Winterleaf Entertainment L.L.C. 2013
    }
    return %this.undoManager;
 }

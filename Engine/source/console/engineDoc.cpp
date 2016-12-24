@@ -114,7 +114,11 @@ static void dumpVariable(  Stream& stream,
 {
    // Skip variables defined in script.
    
+<<<<<<< HEAD
    if( entry->value.type < 0 )
+=======
+   if( entry->type < 0 )
+>>>>>>> omni_engine
       return;
          
    // Skip internals... don't export them.
@@ -149,7 +153,11 @@ static void dumpVariable(  Stream& stream,
             
    // Skip variables for which we can't decipher their type.
 
+<<<<<<< HEAD
    ConsoleBaseType* type = ConsoleBaseType::getType( entry->value.type );
+=======
+   ConsoleBaseType* type = ConsoleBaseType::getType( entry->type );
+>>>>>>> omni_engine
    if( !type )
    {
       Con::errorf( "Can't find type for variable '%s'", entry->name );
@@ -706,7 +714,11 @@ static bool dumpEngineDocs( const char *outputFile )
    // Dump pre-declarations for any groups we encountered
    // so that we don't have to explicitly define them.
    HashTable<String,U32>::Iterator iter = smDocGroups.begin();
+<<<<<<< HEAD
    for (; iter != smDocGroups.end(); ++iter)
+=======
+   for ( ; iter != smDocGroups.end(); iter++ )
+>>>>>>> omni_engine
       stream.writeText( String::ToString( "/*! @addtogroup %s */\r\n\r\n", iter->key.c_str() ) );
 
    return true;
@@ -720,4 +732,73 @@ DefineEngineFunction( dumpEngineDocs, bool, ( const char* outputFile ),,
 {
    return dumpEngineDocs( outputFile );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_dumpEngineDocs(char * x__outputFile)
+{
+const char* outputFile = (const char*)x__outputFile;
+bool wle_returnObject;
+{
+   {wle_returnObject =dumpEngineDocs( outputFile );
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

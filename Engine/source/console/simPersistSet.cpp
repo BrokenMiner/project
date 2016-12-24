@@ -47,7 +47,11 @@ SimPersistSet::SimPersistSet()
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 bool SimPersistSet::processArguments( S32 argc, ConsoleValueRef *argv )
+=======
+bool SimPersistSet::processArguments( S32 argc, const char** argv )
+>>>>>>> omni_engine
 {
    for( U32 i = 0; i < argc; ++ i )
    {
@@ -55,7 +59,11 @@ bool SimPersistSet::processArguments( S32 argc, ConsoleValueRef *argv )
       Torque::UUID uuid;
       if( !uuid.fromString( argv[ i ] ) )
       {
+<<<<<<< HEAD
          Con::errorf( "SimPersistSet::processArguments - could not read UUID at index %i: %s", i, (const char*)argv[ i ] );
+=======
+         Con::errorf( "SimPersistSet::processArguments - could not read UUID at index %i: %s", i, argv[ i ] );
+>>>>>>> omni_engine
          continue;
       }
 
@@ -191,3 +199,73 @@ DefineConsoleMethod( SimPersistSet, resolvePersistentIds, void, (), , "() - Try 
 {
    object->resolvePIDs();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimPersistSet_resolvePersistentIds(char * x__object)
+{
+SimPersistSet* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->resolvePIDs();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

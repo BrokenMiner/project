@@ -23,7 +23,11 @@
 #ifndef _TSFORESTCELLBATCH_H_
 #define _TSFORESTCELLBATCH_H_
 
+<<<<<<< HEAD
 #ifndef _IMPOSTERRENDERMGR_H_
+=======
+#ifndef _FORESTCELLBATCH_H_
+>>>>>>> omni_engine
 #include "renderInstance/renderImposterMgr.h"
 #endif
 #ifndef _FORESTCELLBATCH_H_

@@ -55,7 +55,7 @@ const char *stristr(const char *szStringToBeSearched, const char *szSubstringToS
       return NULL;
    }
 
-   pPos = strstr((const char*)szCopy1, (const char*)szCopy2);
+   pPos = strstr(szCopy1, szCopy2);
 
    if ( pPos != NULL ) {
       // map to the original string

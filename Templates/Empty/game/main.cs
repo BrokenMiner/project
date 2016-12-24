@@ -40,11 +40,17 @@ function createCanvas(%windowTitle)
    // Create the Canvas
    %foo = new GuiCanvas(Canvas)
    {
+<<<<<<< HEAD
       displayWindow = $platform !$= "windows";
    };
    
    $GameCanvas = %foo;
    
+=======
+      displayWindow = false;
+   };
+   
+>>>>>>> omni_engine
    // Set the window title
    if (isObject(Canvas))
       Canvas.setWindowTitle(getEngineName() @ " - " @ $appName);

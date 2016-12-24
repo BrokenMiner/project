@@ -56,10 +56,17 @@ class AsyncPacket : public RawDataT< T >
       typedef RawDataT< T > Parent;
 
       AsyncPacket()
+<<<<<<< HEAD
          : mIndex( 0 ), mSizeActual( 0 ), mIsLast( false ) {}
       AsyncPacket( T* data, U32 size, bool ownMemory = false )
          : Parent( data, size, ownMemory ),
            mIndex( 0 ), mSizeActual( 0 ), mIsLast( false ) {}
+=======
+         : mIndex( 0 ), mIsLast( false ), mSizeActual( 0 ) {}
+      AsyncPacket( T* data, U32 size, bool ownMemory = false )
+         : Parent( data, size, ownMemory ),
+           mIndex( 0 ), mIsLast( false ), mSizeActual( 0 ) {}
+>>>>>>> omni_engine
 
       /// Running number in stream.
       U32 mIndex;

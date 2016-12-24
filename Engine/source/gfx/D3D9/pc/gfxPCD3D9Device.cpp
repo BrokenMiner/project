@@ -66,7 +66,11 @@ void GFXPCD3D9Device::createDirect3D9(LPDIRECT3D9 &d3d9, LPDIRECT3D9EX &d3d9ex)
       
       if (pfnCreate9Ex)
       {
+<<<<<<< HEAD
 		  if (d3d9ex && !FAILED(pfnCreate9Ex(D3D_SDK_VERSION, &d3d9ex)))
+=======
+         if (!FAILED(pfnCreate9Ex(D3D_SDK_VERSION, &d3d9ex)) && d3d9ex)
+>>>>>>> omni_engine
             d3d9ex->QueryInterface(__uuidof(IDirect3D9), reinterpret_cast<void **>(&d3d9));
       }
 
@@ -332,8 +336,15 @@ void GFXPCD3D9Device::init( const GFXVideoMode &mode, PlatformWindow *window /* 
 
    initD3DXFnTable();
 
+<<<<<<< HEAD
    HWND winHwnd = (HWND)window->getSystemWindow( PlatformWindow::WindowSystem_Windows );
    AssertISV(winHwnd, "GFXPCD3D9WindowTarget::initPresentationParams() - no HWND");
+=======
+   Win32Window *win = dynamic_cast<Win32Window*>( window );
+   AssertISV( win, "GFXD3D9Device::init - got a non Win32Window window passed in! Did DX go crossplatform?" );
+
+   HWND winHwnd = win->getHWND();
+>>>>>>> omni_engine
 
    // Create D3D Presentation params
    D3DPRESENT_PARAMETERS d3dpp = setupPresentParams( mode, winHwnd );
@@ -348,8 +359,34 @@ void GFXPCD3D9Device::init( const GFXVideoMode &mode, PlatformWindow *window /* 
 
    HRESULT hres = E_FAIL;
    if ( usePerfHud )
+<<<<<<< HEAD
    {  
       hres = createDevice(  mD3D->GetAdapterCount() - 1, D3DDEVTYPE_REF, winHwnd, D3DCREATE_MIXED_VERTEXPROCESSING, &d3dpp);
+=======
+   {
+	   // Based on https://developer.nvidia.com/sites/default/files/akamai/tools/files/PerfHUD6-QuickTutorial.pdf
+
+       UINT AdapterToUse = D3DADAPTER_DEFAULT;
+       D3DDEVTYPE DeviceType = D3DDEVTYPE_HAL;
+        
+       for( UINT Adapter = 0; Adapter < mD3D->GetAdapterCount(); Adapter++ )
+       {
+          D3DADAPTER_IDENTIFIER9 Identifier;
+          HRESULT Res;
+          Res = mD3D->GetAdapterIdentifier( Adapter, 0, &Identifier );
+          if( strstr( Identifier.Description, "PerfHUD" ) != 0 )
+          {
+              Con::printf( "Found NVIDIA PerfHUD adapter" );
+              AdapterToUse = Adapter;
+              DeviceType = D3DDEVTYPE_REF;
+              break;
+          }
+      }
+      hres = mD3D->CreateDevice( AdapterToUse, DeviceType,
+                                 winHwnd,
+                                 D3DCREATE_HARDWARE_VERTEXPROCESSING,
+                                 &d3dpp, &mD3DDevice );
+>>>>>>> omni_engine
    }
    else 
    {
@@ -1019,6 +1056,10 @@ bool GFXPCD3D9Device::beginSceneInternal()
 GFXWindowTarget * GFXPCD3D9Device::allocWindowTarget( PlatformWindow *window )
 {
    AssertFatal(window,"GFXD3D9Device::allocWindowTarget - no window provided!");
+#ifndef TORQUE_OS_XENON
+   AssertFatal(dynamic_cast<Win32Window*>(window), 
+      "GFXD3D9Device::allocWindowTarget - only works with Win32Windows!");
+#endif
 
    // Set up a new window target...
    GFXPCD3D9WindowTarget *gdwt = new GFXPCD3D9WindowTarget();

@@ -1586,7 +1586,11 @@ dsize_t getMemoryUsed()
 }
 
 #ifdef TORQUE_DEBUG_GUARD
+<<<<<<< HEAD
 DefineEngineFunction( dumpAlloc, void, ( S32 allocNum ),,
+=======
+DefineEngineFunction( dumpAlloc, void, ( int allocNum ),,
+>>>>>>> omni_engine
 				"@brief Dumps information about the given allocated memory block.\n\n"
 				"@param allocNum Memory block to dump information about."
 				"@note Available in debug builds only. "

@@ -169,11 +169,19 @@ void SFXFMODProvider::init()
    const char* pDllName; // plugin-based DLL
    const char* eventDllName;
    
+<<<<<<< HEAD
 #ifdef _WIN64
    dllName = "fmodex64.dll";
    pDllName = "fmodexp64.dll";
    eventDllName = "fmod_event64.dll";
 #elif defined(TORQUE_OS_WIN)
+=======
+#ifdef TORQUE_64
+   dllName = "fmodex64.dll";
+   pDllName = "fmodexp64.dll";
+   eventDllName = "fmod_event64.dll";
+#elif defined(TORQUE_OS_WIN32)
+>>>>>>> omni_engine
    dllName = "fmodex.dll";
    pDllName = "fmodexp.dll";
    eventDllName = "fmod_event.dll";

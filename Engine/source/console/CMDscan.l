@@ -105,7 +105,11 @@ HEXDIGIT [a-fA-F0-9]
 %%
          ;
 {SPACE}+ { }
+<<<<<<< HEAD
 ("///"([^/\n\r][^\n\r]*)?[\n\r]+)+ { return(Sc_ScanDocBlock()); }
+=======
+("///"[^/][^\n\r]*[\n\r]*)+ { return(Sc_ScanDocBlock()); }
+>>>>>>> omni_engine
 "//"[^\n\r]*   ;
 [\r]        ;
 [\n]        {lineIndex++;}

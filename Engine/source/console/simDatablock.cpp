@@ -28,6 +28,7 @@
 #include "console/engineAPI.h"
 #include "T3D/gameBase/gameConnectionEvents.h"
 #include "T3D/gameBase/gameConnection.h"
+#include "console/SimXMLDocument.h" // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 
 
 IMPLEMENT_CO_DATABLOCK_V1(SimDataBlock);
@@ -124,6 +125,34 @@ void SimDataBlock::write(Stream &stream, U32 tabStop, U32 flags)
    stream.writeTabs(tabStop);
    char buffer[1024];
 
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   /// For XML Output
+   if( flags & XmlOutput )
+   {
+	   getcurrentXML()->pushNewElement("Group");
+
+	   getcurrentXML()->setAttribute("name", getClassName());
+	   getcurrentXML()->setAttribute("fileName", getFilename());
+	   char buffer[1024];
+	   dSprintf(buffer, sizeof(buffer), "%d", getDeclarationLine());
+	   getcurrentXML()->setAttribute("lineNumber", buffer);
+	   getcurrentXML()->pushNewElement("Setting");
+	   getcurrentXML()->setAttribute("name", "name");
+	   if(getName())
+		   getcurrentXML()->addData(getName());
+	   else
+		   getcurrentXML()->addData(" ");
+	   getcurrentXML()->popElement();
+	   writeFields( stream, tabStop + 1, true);
+
+	   getcurrentXML()->popElement();
+	   return;
+   }
+
+   // @Copyright end
+
    // Client side datablocks are created with 'new' while
    // regular server datablocks use the 'datablock' keyword.
    if ( isClientOnly() )
@@ -131,6 +160,7 @@ void SimDataBlock::write(Stream &stream, U32 tabStop, U32 flags)
    else
       dSprintf(buffer, sizeof(buffer), "datablock %s(%s) {\r\n", getClassName(), getName() ? getName() : "");
 
+   /// For Stream Output
    stream.write(dStrlen(buffer), buffer);
    writeFields(stream, tabStop + 1);
 
@@ -210,3 +240,116 @@ DefineConsoleFunction( deleteDataBlocks, void, (),,
    SimDataBlock::sNextObjectId = DataBlockObjectIdFirst;
    SimDataBlock::sNextModifiedKey = 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_deleteDataBlocks()
+{
+{
+      SimGroup *grp = Sim::getDataBlockGroup();
+   grp->deleteAllObjects();
+   SimDataBlock::sNextObjectId = DataBlockObjectIdFirst;
+   SimDataBlock::sNextModifiedKey = 0;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_preloadClientDataBlocks()
+{
+{
+      SimGroup *grp = Sim::getDataBlockGroup();
+   String errorStr;
+   for(S32 i = grp->size() - 1; i >= 0; i--)
+   {
+      AssertFatal(dynamic_cast<SimDataBlock*>((*grp)[i]), "Doh! non-datablock in datablock group!");
+      SimDataBlock *obj = (SimDataBlock*)(*grp)[i];
+      if (!obj->preload(false, errorStr))
+         Con::errorf("Failed to preload client datablock, %s: %s", obj->getName(), errorStr.c_str());
+   }
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimDataBlock_reloadOnLocalClient(char * x__object)
+{
+SimDataBlock* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   
+   GameConnection* localClient = GameConnection::getLocalClientConnection();
+   if( !localClient )
+      return;
+   
+   if( !object->preload( true, NetConnection::getErrorBuffer() ) )
+   {
+      Con::errorf( NetConnection::getErrorBuffer() );
+      return;
+   }
+   U8 buffer[ 16384 ];
+   BitStream stream( buffer, 16384 );
+   object->packData( &stream );
+   stream.setPosition(0);
+   object->unpackData( &stream );
+   if( !object->preload( false, NetConnection::getErrorBuffer() ) )
+   {
+      Con::errorf( NetConnection::getErrorBuffer() );
+      return;
+   }
+      object->inspectPostApply();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

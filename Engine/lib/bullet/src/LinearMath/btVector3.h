@@ -53,6 +53,7 @@ subject to the following restrictions:
 #define btvxyzMaskf btvFFF0fMask
 #define btvAbsfMask btCastiTo128f(btvAbsMask)
 
+<<<<<<< HEAD
 //there is an issue with XCode 3.2 (LCx errors)
 #define btvMzeroMask (_mm_set_ps(-0.0f, -0.0f, -0.0f, -0.0f))
 #define v1110		 (_mm_set_ps(0.0f, 1.0f, 1.0f, 1.0f))
@@ -63,14 +64,26 @@ subject to the following restrictions:
 //const __m128 ATTRIBUTE_ALIGNED16(v1110) = {1.0f, 1.0f, 1.0f, 0.0f};
 //const __m128 ATTRIBUTE_ALIGNED16(vHalf) = {0.5f, 0.5f, 0.5f, 0.5f};
 //const __m128 ATTRIBUTE_ALIGNED16(v1_5)  = {1.5f, 1.5f, 1.5f, 1.5f};
+=======
+
+
+const __m128 ATTRIBUTE_ALIGNED16(btvMzeroMask) = {-0.0f, -0.0f, -0.0f, -0.0f};
+const __m128 ATTRIBUTE_ALIGNED16(v1110) = {1.0f, 1.0f, 1.0f, 0.0f};
+const __m128 ATTRIBUTE_ALIGNED16(vHalf) = {0.5f, 0.5f, 0.5f, 0.5f};
+const __m128 ATTRIBUTE_ALIGNED16(v1_5)  = {1.5f, 1.5f, 1.5f, 1.5f};
+>>>>>>> omni_engine
 
 #endif
 
 #ifdef BT_USE_NEON
 
 const float32x4_t ATTRIBUTE_ALIGNED16(btvMzeroMask) = (float32x4_t){-0.0f, -0.0f, -0.0f, -0.0f};
+<<<<<<< HEAD
 const int32x4_t ATTRIBUTE_ALIGNED16(btvFFF0Mask) = (int32x4_t){static_cast<int32_t>(0xFFFFFFFF),
 	static_cast<int32_t>(0xFFFFFFFF), static_cast<int32_t>(0xFFFFFFFF), 0x0};
+=======
+const int32x4_t ATTRIBUTE_ALIGNED16(btvFFF0Mask) = (int32x4_t){0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x0};
+>>>>>>> omni_engine
 const int32x4_t ATTRIBUTE_ALIGNED16(btvAbsMask) = (int32x4_t){0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF};
 const int32x4_t ATTRIBUTE_ALIGNED16(btv3AbsMask) = (int32x4_t){0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x0};
 
@@ -234,7 +247,11 @@ public:
    * @param v The other vector in the dot product */
 	SIMD_FORCE_INLINE btScalar dot(const btVector3& v) const
 	{
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+=======
+#if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE)		
+>>>>>>> omni_engine
 		__m128 vd = _mm_mul_ps(mVec128, v.mVec128);
 		__m128 z = _mm_movehl_ps(vd, vd);
 		__m128 y = _mm_shuffle_ps(vd, vd, 0x55);
@@ -359,8 +376,12 @@ public:
   /**@brief Return a vector will the absolute values of each element */
 	SIMD_FORCE_INLINE btVector3 absolute() const 
 	{
+<<<<<<< HEAD
 
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE) 
+=======
+#if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE) 
+>>>>>>> omni_engine
 		return btVector3(_mm_and_ps(mVec128, btv3AbsfMask));
 #elif defined(BT_USE_NEON)
 		return btVector3(vabsq_f32(mVec128));
@@ -415,7 +436,11 @@ public:
 
 	SIMD_FORCE_INLINE btScalar triple(const btVector3& v1, const btVector3& v2) const
 	{
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+=======
+#if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+>>>>>>> omni_engine
 		// cross:
 		__m128 T = _mm_shuffle_ps(v1.mVec128, v1.mVec128, BT_SHUFFLE(1, 2, 0, 3));	//	(Y Z X 0)
 		__m128 V = _mm_shuffle_ps(v2.mVec128, v2.mVec128, BT_SHUFFLE(1, 2, 0, 3));	//	(Y Z X 0)
@@ -647,7 +672,11 @@ public:
 
 	void	getSkewSymmetricMatrix(btVector3* v0,btVector3* v1,btVector3* v2) const
 	{
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+=======
+#if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+>>>>>>> omni_engine
  
 		__m128 V  = _mm_and_ps(mVec128, btvFFF0fMask);
 		__m128 V0 = _mm_xor_ps(btvMzeroMask, V);
@@ -717,7 +746,11 @@ public:
     /* create a vector as  btVector3( this->dot( btVector3 v0 ), this->dot( btVector3 v1), this->dot( btVector3 v2 ))  */
     SIMD_FORCE_INLINE btVector3  dot3( const btVector3 &v0, const btVector3 &v1, const btVector3 &v2 ) const
     {
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+=======
+#if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+>>>>>>> omni_engine
 
         __m128 a0 = _mm_mul_ps( v0.mVec128, this->mVec128 );
         __m128 a1 = _mm_mul_ps( v1.mVec128, this->mVec128 );
@@ -732,7 +765,11 @@ public:
         return btVector3(r);
         
 #elif defined(BT_USE_NEON)
+<<<<<<< HEAD
         static const uint32x4_t xyzMask = (const uint32x4_t){ static_cast<uint32_t>(-1), static_cast<uint32_t>(-1), static_cast<uint32_t>(-1), 0 };
+=======
+        static const uint32x4_t xyzMask = (const uint32x4_t){ -1, -1, -1, 0 };
+>>>>>>> omni_engine
         float32x4_t a0 = vmulq_f32( v0.mVec128, this->mVec128);
         float32x4_t a1 = vmulq_f32( v1.mVec128, this->mVec128);
         float32x4_t a2 = vmulq_f32( v2.mVec128, this->mVec128);
@@ -783,7 +820,11 @@ operator*(const btVector3& v1, const btVector3& v2)
 SIMD_FORCE_INLINE btVector3 
 operator-(const btVector3& v1, const btVector3& v2)
 {
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && (defined(BT_USE_SSE_IN_API)  && defined(BT_USE_SSE))
+=======
+#if (defined(BT_USE_SSE_IN_API)  && defined(BT_USE_SSE))
+>>>>>>> omni_engine
 
 	//	without _mm_and_ps this code causes slowdown in Concave moving
 	__m128 r = _mm_sub_ps(v1.mVec128, v2.mVec128);
@@ -803,7 +844,11 @@ operator-(const btVector3& v1, const btVector3& v2)
 SIMD_FORCE_INLINE btVector3 
 operator-(const btVector3& v)
 {
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && (defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
+=======
+#if (defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
+>>>>>>> omni_engine
 	__m128 r = _mm_xor_ps(v.mVec128, btvMzeroMask);
 	return btVector3(_mm_and_ps(r, btvFFF0fMask)); 
 #elif defined(BT_USE_NEON)
@@ -857,7 +902,11 @@ operator/(const btVector3& v, const btScalar& s)
 SIMD_FORCE_INLINE btVector3
 operator/(const btVector3& v1, const btVector3& v2)
 {
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && (defined(BT_USE_SSE_IN_API)&& defined (BT_USE_SSE))
+=======
+#if (defined(BT_USE_SSE_IN_API)&& defined (BT_USE_SSE))
+>>>>>>> omni_engine
 	__m128 vec = _mm_div_ps(v1.mVec128, v2.mVec128);
 	vec = _mm_and_ps(vec, btvFFF0fMask);
 	return btVector3(vec); 
@@ -950,16 +999,30 @@ SIMD_FORCE_INLINE btScalar btVector3::distance(const btVector3& v) const
 
 SIMD_FORCE_INLINE btVector3 btVector3::normalized() const
 {
+<<<<<<< HEAD
 	btVector3 norm = *this;
 
 	return norm.normalize();
+=======
+#if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+	btVector3 norm = *this;
+
+	return norm.normalize();
+#else
+	return *this / length();
+#endif
+>>>>>>> omni_engine
 } 
 
 SIMD_FORCE_INLINE btVector3 btVector3::rotate( const btVector3& wAxis, const btScalar _angle ) const
 {
 	// wAxis must be a unit lenght vector
 
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+=======
+#if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+>>>>>>> omni_engine
 
     __m128 O = _mm_mul_ps(wAxis.mVec128, mVec128);
 	btScalar ssin = btSin( _angle );
@@ -999,7 +1062,11 @@ SIMD_FORCE_INLINE btVector3 btVector3::rotate( const btVector3& wAxis, const btS
 
 SIMD_FORCE_INLINE   long    btVector3::maxDot( const btVector3 *array, long array_count, btScalar &dotOut ) const
 {
+<<<<<<< HEAD
 #if (defined BT_USE_SSE && defined BT_USE_SIMD_VECTOR3 && defined BT_USE_SSE_IN_API) || defined (BT_USE_NEON)
+=======
+#if defined (BT_USE_SSE) || defined (BT_USE_NEON)
+>>>>>>> omni_engine
     #if defined _WIN32 || defined (BT_USE_SSE)
         const long scalar_cutoff = 10;
         long _maxdot_large( const float *array, const float *vec, unsigned long array_count, float *dotOut );
@@ -1007,8 +1074,15 @@ SIMD_FORCE_INLINE   long    btVector3::maxDot( const btVector3 *array, long arra
         const long scalar_cutoff = 4;
         extern long (*_maxdot_large)( const float *array, const float *vec, unsigned long array_count, float *dotOut );
     #endif
+<<<<<<< HEAD
     if( array_count < scalar_cutoff )	
 #endif
+=======
+    if( array_count < scalar_cutoff )
+#else
+	
+#endif//BT_USE_SSE || BT_USE_NEON
+>>>>>>> omni_engine
     {
         btScalar maxDot = -SIMD_INFINITY;
         int i = 0;
@@ -1027,14 +1101,22 @@ SIMD_FORCE_INLINE   long    btVector3::maxDot( const btVector3 *array, long arra
         dotOut = maxDot;
         return ptIndex;
     }
+<<<<<<< HEAD
 #if (defined BT_USE_SSE && defined BT_USE_SIMD_VECTOR3 && defined BT_USE_SSE_IN_API) || defined (BT_USE_NEON)
+=======
+#if defined (BT_USE_SSE) || defined (BT_USE_NEON)
+>>>>>>> omni_engine
     return _maxdot_large( (float*) array, (float*) &m_floats[0], array_count, &dotOut );
 #endif
 }
 
 SIMD_FORCE_INLINE   long    btVector3::minDot( const btVector3 *array, long array_count, btScalar &dotOut ) const
 {
+<<<<<<< HEAD
 #if (defined BT_USE_SSE && defined BT_USE_SIMD_VECTOR3 && defined BT_USE_SSE_IN_API) || defined (BT_USE_NEON)
+=======
+#if defined (BT_USE_SSE) || defined (BT_USE_NEON)
+>>>>>>> omni_engine
     #if defined BT_USE_SSE
         const long scalar_cutoff = 10;
         long _mindot_large( const float *array, const float *vec, unsigned long array_count, float *dotOut );
@@ -1046,7 +1128,11 @@ SIMD_FORCE_INLINE   long    btVector3::minDot( const btVector3 *array, long arra
     #endif
     
     if( array_count < scalar_cutoff )
+<<<<<<< HEAD
 #endif
+=======
+#endif//BT_USE_SSE || BT_USE_NEON
+>>>>>>> omni_engine
     {
         btScalar  minDot = SIMD_INFINITY;
         int i = 0;
@@ -1067,9 +1153,15 @@ SIMD_FORCE_INLINE   long    btVector3::minDot( const btVector3 *array, long arra
         
         return ptIndex;
     }
+<<<<<<< HEAD
 #if (defined BT_USE_SSE && defined BT_USE_SIMD_VECTOR3 && defined BT_USE_SSE_IN_API) || defined (BT_USE_NEON)
     return _mindot_large( (float*) array, (float*) &m_floats[0], array_count, &dotOut );
 #endif//BT_USE_SIMD_VECTOR3
+=======
+#if defined (BT_USE_SSE) || defined (BT_USE_NEON)
+    return _mindot_large( (float*) array, (float*) &m_floats[0], array_count, &dotOut );
+#endif
+>>>>>>> omni_engine
 }
 
 
@@ -1107,7 +1199,11 @@ public:
 
 	SIMD_FORCE_INLINE btVector4 absolute4() const 
 	{
+<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE) 
+=======
+#if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE) 
+>>>>>>> omni_engine
 		return btVector4(_mm_and_ps(mVec128, btvAbsfMask));
 #elif defined(BT_USE_NEON)
 		return btVector4(vabsq_f32(mVec128));

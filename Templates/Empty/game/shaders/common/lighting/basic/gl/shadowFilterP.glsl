@@ -31,16 +31,30 @@ uniform vec2 oneOverTargetSize;
 const float offset[3] = float[]( 0.0, 1.3846153846, 3.2307692308 );
 const float weight[3] = float[]( 0.2270270270, 0.3162162162, 0.0702702703 );
 
+<<<<<<< HEAD
 out vec4 OUT_col;
 
 void main()
 {
    OUT_col = texture( diffuseMap, uv ) * weight[0];
+=======
+void main()
+{
+   vec4 OUT = texture( diffuseMap, uv ) * weight[0];
+>>>>>>> omni_engine
    
    for ( int i=1; i < 3; i++ )
    {
       vec2 _sample = (BLUR_DIR * offset[i]) * oneOverTargetSize;
+<<<<<<< HEAD
       OUT_col += texture( diffuseMap, uv + _sample ) * weight[i];  
       OUT_col += texture( diffuseMap, uv - _sample ) * weight[i];  
    }
+=======
+      OUT += texture( diffuseMap, uv + _sample ) * weight[i];  
+      OUT += texture( diffuseMap, uv - _sample ) * weight[i];  
+   }
+
+   OUT_FragColor0 = OUT;
+>>>>>>> omni_engine
 }

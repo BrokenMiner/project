@@ -103,6 +103,8 @@ function ForestEditorGui::createForest( %this )
       }
    }   
    
+   ForestEditorInspector.inspect( theForest );
+   
    EWorldEditor.isDirty = true;
 }
 

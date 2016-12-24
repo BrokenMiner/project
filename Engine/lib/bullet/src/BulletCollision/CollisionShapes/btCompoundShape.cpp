@@ -285,7 +285,11 @@ void btCompoundShape::setLocalScaling(const btVector3& scaling)
 //		childScale = childScale * (childTrans.getBasis() * scaling);
 		childScale = childScale * scaling / m_localScaling;
 		m_children[i].m_childShape->setLocalScaling(childScale);
+<<<<<<< HEAD
 		childTrans.setOrigin((childTrans.getOrigin()) * scaling / m_localScaling);
+=======
+		childTrans.setOrigin((childTrans.getOrigin())*scaling);
+>>>>>>> omni_engine
 		updateChildTransform(i, childTrans,false);
 	}
 	

@@ -248,7 +248,11 @@ fxFoliageCulledList::fxFoliageCulledList(Box3F SearchBox, fxFoliageCulledList* I
 
 //------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void fxFoliageCulledList::FindCandidates(const Box3F& SearchBox, fxFoliageCulledList* InVec)
+=======
+void fxFoliageCulledList::FindCandidates(Box3F SearchBox, fxFoliageCulledList* InVec)
+>>>>>>> omni_engine
 {
    // Search the Culled List.
    for (U32 i = 0; i < InVec->GetListCount(); i++)
@@ -1028,7 +1032,11 @@ void fxFoliageReplicator::SetupBuffers()
 
 //------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 Box3F fxFoliageReplicator::FetchQuadrant(const Box3F& Box, U32 Quadrant)
+=======
+Box3F fxFoliageReplicator::FetchQuadrant(Box3F Box, U32 Quadrant)
+>>>>>>> omni_engine
 {
    Box3F QuadrantBox;
 
@@ -1811,3 +1819,86 @@ void fxFoliageReplicator::unpackUpdate(NetConnection * con, BitStream * stream)
          SetupShader();
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_StartFoliageReplication()
+{
+{
+      SimSet *fxFoliageSet = dynamic_cast<SimSet*>(Sim::findObject("fxFoliageSet"));
+      if (!fxFoliageSet)
+   {
+            Con::warnf("fxFoliageReplicator - Cannot locate the 'fxFoliageSet', this is bad!");
+            return;
+   }
+      U32 startupCount = 0;
+   for (SimSetIterator itr(fxFoliageSet); *itr; ++itr)
+   {
+            fxFoliageReplicator* Replicator = static_cast<fxFoliageReplicator*>(*itr);
+            if (Replicator->isClientObject())
+      {
+         Replicator->StartUp();
+         startupCount++;
+      }
+   }
+      Con::printf("fxFoliageReplicator - replicated client foliage for %d objects", startupCount);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

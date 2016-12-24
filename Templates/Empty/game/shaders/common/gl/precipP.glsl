@@ -35,5 +35,9 @@ out vec4 OUT_col;
 //-----------------------------------------------------------------------------
 void main()
 {
+<<<<<<< HEAD
    OUT_col = texture(diffuseMap, texCoord) * color;
+=======
+   OUT_FragColor0 = texture(diffuseMap, texCoord) * color;
+>>>>>>> omni_engine
 }

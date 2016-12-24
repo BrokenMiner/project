@@ -304,6 +304,7 @@ public:
 
 };
 
+<<<<<<< HEAD
 
 	
 struct	btConeTwistConstraintDoubleData
@@ -328,6 +329,9 @@ struct	btConeTwistConstraintDoubleData
 
 #ifdef BT_BACKWARDS_COMPATIBLE_SERIALIZATION
 ///this structure is not used, except for loading pre-2.82 .bullet files
+=======
+///do not change those serialization structures, it requires an updated sBulletDNAstr/sBulletDNAstr64
+>>>>>>> omni_engine
 struct	btConeTwistConstraintData
 {
 	btTypedConstraintData	m_typeConstraintData;
@@ -347,12 +351,21 @@ struct	btConeTwistConstraintData
 	char m_pad[4];
 
 };
+<<<<<<< HEAD
 #endif //BT_BACKWARDS_COMPATIBLE_SERIALIZATION
 //
 
 SIMD_FORCE_INLINE int	btConeTwistConstraint::calculateSerializeBufferSize() const
 {
 	return sizeof(btConeTwistConstraintData2);
+=======
+	
+
+
+SIMD_FORCE_INLINE int	btConeTwistConstraint::calculateSerializeBufferSize() const
+{
+	return sizeof(btConeTwistConstraintData);
+>>>>>>> omni_engine
 
 }
 
@@ -360,6 +373,7 @@ SIMD_FORCE_INLINE int	btConeTwistConstraint::calculateSerializeBufferSize() cons
 	///fills the dataBuffer and returns the struct name (and 0 on failure)
 SIMD_FORCE_INLINE const char*	btConeTwistConstraint::serialize(void* dataBuffer, btSerializer* serializer) const
 {
+<<<<<<< HEAD
 	btConeTwistConstraintData2* cone = (btConeTwistConstraintData2*) dataBuffer;
 	btTypedConstraint::serialize(&cone->m_typeConstraintData,serializer);
 
@@ -375,6 +389,23 @@ SIMD_FORCE_INLINE const char*	btConeTwistConstraint::serialize(void* dataBuffer,
 	cone->m_damping = m_damping;
 
 	return btConeTwistConstraintDataName;
+=======
+	btConeTwistConstraintData* cone = (btConeTwistConstraintData*) dataBuffer;
+	btTypedConstraint::serialize(&cone->m_typeConstraintData,serializer);
+
+	m_rbAFrame.serializeFloat(cone->m_rbAFrame);
+	m_rbBFrame.serializeFloat(cone->m_rbBFrame);
+	
+	cone->m_swingSpan1 = float(m_swingSpan1);
+	cone->m_swingSpan2 = float(m_swingSpan2);
+	cone->m_twistSpan = float(m_twistSpan);
+	cone->m_limitSoftness = float(m_limitSoftness);
+	cone->m_biasFactor = float(m_biasFactor);
+	cone->m_relaxationFactor = float(m_relaxationFactor);
+	cone->m_damping = float(m_damping);
+
+	return "btConeTwistConstraintData";
+>>>>>>> omni_engine
 }
 
 

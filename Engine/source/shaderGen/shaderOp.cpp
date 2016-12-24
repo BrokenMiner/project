@@ -103,7 +103,7 @@ GenOp::GenOp( const char * statement, ... ) : Parent( NULL, NULL )
          // not found, handle end of line
          str = (char*)&statement[ dStrlen( (char*)statement ) ];
 
-         U32 diff = str - lastEntry + 1;
+         U64 diff = str - lastEntry + 1;
          if( diff == 1 ) break;
 
          char * newStr = new char[diff];
@@ -116,7 +116,7 @@ GenOp::GenOp( const char * statement, ... ) : Parent( NULL, NULL )
       }
 
       // create and store statement fragment
-      U32 diff = str - lastEntry + 1;
+      U64 diff = str - lastEntry + 1;
 
       if( diff == 1 )
       {

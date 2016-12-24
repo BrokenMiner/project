@@ -285,7 +285,11 @@ U32 OggTheoraDecoder::read( OggTheoraFrame** buffer, U32 num )
       
       // Transcode the packet.
       
+<<<<<<< HEAD
       #if ( defined( TORQUE_COMPILER_GCC ) || defined( TORQUE_COMPILER_VISUALC ) ) && defined( TORQUE_CPU_X86 )
+=======
+      #if ( defined( TORQUE_COMPILER_GCC ) || defined( TORQUE_COMPILER_VISUALC ) ) && defined( TORQUE_CPU_X86 ) || defined ( TORQUE_CPU_X86_64 )
+>>>>>>> omni_engine
       
       if(      ( mTranscoder == TRANSCODER_Auto || mTranscoder == TRANSCODER_SSE2420RGBA ) &&
                getDecoderPixelFormat() == PIXEL_FORMAT_420 &&

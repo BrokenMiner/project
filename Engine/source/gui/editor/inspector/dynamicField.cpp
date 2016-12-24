@@ -56,7 +56,11 @@ void GuiInspectorDynamicField::setData( const char* data, bool callbacks )
    
    const U32 numTargets = mInspector->getNumInspectObjects();
    if( callbacks && numTargets > 1 )
+<<<<<<< HEAD
       Con::executef( mInspector, "beginCompoundUndo" );
+=======
+   { mInspector->beginCompoundUndo_callback(); }
+>>>>>>> omni_engine
       
    // Setting an empty string will kill the field.
    const bool isRemoval = !data[ 0 ];
@@ -77,9 +81,15 @@ void GuiInspectorDynamicField::setData( const char* data, bool callbacks )
          if( callbacks )
          {
             if( isRemoval )
+<<<<<<< HEAD
                Con::executef( mInspector, "onFieldRemoved", target->getIdString(), mDynField->slotName );
             else
                Con::executef( mInspector, "onInspectorFieldModified", target->getIdString(), mDynField->slotName, oldData, data );
+=======
+            { mInspector->onFieldRemoved_callback( target->getIdString(), mDynField->slotName ); }
+            else
+            { mInspector->onInspectorFieldModified_callback( target->getIdString(), mDynField->slotName,"(null)", oldData, data ); }
+>>>>>>> omni_engine
          }
 
          target->setDataField( mDynField->slotName, NULL, data );
@@ -90,7 +100,11 @@ void GuiInspectorDynamicField::setData( const char* data, bool callbacks )
    }
    
    if( callbacks && numTargets > 1 )
+<<<<<<< HEAD
       Con::executef( mInspector, "endCompoundUndo" );
+=======
+   { mInspector->endCompoundUndo_callback(); }
+>>>>>>> omni_engine
 
    // Force our edit to update
    updateValue();
@@ -134,7 +148,11 @@ void GuiInspectorDynamicField::renameField( const char* newFieldName )
    
    const U32 numTargets = mInspector->getNumInspectObjects();
    if( numTargets > 1 )
+<<<<<<< HEAD
       Con::executef( mInspector, "onBeginCompoundEdit" );
+=======
+   { mInspector->onBeginCompoundEdit_callback(); }
+>>>>>>> omni_engine
       
    const char* oldFieldName = getFieldName();
    SimFieldDictionary::Entry* newEntry = NULL;
@@ -151,11 +169,21 @@ void GuiInspectorDynamicField::renameField( const char* newFieldName )
          // New field is already defined.  If we can, let the scripts handle
          // the error.  Otherwise, just emit an error on the console and proceed.
          
+<<<<<<< HEAD
          if( numTargets == 1 && mInspector->isMethod( "onFieldRenameAlreadyDefined" ) )
             Con::executef( mInspector, "onFieldRenameAlreadyDefined", target->getIdString(), oldFieldName, newFieldName );
          else
             Con::errorf( "GuiInspectorDynamicField::renameField - field '%s' is already defined on %i:%s (%s)",
                newFieldName, target->getId(), target->getClassName(), target->getName() );
+=======
+         if( numTargets == 1 )
+         { mInspector->onFieldRenameAlreadyDefined_callback( target->getIdString(), oldFieldName, newFieldName ); }
+         else
+         { 
+             Con::errorf( "GuiInspectorDynamicField::renameField - field '%s' is already defined on %i:%s (%s)", 
+               newFieldName, target->getId(), target->getClassName(), target->getName() );
+         }
+>>>>>>> omni_engine
                
          // Reset the text entry.
                
@@ -176,7 +204,11 @@ void GuiInspectorDynamicField::renameField( const char* newFieldName )
 
       // Notify script.
       
+<<<<<<< HEAD
       Con::executef( mInspector, "onFieldRenamed", target->getIdString(), oldFieldName, newFieldName );
+=======
+      mInspector->onFieldRenamed_callback( target->getIdString(), oldFieldName, newFieldName );
+>>>>>>> omni_engine
       
       // Look up the new SimFieldDictionary entry.
       
@@ -194,7 +226,11 @@ void GuiInspectorDynamicField::renameField( const char* newFieldName )
    }
 
    if( numTargets > 1 )
+<<<<<<< HEAD
       Con::executef( mInspector, "onEndCompoundEdit" );
+=======
+   { mInspector->onEndCompoundEdit_callback(); }
+>>>>>>> omni_engine
       
    // Lastly we need to reassign our validate field for our value edit control
    char szBuffer[1024];
@@ -311,12 +347,89 @@ void GuiInspectorDynamicField::_executeSelectedCallback()
 {
    ConsoleBaseType* type = mDynField->type;
    if ( type )
+<<<<<<< HEAD
       Con::executef( mInspector, "onFieldSelected", mDynField->slotName, type->getTypeName() );
    else
       Con::executef( mInspector, "onFieldSelected", mDynField->slotName, "TypeDynamicField" );
+=======
+   { mInspector->onFieldSelected_callback( mDynField->slotName, type->getTypeName(), "" ); }
+   else
+   { mInspector->onFieldSelected_callback( mDynField->slotName, "TypeDynamicField", "" ); }
+>>>>>>> omni_engine
 }
 
 DefineConsoleMethod( GuiInspectorDynamicField, renameField, void, (const char* newDynamicFieldName),, "field.renameField(newDynamicFieldName);" )
 {
    object->renameField( newDynamicFieldName );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiInspectorDynamicField_renameField(char * x__object, char * x__newDynamicFieldName)
+{
+GuiInspectorDynamicField* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* newDynamicFieldName = (const char*)x__newDynamicFieldName;
+{
+   object->renameField( newDynamicFieldName );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

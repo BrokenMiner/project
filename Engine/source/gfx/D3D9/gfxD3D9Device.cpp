@@ -695,9 +695,15 @@ GFXShader* GFXD3D9Device::createShader()
    return shader;
 }
 
+<<<<<<< HEAD
 void GFXD3D9Device::disableShaders(bool force)
 {
    setShader( NULL, force );
+=======
+void GFXD3D9Device::disableShaders()
+{
+   setShader( NULL );
+>>>>>>> omni_engine
    setShaderConstBuffer( NULL );
 }
 
@@ -706,24 +712,37 @@ void GFXD3D9Device::disableShaders(bool force)
 //              and to make sure redundant shader states are not being
 //              sent to the card.
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 void GFXD3D9Device::setShader( GFXShader *shader, bool force )
+=======
+void GFXD3D9Device::setShader( GFXShader *shader )
+>>>>>>> omni_engine
 {
    GFXD3D9Shader *d3dShader = static_cast<GFXD3D9Shader*>( shader );
 
    IDirect3DPixelShader9 *pixShader = ( d3dShader != NULL ? d3dShader->mPixShader : NULL );
    IDirect3DVertexShader9 *vertShader = ( d3dShader ? d3dShader->mVertShader : NULL );
 
+<<<<<<< HEAD
    if( pixShader != mLastPixShader || force )
+=======
+   if( pixShader != mLastPixShader )
+>>>>>>> omni_engine
    {
       mD3DDevice->SetPixelShader( pixShader );
       mLastPixShader = pixShader;
    }
 
+<<<<<<< HEAD
    if( vertShader != mLastVertShader || force )
+=======
+   if( vertShader != mLastVertShader )
+>>>>>>> omni_engine
    {
       mD3DDevice->SetVertexShader( vertShader );
       mLastVertShader = vertShader;
    }
+
 }
 
 //-----------------------------------------------------------------------------

@@ -26,8 +26,13 @@ singleton ShaderData( BL_ShadowFilterShaderV )
    DXVertexShaderFile 	= "shaders/common/lighting/basic/shadowFilterV.hlsl";
    DXPixelShaderFile 	= "shaders/common/lighting/basic/shadowFilterP.hlsl";
    
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/lighting/basic/gl/shadowFilterV.glsl";
    OGLPixelShaderFile   = "shaders/common/lighting/basic/gl/shadowFilterP.glsl";
+=======
+   OGLVertexShaderFile 	= "shaders/common/lighting/basic/gl/shadowFilterV.glsl";
+   OGLPixelShaderFile 	= "shaders/common/lighting/basic/gl/shadowFilterP.glsl";
+>>>>>>> omni_engine
 
    samplerNames[0] = "$diffuseMap";
 

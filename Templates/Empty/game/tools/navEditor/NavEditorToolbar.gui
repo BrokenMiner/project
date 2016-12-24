@@ -57,16 +57,41 @@
       canSaveDynamicFields = "0";
    };
    new GuiButtonCtrl(NavEditorAboutBtn) {
-      text = "Console";
+      text = "About";
       groupNum = "7";
       buttonType = "PushButton";
       useMouseEvents = "0";
-      position = "100 6";
-      extent = "54 20";
+      position = "97 5";
+      extent = "36 20";
       minExtent = "8 2";
       horizSizing = "right";
       vertSizing = "bottom";
       profile = "GuiButtonProfile";
+      visible = "1";
+      active = "1";
+      command = "Canvas.pushDialog(NavEditorAboutDlg);";
+      tooltipProfile = "GuiToolTipProfile";
+      tooltip = "About the navigation editor";
+      hovertime = "1000";
+      isContainer = "0";
+      canSave = "1";
+      canSaveDynamicFields = "0";
+   };
+   new GuiBitmapButtonCtrl(NavEditorConsoleBtn) {
+      bitmap = "tools/navEditor/images/nav-console";
+      bitmapMode = "Stretched";
+      autoFitExtents = "0";
+      useModifiers = "0";
+      useStates = "1";
+      groupNum = "-1";
+      buttonType = "PushButton";
+      useMouseEvents = "0";
+      position = "135 3";
+      extent = "26 22";
+      minExtent = "8 2";
+      horizSizing = "right";
+      vertSizing = "bottom";
+      profile = "GuiDefaultProfile";
       visible = "1";
       active = "1";
       command = "NavEditorConsoleDlg.setVisible(!NavEditorConsoleDlg.isVisible());";
@@ -78,6 +103,7 @@
       canSaveDynamicFields = "0";
    };
    new GuiCheckBoxCtrl() {
+      internalName = "MeshButton";
       text = "Mesh";
       groupNum = "-1";
       buttonType = "ToggleButton";
@@ -99,6 +125,7 @@
       canSaveDynamicFields = "0";
    };
    new GuiCheckBoxCtrl() {
+      internalName = "PortalButton";
       text = "Portals";
       groupNum = "-1";
       buttonType = "ToggleButton";
@@ -120,6 +147,7 @@
       canSaveDynamicFields = "0";
    };
    new GuiCheckBoxCtrl() {
+      internalName = "BVTreeButton";
       text = "BV tree";
       groupNum = "-1";
       buttonType = "ToggleButton";

@@ -57,6 +57,8 @@
 #include "T3D/decal/decalData.h"
 #include "materials/baseMatInstance.h"
 
+#include "console/console.h"
+
 #ifdef TORQUE_EXTENDED_MOVE
    #include "T3D/gameBase/extended/extendedMove.h"
 #endif
@@ -488,6 +490,10 @@ bool PlayerData::preload(bool server, String &errorStr)
          dp->death         = false;
          if (dp->sequence != -1)
             getGroundInfo(si,thread,dp);
+
+         // No real reason to spam the console about a missing jet animation
+         if (dStricmp(sp->name, "jet") != 0)
+            AssertWarn(dp->sequence != -1, avar("PlayerData::preload - Unable to find named animation sequence '%s'!", sp->name));
       }
       for (S32 b = 0; b < mShape->sequences.size(); b++)
       {
@@ -2746,7 +2752,11 @@ void Player::updateMove(const Move* move)
    // we can move and aren't mounted.
    VectorF contactNormal(0,0,0);
    bool jumpSurface = false, runSurface = false;
+<<<<<<< HEAD
    if ( !isMounted() )
+=======
+   if ( !isMounted() && !mSwimming )
+>>>>>>> omni_engine
       findContact( &runSurface, &jumpSurface, &contactNormal );
    if ( jumpSurface )
       mJumpSurfaceNormal = contactNormal;
@@ -2954,7 +2964,11 @@ void Player::updateMove(const Move* move)
 
       // Clamp acceleration.
       F32 maxAcc = (mDataBlock->swimForce / getMass()) * TickSec;
+<<<<<<< HEAD
       if ( swimSpeed > maxAcc )
+=======
+      if ( false && swimSpeed > maxAcc )
+>>>>>>> omni_engine
          swimAcc *= maxAcc / swimSpeed;      
 
       acc += swimAcc;
@@ -3694,7 +3708,11 @@ bool Player::setActionThread(const char* sequence,bool hold,bool wait,bool fsp)
 
 void Player::setActionThread(U32 action,bool forward,bool hold,bool wait,bool fsp, bool forceSet)
 {
+<<<<<<< HEAD
    if (!mDataBlock || !mDataBlock->actionCount || (mActionAnimation.action == action && mActionAnimation.forward == forward && !forceSet))
+=======
+   if (!mDataBlock || (mActionAnimation.action == action && mActionAnimation.forward == forward && !forceSet))
+>>>>>>> omni_engine
       return;
 
    if (action >= PlayerData::NumActionAnims)
@@ -6033,6 +6051,13 @@ void Player::writePacketData(GameConnection *connection, BitStream *stream)
    if (stream->writeFlag(mJumpDelay > 0))
       stream->writeInt(mJumpDelay,PlayerData::JumpDelayBits);
 
+//Walkable Shapes
+   if ( stream->writeFlag(mAttachedToObj) )
+   {
+      writeAttachedPacketData(connection, stream);
+      return;
+   }
+//Walkable Shapes
    Point3F pos;
    getTransform().getColumn(3,&pos);
    if (stream->writeFlag(!isMounted())) {
@@ -6088,6 +6113,13 @@ void Player::readPacketData(GameConnection *connection, BitStream *stream)
       mJumpDelay = stream->readInt(PlayerData::JumpDelayBits);
    else
       mJumpDelay = 0;
+//Walkable Shapes
+   if ( stream->readFlag() )
+   {
+      readAttachedPacketData(connection, stream);
+      return;
+   }
+//Walkable Shapes
 
    Point3F pos,rot;
    if (stream->readFlag()) {
@@ -6205,16 +6237,24 @@ U32 Player::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
          stream->writeInt((S32)len, 13);
       }
       stream->writeFloat(mRot.z / M_2PI_F, 7);
+<<<<<<< HEAD
       stream->writeSignedFloat(mHead.x / (mDataBlock->maxLookAngle - mDataBlock->minLookAngle), 6);
+=======
+      stream->writeSignedFloat(mHead.x / mDataBlock->maxLookAngle, 6);
+>>>>>>> omni_engine
       stream->writeSignedFloat(mHead.z / mDataBlock->maxFreelookAngle, 6);
       delta.move.pack(stream);
       stream->writeFlag(!(mask & NoWarpMask));
    }
    // Ghost need energy to predict reliably
+<<<<<<< HEAD
    if (mDataBlock->maxEnergy > 0.f)
       stream->writeFloat(getEnergyLevel() / mDataBlock->maxEnergy, EnergyLevelBits);
    else
       stream->writeFloat(0.f, EnergyLevelBits);
+=======
+   stream->writeFloat(getEnergyLevel() / mDataBlock->maxEnergy,EnergyLevelBits);
+>>>>>>> omni_engine
    return retMask;
 }
 
@@ -6306,13 +6346,27 @@ void Player::unpackUpdate(NetConnection *con, BitStream *stream)
       
       rot.y = rot.x = 0.0f;
       rot.z = stream->readFloat(7) * M_2PI_F;
+<<<<<<< HEAD
       mHead.x = stream->readSignedFloat(6) * (mDataBlock->maxLookAngle - mDataBlock->minLookAngle);
+=======
+      mHead.x = stream->readSignedFloat(6) * mDataBlock->maxLookAngle;
+>>>>>>> omni_engine
       mHead.z = stream->readSignedFloat(6) * mDataBlock->maxFreelookAngle;
       delta.move.unpack(stream);
 
       delta.head = mHead;
       delta.headVec.set(0.0f, 0.0f, 0.0f);
 
+//Walkable Shapes
+      if ( mAttachedToObj )
+      {  // If we're attached to another object, it's maintaining our position and rotation.
+         //Just read in the rest of the update and return
+         stream->readFlag();
+         F32 energy = stream->readFloat(EnergyLevelBits) * mDataBlock->maxEnergy;
+         setEnergyLevel(energy);
+         return;
+      }
+//Walkable Shapes
       if (stream->readFlag() && isProperlyAdded())
       {
          // Determine number of ticks to warp based on the average
@@ -7161,11 +7215,25 @@ void Player::prepRenderImage( SceneRenderState* state )
    }
 
    GameConnection* connection = GameConnection::getConnectionToServer();
+<<<<<<< HEAD
    if( connection && connection->getControlObject() == this && connection->isFirstPerson() )
    {
       // If we're first person and we are not rendering the player
       // then disable all shadow rendering... a floating gun shadow sucks.
       if ( state->isShadowPass() && !mDataBlock->renderFirstPerson && !mDataBlock->firstPersonShadows )
+=======
+	//WLE - Vince
+	//Lod preloading
+   if (connection && !connection->didFirstRender)
+	   ShapeBase::PreLoadAllLOD(state);
+   else
+   {
+   if ( connection && connection->getControlObject() == this && connection->isFirstPerson() )
+   {
+      // If we're first person and we are not rendering the player
+      // then disable all shadow rendering... a floating gun shadow sucks.
+      if ( state->isShadowPass() && !mDataBlock->renderFirstPerson && !mDataBlock->firstPersonShadows ) 
+>>>>>>> omni_engine
          return;
 
       renderPlayer = mDataBlock->renderFirstPerson || !state->isDiffusePass();
@@ -7174,6 +7242,7 @@ void Player::prepRenderImage( SceneRenderState* state )
          renderPlayer = false;
       if( !sRenderMyItems )
          renderItems = false;
+   }
    }
 
    // Call the protected base class to do the work 
@@ -7190,3 +7259,396 @@ void Player::renderConvex( ObjectRenderInst *ri, SceneRenderState *state, BaseMa
    mConvex.renderWorkingList();
    GFX->leaveDebugEvent();
 }
+//Walkable Shapes
+//----------------------------------------------------------------------------
+
+void Player::setDeltas(Point3F pos, Point3F rot)
+{
+   delta.pos = pos;
+   delta.rot = rot;
+}
+
+void Player::writeAttachedPacketData(GameConnection *connection, BitStream *stream)
+{  // Convert our position, velocity and rotation to be relative to the object we're attached to
+   // Get the relative position and rotation from the object that we're attached to
+   Point3F relPos, relRot;
+   mAttachedToObj->getRelativeOrientation(this, relPos, relRot);
+
+   // Converting to int here because the conversion to/from different object transforms here 
+   // and on the server will lead to miniscule floating point differences that will change 
+   // the checksum for essentially identical data. This conversion ensures that if the difference
+   // is no greater than 1/100 of a unit the packet will not be sent. The 18 bit limit
+   // allows attachables to represent local position to +/- ~1.3k in all dimensions.
+   stream->writeSignedInt((S32) mRoundToNearest(relPos.x * 100), 18);
+   stream->writeSignedInt((S32) mRoundToNearest(relPos.y * 100), 18);
+   stream->writeSignedInt((S32) mRoundToNearest(relPos.z * 100), 18);
+
+   stream->writeInt(mJumpSurfaceLastContact > 15 ? 15 : mJumpSurfaceLastContact, 4);
+
+   if (stream->writeFlag(!mAllowSprinting || !mAllowCrouching || !mAllowProne || !mAllowJumping || !mAllowJetJumping || !mAllowSwimming))
+   {
+      stream->writeFlag(mAllowJumping);
+      stream->writeFlag(mAllowJetJumping);
+      stream->writeFlag(mAllowSprinting);
+      stream->writeFlag(mAllowCrouching);
+      stream->writeFlag(mAllowProne);
+      stream->writeFlag(mAllowSwimming);
+   }
+
+   stream->write(mHead.x);
+   if(stream->writeFlag(mDataBlock->cameraCanBank))
+   {
+      // Include mHead.y to allow for camera banking
+      stream->write(mHead.y);
+   }
+   stream->write(mHead.z);
+
+   // Relative rotation can range from 0 to 2pi so this gives 3 decimal place accuracy.
+   // Note: this value is only used for creating the checksum to determine if we need an update.
+   // If an update is required, the object we're attached to will determine the rotation.
+   stream->writeInt((S32)(relRot.z * 1000), 13);
+
+   if (mControlObject) {
+      S32 gIndex = connection->getGhostIndex(mControlObject);
+      if (stream->writeFlag(gIndex != -1)) {
+         stream->writeInt(gIndex,NetConnection::GhostIdBitSize);
+         mControlObject->writePacketData(connection, stream);
+      }
+   }
+   else
+      stream->writeFlag(false);
+}
+
+
+void Player::readAttachedPacketData(GameConnection *connection, BitStream *stream)
+{
+   Point3F relPos, relRot;
+
+   relPos.x = stream->readSignedInt(18) * 0.01f;
+   relPos.y = stream->readSignedInt(18) * 0.01f;
+   relPos.z = stream->readSignedInt(18) * 0.01f;
+   mJumpSurfaceLastContact = stream->readInt(4);
+
+   if (stream->readFlag())
+   {
+      mAllowJumping = stream->readFlag();
+      mAllowJetJumping = stream->readFlag();
+      mAllowSprinting = stream->readFlag();
+      mAllowCrouching = stream->readFlag();
+      mAllowProne = stream->readFlag();
+      mAllowSwimming = stream->readFlag();
+   }
+   else
+   {
+      mAllowJumping = true;
+      mAllowJetJumping = true;
+      mAllowSprinting = true;
+      mAllowCrouching = true;
+      mAllowProne = true;
+      mAllowSwimming = true;
+   }
+
+   stream->read(&mHead.x);
+   if(stream->readFlag())
+   {
+      // Include mHead.y to allow for camera banking
+      stream->read(&mHead.y);
+   }
+   stream->read(&mHead.z);
+   relRot.z = stream->readInt(13) * 0.001f;
+
+   if ( mAttachedToObj )
+   {
+      mAttachedToObj->flagAttachedUpdate(this, true);
+      delta.head = mHead;
+   }
+
+   if (stream->readFlag()) {
+      S32 gIndex = stream->readInt(NetConnection::GhostIdBitSize);
+      ShapeBase* obj = static_cast<ShapeBase*>(connection->resolveGhost(gIndex));
+      setControlObject(obj);
+      obj->readPacketData(connection, stream);
+   }
+   else
+      setControlObject(0);
+}
+//Walkable Shapes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_allowAllPoses(char * x__object)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->allowAllPoses();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_allowCrouching(char * x__object, bool state)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->allowCrouching(state);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_allowJetJumping(char * x__object, bool state)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->allowJetJumping(state);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_allowJumping(char * x__object, bool state)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->allowJumping(state);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_allowProne(char * x__object, bool state)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->allowProne(state);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_allowSprinting(char * x__object, bool state)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->allowSprinting(state);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_allowSwimming(char * x__object, bool state)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->allowSwimming(state);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnPlayer_checkDismountPoint(char * x__object, char * x__oldPos, char * x__pos)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+Point3F oldPos = Point3F();
+sscanf(x__oldPos,"%f %f %f",&oldPos.x,&oldPos.y,&oldPos.z);
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+bool wle_returnObject;
+{
+   MatrixF oldPosMat(true);
+   oldPosMat.setColumn(3, oldPos);
+   MatrixF posMat(true);
+   posMat.setColumn(3, pos);
+   {wle_returnObject =object->checkDismountPosition(oldPosMat, posMat);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_clearControlObject(char * x__object)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setControlObject(0);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnPlayer_getControlObject(char * x__object)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   ShapeBase* controlObject = object->getControlObject();
+  return (S32)( controlObject ? controlObject->getId(): 0);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_getDamageLocation(char * x__object, char * x__pos,  char* retval)
+{
+dSprintf(retval,16384,"");
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+const char* wle_returnObject;
+{
+   const char *buffer1;
+   const char *buffer2;
+   object->getDamageLocation(pos, buffer1, buffer2);
+   static const U32 bufSize = 128;
+   char *buff = Con::getReturnBuffer(bufSize);
+   dSprintf(buff, bufSize, "%s %s", buffer1, buffer2);
+   {wle_returnObject =buff;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnPlayer_getNumDeathAnimations(char * x__object)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   S32 count = 0;
+   const PlayerData * db = dynamic_cast<PlayerData*>( object->getDataBlock() );
+   if ( db )
+   {
+      for ( S32 i = 0; i < db->actionCount; i++ )
+         if ( db->actionList[i].death )
+            count++;
+   }
+  return (S32)( count);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_getPose(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getPoseName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnPlayer_getState(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getStateName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnPlayer_setActionThread(char * x__object, char * x__name, bool hold, bool fsp)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* name = (const char*)x__name;
+
+bool wle_returnObject;
+{
+   {wle_returnObject =object->setActionThread( name, hold, true, fsp);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnPlayer_setArmThread(char * x__object, char * x__name)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* name = (const char*)x__name;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->setArmThread( name );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnPlayer_setControlObject(char * x__object, char * x__obj)
+{
+Player* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+ShapeBase* obj; Sim::findObject(x__obj, obj ); 
+bool wle_returnObject;
+{
+   if (obj) {
+      object->setControlObject(obj);
+      {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   else
+      object->setControlObject(0);
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

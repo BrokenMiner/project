@@ -96,6 +96,7 @@ class TSStatic : public SceneObject
       NextFreeMask               = Parent::NextFreeMask << 4
    };
 
+<<<<<<< HEAD
 public:
    void setAlphaFade(bool enable, F32 start, F32 end, bool inverse)
    {
@@ -103,6 +104,22 @@ public:
       mAlphaFadeStart   = start;
       mAlphaFadeEnd     = end;
       mInvertAlphaFade  = inverse;
+=======
+protected:
+   bool mUseAlphaLod;
+   F32  mAlphaLODStart;
+   F32  mAlphaLODEnd;
+   F32  mAlphaLOD;
+   bool mInvertAlphaLod;
+  
+public:  
+   void setAlphaLOD(bool enable, F32 start, F32 end, bool inverse)
+   {
+      mUseAlphaLod     = enable;
+      mAlphaLODStart   = start;
+      mAlphaLODEnd     = end;
+      mInvertAlphaLod  = inverse;
+>>>>>>> omni_engine
    }
    
    /// The different types of mesh data types

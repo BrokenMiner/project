@@ -42,6 +42,7 @@
 #include "T3D/physics/physicsBody.h"
 #include "T3D/physics/physicsCollision.h"
 #include "console/engineAPI.h"
+#include "console/SimXMLDocument.h"    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 
 IMPLEMENT_CO_NETOBJECT_V1( ConvexShape );
 
@@ -359,6 +360,7 @@ void ConvexShape::onRemove()
    Parent::onRemove();
 }
 
+<<<<<<< HEAD
 void ConvexShape::writeFields( Stream &stream, U32 tabStop )
 {
    Parent::writeFields( stream, tabStop );
@@ -366,6 +368,16 @@ void ConvexShape::writeFields( Stream &stream, U32 tabStop )
    // Now write all planes.
 
    stream.write(2, "\r\n");   
+=======
+void ConvexShape::writeFields( Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput )
+{
+   Parent::writeFields( stream, tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */XMLOutput );
+
+   // Now write all planes.
+
+   if( !XMLOutput)      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      stream.write(2, "\r\n");   
+>>>>>>> omni_engine
 
    S32 count = mSurfaces.size();
    if ( count > smMaxSurfaces )
@@ -385,7 +397,28 @@ void ConvexShape::writeFields( Stream &stream, U32 tabStop )
 
       char buffer[1024];
       dMemset( buffer, 0, 1024 );      
+<<<<<<< HEAD
       
+=======
+
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+      /// For XML Output
+      if(XMLOutput)
+      {
+         dSprintf(buffer, 1024, "%g %g %g %g %g %g %g", quat.x, quat.y, quat.z, quat.w, pos.x, pos.y, pos.z);
+         getcurrentXML()->pushNewElement("surface");
+         getcurrentXML()->addData(buffer);
+         getcurrentXML()->popElement();
+         continue;
+      }
+      // @Copyright end
+
+      /// For Stream output
+      stream.writeTabs(tabStop);
+
+>>>>>>> omni_engine
       dSprintf( buffer, 1024, "surface = \"%g %g %g %g %g %g %g\";", 
          quat.x, quat.y, quat.z, quat.w, pos.x, pos.y, pos.z );      
 
@@ -502,7 +535,11 @@ void ConvexShape::prepRenderImage( SceneRenderState *state )
    }
    */
 
+<<<<<<< HEAD
    if ( mVertexBuffer.isNull() || !state)
+=======
+   if ( mVertexBuffer.isNull() )
+>>>>>>> omni_engine
       return;
 
    // If we don't have a material instance after the override then 
@@ -573,7 +610,11 @@ void ConvexShape::prepRenderImage( SceneRenderState *state )
 
    // We sort by the material then vertex buffer.
    ri->defaultKey = matInst->getStateHint();
+<<<<<<< HEAD
    ri->defaultKey2 = (uintptr_t)ri->vertBuff; // Not 64bit safe!
+=======
+   ri->defaultKey2 = (U32)ri->vertBuff; // Not 64bit safe!
+>>>>>>> omni_engine
 
    // Submit our RenderInst to the RenderPassManager
    state->getRenderPass()->addInst( ri );

@@ -139,7 +139,11 @@ void Platform::fileToLocalTime(const FileTime & ft, LocalTime * lt)
          lt->sec = time->wSecond;
          lt->min = time->wMinute;
          lt->hour = time->wHour;
+<<<<<<< HEAD
          lt->month = time->wMonth - 1;
+=======
+         lt->month = time->wMonth;
+>>>>>>> omni_engine
          lt->monthday = time->wDay;
          lt->weekday = time->wDayOfWeek;
          lt->year = (time->wYear < 1900) ? 1900 : (time->wYear - 1900);

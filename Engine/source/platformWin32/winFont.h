@@ -54,7 +54,11 @@ public:
     virtual PlatformFont::CharInfo &getCharInfo(const UTF16 ch) const;
     virtual PlatformFont::CharInfo &getCharInfo(const UTF8 *str) const;
 
+<<<<<<< HEAD
     virtual bool create(const char *name, dsize_t size, U32 charset = TGE_ANSI_CHARSET);
+=======
+    virtual bool create(const char *name, dsize_t size, U32 charset /*= TGE_ANSI_CHARSET*/);
+>>>>>>> omni_engine
 };
 
 #endif // _WINFONT_H_

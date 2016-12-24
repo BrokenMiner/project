@@ -132,14 +132,30 @@ function MenuBuilder::addItem(%this, %pos, %item)
    }
    else
    {
+      // ATTENTION! From Torque
       %this.insertItem(%pos, %name !$= "-" ? %name : "", %accel, %cmd);
+      ///////////
+      //%this.insertItem(%pos, %name !$= "-" ? %name : "", %accel);
+      // ATTENTION! From OMNI
    }
 }
 
 function MenuBuilder::appendItem(%this, %item)
 {
    %this.addItem(%this.getItemCount(), %item);
+
+   return %this.getItemCount()-1;      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
+
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+function MenuBuilder::removeAllItems(%this)
+{
+   %itemCount = %this.getItemCount();
+   for( %i = 0; %i < %itemCount; %i++)
+      %this.removeItem(%i);
+}
+// @Copyright end
 
 function MenuBuilder::onAdd(%this)
 {
@@ -162,6 +178,7 @@ function MenuBuilder::onRemove(%this)
 function MenuBuilder::onSelectItem(%this, %id, %text)
 {
    %cmd = getField(%this.item[%id], 2);
+   %this.canvas.setPopupShown(false);     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    if(%cmd !$= "")
    {
       eval( %cmd );

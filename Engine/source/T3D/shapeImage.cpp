@@ -97,14 +97,22 @@ ConsoleDocClass( ShapeBaseImageData,
    "@ingroup gameObjects\n"
 );
 
+<<<<<<< HEAD
 IMPLEMENT_CALLBACK( ShapeBaseImageData, onMount, void, ( ShapeBase* obj, S32 slot, F32 dt ), ( obj, slot, dt ),
+=======
+IMPLEMENT_CALLBACK( ShapeBaseImageData, onImageMount, void, ( ShapeBase* obj, S32 slot, F32 dt ), ( obj, slot, dt ),
+>>>>>>> omni_engine
    "@brief Called when the Image is first mounted to the object.\n\n"
 
    "@param obj object that this Image has been mounted to\n"
    "@param slot Image mount slot on the object\n"
    "@param dt time remaining in this Image update\n" );
 
+<<<<<<< HEAD
 IMPLEMENT_CALLBACK( ShapeBaseImageData, onUnmount, void, ( ShapeBase* obj, S32 slot, F32 dt ), ( obj, slot, dt ),
+=======
+IMPLEMENT_CALLBACK( ShapeBaseImageData, onImageUnmount, void, ( ShapeBase* obj, S32 slot, F32 dt ), ( obj, slot, dt ),
+>>>>>>> omni_engine
    "@brief Called when the Image is unmounted from the object.\n\n"
 
    "@param obj object that this Image has been unmounted from\n"
@@ -409,12 +417,20 @@ bool ShapeBaseImageData::preload(bool server, String &errorStr)
    // Resolve objects transmitted from server
    if (!server) {
       if (projectile)
+<<<<<<< HEAD
          if (Sim::findObject(SimObjectId((uintptr_t)projectile), projectile) == false)
+=======
+         if (Sim::findObject(SimObjectId(projectile), projectile) == false)
+>>>>>>> omni_engine
             Con::errorf(ConsoleLogEntry::General, "Error, unable to load projectile for shapebaseimagedata");
 
       for (U32 i = 0; i < MaxStates; i++) {
          if (state[i].emitter)
+<<<<<<< HEAD
             if (!Sim::findObject(SimObjectId((uintptr_t)state[i].emitter), state[i].emitter))
+=======
+            if (!Sim::findObject(SimObjectId(state[i].emitter), state[i].emitter))
+>>>>>>> omni_engine
                Con::errorf(ConsoleLogEntry::General, "Error, unable to load emitter for image datablock");
                
          String str;
@@ -743,7 +759,14 @@ void ShapeBaseImageData::initPersistFields()
       "@see lightType");
 
    addField( "shakeCamera", TypeBool, Offset(shakeCamera, ShapeBaseImageData),
+<<<<<<< HEAD
       "@brief Flag indicating whether the camera should shake when this Image fires.\n\n" );
+=======
+      "@brief Flag indicating whether the camera should shake when this Image fires.\n\n"
+      "@note Camera shake only works properly if the player is in control of "
+      "the one and only shapeBase object in the scene which fires an Image that "
+      "uses camera shake." );
+>>>>>>> omni_engine
 
    addField( "camShakeFreq", TypePoint3F, Offset(camShakeFreq, ShapeBaseImageData),
       "@brief Frequency of the camera shaking effect.\n\n"
@@ -1019,7 +1042,11 @@ void ShapeBaseImageData::packData(BitStream* stream)
 
    // Write the projectile datablock
    if (stream->writeFlag(projectile))
+<<<<<<< HEAD
       stream->writeRangedU32(packed? SimObjectId((uintptr_t)projectile):
+=======
+      stream->writeRangedU32(packed? SimObjectId(projectile):
+>>>>>>> omni_engine
                              projectile->getId(),DataBlockObjectIdFirst,DataBlockObjectIdLast);
 
    stream->writeFlag(cloakable);
@@ -1050,7 +1077,11 @@ void ShapeBaseImageData::packData(BitStream* stream)
 
    if( stream->writeFlag( casing ) )
    {
+<<<<<<< HEAD
       stream->writeRangedU32(packed? SimObjectId((uintptr_t)casing):
+=======
+      stream->writeRangedU32(packed? SimObjectId(casing):
+>>>>>>> omni_engine
          casing->getId(),DataBlockObjectIdFirst,DataBlockObjectIdLast);
    }
 
@@ -1139,7 +1170,11 @@ void ShapeBaseImageData::packData(BitStream* stream)
 
          if (stream->writeFlag(s.emitter))
          {
+<<<<<<< HEAD
             stream->writeRangedU32(packed? SimObjectId((uintptr_t)s.emitter):
+=======
+            stream->writeRangedU32(packed? SimObjectId(s.emitter):
+>>>>>>> omni_engine
                                    s.emitter->getId(),DataBlockObjectIdFirst,DataBlockObjectIdLast);
             stream->write(s.emitterTime);
 
@@ -1222,10 +1257,14 @@ void ShapeBaseImageData::unpackData(BitStream* stream)
    if ( shakeCamera )
    {
       mathRead( *stream, &camShakeFreq );
+<<<<<<< HEAD
       mathRead( *stream, &camShakeAmp );
       stream->read( &camShakeDuration );
       stream->read( &camShakeRadius );
       stream->read( &camShakeFalloff );
+=======
+      mathRead( *stream, &camShakeAmp );      
+>>>>>>> omni_engine
    }
 
    mathRead( *stream, &shellExitDir );
@@ -2292,7 +2331,11 @@ void ShapeBase::setImage(  U32 imageSlot,
    // Notify script unmount since we're swapping datablocks.
    if (image.dataBlock && !isGhost()) {
       F32 dt = image.dataBlock->useRemainderDT ? image.rDT : 0.0f;
+<<<<<<< HEAD
       image.dataBlock->onUnmount_callback( this, imageSlot, dt );
+=======
+      image.dataBlock->onImageUnmount_callback( this, imageSlot, dt );
+>>>>>>> omni_engine
    }
 
    // Stop anything currently going on with the image.
@@ -2393,7 +2436,11 @@ void ShapeBase::setImage(  U32 imageSlot,
    if ( !isGhost() )
    {
       F32 dt = image.dataBlock->useRemainderDT ? image.rDT : 0.0f;
+<<<<<<< HEAD
       image.dataBlock->onMount_callback( this, imageSlot, dt );
+=======
+      image.dataBlock->onImageMount_callback( this, imageSlot, dt );
+>>>>>>> omni_engine
    }
    else
    {
@@ -2837,6 +2884,8 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
       if (!image.dataBlock->shapeIsValid[i] || i != imageShapeIndex && !image.doAnimateAllShapes)
          continue;
 
+	  TSShape *mShape = image.shapeInstance[i]->getShape();
+
       if (image.animThread[i] && stateData.sequence[i] != -1) 
       {
          S32 seqIndex = stateData.sequence[i];  // Standard index without any prefix
@@ -2861,12 +2910,20 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
          if (hasShapeBasePrefix || hasScriptPrefix)
          {
             bool found = false;
+<<<<<<< HEAD
             String baseSeqName(image.shapeInstance[i]->getShape()->getSequenceName(stateData.sequence[i]));
+=======
+            String baseSeqName(mShape->getSequenceName(stateData.sequence[i]));
+>>>>>>> omni_engine
 
             if (!found && hasShapeBasePrefix && hasScriptPrefix)
             {
                String seqName = String(shapeBasePrefix) + String("_") + String(scriptPrefix) + String("_") + baseSeqName;
+<<<<<<< HEAD
                S32 index = image.shapeInstance[i]->getShape()->findSequence(seqName);
+=======
+               S32 index = mShape->findSequence(seqName);
+>>>>>>> omni_engine
                if (index != -1)
                {
                   seqIndex = index;
@@ -2877,7 +2934,11 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
             if (!found && hasShapeBasePrefix)
             {
                String seqName = String(shapeBasePrefix) + String("_") + baseSeqName;
+<<<<<<< HEAD
                S32 index = image.shapeInstance[i]->getShape()->findSequence(seqName);
+=======
+               S32 index = mShape->findSequence(seqName);
+>>>>>>> omni_engine
                if (index != -1)
                {
                   seqIndex = index;
@@ -2888,7 +2949,11 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
             if (!found && hasScriptPrefix)
             {
                String seqName = String(scriptPrefix) + String("_") + baseSeqName;
+<<<<<<< HEAD
                S32 index = image.shapeInstance[i]->getShape()->findSequence(seqName);
+=======
+               S32 index = mShape->findSequence(seqName);
+>>>>>>> omni_engine
                if (index != -1)
                {
                   seqIndex = index;
@@ -2929,7 +2994,11 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
                image.shapeInstance[i]->setTimeScale(image.animThread[i], stateData.direction ? timeScale : -timeScale);
 
                // Broadcast the sequence change
+<<<<<<< HEAD
                String seqName = image.shapeInstance[i]->getShape()->getSequenceName(stateData.sequence[i]);
+=======
+               String seqName = mShape->getSequenceName(stateData.sequence[i]);
+>>>>>>> omni_engine
                onImageAnimThreadChange(imageSlot, imageShapeIndex, lastState, seqName, stateData.direction ? 0.0f : 1.0f, stateData.direction ? timeScale : -timeScale);
             }
             else
@@ -2943,12 +3012,20 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
                if (hasShapeBasePrefix || hasScriptPrefix)
                {
                   bool found = false;
+<<<<<<< HEAD
                   String baseVisSeqName(image.shapeInstance[i]->getShape()->getSequenceName(stateData.sequenceVis[i]));
+=======
+                  String baseVisSeqName(mShape->getSequenceName(stateData.sequenceVis[i]));
+>>>>>>> omni_engine
 
                   if (!found && hasShapeBasePrefix && hasScriptPrefix)
                   {
                      String seqName = String(shapeBasePrefix) + String("_") + String(scriptPrefix) + String("_") + baseVisSeqName;
+<<<<<<< HEAD
                      S32 index = image.shapeInstance[i]->getShape()->findSequence(seqName);
+=======
+                     S32 index = mShape->findSequence(seqName);
+>>>>>>> omni_engine
                      if (index != -1)
                      {
                         seqVisIndex = index;
@@ -2959,7 +3036,11 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
                   if (!found && hasShapeBasePrefix)
                   {
                      String seqName = String(shapeBasePrefix) + String("_") + baseVisSeqName;
+<<<<<<< HEAD
                      S32 index = image.shapeInstance[i]->getShape()->findSequence(seqName);
+=======
+                     S32 index = mShape->findSequence(seqName);
+>>>>>>> omni_engine
                      if (index != -1)
                      {
                         seqVisIndex = index;
@@ -2970,7 +3051,11 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
                   if (!found && hasScriptPrefix)
                   {
                      String seqName = String(scriptPrefix) + String("_") + baseVisSeqName;
+<<<<<<< HEAD
                      S32 index = image.shapeInstance[i]->getShape()->findSequence(seqName);
+=======
+                     S32 index = mShape->findSequence(seqName);
+>>>>>>> omni_engine
                      if (index != -1)
                      {
                         seqVisIndex = index;
@@ -2986,7 +3071,11 @@ void ShapeBase::updateAnimThread(U32 imageSlot, S32 imageShapeIndex, ShapeBaseIm
                image.shapeInstance[i]->setTimeScale(image.flashThread[i], timeScale);
 
                // Broadcast the sequence change
+<<<<<<< HEAD
                String seqName = image.shapeInstance[i]->getShape()->getSequenceName(stateData.sequenceVis[i]);
+=======
+               String seqName = mShape->getSequenceName(stateData.sequenceVis[i]);
+>>>>>>> omni_engine
                onImageAnimThreadChange(imageSlot, imageShapeIndex, lastState, seqName, stateData.direction ? 0.0f : 1.0f, stateData.direction ? timeScale : -timeScale);
             }
          }
@@ -3010,7 +3099,15 @@ void ShapeBase::updateImageState(U32 imageSlot,F32 dt)
 TICKAGAIN:
 
    ShapeBaseImageData::StateData& stateData = *image.state;
+<<<<<<< HEAD
 
+=======
+   //////////////////////////////////////////added if statement  
+   if( dt < 0.001f){//dt Failsafe  
+       dt = 0.001f;  
+   }  
+////////////////////////////////////////  
+>>>>>>> omni_engine
    if ( image.delayTime > dt )
       elapsed = dt;
    else
@@ -3360,6 +3457,7 @@ void ShapeBase::ejectShellCasing( U32 imageSlot )
 
    if (!casing->registerObject())
       delete casing;
+<<<<<<< HEAD
    else
       casing->init( shellPos, shellVel );
 }
@@ -3416,4 +3514,8 @@ void ShapeBase::shakeCamera( U32 imageSlot )
          gCamFXMgr.addFX(camShake);
       }
    }
+=======
+
+   casing->init( shellPos, shellVel );
+>>>>>>> omni_engine
 }

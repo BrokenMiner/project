@@ -57,7 +57,11 @@ struct Collision
 
    // Face and Face dot are currently only set by the extrudedPolyList
    // clipper.  Values are otherwise undefined.
+<<<<<<< HEAD
    U32 face;                  // Which face was hit
+=======
+   U64 face;                  // Which face was hit
+>>>>>>> omni_engine
    F32 faceDot;               // -Dot of face with poly normal
    F32 distance;
    

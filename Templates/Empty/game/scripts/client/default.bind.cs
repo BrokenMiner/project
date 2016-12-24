@@ -441,12 +441,16 @@ GlobalActionMap.bind(keyboard, "ctrl o", bringUpOptions);
 //------------------------------------------------------------------------------
 // Debugging Functions
 //------------------------------------------------------------------------------
+<<<<<<< HEAD
 function showMetrics(%val)
 {
    if(%val)
       metrics("fps gfx shadow sfx terrain groundcover forest net");
 }
 GlobalActionMap.bind(keyboard, "ctrl F2", showMetrics);
+=======
+
+>>>>>>> omni_engine
 
 //------------------------------------------------------------------------------
 //

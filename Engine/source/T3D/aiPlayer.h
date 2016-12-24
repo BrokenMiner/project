@@ -27,11 +27,22 @@
 #include "T3D/player.h"
 #endif
 
+<<<<<<< HEAD
 #ifdef TORQUE_NAVIGATION_ENABLED
 #include "navigation/navPath.h"
 #include "navigation/navMesh.h"
 #include "navigation/coverPoint.h"
 #endif // TORQUE_NAVIGATION_ENABLED
+=======
+#include "torqueConfig.h"
+
+#ifdef TORQUE_WALKABOUT_ENABLED
+#include "walkabout/navPath.h"
+#include "walkabout/navMesh.h"
+#include "walkabout/coverPoint.h"
+#endif // TORQUE_WALKABOUT_ENABLED
+
+>>>>>>> omni_engine
 
 class AIPlayer : public Player {
 
@@ -44,6 +55,11 @@ public:
 		ModeStuck,                      // AI is stuck, but wants to move.
       ModeSlowing,                    // AI is slowing down as it reaches it's destination.
 	};
+
+    DECLARE_CALLBACK( void, onMoveStuck, ( AIPlayer* obj ) );
+    DECLARE_CALLBACK( void, onReachDestination, ( AIPlayer* obj ) );
+    DECLARE_CALLBACK( void, onTargetEnterLOS, ( AIPlayer* obj ) );
+    DECLARE_CALLBACK( void, onTargetExitLOS, ( AIPlayer* obj ) );
 
 private:
    MoveState mMoveState;
@@ -63,6 +79,7 @@ private:
 
    Point3F mAimOffset;
 
+<<<<<<< HEAD
    // move triggers
    bool mMoveTriggers[MaxTriggerKeys];
 
@@ -70,6 +87,17 @@ private:
    void throwCallback( const char *name );
 
 #ifdef TORQUE_NAVIGATION_ENABLED
+=======
+   // Utility Methods
+   void throwCallback( const char *name );
+
+#ifdef TORQUE_WALKABOUT_ENABLED
+public:
+   /// Get cover we are moving to.
+   CoverPoint *getCover() { return mCoverData.cover; }
+
+private:
+>>>>>>> omni_engine
    /// Should we jump?
    enum JumpStates {
       None,  ///< No, don't jump.
@@ -107,7 +135,13 @@ private:
       /// Pointer to a cover point.
       SimObjectPtr<CoverPoint> cover;
       /// Default constructor.
+<<<<<<< HEAD
       CoverData() : cover(NULL) {}
+=======
+      CoverData() : cover(NULL)
+      {
+      }
+>>>>>>> omni_engine
    };
 
    /// Current cover we're trying to get to.
@@ -147,6 +181,7 @@ private:
 protected:
    virtual void onReachDestination();
    virtual void onStuck();
+#endif // TORQUE_WALKABOUT_ENABLED
 
 public:
    DECLARE_CONOBJECT( AIPlayer );
@@ -154,6 +189,7 @@ public:
    AIPlayer();
    ~AIPlayer();
 
+<<<<<<< HEAD
    static void initPersistFields();
 
    bool onAdd();
@@ -164,6 +200,25 @@ public:
    // Targeting and aiming sets/gets
    void setAimObject( GameBase *targetObject );
    void setAimObject(GameBase *targetObject, const Point3F& offset);
+=======
+    /// @see shapeBase.h
+   virtual void onCollision( SceneObject *object, const VectorF &vec );
+
+   static void initPersistFields();
+
+   bool onAdd();
+#ifdef TORQUE_WALKABOUT_ENABLED
+   void onRemove();
+#endif // TORQUE_WALKABOUT_ENABLED
+
+   virtual bool getAIMove( Move *move );
+
+   void AISearch(F32 fOV,F32 farDist,SimSet* ObjToSearch,SimSet* result);
+
+   // Targeting and aiming sets/gets
+   void setAimObject( GameBase *targetObject );
+   void setAimObject( GameBase *targetObject, Point3F offset );
+>>>>>>> omni_engine
    GameBase* getAimObject() const  { return mAimObject; }
    void setAimLocation( const Point3F &location );
    Point3F getAimLocation() const { return mAimLocation; }
@@ -180,12 +235,16 @@ public:
    Point3F getMoveDestination() const { return mMoveDestination; }
    void stopMove();
 
+<<<<<<< HEAD
    // Trigger sets/gets
    void setMoveTrigger( U32 slot, const bool isSet = true );
    bool getMoveTrigger( U32 slot ) const;
    void clearMoveTriggers();
 
 #ifdef TORQUE_NAVIGATION_ENABLED
+=======
+#ifdef TORQUE_WALKABOUT_ENABLED
+>>>>>>> omni_engine
    /// @name Pathfinding
    /// @{
 
@@ -218,7 +277,13 @@ public:
    LinkData mLinkTypes;
 
    /// @}
+<<<<<<< HEAD
 #endif // TORQUE_NAVIGATION_ENABLED
+=======
+#endif // TORQUE_WALKABOUT_ENABLED
+
+   void onTargetEnterLOS();
+>>>>>>> omni_engine
 };
 
 #endif

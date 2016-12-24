@@ -144,7 +144,11 @@ void GuiPopupTextListCtrlEx::onCellSelected( Point2I cell )
       return;
 
    if( isMethod( "onSelect" ) )
+<<<<<<< HEAD
       Con::executef(this, "onSelect", Con::getFloatArg(cell.x), Con::getFloatArg(cell.y));
+=======
+   { onSelect_callback( Con::getFloatArg(cell.x), Con::getFloatArg(cell.y)); }
+>>>>>>> omni_engine
 
    //call the console function
    execConsoleCallback();
@@ -221,11 +225,23 @@ void GuiPopupTextListCtrlEx::onMouseMove( const GuiEvent &event )
 
    // Within Bounds?
    if (cell.x >= 0 && cell.x < mSize.x && cell.y >= 0 && cell.y < mSize.y)
+<<<<<<< HEAD
       // Hot Track notification
       Con::executef( mPopUpCtrl, "onHotTrackItem", Con::getIntArg(mList[cell.y].id) );
    else 
       // Hot Track -1
       Con::executef( mPopUpCtrl, "onHotTrackItem", Con::getIntArg(-1) );
+=======
+   {
+      // Hot Track notification
+      mPopUpCtrl->onHotTrackItem_callback( Con::getIntArg(mList[cell.y].id) );
+   }  
+   else 
+   {
+      // Hot Track -1
+      mPopUpCtrl->onHotTrackItem_callback( Con::getIntArg(-1) );
+   }  
+>>>>>>> omni_engine
 
    // Call Parent
    Parent::onMouseMove(event);
@@ -309,6 +325,10 @@ void GuiPopupTextListCtrlEx::onRenderCell(Point2I offset, Point2I cell, bool sel
 //------------------------------------------------------------------------------
 
 IMPLEMENT_CONOBJECT(GuiPopUpMenuCtrlEx);
+
+IMPLEMENT_CALLBACK(GuiPopUpMenuCtrlEx, onHotTrackItem, void, (const char* id), (id), "");
+IMPLEMENT_CALLBACK(GuiPopUpMenuCtrlEx, onSelect, void, (const char* id, const char* text), (id, text), "");
+IMPLEMENT_CALLBACK(GuiPopUpMenuCtrlEx, onCancel, void, (), (), "");
 
 GuiPopUpMenuCtrlEx::GuiPopUpMenuCtrlEx(void)
 {
@@ -950,7 +970,12 @@ void GuiPopUpMenuCtrlEx::setSelected(S32 id, bool bNotifyScript )
          char idval[24];
          dSprintf( idval, sizeof(idval), "%d", mEntries[mSelIndex].id );
          if ( isMethod( "onSelect" ) && bNotifyScript )
+<<<<<<< HEAD
             Con::executef( this, "onSelect", idval, mEntries[mSelIndex].buf );
+=======
+         { onSelect_callback( idval, mEntries[mSelIndex].buf ); }
+            
+>>>>>>> omni_engine
          return;
       }
    }
@@ -962,7 +987,12 @@ void GuiPopUpMenuCtrlEx::setSelected(S32 id, bool bNotifyScript )
    mSelIndex = -1;
 
    if ( isMethod( "onCancel" ) && bNotifyScript )
+<<<<<<< HEAD
       Con::executef( this, "onCancel" );
+=======
+   { onCancel_callback(); }
+      
+>>>>>>> omni_engine
 
    if ( id == -1 )
       return;
@@ -990,7 +1020,12 @@ void GuiPopUpMenuCtrlEx::setFirstSelected( bool bNotifyScript )
       char idval[24];
       dSprintf( idval, sizeof(idval), "%d", mEntries[mSelIndex].id );
       if ( isMethod( "onSelect" ) )
+<<<<<<< HEAD
          Con::executef( this, "onSelect", idval, mEntries[mSelIndex].buf );
+=======
+      { onSelect_callback( idval, mEntries[mSelIndex].buf ); }
+         
+>>>>>>> omni_engine
       
 		// Execute the popup console command:
 		if ( bNotifyScript )
@@ -1004,7 +1039,12 @@ void GuiPopUpMenuCtrlEx::setFirstSelected( bool bNotifyScript )
 		mSelIndex = -1;
 
 		if ( bNotifyScript )
+<<<<<<< HEAD
 			Con::executef( this, "onCancel" );
+=======
+        { onCancel_callback(); }
+			
+>>>>>>> omni_engine
 	}
 }
 
@@ -1052,30 +1092,51 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
       else
       {
          //renderSlightlyLoweredBox(r, mProfile);
+<<<<<<< HEAD
          drawUtil->drawRectFill( r, mProfile->mFillColor );
+=======
+         GFX->getDrawUtil()->drawRectFill( r, mProfile->mFillColor );
+>>>>>>> omni_engine
       }
 
       //  Draw a bitmap over the background?
       if ( mTextureDepressed )
       {
          RectI rect(offset, mBitmapBounds);
+<<<<<<< HEAD
          drawUtil->clearBitmapModulation();
          drawUtil->drawBitmapStretch( mTextureDepressed, rect );
+=======
+         //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+         GFX->getDrawUtil()->drawBitmapStretch( mTextureDepressed, rect );
+>>>>>>> omni_engine
       } 
       else if ( mTextureNormal )
       {
          RectI rect(offset, mBitmapBounds);
+<<<<<<< HEAD
          drawUtil->clearBitmapModulation();
          drawUtil->drawBitmapStretch( mTextureNormal, rect );
+=======
+         //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+         GFX->getDrawUtil()->drawBitmapStretch( mTextureNormal, rect );
+>>>>>>> omni_engine
       }
 
       // Do we render a bitmap border or lines?
       if ( !( mProfile->getChildrenProfile() && mProfile->mBitmapArrayRects.size() ) )
       {
+<<<<<<< HEAD
          drawUtil->drawLine( l, t, l, b, colorWhite );
          drawUtil->drawLine( l, t, r2, t, colorWhite );
          drawUtil->drawLine( l + 1, b, r2, b, mProfile->mBorderColor );
          drawUtil->drawLine( r2, t + 1, r2, b - 1, mProfile->mBorderColor );
+=======
+         GFX->getDrawUtil()->drawLine( l, t, l, b, colorWhite );
+         GFX->getDrawUtil()->drawLine( l, t, r2, t, colorWhite );
+         GFX->getDrawUtil()->drawLine( l + 1, b, r2, b, mProfile->mBorderColor );
+         GFX->getDrawUtil()->drawLine( r2, t + 1, r2, b - 1, mProfile->mBorderColor );
+>>>>>>> omni_engine
       }
 
    }
@@ -1096,24 +1157,40 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
          } 
          else
          {
+<<<<<<< HEAD
             drawUtil->drawRectFill( r, mProfile->mFillColorHL );
+=======
+            GFX->getDrawUtil()->drawRectFill( r, mProfile->mFillColorHL );
+>>>>>>> omni_engine
          }
 
          //  Draw a bitmap over the background?
          if ( mTextureNormal )
          {
             RectI rect( offset, mBitmapBounds );
+<<<<<<< HEAD
             drawUtil->clearBitmapModulation();
             drawUtil->drawBitmapStretch( mTextureNormal, rect );
+=======
+            //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+            GFX->getDrawUtil()->drawBitmapStretch( mTextureNormal, rect );
+>>>>>>> omni_engine
          }
 
          // Do we render a bitmap border or lines?
          if ( !( mProfile->getChildrenProfile() && mProfile->mBitmapArrayRects.size() ) )
          {
+<<<<<<< HEAD
             drawUtil->drawLine( l, t, l, b, colorWhite );
             drawUtil->drawLine( l, t, r2, t, colorWhite );
             drawUtil->drawLine( l + 1, b, r2, b, mProfile->mBorderColor );
             drawUtil->drawLine( r2, t + 1, r2, b - 1, mProfile->mBorderColor );
+=======
+            GFX->getDrawUtil()->drawLine( l, t, l, b, colorWhite );
+            GFX->getDrawUtil()->drawLine( l, t, r2, t, colorWhite );
+            GFX->getDrawUtil()->drawLine( l + 1, b, r2, b, mProfile->mBorderColor );
+            GFX->getDrawUtil()->drawLine( r2, t + 1, r2, b - 1, mProfile->mBorderColor );
+>>>>>>> omni_engine
          }
       }
       else
@@ -1126,21 +1203,34 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
          } 
          else
          {
+<<<<<<< HEAD
             drawUtil->drawRectFill( r, mProfile->mFillColorNA );
+=======
+            GFX->getDrawUtil()->drawRectFill( r, mProfile->mFillColorNA );
+>>>>>>> omni_engine
          }
 
          //  Draw a bitmap over the background?
          if ( mTextureNormal )
          {
             RectI rect(offset, mBitmapBounds);
+<<<<<<< HEAD
             drawUtil->clearBitmapModulation();
             drawUtil->drawBitmapStretch( mTextureNormal, rect );
+=======
+            //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+            GFX->getDrawUtil()->drawBitmapStretch( mTextureNormal, rect );
+>>>>>>> omni_engine
          }
 
          // Do we render a bitmap border or lines?
          if ( !( mProfile->getChildrenProfile() && mProfile->mBitmapArrayRects.size() ) )
          {
+<<<<<<< HEAD
             drawUtil->drawRect( r, mProfile->mBorderColorNA );
+=======
+            GFX->getDrawUtil()->drawRect( r, mProfile->mBorderColorNA );
+>>>>>>> omni_engine
          }
       }
       //      renderSlightlyRaisedBox(r, mProfile); //  Used to be the only 'else' condition to mInAction above.
@@ -1211,8 +1301,13 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
       {
          Point2I coloredboxsize( 15, 10 );
          RectI r( offset.x + mProfile->mTextOffset.x, offset.y + ( (getHeight() - coloredboxsize.y ) / 2 ), coloredboxsize.x, coloredboxsize.y );
+<<<<<<< HEAD
          drawUtil->drawRectFill( r, boxColor);
          drawUtil->drawRect( r, ColorI(0,0,0));
+=======
+         GFX->getDrawUtil()->drawRectFill( r, boxColor);
+         GFX->getDrawUtil()->drawRect( r, ColorI(0,0,0));
+>>>>>>> omni_engine
 
          localStart.x += coloredboxsize.x + mProfile->mTextOffset.x;
       }
@@ -1220,7 +1315,11 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
       // Draw the text
       Point2I globalStart = localToGlobalCoord( localStart );
       ColorI fontColor   = mActive ? ( mInAction ? mProfile->mFontColor : mProfile->mFontColorNA ) : mProfile->mFontColorNA;
+<<<<<<< HEAD
       drawUtil->setBitmapModulation( fontColor ); //  was: (mProfile->mFontColor);
+=======
+      GFX->getDrawUtil()->setBitmapModulation( fontColor ); //  was: (mProfile->mFontColor);
+>>>>>>> omni_engine
 
       //  Get the number of columns in the text
       S32 colcount = getColumnCount( mText, "\t" );
@@ -1232,7 +1331,11 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
 
          // Draw the first column
          getColumn( mText, buff, 0, "\t" );
+<<<<<<< HEAD
          drawUtil->drawText( mProfile->mFont, globalStart, buff, mProfile->mFontColors );
+=======
+         GFX->getDrawUtil()->drawText( mProfile->mFont, globalStart, buff, mProfile->mFontColors );
+>>>>>>> omni_engine
 
          // Draw the second column to the right
          getColumn( mText, buff, 1, "\t" );
@@ -1243,17 +1346,29 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
             // right cap of the border.
             RectI* bitmapBounds = mProfile->mBitmapArrayRects.address();
             Point2I textpos = localToGlobalCoord( Point2I( getWidth() - txt_w - bitmapBounds[2].extent.x, localStart.y ) );
+<<<<<<< HEAD
             drawUtil->drawText( mProfile->mFont, textpos, buff, mProfile->mFontColors );
+=======
+            GFX->getDrawUtil()->drawText( mProfile->mFont, textpos, buff, mProfile->mFontColors );
+>>>>>>> omni_engine
 
          } else
          {
             Point2I textpos = localToGlobalCoord( Point2I( getWidth() - txt_w - 12, localStart.y ) );
+<<<<<<< HEAD
             drawUtil->drawText( mProfile->mFont, textpos, buff, mProfile->mFontColors );
+=======
+            GFX->getDrawUtil()->drawText( mProfile->mFont, textpos, buff, mProfile->mFontColors );
+>>>>>>> omni_engine
          }
 
       } else
       {
+<<<<<<< HEAD
          drawUtil->drawText( mProfile->mFont, globalStart, mText, mProfile->mFontColors );
+=======
+         GFX->getDrawUtil()->drawText( mProfile->mFont, globalStart, mText, mProfile->mFontColors );
+>>>>>>> omni_engine
       }
 
       // If we're rendering a bitmap border, then it will take care of the arrow.
@@ -1318,10 +1433,17 @@ void GuiPopUpMenuCtrlEx::closePopUp()
       char idval[24];
       dSprintf( idval, sizeof(idval), "%d", mEntries[mSelIndex].id );
       if ( isMethod( "onSelect" ) )
+<<<<<<< HEAD
          Con::executef( this, "onSelect", idval, mEntries[mSelIndex].buf );
    }
    else if ( isMethod( "onCancel" ) )
       Con::executef( this, "onCancel" );
+=======
+      { onSelect_callback( idval, mEntries[mSelIndex].buf ); }         
+   }
+   else if ( isMethod( "onCancel" ) )
+   { onCancel_callback(); }
+>>>>>>> omni_engine
 
    // Execute the popup console command:
    execConsoleCallback();
@@ -1653,6 +1775,9 @@ void GuiPopUpMenuCtrlEx::onMouseUp(const GuiEvent &event)
 void GuiPopUpMenuCtrlEx::onMouseEnter(const GuiEvent &event)
 {
    mMouseOver = true;
+
+   // fade control
+   fadeControl();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 //------------------------------------------------------------------------------
@@ -1660,6 +1785,7 @@ void GuiPopUpMenuCtrlEx::onMouseEnter(const GuiEvent &event)
 void GuiPopUpMenuCtrlEx::onMouseLeave(const GuiEvent &)
 {
    mMouseOver = false;
+   smCapturedControl = this;     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 //------------------------------------------------------------------------------
@@ -1716,3 +1842,343 @@ void GuiPopUpMenuCtrlEx::replaceText(S32 boolVal)
 {
    mReplaceText = boolVal;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiPopUpMenuCtrlEx_add(char * x__object, char * x__name, S32 idNum, U32 scheme)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+
+{
+   object->addEntry(name, idNum, scheme);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiPopUpMenuCtrlEx_clearEntry(char * x__object, S32 entry)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->clearEntry(entry);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiPopUpMenuCtrlEx_findText(char * x__object, char * x__text)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+const char* text = (const char*)x__text;
+{
+  return (S32)(( object->findText( text ) ));
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiPopUpMenuCtrlEx_getColorById(char * x__object, S32 id,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+ColorI wle_returnObject;
+{
+   ColorI color;
+   object->getColoredBox(color, id);
+	{wle_returnObject =color;
+dSprintf(retval,1024,"%d %d %d %d ",(int)wle_returnObject.red,(int)wle_returnObject.green,(int)wle_returnObject.blue,(int)wle_returnObject.alpha);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiPopUpMenuCtrlEx_replaceText(char * x__object, S32 boolVal)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->replaceText(boolVal);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiPopUpMenuCtrlEx_setEnumContent(char * x__object, char * x__className, char * x__enumName)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* className = (const char*)x__className;
+const char* enumName = (const char*)x__enumName;
+{
+   AbstractClassRep * classRep = AbstractClassRep::getClassList();
+      while(classRep)
+   {
+      if(!dStricmp(classRep->getClassName(), className))
+         break;
+      classRep = classRep->getNextClass();
+   }
+      if(!classRep)
+   {
+      Con::warnf(ConsoleLogEntry::General, "failed to locate class rep for '%s'", className);
+      return;
+   }
+      U32 i;
+   for(i = 0; i < classRep->mFieldList.size(); i++)
+      if(!dStricmp(classRep->mFieldList[i].pFieldname, enumName))
+         break;
+      if(i == classRep->mFieldList.size())
+   {   
+      Con::warnf(ConsoleLogEntry::General, "failed to locate field '%s' for class '%s'", enumName, className);
+      return;
+   }
+   const AbstractClassRep::Field & field = classRep->mFieldList[i];
+   ConsoleBaseType* conType = ConsoleBaseType::getType( field.type );
+      if( !conType->getEnumTable() )
+   {
+      Con::warnf(ConsoleLogEntry::General, "field '%s' is not an enumeration for class '%s'", enumName, className);
+      return;
+   }
+      const EngineEnumTable& table = *( conType->getEnumTable() );
+   const U32 numValues = table.getNumValues();
+   
+   for(i = 0; i < numValues; i++)
+      object->addEntry( table[i].getName(), table[i] );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiPopUpMenuCtrlEx_setFirstSelected(char * x__object, bool scriptCallback)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setFirstSelected( scriptCallback );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiPopUpMenuCtrlEx_setSelected(char * x__object, S32 id, bool scriptCallback)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setSelected( id, scriptCallback );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiPopUpMenuCtrlEx_size(char * x__object)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)(( object->getNumEntries() )); 
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_addCategory(char * x__object, char * x__text)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* text = (const char*)x__text;
+{
+	object->addEntry(text, -1, 0);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_addScheme(char * x__object, S32 id, char * x__fontColor, char * x__fontColorHL, char * x__fontColorSEL)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+ColorI fontColor = ColorI();
+{
+int r,g,b,a;
+sscanf(x__fontColor,"%d %d %d %d ",&r,&g,&b,&a);
+fontColor.red =(unsigned short)r;
+fontColor.green=(unsigned short)g;
+fontColor.blue=(unsigned short)b;
+fontColor.alpha=(unsigned short)a;
+}
+ColorI fontColorHL = ColorI();
+{
+int r,g,b,a;
+sscanf(x__fontColorHL,"%d %d %d %d ",&r,&g,&b,&a);
+fontColorHL.red =(unsigned short)r;
+fontColorHL.green=(unsigned short)g;
+fontColorHL.blue=(unsigned short)b;
+fontColorHL.alpha=(unsigned short)a;
+}
+ColorI fontColorSEL = ColorI();
+{
+int r,g,b,a;
+sscanf(x__fontColorSEL,"%d %d %d %d ",&r,&g,&b,&a);
+fontColorSEL.red =(unsigned short)r;
+fontColorSEL.green=(unsigned short)g;
+fontColorSEL.blue=(unsigned short)b;
+fontColorSEL.alpha=(unsigned short)a;
+}
+{
+	
+   object->addScheme( id, fontColor, fontColorHL, fontColorSEL );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_clear(char * x__object)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->clear();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_forceClose(char * x__object)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->closePopUp();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_forceOnAction(char * x__object)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->onAction();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiPopUpMenuCtrlEx_getSelected(char * x__object)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	return object->getSelected();
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_getText(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	{wle_returnObject =object->getText();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_getTextById(char * x__object, S32 id,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	{wle_returnObject =(object->getTextById(id));
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_setNoneSelected(char * x__object, S32 param)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setNoneSelected();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_setText(char * x__object, char * x__text)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* text = (const char*)x__text;
+{
+	object->setText(text);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_sort(char * x__object)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->sort();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPopUpMenuCtrlEx_sortID(char * x__object)
+{
+GuiPopUpMenuCtrlEx* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->sortID();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

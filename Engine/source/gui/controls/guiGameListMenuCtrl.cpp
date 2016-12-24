@@ -123,19 +123,33 @@ void GuiGameListMenuCtrl::onRender(Point2I offset, const RectI &updateRect)
       }
 
       // render the row bitmap
+<<<<<<< HEAD
       drawUtil->clearBitmapModulation();
       drawUtil->drawBitmapStretchSR(profile->mTextureObject, RectI(currentOffset, rowExtent), profile->getBitmapArrayRect(buttonTextureIndex));
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      GFX->getDrawUtil()->drawBitmapStretchSR(profile->mTextureObject, RectI(currentOffset, rowExtent), profile->getBitmapArrayRect(buttonTextureIndex));
+>>>>>>> omni_engine
 
       // render the row icon if it has one
       if ((iconIndex != NO_ICON) && profileHasIcons && (! profile->getBitmapArrayRect((U32)iconIndex).extent.isZero()))
       {
          iconIndex += Profile::TEX_FIRST_ICON;
+<<<<<<< HEAD
          drawUtil->clearBitmapModulation();
          drawUtil->drawBitmapStretchSR(profile->mTextureObject, RectI(currentOffset + iconOffset, iconExtent), profile->getBitmapArrayRect(iconIndex));
       }
 
       // render the row text
       drawUtil->setBitmapModulation(fontColor);
+=======
+         //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+         GFX->getDrawUtil()->drawBitmapStretchSR(profile->mTextureObject, RectI(currentOffset + iconOffset, iconExtent), profile->getBitmapArrayRect(iconIndex));
+      }
+
+      // render the row text
+      GFX->getDrawUtil()->setBitmapModulation(fontColor);
+>>>>>>> omni_engine
       renderJustifiedText(currentOffset + textOffset, textExtent, (*row)->mLabel);
    }
 
@@ -640,6 +654,15 @@ void GuiGameListMenuCtrl::initPersistFields()
       "Script callback when the 'Y' button is pressed. 'Y' inputs are Keyboard: Y; Gamepad: Y" );
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
 }
 
 DefineEngineMethod( GuiGameListMenuCtrl, addRow, void,
@@ -738,7 +761,11 @@ bool GuiGameListMenuProfile::onAdd()
    // We can't call enforceConstraints() here because incRefCount initializes
    // some of the things to enforce. Do a basic sanity check here instead.
    
+<<<<<<< HEAD
    if( !mBitmapName || !dStrlen(mBitmapName) )
+=======
+   if( !dStrlen(mBitmapName) )
+>>>>>>> omni_engine
    {
       Con::errorf( "GuiGameListMenuProfile: %s can't be created without a bitmap. Please add a 'Bitmap' property to the object definition.", getName() );
       return false;
@@ -877,3 +904,161 @@ void GuiGameListMenuProfile::initPersistFields()
 
    removeField("profileForChildren");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiGameListMenuCtrl_activateRow(char * x__object)
+{
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->activateRow();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiGameListMenuCtrl_addRow(char * x__object, char * x__label, char * x__callback, S32 icon, S32 yPad, bool useHighlightIcon, bool enabled)
+{
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* label = (const char*)x__label;
+const char* callback = (const char*)x__callback;
+
+
+{
+   object->addRow( label, callback, icon, yPad, useHighlightIcon, enabled );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiGameListMenuCtrl_getRowCount(char * x__object)
+{
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getRowCount());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiGameListMenuCtrl_getRowLabel(char * x__object, S32 row,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+   {wle_returnObject =object->getRowLabel( row );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiGameListMenuCtrl_getSelectedRow(char * x__object)
+{
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getSelected());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiGameListMenuCtrl_isRowEnabled(char * x__object, S32 row)
+{
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isRowEnabled( row );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiGameListMenuCtrl_setRowEnabled(char * x__object, S32 row, bool enabled)
+{
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setRowEnabled( row, enabled );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiGameListMenuCtrl_setRowLabel(char * x__object, S32 row, char * x__label)
+{
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+const char* label = (const char*)x__label;
+{
+   object->setRowLabel( row, label );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiGameListMenuCtrl_setSelected(char * x__object, S32 row)
+{
+GuiGameListMenuCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setSelected( row );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

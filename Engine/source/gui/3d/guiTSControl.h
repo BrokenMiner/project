@@ -44,6 +44,7 @@ struct CameraQuery
    F32         nearPlane;
    F32         farPlane;
    F32         fov;
+<<<<<<< HEAD
    FovPort     fovPort[2]; // fov for each eye
    Point2F     projectionOffset;
    Point3F     eyeOffset[2];
@@ -55,6 +56,13 @@ struct CameraQuery
    RectI       stereoViewports[2]; // destination viewports
    GFXTextureTarget* stereoTargets[2];
    GuiCanvas* drawCanvas; // Canvas we are drawing to. Needed for VR
+=======
+   Point2F     projectionOffset;
+   Point3F     eyeOffset;
+   bool        ortho;
+   MatrixF     cameraMatrix;
+   Point4F     frustumOffset;
+>>>>>>> omni_engine
 };
 
 /// Abstract base class for 3D viewport GUIs.
@@ -65,7 +73,11 @@ class GuiTSCtrl : public GuiContainer
 public:
    enum RenderStyles {
       RenderStyleStandard           = 0,
+<<<<<<< HEAD
       RenderStyleStereoSideBySide   = (1<<0)
+=======
+      RenderStyleStereoSideBySide   = (1<<0),
+>>>>>>> omni_engine
    };
 
 protected:
@@ -99,6 +111,7 @@ protected:
 
    /// The last camera query set in onRender.
    /// @see getLastCameraQuery
+<<<<<<< HEAD
    CameraQuery mLastCameraQuery;
 
    NamedTexTargetRef mStereoGuiTarget;
@@ -107,6 +120,17 @@ protected:
    
 public:
    
+=======
+   CameraQuery mLastCameraQuery;	
+   
+public:
+   
+   F32            mForceAspect;   
+   Point4F        mForceFrustumOffset;
+   F32            mCameraRoll;
+   bool			  mEnableAugmentations;
+
+>>>>>>> omni_engine
    GuiTSCtrl();
 
    void onPreRender();
@@ -118,6 +142,9 @@ public:
 
    /// Subclasses can override this to perform 2D rendering.   
    virtual void renderGui(Point2I offset, const RectI &updateRect) {}
+
+   const char* getClickVector( Point2I mousePoint );
+   const char* getWorldPosition( Point2I mousePoint );
 
    static void initPersistFields();
    static void consoleInit();
@@ -171,6 +198,7 @@ public:
    /// intended for debug rendering, editor rendering, or infrequent rendering.
    ///
    void drawLine( Point3F p0, Point3F p1, const ColorI &color, F32 width );
+<<<<<<< HEAD
    void drawLineList( const Vector<Point3F> &points, const ColorI color, F32 width );
 
    static const U32& getFrameCount() { return smFrameCount; }
@@ -179,6 +207,12 @@ public:
 
    void setStereoGui(GuiOffscreenCanvas *canvas);
 
+=======
+   void drawLineList( const Vector<Point3F> &points, const ColorI &color, F32 width );
+
+   static const U32& getFrameCount() { return smFrameCount; }
+
+>>>>>>> omni_engine
    DECLARE_CONOBJECT(GuiTSCtrl);
    DECLARE_CATEGORY( "Gui 3D" );
    DECLARE_DESCRIPTION( "Abstract base class for controls that render a 3D viewport." );

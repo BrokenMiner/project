@@ -96,6 +96,7 @@ void	btQuantizedBvh::setQuantizationValues(const btVector3& bvhAabbMin,const btV
 	m_bvhAabbMax = bvhAabbMax + clampValue;
 	btVector3 aabbSize = m_bvhAabbMax - m_bvhAabbMin;
 	m_bvhQuantization = btVector3(btScalar(65533.0),btScalar(65533.0),btScalar(65533.0)) / aabbSize;
+<<<<<<< HEAD
 
 	m_useQuantization = true;
 
@@ -115,6 +116,9 @@ void	btQuantizedBvh::setQuantizationValues(const btVector3& bvhAabbMin,const btV
 		aabbSize = m_bvhAabbMax - m_bvhAabbMin;
 		m_bvhQuantization = btVector3(btScalar(65533.0),btScalar(65533.0),btScalar(65533.0)) / aabbSize;
 	}
+=======
+	m_useQuantization = true;
+>>>>>>> omni_engine
 }
 
 

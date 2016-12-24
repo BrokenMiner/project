@@ -17,31 +17,52 @@
    {*                                   *}
    {capture assign="itemOut"}
    {* we don't compile some files. *}
-   {if dontCompile($dirWalk->path, $projOutput)}
-      <ClCompile Include=
-      "{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}">
-            <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-            <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Optimized Debug|Win32'">true</ExcludedFromBuild>
-            <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+
+   {if preg_match('/x86_32/i',$dirWalk->path)}
+      <ClCompile Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}">
+	        <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+            <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       </ClCompile>
-   {else}
-      {if substr($dirWalk->path, -4, 4) == ".asm"}
-         <CustomBuild Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}">
-            <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"{$binDir|replace:'//':'/'|replace:'/':'\\'}nasm\nasm.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-            <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-            <Command Condition="'$(Configuration)|$(Platform)'=='Optimized Debug|Win32'">"{$binDir|replace:'//':'/'|replace:'/':'\\'}nasm\nasm.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-            <Outputs Condition="'$(Configuration)|$(Platform)'=='Optimized Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-            <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"{$binDir|replace:'//':'/'|replace:'/':'\\'}nasm\nasm.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-            <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-         </CustomBuild>
-      {elseif $projOutput->isSourceFile( $dirWalk->path ) }
-         <ClCompile Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}" />      
-      {elseif $projOutput->isResourceFile( $dirWalk->path ) }
-         <ResourceCompile Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}" />      
-      {else}
-         <ClInclude Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}" />      
-      {/if}{* if path == "*.asm" *}   
-   {/if}{* if dontCompile() *}
+   {elseif preg_match('/x86_64/i',$dirWalk->path)}
+      <ClCompile Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}">
+            <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+			<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      </ClCompile>
+   {else}   
+	   {if dontCompile($dirWalk->path, $projOutput)}
+		  <ClCompile Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}">
+				<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+				<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Optimized Debug|Win32'">true</ExcludedFromBuild>
+				<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+				<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+				<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+		  </ClCompile>
+	   {else}
+		  {if substr($dirWalk->path, -4, 4) == ".asm"}
+			 <CustomBuild Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}">
+				  <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"..\..\..\..\..\Engine\bin\nasm\nasm.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
+				  <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"..\..\..\..\..\Engine\bin\nasm\nasm.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
+				  <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+				  <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+				  <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"..\..\..\..\..\Engine\bin\nasm\nasm.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
+				  <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"..\..\..\..\..\Engine\bin\nasm\nasm.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
+				  <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+				  <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+				  <Command Condition="'$(Configuration)|$(Platform)'=='Optimized Debug|Win32'">"{$binDir|replace:'//':'/'|replace:'/':'\\'}nasm\nasm.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
+				  <Outputs Condition="'$(Configuration)|$(Platform)'=='Optimized Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+				  <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+				  <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+			 </CustomBuild>
+		  {elseif $projOutput->isSourceFile( $dirWalk->path ) }
+			 <ClCompile Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}" />      
+		  {elseif $projOutput->isResourceFile( $dirWalk->path ) }
+			 <ResourceCompile Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}" />      
+		  {else}
+			 <ClInclude Include="{$dirWalk->path|replace:'//':'/'|replace:'/':'\\'}" />      
+		  {/if}{* if path == "*.asm" *}   
+	   {/if}{* if dontCompile() *}
+   {/if}
+
    {/capture}
    {$itemOut|indent:$depth:"\t"}
    

@@ -104,7 +104,11 @@ BOOL CALLBACK EnumFamCallBack(LPLOGFONT logFont, LPNEWTEXTMETRIC textMetric, DWO
 
    const U32 len = dStrlen( logFont->lfFaceName ) * 3 + 1;
    FrameTemp<UTF8> buffer( len );
+<<<<<<< HEAD
    convertUTF16toUTF8N( logFont->lfFaceName, buffer, len );
+=======
+   convertUTF16toUTF8( logFont->lfFaceName, buffer, len );
+>>>>>>> omni_engine
 
    fonts->push_back( StringTable->insert( buffer ) );
 

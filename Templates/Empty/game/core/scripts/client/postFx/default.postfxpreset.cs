@@ -70,4 +70,8 @@ $PostFXManager::Settings::SSAO::sNormalPow = "1";
 $PostFXManager::Settings::SSAO::sNormalTol = "0";
 $PostFXManager::Settings::SSAO::sRadius = "0.1";
 $PostFXManager::Settings::SSAO::sStrength = "6";
+<<<<<<< HEAD
 $PostFXManager::Settings::ColorCorrectionRamp = "core/scripts/client/postFx/null_color_ramp.png";
+=======
+$PostFXManager::Settings::ColorCorrectionRamp = "core/scripts/client/postFx/null_color_ramp.png";
+>>>>>>> omni_engine

@@ -104,7 +104,11 @@ bool Platform::excludeOtherInstances(const char *mutexName)
 {
 #ifdef UNICODE
    UTF16 b[512];
+<<<<<<< HEAD
    convertUTF8toUTF16((UTF8 *)mutexName, b);
+=======
+   convertUTF8toUTF16((UTF8 *)mutexName, b, sizeof(b));
+>>>>>>> omni_engine
    gMutexHandle = CreateMutex(NULL, true, b);
 #else
    gMutexHandle = CreateMutex(NULL, true, mutexName);
@@ -164,7 +168,11 @@ bool Platform::checkOtherInstances(const char *mutexName)
    
 #ifdef UNICODE
    UTF16 b[512];
+<<<<<<< HEAD
    convertUTF8toUTF16((UTF8 *)mutexName, b);
+=======
+   convertUTF8toUTF16((UTF8 *)mutexName, b, sizeof(b));
+>>>>>>> omni_engine
    pMutex  = CreateMutex(NULL, true, b);
 #else
    pMutex = CreateMutex(NULL, true, mutexName);
@@ -197,8 +205,13 @@ void Platform::AlertOK(const char *windowTitle, const char *message)
    ShowCursor(true);
 #ifdef UNICODE
    UTF16 m[1024], t[512];
+<<<<<<< HEAD
    convertUTF8toUTF16((UTF8 *)windowTitle, t);
    convertUTF8toUTF16((UTF8 *)message, m);
+=======
+   convertUTF8toUTF16((UTF8 *)windowTitle, t, sizeof(t));
+   convertUTF8toUTF16((UTF8 *)message, m, sizeof(m));
+>>>>>>> omni_engine
    MessageBox(NULL, m, t, MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TASKMODAL | MB_OK);
 #else
    MessageBox(NULL, message, windowTitle, MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TASKMODAL | MB_OK);
@@ -211,8 +224,13 @@ bool Platform::AlertOKCancel(const char *windowTitle, const char *message)
    ShowCursor(true);
 #ifdef UNICODE
    UTF16 m[1024], t[512];
+<<<<<<< HEAD
    convertUTF8toUTF16((UTF8 *)windowTitle, t);
    convertUTF8toUTF16((UTF8 *)message, m);
+=======
+   convertUTF8toUTF16((UTF8 *)windowTitle, t, sizeof(t));
+   convertUTF8toUTF16((UTF8 *)message, m, sizeof(m));
+>>>>>>> omni_engine
    return MessageBox(NULL, m, t, MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TASKMODAL | MB_OKCANCEL) == IDOK;
 #else
    return MessageBox(NULL, message, windowTitle, MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TASKMODAL | MB_OKCANCEL) == IDOK;
@@ -225,8 +243,13 @@ bool Platform::AlertRetry(const char *windowTitle, const char *message)
    ShowCursor(true);
 #ifdef UNICODE
    UTF16 m[1024], t[512];
+<<<<<<< HEAD
    convertUTF8toUTF16((UTF8 *)windowTitle, t);
    convertUTF8toUTF16((UTF8 *)message, m);
+=======
+   convertUTF8toUTF16((UTF8 *)windowTitle, t, sizeof(t));
+   convertUTF8toUTF16((UTF8 *)message, m, sizeof(m));
+>>>>>>> omni_engine
    return (MessageBox(NULL, m, t, MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TASKMODAL | MB_RETRYCANCEL) == IDRETRY);
 #else
    return (MessageBox(NULL, message, windowTitle, MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TASKMODAL | MB_RETRYCANCEL) == IDRETRY);
@@ -352,6 +375,7 @@ S32 main(S32 argc, const char **argv)
 
 #include "app/mainLoop.h"
 
+<<<<<<< HEAD
 S32 WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR lpszCmdLine, S32)
 {
    Vector<char *> argv( __FILE__, __LINE__ );
@@ -366,6 +390,21 @@ S32 WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR lpszCmdLine, S32)
    }
 #else
    GetModuleFileNameA(NULL, moduleName, moduleNameSize);
+=======
+S32 PASCAL WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR lpszCmdLine, S32)
+{
+   Vector<char *> argv( __FILE__, __LINE__ );
+
+   char moduleName[256];
+#ifdef TORQUE_UNICODE
+   {
+      TCHAR buf[ 256 ];
+      GetModuleFileNameW( NULL, buf, sizeof( buf ) );
+      convertUTF16toUTF8( buf, moduleName, sizeof( moduleName ) );
+   }
+#else
+   GetModuleFileNameA(NULL, moduleName, sizeof(moduleName));
+>>>>>>> omni_engine
 #endif
    argv.push_back(moduleName);
 
@@ -406,11 +445,18 @@ extern "C"
 {
 	bool torque_engineinit(S32 argc, const char **argv);
 	S32  torque_enginetick();
+<<<<<<< HEAD
 	S32  torque_getreturnstatus();
 	bool torque_engineshutdown();
 };
 
 S32 TorqueMain(int argc, const char **argv)
+=======
+	bool torque_engineshutdown();
+};
+
+S32 TorqueMain(S32 argc, const char **argv)
+>>>>>>> omni_engine
 {
 	if (!torque_engineinit(argc, argv))
 		return 1;
@@ -422,10 +468,24 @@ S32 TorqueMain(int argc, const char **argv)
 
 	torque_engineshutdown();
 
+<<<<<<< HEAD
 	return torque_getreturnstatus();
 
 }
 
+=======
+	return 0;
+
+}
+
+//Winterleaf
+extern "C" __declspec(dllexport) S32 dnt_torque_engineinit(S32 argc, const char **argv, HINSTANCE hInstance)
+	{
+	winState.appInstance = hInstance;
+	return torque_engineinit(argc,argv);
+	}
+//Winterleaf
+>>>>>>> omni_engine
 
 
 extern "C" {
@@ -434,6 +494,7 @@ S32 torque_winmain( HINSTANCE hInstance, HINSTANCE, LPSTR lpszCmdLine, S32)
 {
 	Vector<char *> argv( __FILE__, __LINE__ );
 
+<<<<<<< HEAD
    enum { moduleNameSize = 256 };
    char moduleName[moduleNameSize];
 #ifdef TORQUE_UNICODE
@@ -444,6 +505,17 @@ S32 torque_winmain( HINSTANCE hInstance, HINSTANCE, LPSTR lpszCmdLine, S32)
    }
 #else
    GetModuleFileNameA(NULL, moduleName, moduleNameSize);
+=======
+	char moduleName[256];
+#ifdef TORQUE_UNICODE
+	{
+		TCHAR buf[ 256 ];
+		GetModuleFileNameW( NULL, buf, sizeof( buf ) );
+		convertUTF16toUTF8( buf, moduleName, sizeof( moduleName ) );
+}
+#else
+	GetModuleFileNameA(NULL, moduleName, sizeof(moduleName));
+>>>>>>> omni_engine
 #endif
 	argv.push_back(moduleName);
 
@@ -475,7 +547,11 @@ S32 torque_winmain( HINSTANCE hInstance, HINSTANCE, LPSTR lpszCmdLine, S32)
 		// Add the word to the argument list.
 		if (*word) 
 		{
+<<<<<<< HEAD
 			S32 len = ptr - word;
+=======
+			intptr_t len = ptr - word;
+>>>>>>> omni_engine
 			char *arg = (char *) dMalloc(len + 1);
 			dStrncpy(arg, word, len);
 			arg[len] = 0;
@@ -541,7 +617,11 @@ bool Platform::openWebBrowser( const char* webAddress )
       RegCloseKey( regKey );
       sHaveKey = true;
 
+<<<<<<< HEAD
       convertUTF16toUTF8(sWebKey,utf8WebKey);
+=======
+      convertUTF16toUTF8(sWebKey,utf8WebKey,512);
+>>>>>>> omni_engine
 
 #ifdef UNICODE
       char *p = dStrstr((const char *)utf8WebKey, "%1"); 
@@ -560,7 +640,11 @@ bool Platform::openWebBrowser( const char* webAddress )
 #ifdef UNICODE
    dSprintf( buf, sizeof( buf ), "%s %s", utf8WebKey, webAddress );   
    UTF16 b[1024];
+<<<<<<< HEAD
    convertUTF8toUTF16((UTF8 *)buf, b);
+=======
+   convertUTF8toUTF16((UTF8 *)buf, b, sizeof(b));
+>>>>>>> omni_engine
 #else
    dSprintf( buf, sizeof( buf ), "%s %s", sWebKey, webAddress );   
 #endif
@@ -660,3 +744,82 @@ DefineConsoleFunction( isKoreanBuild, bool, ( ), , "isKoreanBuild()")
 
    return( result );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_isKoreanBuild()
+{
+bool wle_returnObject;
+{
+   HKEY regKey;
+   bool result = false;
+   if ( RegOpenKeyEx( HKEY_LOCAL_MACHINE, TorqueRegKey, 0, KEY_QUERY_VALUE, &regKey ) == ERROR_SUCCESS )
+   {
+      DWORD val;
+      DWORD size = sizeof( val );
+      if ( RegQueryValueEx( regKey, dT("Korean"), NULL, NULL, (U8*) &val, &size ) == ERROR_SUCCESS )
+         result = ( val > 0 );
+      RegCloseKey( regKey );
+   }
+   {wle_returnObject =( result );
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

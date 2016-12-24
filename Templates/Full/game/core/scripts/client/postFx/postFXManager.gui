@@ -78,7 +78,7 @@
       new GuiTabBookCtrl(ppOptionsTabBook) {
          tabPosition = "Top";
          tabMargin = "7";
-         minTabWidth = "32";
+         minTabWidth = "64";
          tabHeight = "20";
          allowReorder = "0";
          defaultPage = "-1";
@@ -1689,12 +1689,12 @@
             canSave = "1";
             canSaveDynamicFields = "0";
 
-           new GuiSliderCtrl(ppOptionsLightRaysBrightScalar) {
+            new GuiSliderCtrl(ppOptionsLightRaysBrightScalar) {
                range = "0 5";
                ticks = "1000";
                snap = "0";
                value = "0.75";
-               position = "96 46";
+               position = "96 96";
                extent = "264 17";
                minExtent = "8 2";
                horizSizing = "right";
@@ -1707,7 +1707,7 @@
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
-            };			
+            };
             new GuiTextCtrl(ppOptionsLightRaysBrightnessScalarLabel) {
                text = "Brightness";
                maxLength = "1024";
@@ -1717,7 +1717,7 @@
                anchorBottom = "0";
                anchorLeft = "1";
                anchorRight = "0";
-               position = "26 48";
+               position = "26 98";
                extent = "87 15";
                minExtent = "8 2";
                horizSizing = "right";

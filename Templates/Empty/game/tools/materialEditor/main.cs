@@ -114,6 +114,9 @@ function MaterialEditorPlugin::onWorldEditorStartup( %this )
 
 function MaterialEditorPlugin::onActivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   MaterialEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    if($gfx::wireframe){
       $wasInWireFrameMode = true;   
       $gfx::wireframe = false;
@@ -127,6 +130,10 @@ function MaterialEditorPlugin::onActivated( %this )
 
    EditorGui-->MatEdPropertiesWindow.setVisible( true );
    EditorGui-->MatEdPreviewWindow.setVisible( true );
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   MaterialEditorPropertiesWindow.setVisible( true );
+   MaterialEditorPreviewWindow.setVisible( true );
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    EditorGui-->WorldEditorToolbar.setVisible( true );
    
    MaterialEditorGui.currentObject = $Tools::materialEditorList;
@@ -144,6 +151,11 @@ function MaterialEditorPlugin::onEditMenuSelect( %this, %editMenu )
 
 function MaterialEditorPlugin::onDeactivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!MaterialEditorPlugin.isActive)
+      return;
+   MaterialEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    if($wasInWireFrameMode)
       $gfx::wireframe = true;
       

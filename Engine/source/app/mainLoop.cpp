@@ -58,16 +58,39 @@
 #include "util/sampler.h"
 #include "platform/threads/threadPool.h"
 
+<<<<<<< HEAD
 // For the TickMs define... fix this for T2D...
 #include "T3D/gameBase/processList.h"
 
+=======
+#include "torqueConfig.h"
+
+#include<vector>
+#include <list>
+#include <string>
+
+// For the TickMs define... fix this for T2D...
+#include "T3D/gameBase/processList.h"
+
+#ifdef TORQUE_DEMO_PURCHASE
+#include "demo/pestTimer/pestTimer.h"
+#endif
+
+>>>>>>> omni_engine
 #ifdef TORQUE_ENABLE_VFS
 #include "platform/platformVFS.h"
 #endif
 
+#ifdef ENABLE_DATABLOCK_CACHE
+#include "core/stream/bitStream.h"
+#endif
+
+
 DITTS( F32, gTimeScale, 1.0 );
 DITTS( U32, gTimeAdvance, 0 );
 DITTS( U32, gFrameSkip, 0 );
+
+bool gFreezeSim = false;
 
 extern S32 sgBackgroundProcessSleepTime;
 extern S32 sgTimeManagerProcessInterval;
@@ -201,6 +224,14 @@ void processTimeEvent(S32 elapsedTime)
    Con::setFloatVariable("Sim::Time",F32(Platform::getVirtualMilliseconds()) / 1000);
 }
 
+IMPLEMENT_GLOBAL_CALLBACK(onPreExit, void, (),(),
+                          "Used by Torque Tool to given a chance to do pre-quit processingCalled.\n"
+                         );
+
+IMPLEMENT_GLOBAL_CALLBACK(onExit, void, (),(),
+                          "Called before exit main loop.\n"
+                         );
+
 void StandardMainLoop::init()
 {
    #ifdef TORQUE_DEBUG
@@ -254,6 +285,11 @@ void StandardMainLoop::init()
    Platform::initConsole();
    
    ThreadPool::GlobalThreadPool::createSingleton();
+#ifdef SocketThread
+    ThreadPool::NetworkThreadPool::createSingleton();
+    ThreadPool::NETWORKTHREADPOOL().setQueueUpdateInterval(1);
+
+#endif
 
    // Initialize modules.
    
@@ -275,6 +311,8 @@ void StandardMainLoop::init()
    Con::addVariable("timeAdvance", TypeS32, &ATTS(gTimeAdvance), "The speed at which system processing time advances.\n"
 	   "@ingroup platform");
    Con::addVariable("frameSkip", TypeS32, &ATTS(gFrameSkip), "Sets the number of frames to skip while rendering the scene.\n"
+                     "@ingroup platform");
+    Con::addVariable("freezeSim", TypeS32, &ATTS(gFreezeSim), "Freeze physics simulation.\n"
 	   "@ingroup platform");
 
    Con::setVariable( "defaultGame", StringTable->insert("scripts") );
@@ -305,6 +343,10 @@ void StandardMainLoop::init()
    // Hook in for UDP notification
    Net::smPacketReceive.notify(GNet, &NetInterface::processPacketReceiveEvent);
 
+   #ifdef TORQUE_DEMO_PURCHASE
+   PestTimerinit();
+   #endif
+
    #ifdef TORQUE_DEBUG_GUARD
       Memory::flagCurrentAllocs( Memory::FLAG_Static );
    #endif
@@ -323,6 +365,9 @@ void StandardMainLoop::shutdown()
    ModuleManager::shutdownSystem();
    
    ThreadPool::GlobalThreadPool::deleteSingleton();
+#ifdef SocketThread
+    ThreadPool::NetworkThreadPool::deleteSingleton();
+#endif
 
 #ifdef TORQUE_ENABLE_VFS
    closeEmbeddedVFSArchive();
@@ -366,11 +411,18 @@ void StandardMainLoop::preShutdown()
    //   destroyed that may be vital to saving changes to avoid
    //   loss of work [1/5/2007 justind]
    if( Con::isFunction("onPreExit") )
+<<<<<<< HEAD
       Con::executef( "onPreExit");
+=======
+    {
+        onPreExit_callback();
+    }
+>>>>>>> omni_engine
 #endif
 
    //exec the script onExit() function
    if ( Con::isFunction( "onExit" ) )
+<<<<<<< HEAD
       Con::executef("onExit");
 }
 
@@ -387,6 +439,80 @@ bool StandardMainLoop::handleCommandLine( S32 argc, const char **argv )
    U32 i;
    for (i = 0; i < argc; i++)
       Con::setVariable(avar("Game::argv%d", i), argv[i]);
+=======
+    {
+        onExit_callback();
+    }
+}
+
+void BuildCacheCRC()
+{
+#ifdef ENABLE_DATABLOCK_CACHE
+    SimDataBlockGroup* pGroup = Sim::getDataBlockGroup();
+    SimDataBlock* pDataBlock = 0;
+    const U32 iCount = pGroup->size();
+    BitStream* stream = new InfiniteBitStream;
+    U32 crc=0;
+    for (U32 i = 0; i < iCount; i++)
+    {
+        pDataBlock = (SimDataBlock*)(*pGroup)[i];
+        pDataBlock->packData(stream);
+    }
+    //U32 crc = CRC::calculateCRCStream(stream); //Stream CRC doesn't seem reliable.
+
+    FileStream* datablocksOut = FileStream::createAndOpen("ServerCRC.dmp", Torque::FS::File::Write );
+    if (datablocksOut==NULL)
+        Con::errorf("### Datablock Cache: Unable to Build Server Datablock CRC Key File.");
+    else
+    {
+        datablocksOut->writeBitStream(stream);
+        datablocksOut->close();
+        crc=Con::getFileCRC("ServerCRC.dmp");
+        Con::deleteFile("ServerCRC.dmp");
+    }
+    Con::setVariable("$ServerDatablockCacheCRC", Con::getuIntArg(crc));
+    Con::warnf("### Datablock Cache: Server Datablock CRC is %u",crc);
+
+    delete stream;
+#endif
+}
+
+bool StandardMainLoop::handleCommandLine( S32 argc, const char **argv )
+{
+    // Allow the window manager to process command line inputs; this is
+    // done to let web plugin functionality happen in a fairly transparent way.
+    PlatformWindowManager::get()->processCmdLineArgs(argc, argv);
+
+    Process::handleCommandLine( argc, argv );
+
+    // Set up the command line args for the console scripts...
+    Con::setIntVariable("Game::argc", argc);
+    U32 i;
+    std::vector<const char*> arguments;
+    arguments.push_back(StringTable->insert("main"));
+
+    for (i = 1; i < argc; i++)
+    {
+        Con::setVariable(avar("Game::argv%d", i), argv[i]);
+        if (i > 0)
+        {
+            arguments.push_back(argv[i]);
+        }
+    }
+
+//WLE - Vince
+    if (Winterleaf_EngineCallback::mWLE_GlobalFunction!=0)
+    {
+        char sbuffer[8000];
+        Winterleaf_EngineCallback::mWLE_GlobalFunction(argc  , &arguments[0], sbuffer);
+        //If you can find the main routine in C# then use it, if it fails use stock.
+        if (atoi(sbuffer))
+        {
+            BuildCacheCRC();
+            return true;
+        }
+    }
+>>>>>>> omni_engine
 
 #ifdef TORQUE_PLAYER
    if(argc > 2 && dStricmp(argv[1], "-project") == 0)
@@ -452,7 +578,11 @@ bool StandardMainLoop::handleCommandLine( S32 argc, const char **argv )
 #endif
          success = str.open(defaultScriptName, Torque::FS::File::Read);
 
+<<<<<<< HEAD
 #if defined( TORQUE_DEBUG ) && defined (TORQUE_TOOLS) && !defined(TORQUE_DEDICATED) && !defined( _XBOX )
+=======
+#if defined( TORQUE_DEBUG ) && defined (TORQUE_TOOLS) && !defined( _XBOX )
+>>>>>>> omni_engine
       if (!success)
       {
          OpenFileDialog ofd;
@@ -541,6 +671,7 @@ bool StandardMainLoop::handleCommandLine( S32 argc, const char **argv )
    closeEmbeddedVFSArchive();
 #endif
 
+    BuildCacheCRC();
    return true;
 }
 
@@ -605,6 +736,11 @@ bool StandardMainLoop::doMainLoop()
       ThreadPool::processMainThreadWorkItems();
       Sampler::endFrame();
       PROFILE_END_NAMED(MainLoop);
+
+	  #ifdef TORQUE_DEMO_PURCHASE
+	  CheckTimer();
+	  CheckBlocker();
+	  #endif
    }
    
    return keepRunning;

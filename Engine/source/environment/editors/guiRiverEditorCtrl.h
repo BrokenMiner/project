@@ -40,7 +40,11 @@ struct ObjectRenderInst;
 class SceneManager;
 class SceneRenderState;
 class BaseMatInstance;
+<<<<<<< HEAD
 
+=======
+class River;
+>>>>>>> omni_engine
 
 class GuiRiverEditorCtrl : public EditTSCtrl
 {
@@ -66,6 +70,12 @@ class GuiRiverEditorCtrl : public EditTSCtrl
       ~GuiRiverEditorCtrl();
 
       DECLARE_CONOBJECT(GuiRiverEditorCtrl);
+
+      DECLARE_CALLBACK(void, onNodeModified, (const char* nodeIdx));
+      DECLARE_CALLBACK(void, onNodeSelected, (const char* nodeIdx));
+      DECLARE_CALLBACK(void, paletteSync, (const char* mode));
+      DECLARE_CALLBACK(void, onRiverSelected, (const char* road));
+      DECLARE_CALLBACK(StringTableEntry, createRiver, () );
 
       // SimObject
       bool onAdd();
@@ -109,10 +119,17 @@ class GuiRiverEditorCtrl : public EditTSCtrl
       F32 getNodeDepth();
       void setNodeDepth( F32 depth );
 
+<<<<<<< HEAD
 		Point3F getNodePosition();
       void setNodePosition(const Point3F& pos);
 
 		VectorF getNodeNormal();
+=======
+	  Point3F getNodePosition();
+	  void setNodePosition( Point3F &pos );
+
+	  VectorF getNodeNormal();
+>>>>>>> omni_engine
       void setNodeNormal( const VectorF &normal );
 
    protected:

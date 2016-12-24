@@ -1243,4 +1243,99 @@ void LightningBolt::update( F32 dt )
       isFading = false;
       elapsedTime = 0.0f;
    }
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnLightning_strikeObject(char * x__object, char * x__pSB)
+{
+Lightning* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+ShapeBase* pSB; Sim::findObject(x__pSB, pSB ); 
+{
+      object->strikeObject(pSB);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnLightning_strikeRandomPoint(char * x__object)
+{
+Lightning* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if (object->isServerObject()) 
+      object->strikeRandomPoint();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnLightning_warningFlashes(char * x__object)
+{
+Lightning* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if (object->isServerObject()) 
+      object->warningFlashes();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

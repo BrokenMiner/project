@@ -31,10 +31,18 @@ subject to the following restrictions:
 #include "BulletCollision/BroadphaseCollision/btDbvt.h"
 #include "LinearMath/btAabbUtil2.h"
 #include "LinearMath/btQuickprof.h"
+<<<<<<< HEAD
 #include "LinearMath/btSerializer.h"
 #include "BulletCollision/CollisionShapes/btConvexPolyhedron.h"
 #include "BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"
+=======
+#include "LinearMath/btStackAlloc.h"
+#include "LinearMath/btSerializer.h"
+#include "BulletCollision/CollisionShapes/btConvexPolyhedron.h"
+#include "BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h"
+
+>>>>>>> omni_engine
 //#define DISABLE_DBVT_COMPOUNDSHAPE_RAYCAST_ACCELERATION
 
 
@@ -72,6 +80,8 @@ m_broadphasePairCache(pairCache),
 m_debugDrawer(0),
 m_forceUpdateAllAabbs(true)
 {
+	m_stackAlloc = collisionConfiguration->getStackAllocator();
+	m_dispatchInfo.m_stackAllocator = m_stackAlloc;
 }
 
 
@@ -265,7 +275,11 @@ void	btCollisionWorld::rayTestSingle(const btTransform& rayFromTrans,const btTra
 										const btTransform& colObjWorldTransform,
 										RayResultCallback& resultCallback)
 {
+<<<<<<< HEAD
 	btCollisionObjectWrapper colObWrap(0,collisionShape,collisionObject,colObjWorldTransform,-1,-1);
+=======
+	btCollisionObjectWrapper colObWrap(0,collisionShape,collisionObject,colObjWorldTransform);
+>>>>>>> omni_engine
 	btCollisionWorld::rayTestSingleInternal(rayFromTrans,rayToTrans,&colObWrap,resultCallback);
 }
 
@@ -287,6 +301,7 @@ void	btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans,con
 
 		btConvexShape* convexShape = (btConvexShape*) collisionShape;
 		btVoronoiSimplexSolver	simplexSolver;
+<<<<<<< HEAD
 		btSubsimplexConvexCast subSimplexConvexCaster(castShape,convexShape,&simplexSolver);
 		
 		btGjkConvexCast	gjkConvexCaster(castShape,convexShape,&simplexSolver);
@@ -300,6 +315,15 @@ void	btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans,con
 			convexCasterPtr = &gjkConvexCaster;
 		
 		btConvexCast& convexCaster = *convexCasterPtr;
+=======
+#define USE_SUBSIMPLEX_CONVEX_CAST 1
+#ifdef USE_SUBSIMPLEX_CONVEX_CAST
+		btSubsimplexConvexCast convexCaster(castShape,convexShape,&simplexSolver);
+#else
+		//btGjkConvexCast	convexCaster(castShape,convexShape,&simplexSolver);
+		//btContinuousConvexCollision convexCaster(castShape,convexShape,&simplexSolver,0);
+#endif //#USE_SUBSIMPLEX_CONVEX_CAST
+>>>>>>> omni_engine
 
 		if (convexCaster.calcTimeOfImpact(rayFromTrans,rayToTrans,colObjWorldTransform,colObjWorldTransform,castResult))
 		{
@@ -331,17 +355,35 @@ void	btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans,con
 	} else {
 		if (collisionShape->isConcave())
 		{
+<<<<<<< HEAD
 
 			//ConvexCast::CastResult
+=======
+			//			BT_PROFILE("rayTestConcave");
+			if (collisionShape->getShapeType()==TRIANGLE_MESH_SHAPE_PROXYTYPE)
+			{
+				///optimized version for btBvhTriangleMeshShape
+				btBvhTriangleMeshShape* triangleMesh = (btBvhTriangleMeshShape*)collisionShape;
+				btTransform worldTocollisionObject = colObjWorldTransform.inverse();
+				btVector3 rayFromLocal = worldTocollisionObject * rayFromTrans.getOrigin();
+				btVector3 rayToLocal = worldTocollisionObject * rayToTrans.getOrigin();
+
+				//ConvexCast::CastResult
+>>>>>>> omni_engine
 				struct BridgeTriangleRaycastCallback : public btTriangleRaycastCallback
 				{
 					btCollisionWorld::RayResultCallback* m_resultCallback;
 					const btCollisionObject*	m_collisionObject;
+<<<<<<< HEAD
 					const btConcaveShape*	m_triangleMesh;
+=======
+					btTriangleMeshShape*	m_triangleMesh;
+>>>>>>> omni_engine
 
 					btTransform m_colObjWorldTransform;
 
 					BridgeTriangleRaycastCallback( const btVector3& from,const btVector3& to,
+<<<<<<< HEAD
 					btCollisionWorld::RayResultCallback* resultCallback, const btCollisionObject* collisionObject,const btConcaveShape*	triangleMesh,const btTransform& colObjWorldTransform):
 						//@BP Mod
 						btTriangleRaycastCallback(from,to, resultCallback->m_flags),
@@ -351,6 +393,17 @@ void	btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans,con
 							m_colObjWorldTransform(colObjWorldTransform)
 						{
 						}
+=======
+						btCollisionWorld::RayResultCallback* resultCallback, const btCollisionObject* collisionObject,btTriangleMeshShape*	triangleMesh,const btTransform& colObjWorldTransform):
+					//@BP Mod
+					btTriangleRaycastCallback(from,to, resultCallback->m_flags),
+						m_resultCallback(resultCallback),
+						m_collisionObject(collisionObject),
+						m_triangleMesh(triangleMesh),
+						m_colObjWorldTransform(colObjWorldTransform)
+					{
+					}
+>>>>>>> omni_engine
 
 
 					virtual btScalar reportHit(const btVector3& hitNormalLocal, btScalar hitFraction, int partId, int triangleIndex )
@@ -373,6 +426,7 @@ void	btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans,con
 
 				};
 
+<<<<<<< HEAD
 			btTransform worldTocollisionObject = colObjWorldTransform.inverse();
 			btVector3 rayFromLocal = worldTocollisionObject * rayFromTrans.getOrigin();
 			btVector3 rayToLocal = worldTocollisionObject * rayToTrans.getOrigin();
@@ -395,6 +449,12 @@ void	btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans,con
 				rcb.m_hitFraction = resultCallback.m_closestHitFraction;
 				concaveShape->processAllTrianglesRay(&rcb,rayFromLocal,rayToLocal);
 			}else
+=======
+				BridgeTriangleRaycastCallback rcb(rayFromLocal,rayToLocal,&resultCallback,collisionObjectWrap->getCollisionObject(),triangleMesh,colObjWorldTransform);
+				rcb.m_hitFraction = resultCallback.m_closestHitFraction;
+				triangleMesh->performRaycast(&rcb,rayFromLocal,rayToLocal);
+			} else
+>>>>>>> omni_engine
 			{
 				//generic (slower) case
 				btConcaveShape* concaveShape = (btConcaveShape*)collisionShape;
@@ -522,7 +582,11 @@ void	btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans,con
 						const btTransform& childTrans = m_compoundShape->getChildTransform(i);
 						btTransform childWorldTrans = m_colObjWorldTransform * childTrans;
 						
+<<<<<<< HEAD
 						btCollisionObjectWrapper tmpOb(0,childCollisionShape,m_collisionObject,childWorldTrans,-1,i);
+=======
+						btCollisionObjectWrapper tmpOb(0,childCollisionShape,m_collisionObject,childWorldTrans);
+>>>>>>> omni_engine
 						// replace collision shape so that callback can determine the triangle
 
 						
@@ -580,7 +644,11 @@ void	btCollisionWorld::objectQuerySingle(const btConvexShape* castShape,const bt
 											const btTransform& colObjWorldTransform,
 											ConvexResultCallback& resultCallback, btScalar allowedPenetration)
 {
+<<<<<<< HEAD
 	btCollisionObjectWrapper tmpOb(0,collisionShape,collisionObject,colObjWorldTransform,-1,-1);
+=======
+	btCollisionObjectWrapper tmpOb(0,collisionShape,collisionObject,colObjWorldTransform);
+>>>>>>> omni_engine
 	btCollisionWorld::objectQuerySingleInternal(castShape,convexFromTrans,convexToTrans,&tmpOb,resultCallback,allowedPenetration);
 }
 
@@ -836,7 +904,11 @@ void	btCollisionWorld::objectQuerySingleInternal(const btConvexShape* castShape,
 
                     LocalInfoAdder my_cb(i, &resultCallback);
 					
+<<<<<<< HEAD
 					btCollisionObjectWrapper tmpObj(colObjWrap,childCollisionShape,colObjWrap->getCollisionObject(),childWorldTrans,-1,i);
+=======
+					btCollisionObjectWrapper tmpObj(colObjWrap,childCollisionShape,colObjWrap->getCollisionObject(),childWorldTrans);
+>>>>>>> omni_engine
 
 					objectQuerySingleInternal(castShape, convexFromTrans,convexToTrans,
 						&tmpObj,my_cb, allowedPenetration);
@@ -1148,8 +1220,13 @@ struct btSingleContactCallback : public btBroadphaseAabbCallback
 		//only perform raycast if filterMask matches
 		if(m_resultCallback.needsCollision(collisionObject->getBroadphaseHandle())) 
 		{
+<<<<<<< HEAD
 			btCollisionObjectWrapper ob0(0,m_collisionObject->getCollisionShape(),m_collisionObject,m_collisionObject->getWorldTransform(),-1,-1);
 			btCollisionObjectWrapper ob1(0,collisionObject->getCollisionShape(),collisionObject,collisionObject->getWorldTransform(),-1,-1);
+=======
+			btCollisionObjectWrapper ob0(0,m_collisionObject->getCollisionShape(),m_collisionObject,m_collisionObject->getWorldTransform());
+			btCollisionObjectWrapper ob1(0,collisionObject->getCollisionShape(),collisionObject,collisionObject->getWorldTransform());
+>>>>>>> omni_engine
 
 			btCollisionAlgorithm* algorithm = m_world->getDispatcher()->findAlgorithm(&ob0,&ob1);
 			if (algorithm)
@@ -1184,8 +1261,13 @@ void	btCollisionWorld::contactTest( btCollisionObject* colObj, ContactResultCall
 ///it reports one or more contact points (including the one with deepest penetration)
 void	btCollisionWorld::contactPairTest(btCollisionObject* colObjA, btCollisionObject* colObjB, ContactResultCallback& resultCallback)
 {
+<<<<<<< HEAD
 	btCollisionObjectWrapper obA(0,colObjA->getCollisionShape(),colObjA,colObjA->getWorldTransform(),-1,-1);
 	btCollisionObjectWrapper obB(0,colObjB->getCollisionShape(),colObjB,colObjB->getWorldTransform(),-1,-1);
+=======
+	btCollisionObjectWrapper obA(0,colObjA->getCollisionShape(),colObjA,colObjA->getWorldTransform());
+	btCollisionObjectWrapper obB(0,colObjB->getCollisionShape(),colObjB,colObjB->getWorldTransform());
+>>>>>>> omni_engine
 
 	btCollisionAlgorithm* algorithm = getDispatcher()->findAlgorithm(&obA,&obB);
 	if (algorithm)

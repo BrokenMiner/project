@@ -202,7 +202,11 @@ void main()
    
    float Sat_NL_Att = saturate( dotNL * shadowed ) * lightBrightness;
    vec3 lightColorOut = lightMapParams.rgb * lightColor.rgb;
+<<<<<<< HEAD
    vec4 addToResult = (lightAmbient * (1 - ambientCameraFactor)) + ( lightAmbient * ambientCameraFactor * saturate(dot(normalize(-vsEyeRay), normal)) );
+=======
+   vec4 addToResult = lightAmbient;
+>>>>>>> omni_engine
 
    // TODO: This needs to be removed when lightmapping is disabled
    // as its extra work per-pixel on dynamic lit scenes.
@@ -229,6 +233,10 @@ void main()
       lightColorOut = debugColor;
    #endif
    
+<<<<<<< HEAD
    OUT_col = lightinfoCondition( lightColorOut, Sat_NL_Att, specular, addToResult );  
+=======
+   OUT_FragColor0 = lightinfoCondition( lightColorOut, Sat_NL_Att, specular, addToResult );  
+>>>>>>> omni_engine
    
 }

@@ -216,13 +216,21 @@ bool LightAnimData::AnimValue<COUNT>::animate( F32 time, F32 *output )
 	   valueRange = ( value2[i] - value1[i] ) / 25.0f;
 
       if ( !smooth[i] )
+<<<<<<< HEAD
          output[i] = (value1[i] + (keyFrameFrom * valueRange)) * initialValue;
+=======
+   	   output[i] = value1[i] + ( keyFrameFrom * valueRange );
+>>>>>>> omni_engine
       else
       {
          lerpFactor = scaledTime - posFrom;
    	   keyFrameLerp = ( keyFrameTo - keyFrameFrom ) * lerpFactor;
 
+<<<<<<< HEAD
          output[i] = (value1[i] + ((keyFrameFrom + keyFrameLerp) * valueRange)) * initialValue;
+=======
+         output[i] = value1[i] + ( ( keyFrameFrom + keyFrameLerp ) * valueRange );
+>>>>>>> omni_engine
       }
    }
 

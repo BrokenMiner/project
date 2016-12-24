@@ -290,7 +290,13 @@ void ProcessedMaterial::_initPassStateBlock( RenderPassData *rpd, GFXStateBlockD
 
    // The prepass will take care of writing to the 
    // zbuffer, so we don't have to by default.
+<<<<<<< HEAD
    if (  MATMGR->getPrePassEnabled() && 
+=======
+   // The prepass can't write to the backbuffer's zbuffer in OpenGL.
+   if (  MATMGR->getPrePassEnabled() && 
+         !GFX->getAdapterType() == OpenGL && 
+>>>>>>> omni_engine
          !mFeatures.hasFeature(MFT_ForwardShading))
       result.setZReadWrite( result.zEnable, false );
 
@@ -455,7 +461,19 @@ void ProcessedMaterial::_setStageData()
          if(!mStages[i].getTex( MFT_SpecularMap ))
             mMaterial->logError("Failed to load specular map %s for stage %i", _getTexturePath(mMaterial->mSpecularMapFilename[i]).c_str(), i);
       }
+<<<<<<< HEAD
 
+=======
+   //Sahara
+	  // AccuMap
+      if( mMaterial->mAccuMapFilename[i].isNotEmpty() )
+      {
+         mStages[i].setTex( MFT_AccuMap, _createTexture( mMaterial->mAccuMapFilename[i], &GFXDefaultStaticDiffuseProfile ) );
+         if(!mStages[i].getTex( MFT_AccuMap ))
+            mMaterial->logError("Failed to load accu map %s for stage %i", _getTexturePath(mMaterial->mAccuMapFilename[i]).c_str(), i);
+      }
+   //Sahara
+>>>>>>> omni_engine
       // EnironmentMap
       if( mMaterial->mEnvMapFilename[i].isNotEmpty() )
       {

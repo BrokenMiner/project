@@ -51,6 +51,7 @@ public:
 	///internal method used by the constraint solver, don't use them directly
 	virtual void getInfo2 (btConstraintInfo2* info);
 
+<<<<<<< HEAD
 	void setAxisA(btVector3& axisA) 
 	{
 		m_axisInA = axisA;
@@ -84,6 +85,12 @@ public:
 		(void) axis;
 		btAssert(0);
 	}
+=======
+	virtual	void	setParam(int num, btScalar value, int axis = -1) 
+	{
+		btAssert(0);
+	};
+>>>>>>> omni_engine
 
 	///return the local value of parameter
 	virtual	btScalar getParam(int num, int axis = -1) const 
@@ -94,6 +101,7 @@ public:
 		return 0.f;
 	}
 
+<<<<<<< HEAD
 	virtual	int	calculateSerializeBufferSize() const;
 
 	///fills the dataBuffer and returns the struct name (and 0 on failure)
@@ -149,4 +157,8 @@ SIMD_FORCE_INLINE	const char*	btGearConstraint::serialize(void* dataBuffer, btSe
 
 
 
+=======
+};
+
+>>>>>>> omni_engine
 #endif //BT_GEAR_CONSTRAINT_H

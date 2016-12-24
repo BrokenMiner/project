@@ -34,6 +34,7 @@
 
 
 
+<<<<<<< HEAD
 DECLARE_PRIMITIVE_R( bool );
 DECLARE_PRIMITIVE_R(S8);
 DECLARE_PRIMITIVE_R(U8);
@@ -42,6 +43,16 @@ DECLARE_PRIMITIVE_R(U32);
 DECLARE_PRIMITIVE_R(F32);
 DECLARE_PRIMITIVE_R(F64);
 DECLARE_PRIMITIVE_R(void*);
+=======
+DECLARE_PRIMITIVE( bool );
+DECLARE_PRIMITIVE( S8 );
+DECLARE_PRIMITIVE( U8 );
+DECLARE_PRIMITIVE( S32 );
+DECLARE_PRIMITIVE( U32 );
+DECLARE_PRIMITIVE( F32 );
+DECLARE_PRIMITIVE( F64 );
+DECLARE_PRIMITIVE( void* );
+>>>>>>> omni_engine
 
 
 //FIXME: this allows String to be used as a struct field type
@@ -52,7 +63,11 @@ DECLARE_PRIMITIVE_R(void*);
 // are considered to be owned by the API layer itself.  The rule here is that such
 // a string is only valid until the next API call is made.  Usually, control layers
 // will immediately copy and convert strings to their own string type.
+<<<<<<< HEAD
 _DECLARE_TYPE_R(String);
+=======
+_DECLARE_TYPE( String );
+>>>>>>> omni_engine
 template<>
 struct EngineTypeTraits< String > : public _EnginePrimitiveTypeTraits< String >
 {

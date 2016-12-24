@@ -38,7 +38,7 @@ bool triBoxOverlap(const Point3F &boxcenter, const Point3F &boxhalfsize, const P
 
 /// Massage stuff into right format for triBoxOverlap test. This is really
 /// just a helper function - use the other version if you want to be fast!
-inline bool triBoxOverlap(Box3F box, const Point3F& a, const Point3F& b, const Point3F& c)
+inline bool triBoxOverlap(const Box3F& box, const Point3F& a, const Point3F& b, const Point3F& c)
 {
    Point3F halfSize(box.len_x() / 2.f, box.len_y() / 2.f, box.len_z() / 2.f);
 

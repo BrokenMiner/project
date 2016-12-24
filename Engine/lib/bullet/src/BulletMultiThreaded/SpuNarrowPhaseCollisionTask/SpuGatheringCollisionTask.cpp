@@ -127,7 +127,11 @@ bool gUseEpa = false;
 //int gNumConvexPoints0=0;
 
 ///Make sure no destructors are called on this memory
+<<<<<<< HEAD
 ATTRIBUTE_ALIGNED16(struct)	CollisionTask_LocalStoreMemory
+=======
+struct	CollisionTask_LocalStoreMemory
+>>>>>>> omni_engine
 {
 	///This CollisionTask_LocalStoreMemory is mainly used for the SPU version, using explicit DMA
 	///Other platforms can use other memory programming models.
@@ -142,7 +146,11 @@ ATTRIBUTE_ALIGNED16(struct)	CollisionTask_LocalStoreMemory
 	btPersistentManifold	gPersistentManifoldBuffer;
 	CollisionShape_LocalStoreMemory gCollisionShapes[2];
 	bvhMeshShape_LocalStoreMemory bvhShapeData;
+<<<<<<< HEAD
 	ATTRIBUTE_ALIGNED16(SpuConvexPolyhedronVertexData convexVertexData[2]);
+=======
+	SpuConvexPolyhedronVertexData convexVertexData[2];
+>>>>>>> omni_engine
 	CompoundShape_LocalStoreMemory compoundShapeData[2];
 		
 	///The following pointers might either point into this local store memory, or to the original/other memory locations.
@@ -199,7 +207,11 @@ btAlignedObjectArray<CollisionTask_LocalStoreMemory*> sLocalStorePointers;
 
 void* createCollisionLocalStoreMemory()
 {
+<<<<<<< HEAD
     CollisionTask_LocalStoreMemory* localStore = (CollisionTask_LocalStoreMemory*)btAlignedAlloc( sizeof(CollisionTask_LocalStoreMemory),16);
+=======
+    CollisionTask_LocalStoreMemory* localStore = new CollisionTask_LocalStoreMemory;
+>>>>>>> omni_engine
     sLocalStorePointers.push_back(localStore);
     return localStore;
 }
@@ -208,7 +220,11 @@ void deleteCollisionLocalStoreMemory()
 {
     for (int i=0;i<sLocalStorePointers.size();i++)
     {
+<<<<<<< HEAD
         btAlignedFree(sLocalStorePointers[i]);
+=======
+        delete sLocalStorePointers[i];
+>>>>>>> omni_engine
     }
     sLocalStorePointers.clear();
 }
@@ -291,7 +307,11 @@ SIMD_FORCE_INLINE void small_cache_read_triple(	void* ls0, ppu_address_t ea0,
 
 
 
+<<<<<<< HEAD
 ATTRIBUTE_ALIGNED16(class) spuNodeCallback : public btNodeOverlapCallback
+=======
+class spuNodeCallback : public btNodeOverlapCallback
+>>>>>>> omni_engine
 {
 	SpuCollisionPairInput* m_wuInput;
 	SpuContactResult&		m_spuContacts;

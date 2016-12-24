@@ -50,10 +50,14 @@ public:
       if(mUsingPerfCounter)
          mUsingPerfCounter = QueryPerformanceCounter((LARGE_INTEGER *) &mPerfCountCurrent);
       if(!mUsingPerfCounter)
+<<<<<<< HEAD
       {
          mTickCountCurrent = GetTickCount();
          mTickCountNext = 0;
       }
+=======
+         mTickCountCurrent = GetTickCount();
+>>>>>>> omni_engine
    }
 
    const S32 getElapsedMs()

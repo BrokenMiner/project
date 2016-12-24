@@ -45,13 +45,21 @@ public:
    {
       SetMementoFrom(memento);
       if (m_pthis)
+<<<<<<< HEAD
          mOffset = ((int)m_pthis) - ((int)t);
+=======
+         mOffset = ((int_ptr)m_pthis) - ((intptr_t)t);
+>>>>>>> omni_engine
    }
 
    void rethis(T * t)
    {
       if (m_pthis)
+<<<<<<< HEAD
          m_pthis = (fastdelegate::detail::GenericClass *)(mOffset + (int)t);
+=======
+         m_pthis = (fastdelegate::detail::GenericClass *)(mOffset + (intptr_t)t);
+>>>>>>> omni_engine
    }
 
 protected:

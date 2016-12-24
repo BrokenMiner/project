@@ -103,7 +103,11 @@ class TheoraTextureFrame
       F32 mFrameDuration;
       
       TheoraTextureFrame()
+<<<<<<< HEAD
          : mLockedRect( NULL ), mFrameNumber(0), mFrameTime(0.0f), mFrameDuration(0.0f)
+=======
+         : mLockedRect( NULL )
+>>>>>>> omni_engine
       {
       }
 };

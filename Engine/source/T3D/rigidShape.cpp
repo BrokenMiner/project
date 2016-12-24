@@ -92,7 +92,11 @@ ConsoleDocClass( RigidShapeData,
    "@see RigidShape\n"
    "@see ShapeBase\n\n"
 
+<<<<<<< HEAD
    "@ingroup Physics\n"
+=======
+   "@ingroup Platform\n"
+>>>>>>> omni_engine
 );
 
 
@@ -149,11 +153,19 @@ ConsoleDocClass( RigidShape,
    "@see RigidShapeData\n"
    "@see ShapeBase\n\n"
    
+<<<<<<< HEAD
    "@ingroup Physics\n"
 );
 
 
 IMPLEMENT_CALLBACK( RigidShape, onEnterLiquid, void, ( const char* objId, F32 waterCoverage, const char* liquidType ),
+=======
+   "@ingroup Platform\n"
+);
+
+
+IMPLEMENT_CALLBACK( RigidShape, onEnterLiquid, void, ( const char* objId, const char* waterCoverage, const char* liquidType ),
+>>>>>>> omni_engine
 													 ( objId, waterCoverage, liquidType ),
    "@brief Called whenever this RigidShape object enters liquid.\n\n"
    "@param objId The ID of the rigidShape object.\n"
@@ -1088,7 +1100,11 @@ void RigidShape::updatePos(F32 dt)
       // Water script callbacks      
       if (!inLiquid && mWaterCoverage != 0.0f) 
       {
+<<<<<<< HEAD
          onEnterLiquid_callback(getIdString(), mWaterCoverage, mLiquidType.c_str() );
+=======
+         onEnterLiquid_callback(getIdString(), Con::getFloatArg(mWaterCoverage), mLiquidType.c_str() );
+>>>>>>> omni_engine
          inLiquid = true;
       }
       else if (inLiquid && mWaterCoverage == 0.0f) 
@@ -1146,6 +1162,7 @@ void RigidShape::updateForces(F32 /*dt*/)
 
    MatrixF currTransform;
    mRigid.getTransform(&currTransform);
+   mRigid.atRest = false;
 
    Point3F torque(0, 0, 0);
    Point3F force(0, 0, 0);
@@ -1732,3 +1749,94 @@ DefineEngineMethod( RigidShape, forceClientTransform, void, (),,
       object->forceClientTransform();
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRigidShape_forceClientTransform(char * x__object)
+{
+RigidShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if(object->isServerObject())
+   {
+      object->forceClientTransform();
+   }
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRigidShape_freezeSim(char * x__object, bool isFrozen)
+{
+RigidShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->freezeSim(isFrozen);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRigidShape_reset(char * x__object)
+{
+RigidShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->reset();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

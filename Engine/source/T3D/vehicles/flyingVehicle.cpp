@@ -134,11 +134,19 @@ bool FlyingVehicleData::preload(bool server, String &errorStr)
    if (!server) {
       for (S32 i = 0; i < MaxSounds; i++)
          if (sound[i])
+<<<<<<< HEAD
             Sim::findObject(SimObjectId((uintptr_t)sound[i]),sound[i]);
 
       for (S32 j = 0; j < MaxJetEmitters; j++)
          if (jetEmitter[j])
             Sim::findObject(SimObjectId((uintptr_t)jetEmitter[j]),jetEmitter[j]);
+=======
+            Sim::findObject(SimObjectId(sound[i]),sound[i]);
+
+      for (S32 j = 0; j < MaxJetEmitters; j++)
+         if (jetEmitter[j])
+            Sim::findObject(SimObjectId(jetEmitter[j]),jetEmitter[j]);
+>>>>>>> omni_engine
    }
 
    // Extract collision planes from shape collision detail level
@@ -244,7 +252,11 @@ void FlyingVehicleData::packData(BitStream* stream)
    {
       if (stream->writeFlag(sound[i]))
       {
+<<<<<<< HEAD
          SimObjectId writtenId = packed ? SimObjectId((uintptr_t)sound[i]) : sound[i]->getId();
+=======
+         SimObjectId writtenId = packed ? SimObjectId(sound[i]) : sound[i]->getId();
+>>>>>>> omni_engine
          stream->writeRangedU32(writtenId, DataBlockObjectIdFirst, DataBlockObjectIdLast);
       }
    }
@@ -253,7 +265,11 @@ void FlyingVehicleData::packData(BitStream* stream)
    {
       if (stream->writeFlag(jetEmitter[j]))
       {
+<<<<<<< HEAD
          SimObjectId writtenId = packed ? SimObjectId((uintptr_t)jetEmitter[j]) : jetEmitter[j]->getId();
+=======
+         SimObjectId writtenId = packed ? SimObjectId(jetEmitter[j]) : jetEmitter[j]->getId();
+>>>>>>> omni_engine
          stream->writeRangedU32(writtenId, DataBlockObjectIdFirst,DataBlockObjectIdLast);
       }
    }
@@ -802,3 +818,73 @@ void FlyingVehicle::useCreateHeight(bool val)
    createHeightOn = val;
    setMaskBits(HoverHeight);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnFlyingVehicle_useCreateHeight(char * x__object, bool enabled)
+{
+FlyingVehicle* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->useCreateHeight( enabled );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

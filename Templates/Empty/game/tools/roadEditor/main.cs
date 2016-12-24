@@ -87,6 +87,9 @@ function RoadEditorPlugin::onWorldEditorStartup( %this )
 
 function RoadEditorPlugin::onActivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   RoadEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    %this.readSettings();
    
    ToolsPaletteArray->RoadEditorAddRoadMode.performClick();
@@ -112,6 +115,11 @@ function RoadEditorPlugin::onActivated( %this )
 
 function RoadEditorPlugin::onDeactivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!RoadEditorPlugin.isActive)
+      return;
+   RoadEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    %this.writeSettings();
    
    RoadEditorGui.setVisible( false );

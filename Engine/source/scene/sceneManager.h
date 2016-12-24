@@ -117,6 +117,8 @@ class SceneManager
       /// If true, render the AABBs of objects for debugging.
       static bool smRenderBoundingBoxes;
 
+	  //Accessor for client render
+	  bool GetIsClient()	{return mIsClient;}
    protected:
 
       /// Whether this is the client-side scene.
@@ -141,9 +143,21 @@ class SceneManager
 
       F32 mVisibleDistance;
 
+<<<<<<< HEAD
       F32 mVisibleGhostDistance;
       F32 mNearClip;
 
+=======
+      //Winterleaf Modification
+      F32 mVisibleDistance_Ghost;
+      //Winterleaf Modification
+
+
+      F32 mNearClip;
+
+	  Point4F mFrustumOffset;
+
+>>>>>>> omni_engine
       FogData mFogData;
 
       WaterFogData mWaterFogData;
@@ -318,8 +332,16 @@ class SceneManager
       /// Returns the default visible distance for the scene.
       F32 getVisibleDistance() { return mVisibleDistance; }
 
+<<<<<<< HEAD
       void setVisibleGhostDistance( F32 dist ) { mVisibleGhostDistance = dist; }
       F32  getVisibleGhostDistance() { return mVisibleGhostDistance;}
+=======
+	   //Winterleaf Modification
+      void setVisibleDistance_Ghost( F32 dist ) { mVisibleDistance_Ghost = dist; }
+      F32  getVisibleDistance_Ghost() { return mVisibleDistance_Ghost;}
+      //Winterleaf Modification
+
+>>>>>>> omni_engine
 
       /// Used by LevelInfo to set the default near clip plane 
       /// for rendering the scene.
@@ -330,6 +352,9 @@ class SceneManager
 
       /// Returns the default near clip distance for the scene.
       F32 getNearClip() { return mNearClip; }
+
+	  void setFrustumOffset(const Point4F& offset) { mFrustumOffset = offset; }
+	  Point4F getFrustumOffset() { return mFrustumOffset; }
 
       /// @}
 

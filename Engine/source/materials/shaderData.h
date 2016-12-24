@@ -91,6 +91,7 @@ protected:
    /// @see LightManager::smActivateSignal
    static void _onLMActivate( const char *lm, bool activate );
 
+<<<<<<< HEAD
    enum
    {
       NumTextures = 8
@@ -108,6 +109,10 @@ public:
 
    bool hasSamplerDef(const String &samplerName, int &pos) const;
    bool hasRTParamsDef(const int pos) const { return mRTParams[pos]; }
+=======
+public:
+
+>>>>>>> omni_engine
 
    ShaderData();
 

@@ -48,14 +48,22 @@
 
 #define lerp mix
 
+<<<<<<< HEAD
 void tSetMatrixRow(inout float3x3 m, int row, float3 value)
+=======
+void tSetMatrixRow(out float3x3 m, int row, float3 value)
+>>>>>>> omni_engine
 {
    m[0][row] = value.x;
    m[1][row] = value.y;
    m[2][row] = value.z;
 }
 
+<<<<<<< HEAD
 void tSetMatrixRow(inout float4x4 m, int row, float4 value)
+=======
+void tSetMatrixRow(out float4x4 m, int row, float4 value)
+>>>>>>> omni_engine
 {
    m[0][row] = value.x;
    m[1][row] = value.y;
@@ -100,4 +108,6 @@ mat4 mat4FromRow( float r0c0, float r0c1, float r0c2, float r0c3,
 
 #ifdef TORQUE_PIXEL_SHADER
 	void clip(float a) { if(a < 0) discard;}
+   
+   out vec4 OUT_FragColor0;
 #endif

@@ -30,12 +30,29 @@
 //----------------------------------------------------------------------------
 
 ProcessObject::ProcessObject()
+<<<<<<< HEAD
  : mProcessTag( 0 ),   
    mOrderGUID( 0 ),
    mProcessTick( false ),
    mIsGameBase( false )
 { 
    mProcessLink.next = mProcessLink.prev = this;
+=======
+	: mProcessTag( 0 ),
+	  mOrderGUID( 0 ),
+	  mProcessTick( false ),
+	  mIsGameBase( false )
+#ifdef ENABLE_SIMOBJECT_TICK_EVENTS
+	  ,
+	  mProcessTickScriptNotifyBefore ( false),
+	  mProcessTickScriptNotifyAfter ( false),
+	  mProcessTickClient ( false),
+	  mProcessTickServer ( false),
+	  mCountersProcess( false )
+#endif
+{
+	mProcessLink.next = mProcessLink.prev = this;
+>>>>>>> omni_engine
 }
 
 void ProcessObject::plUnlink()
@@ -102,6 +119,85 @@ void ProcessObject::plJoin(ProcessObject * head)
    tail2->mProcessLink.next = head;
    head->mProcessLink.prev = tail2;
 }
+
+#ifdef ENABLE_SIMOBJECT_TICK_EVENTS
+bool ProcessObject::counterHas(const char* countername)
+{
+	TypeCounters::const_iterator got = mCounters.find(std::string(countername));
+	if (got == mCounters.end())
+		return false;
+	return true;
+}
+
+void ProcessObject::counterSuspend(const char* countername,bool suspend)
+{
+	if (counterHas(countername))
+	{
+		mCounters[std::string(countername)].mSuspend = suspend;
+	}
+
+}
+bool ProcessObject::counterAdd(const char* countername,U32 interval)
+{
+	//if (!counterHas(countername))
+	//{
+		mCounters[std::string(countername)].mInterval=interval;
+		mCounters[std::string(countername)].mCounter=0;
+		return true;
+	//}
+	//return false;
+}
+
+bool ProcessObject::counterRemove(const char* countername)
+{
+	if (counterHas(countername))
+	{
+		mCounters.erase(std::string(countername));
+		return true;
+	}
+	return false;
+}
+
+U32 ProcessObject::counterGetInterval(const char* countername)
+{
+	if (counterHas(countername))
+	{
+		U32 val = mCounters[std::string(countername)].mInterval;
+		return val;
+	}
+	return 0;
+}
+
+void ProcessObject::counterReset(const char* countername)
+{
+	if (counterHas(countername))
+	{
+		mCounters[std::string(countername)].mCounter=0;
+	}
+}
+
+void ProcessObject::countersClear()
+{
+	mCounters.clear();
+}
+
+void ProcessObject::countersIncrement()
+{
+	TypeCounters::const_iterator itr;
+	for(itr = mCounters.begin(); itr != mCounters.end(); ++itr)
+	{
+		if (!mCounters[(*itr).first].mSuspend)
+		mCounters[(*itr).first].mCounter++;
+		if (mCounters[(*itr).first].mCounter >= mCounters[(*itr).first].mInterval)
+		{
+			mCounters[(*itr).first].mCounter = 0;
+			counterNotify((*itr).first.c_str());
+		}
+		
+
+}
+}
+#endif
 
 //--------------------------------------------------------------------------
 
@@ -255,6 +351,7 @@ void ProcessList::advanceObjects()
 {
    PROFILE_START(ProcessList_AdvanceObjects);
 
+<<<<<<< HEAD
    // A little link list shuffling is done here to avoid problems
    // with objects being deleted from within the process method.
    ProcessObject list;
@@ -267,6 +364,38 @@ void ProcessList::advanceObjects()
       
       onTickObject(pobj);
    }
+=======
+	// A little link list shuffling is done here to avoid problems
+	// with objects being deleted from within the process method.
+	ProcessObject list;
+	list.plLinkBefore(mHead.mProcessLink.next);
+	mHead.plUnlink();
+	for (ProcessObject * pobj = list.mProcessLink.next; pobj != &list; pobj = list.mProcessLink.next)
+		{
+			pobj->plUnlink();
+			pobj->plLinkBefore(&mHead);
+#ifdef ENABLE_SIMOBJECT_TICK_EVENTS
+			SimObjectPtr<SceneObject> safePtr = static_cast<SceneObject*>( pobj );
+			//WLE - Vince
+			//Ok, this is used to allow a developer to have the script notified
+			//on each tick.
+			if ((safePtr->isTicking() && safePtr->isTickingScriptNotifyBefore()) || safePtr->mProcessTickClient)
+				safePtr->processTickNotifyBefore();
+
+			if (!safePtr.isNull() && safePtr.isValid())
+#endif			
+				onTickObject(pobj);
+#ifdef ENABLE_SIMOBJECT_TICK_EVENTS
+			if (!safePtr.isNull() && safePtr.isValid())
+				if ( ((safePtr->isTicking() && safePtr->isTickingScriptNotifyAfter()) || safePtr->mProcessTickClient))
+					safePtr->processTickNotifyAfter();
+
+			if (!safePtr.isNull() && safePtr.isValid())
+				if (safePtr->mCountersProcess)
+					safePtr->countersIncrement();
+#endif
+		}
+>>>>>>> omni_engine
 
    mTotalTicks++;
 

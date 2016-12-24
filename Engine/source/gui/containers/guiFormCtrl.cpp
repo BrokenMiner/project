@@ -267,7 +267,11 @@ void GuiFormCtrl::onRender(Point2I offset, const RectI &updateRect)
    // Draw our little bar, too
    if (mProfile->mBitmapArrayRects.size() >= 5)
    {
+<<<<<<< HEAD
       GFX->getDrawUtil()->clearBitmapModulation();
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
       S32 barStart = offset.x + textWidth;
       S32 barTop   = mThumbSize.y / 2 + offset.y - mProfile->mBitmapArrayRects[3].extent.y / 2;
@@ -334,6 +338,9 @@ void GuiFormCtrl::onMouseEnter(const GuiEvent &event)
       mMouseOver = true;
    }
 
+   // fade control
+   fadeControl();
+
 }
 
 void GuiFormCtrl::onMouseLeave(const GuiEvent &event)
@@ -342,6 +349,7 @@ void GuiFormCtrl::onMouseLeave(const GuiEvent &event)
    if(isMouseLocked())
       mDepressed = false;
    mMouseOver = false;
+   smCapturedControl = this;
 }
 
 void GuiFormCtrl::onMouseDown(const GuiEvent &event)
@@ -411,3 +419,83 @@ DefineEngineMethod( GuiFormCtrl, setCaption, void, ( const char* caption ),,
 }
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiFormCtrl_getMenuID(char * x__object)
+{
+GuiFormCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getMenuBarID());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiFormCtrl_setCaption(char * x__object, char * x__caption)
+{
+GuiFormCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* caption = (const char*)x__caption;
+{
+   object->setCaption( caption );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

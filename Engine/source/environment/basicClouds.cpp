@@ -319,7 +319,11 @@ void BasicClouds::renderObject( ObjectRenderInst *ri, SceneRenderState *state, B
       mShaderConsts->setSafe( mTexDirectionSC, mTexDirection[i] * mTexSpeed[i] );
       mShaderConsts->setSafe( mTexOffsetSC, mTexOffset[i] );         
 
+<<<<<<< HEAD
       GFX->setTexture( mDiffuseMapSC->getSamplerRegister(), mTexture[i] );                            
+=======
+      GFX->setTexture( 0, mTexture[i] );                            
+>>>>>>> omni_engine
       GFX->setVertexBuffer( mVB[i] );            
 
       GFX->drawIndexedPrimitive( GFXTriangleList, 0, 0, smVertCount, 0, smTriangleCount );

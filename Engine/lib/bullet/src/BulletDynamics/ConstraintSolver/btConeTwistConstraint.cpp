@@ -729,8 +729,12 @@ void btConeTwistConstraint::calcAngleInfo2(const btTransform& transA, const btTr
 			{
 				if(m_swingSpan1 < m_fixThresh)
 				{ // hinge around Y axis
+<<<<<<< HEAD
 //					if(!(btFuzzyZero(y)))
 					if((!(btFuzzyZero(x))) || (!(btFuzzyZero(z))))
+=======
+					if(!(btFuzzyZero(y)))
+>>>>>>> omni_engine
 					{
 						m_solveSwingLimit = true;
 						if(m_swingSpan2 >= m_fixThresh)
@@ -752,8 +756,12 @@ void btConeTwistConstraint::calcAngleInfo2(const btTransform& transA, const btTr
 				}
 				else
 				{ // hinge around Z axis
+<<<<<<< HEAD
 //					if(!btFuzzyZero(z))
 					if((!(btFuzzyZero(x))) || (!(btFuzzyZero(y))))
+=======
+					if(!btFuzzyZero(z))
+>>>>>>> omni_engine
 					{
 						m_solveSwingLimit = true;
 						if(m_swingSpan1 >= m_fixThresh)

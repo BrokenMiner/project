@@ -44,5 +44,9 @@ void main()
    if(blend - 0.0001 < 0.0)
       discard;
 
+<<<<<<< HEAD
    OUT_col = vec4( texture( textureMap, IN_texCoord ).rgb, blend );
+=======
+   OUT_FragColor0 = vec4( texture( textureMap, IN_texCoord ).rgb, blend );
+>>>>>>> omni_engine
 }

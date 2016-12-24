@@ -37,10 +37,17 @@ singleton ShaderData( PFX_EdgeAADetectShader )
    DXVertexShaderFile 	= "shaders/common/postFx/postFxV.hlsl";
    DXPixelShaderFile 	= "shaders/common/postFx/edgeaa/edgeDetectP.hlsl";
          
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/postFx/gl/postFxV.glsl";
    OGLPixelShaderFile   = "shaders/common/postFx/edgeaa/gl/edgeDetectP.glsl";
       
    samplerNames[0] = "$prepassBuffer";
+=======
+   //OGLVertexShaderFile  = "shaders/common/postFx/gl//postFxV.glsl";
+   //OGLPixelShaderFile   = "shaders/common/postFx/gl/passthruP.glsl";
+      
+   samplerNames[0] = "$inputTex";
+>>>>>>> omni_engine
    
    pixVersion = 3.0;
 };
@@ -50,11 +57,18 @@ singleton ShaderData( PFX_EdgeAAShader )
    DXVertexShaderFile 	= "shaders/common/postFx/edgeaa/edgeAAV.hlsl";
    DXPixelShaderFile 	= "shaders/common/postFx/edgeaa/edgeAAP.hlsl";
          
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/postFx/edgeaa/gl/edgeAAV.glsl";
    OGLPixelShaderFile   = "shaders/common/postFx/edgeaa/gl/edgeAAP.glsl";
       
    samplerNames[0] = "$edgeBuffer";
    samplerNames[1] = "$backBuffer";
+=======
+   //OGLVertexShaderFile  = "shaders/common/postFx/gl//postFxV.glsl";
+   //OGLPixelShaderFile   = "shaders/common/postFx/gl/passthruP.glsl";
+      
+   samplerNames[0] = "$inputTex";
+>>>>>>> omni_engine
    
    pixVersion = 3.0;
 };
@@ -64,10 +78,17 @@ singleton ShaderData( PFX_EdgeAADebugShader )
    DXVertexShaderFile 	= "shaders/common/postFx/postFxV.hlsl";
    DXPixelShaderFile 	= "shaders/common/postFx/edgeaa/dbgEdgeDisplayP.hlsl";
          
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/postFx/gl/postFxV.glsl";
    OGLPixelShaderFile   = "shaders/common/postFx/edgeaa/gl/dbgEdgeDisplayP.glsl";
       
    samplerNames[0] = "$edgeBuffer";
+=======
+   //OGLVertexShaderFile  = "shaders/common/postFx/gl//postFxV.glsl";
+   //OGLPixelShaderFile   = "shaders/common/postFx/gl/passthruP.glsl";
+      
+   samplerNames[0] = "$inputTex";
+>>>>>>> omni_engine
    
    pixVersion = 3.0;
 };
@@ -84,7 +105,11 @@ singleton PostEffect( EdgeDetectPostEffect )
    texture[0] = "#prepass";
    target = "#edge";
    
+<<<<<<< HEAD
    isEnabled = true;
+=======
+   isEnabled = false;
+>>>>>>> omni_engine
 };
 
 singleton PostEffect( EdgeAAPostEffect )

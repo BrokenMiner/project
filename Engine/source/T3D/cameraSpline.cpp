@@ -193,7 +193,11 @@ void CameraSpline::renderTimeMap()
    void *ptr = vb.lock();
    if(!ptr) return;
 
+<<<<<<< HEAD
    MRandomLCG random(1376312589 * (uintptr_t)this);
+=======
+   MRandomLCG random(1376312589 * (U32)this);
+>>>>>>> omni_engine
    S32 index = 0;
    for(Vector<TimeMap>::iterator itr=mTimeMap.begin(); itr != mTimeMap.end(); itr++)
    {
@@ -214,7 +218,11 @@ void CameraSpline::renderTimeMap()
 
    // Render the buffer
    GFX->pushWorldMatrix();
+<<<<<<< HEAD
    GFX->setupGenericShaders();
+=======
+   GFX->disableShaders();
+>>>>>>> omni_engine
    GFX->setVertexBuffer(vb);
    GFX->drawPrimitive(GFXLineStrip,0,index);
    GFX->popWorldMatrix();
@@ -279,10 +287,23 @@ F32 CameraSpline::getTime(F32 d)
 
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 void CameraSpline::value(F32 t, CameraSpline::Knot *result, bool skip_rotation)
 {
    // Do some easing in and out for t.
    if(!gBuilding)
+=======
+//Walkable Shapes
+//void CameraSpline::value(F32 t, CameraSpline::Knot *result, bool skip_rotation)
+//{
+//   // Do some easing in and out for t.
+//   if(!gBuilding)
+void CameraSpline::value(F32 t, CameraSpline::Knot *result, bool skip_rotation, bool skip_ease)
+{
+   // Do some easing in and out for t.
+   if(!gBuilding && !skip_ease)
+//Walkable Shapes
+>>>>>>> omni_engine
    {
       F32 oldT = t;
       if(oldT < 0.5f)

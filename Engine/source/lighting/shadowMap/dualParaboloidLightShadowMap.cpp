@@ -69,7 +69,12 @@ void DualParaboloidLightShadowMap::_render(  RenderPassManager* renderPass,
    GFX->pushActiveRenderTarget();
 
    mTarget->attachTexture(GFXTextureTarget::Color0, mShadowMapTex);
+<<<<<<< HEAD
    mTarget->attachTexture( GFXTextureTarget::DepthStencil, mShadowMapDepth );
+=======
+   mTarget->attachTexture( GFXTextureTarget::DepthStencil, 
+      _getDepthTarget( mShadowMapTex->getWidth(), mShadowMapTex->getHeight() ) );
+>>>>>>> omni_engine
    GFX->setActiveRenderTarget(mTarget);
    GFX->clear(GFXClearTarget | GFXClearStencil | GFXClearZBuffer, ColorI::WHITE, 1.0f, 0);
 

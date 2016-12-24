@@ -126,7 +126,11 @@ void GuiCursor::render(const Point2I &pos)
    renderPos.x -= (S32)( texWidth  * mRenderOffset.x );
    renderPos.y -= (S32)( texHeight * mRenderOffset.y );
 
+<<<<<<< HEAD
    GFX->getDrawUtil()->clearBitmapModulation();
+=======
+   //GFX->getDrawUtil()->clearBitmapModulation();   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    GFX->getDrawUtil()->drawBitmap(mTextureObject, renderPos);
 }
 
@@ -323,6 +327,8 @@ GuiControlProfile::GuiControlProfile(void) :
    mChildrenProfileName = NULL;
    mChildrenProfile = NULL;
 
+   mBoundControl = "All";	//ControlBoundAddition
+
    // inherit/copy values from GuiDefaultProfile
    GuiControlProfile *def = dynamic_cast<GuiControlProfile*>(Sim::findObject("GuiDefaultProfile"));
    if (def)
@@ -389,6 +395,7 @@ void GuiControlProfile::initPersistFields()
          "Whether the control can have the keyboard focus." );
       addField("mouseOverSelected", TypeBool,   Offset(mMouseOverSelected, GuiControlProfile));
       addField("modal",         TypeBool,       Offset(mModal, GuiControlProfile));
+	  addField("controlBound",         TypeGuiControl,       Offset(mBoundControl, GuiControlProfile));	//ControlBoundAddition
    
    endGroup( "Behavior" );
    
@@ -695,12 +702,18 @@ bool GuiControlProfile::loadFont()
    return true;
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiControlProfile, getStringWidth, S32, (const char* string),,
    "Get the width of the string in pixels.\n"
    "@param string String to get the width of."
    "@return width of the string in pixels." )
 {
    return object->mFont->getStrNWidth( string, dStrlen( string ) );
+=======
+DefineConsoleMethod( GuiControlProfile, getStringWidth, S32, ( const char * pString ), , "( pString )" )
+{
+    return object->mFont->getStrNWidth( pString, dStrlen( pString ) );
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -740,3 +753,74 @@ ConsoleSetType( TypeRectSpacingI )
    else
       Con::printf("RectSpacingI must be set as { t, b, l, r } or \"t b l r\"");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiControlProfile_getStringWidth(char * x__object, char * x__pString)
+{
+GuiControlProfile* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+const char* pString = (const char*)x__pString;
+{
+   return (S32)( object->mFont->getStrNWidth( pString, dStrlen( pString ) ));
+};
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

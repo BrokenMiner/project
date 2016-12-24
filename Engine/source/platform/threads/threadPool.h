@@ -204,8 +204,12 @@ class ThreadPool
             /// @param context The work context in which the item should be placed.
             ///    If NULL, the root context will be used.
             WorkItem( Context* context = 0 )
+<<<<<<< HEAD
                : mContext( context ? context : Context::ROOT_CONTEXT() ),
                  mExecuted( false )
+=======
+               : mContext( context ? context : Context::ROOT_CONTEXT() )
+>>>>>>> omni_engine
             {
             }
             
@@ -243,6 +247,9 @@ class ThreadPool
 
       typedef ThreadSafeRef< WorkItem > WorkItemPtr;
       struct GlobalThreadPool;
+#ifdef SocketThread	  
+	  struct NetworkThreadPool;
+#endif	  
       
    protected:
    
@@ -398,6 +405,9 @@ class ThreadPool
 
       /// Return the global thread pool singleton.
       static ThreadPool& GLOBAL();
+#ifdef SocketThread
+	  static ThreadPool& NETWORKTHREADPOOL();
+#endif
 };
 
 typedef ThreadPool::Context ThreadContext;
@@ -420,4 +430,21 @@ inline ThreadPool& ThreadPool::GLOBAL()
    return *( GlobalThreadPool::instance() );
 }
 
+#ifdef SocketThread
+struct ThreadPool::NetworkThreadPool : public ThreadPool, public ManagedSingleton< NetworkThreadPool >
+{
+   typedef ThreadPool Parent;
+   
+   NetworkThreadPool()
+      : Parent( "NETWORK",100 ) {}
+      
+   // For ManagedSingleton.
+   static const char* getSingletonName() { return "NetworkThreadPool"; }
+};
+
+inline ThreadPool& ThreadPool::NETWORKTHREADPOOL()
+{
+   return *( NetworkThreadPool::instance() );
+}
+#endif
 #endif // !_THREADPOOL_H_

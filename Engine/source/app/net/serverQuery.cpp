@@ -263,7 +263,12 @@ struct ServerFilter
          dFree( missionType );
       if ( buddyList )
          dFree( buddyList );
+<<<<<<< HEAD
    }
+=======
+   }   
+
+>>>>>>> omni_engine
 };
 
 static ServerFilter sActiveFilter;
@@ -368,6 +373,21 @@ class HeartbeatEvent : public SimEvent
 // Public query methods
 //-----------------------------------------------------------------------------
 
+IMPLEMENT_GLOBAL_CALLBACK( onServerQueryStatus, void, ( const char *status, const char *msg, const char *value ), ( status, msg, value ),
+   "A callback called by the engine for update query status .\n");
+
+IMPLEMENT_GLOBAL_CALLBACK( onClearGameTypes, void, (), (),
+   "A callback called by the engine.\n");
+
+IMPLEMENT_GLOBAL_CALLBACK( onAddGameType, void, ( const char *type ), ( type ),
+   "A callback called by the engine.\n");
+
+IMPLEMENT_GLOBAL_CALLBACK( onClearMissionTypes, void, (), (),
+   "A callback called by the engine.\n");
+
+IMPLEMENT_GLOBAL_CALLBACK( onAddMissionType, void, ( const char *type ), ( type ),
+   "A callback called by the engine.\n");
+
 //-----------------------------------------------------------------------------
 
 void queryLanServers(U32 port, U8 flags, const char* gameType, const char* missionType,
@@ -405,7 +425,12 @@ void queryLanServers(U32 port, U8 flags, const char* gameType, const char* missi
    Net::stringToAddress( addrText, &addr );
    pushPingBroadcast( &addr );
 
+<<<<<<< HEAD
    Con::executef("onServerQueryStatus", "start", "Querying LAN servers", "0");
+=======
+   onServerQueryStatus_callback("start", "Querying LAN servers", "0");
+
+>>>>>>> omni_engine
    processPingsAndQueries( gPingSession );
 }
 
@@ -433,7 +458,11 @@ DefineConsoleFunction( queryAllServers
       maxBots,regionMask,maxPing,minCPU,filterFlags,0,&buddyList);
 
    queryLanServers(lanPort, flags, gameType, missionType, minPlayers, maxPlayers, maxBots,
+<<<<<<< HEAD
       regionMask, maxPing, minCPU, filterFlags);
+=======
+	   regionMask, maxPing, minCPU, filterFlags);
+>>>>>>> omni_engine
 
 }
 
@@ -455,7 +484,11 @@ DefineConsoleFunction( queryLanServers
 
    clearServerList();
    queryLanServers(lanPort, flags, gameType, missionType, minPlayers, maxPlayers, maxBots,
+<<<<<<< HEAD
       regionMask, maxPing, minCPU, filterFlags);
+=======
+	   regionMask, maxPing, minCPU, filterFlags);
+>>>>>>> omni_engine
 
 }
 
@@ -483,7 +516,11 @@ void queryMasterServer(U8 flags, const char* gameType, const char* missionType,
    gGotFirstListPacket = false;
    sgServerQueryActive = true;
 
+<<<<<<< HEAD
    Con::executef( "onServerQueryStatus", "start", "Querying master server", "0");
+=======
+   onServerQueryStatus_callback("start", "Querying master server", "0");
+>>>>>>> omni_engine
 
    if ( buddyCount == 0 )
    {
@@ -540,7 +577,12 @@ void queryMasterServer(U8 flags, const char* gameType, const char* missionType,
 }
 
 DefineConsoleFunction( queryMasterServer
+<<<<<<< HEAD
                      , void, (  U32 flags
+=======
+                     , void, ( U32 lanPort
+                             , U32 flags
+>>>>>>> omni_engine
                              , const char * gameType
                              , const char * missionType
                              , U32 minPlayers
@@ -557,15 +599,25 @@ DefineConsoleFunction( queryMasterServer
    clearServerList();
    queryMasterServer(flags,gameType,missionType,minPlayers,maxPlayers,
       maxBots,regionMask,maxPing,minCPU,filterFlags,0,&buddyList);
+
 }
 
 //-----------------------------------------------------------------------------
 
 DefineConsoleFunction( querySingleServer
                      , void, ( const char* addrText, U8 flags )
+<<<<<<< HEAD
                      , (0), "querySingleServer(address, flags);" )
 {
    NetAddress addr;
+=======
+                     ,(0) , "querySingleServer(...);" )
+{
+
+   NetAddress addr;
+
+
+>>>>>>> omni_engine
    Net::stringToAddress( addrText, &addr );
    querySingleServer(&addr,flags);
 }
@@ -579,7 +631,11 @@ void queryFavoriteServers( U8 /*flags*/ )
    sActiveFilter.type = ServerFilter::Favorites;
    pushServerFavorites();
 
+<<<<<<< HEAD
    Con::executef( "onServerQueryStatus", "start", "Query favorites...", "0" );
+=======
+   onServerQueryStatus_callback("start", "Query favorites...", "0" );
+>>>>>>> omni_engine
    processPingsAndQueries( gPingSession );
 }
 
@@ -602,7 +658,11 @@ void querySingleServer( const NetAddress* addr, U8 /*flags*/ )
       }
    }
 
+<<<<<<< HEAD
    Con::executef( "onServerQueryStatus", "start", "Refreshing server...", "0" );
+=======
+   onServerQueryStatus_callback("start", "Refreshing server...", "0" );
+>>>>>>> omni_engine
    gServerPingCount = gServerQueryCount = 0;
    pushPingRequest( addr );
    processPingsAndQueries( gPingSession );
@@ -647,7 +707,11 @@ void cancelServerQuery()
    }
 }
 
+<<<<<<< HEAD
 DefineConsoleFunction( cancelServerQuery, void, (), , "cancelServerQuery();" )
+=======
+DefineConsoleFunction( cancelServerQuery, void, (), , "cancelServerQuery(...);" )
+>>>>>>> omni_engine
 {
    cancelServerQuery();
 }
@@ -675,14 +739,22 @@ void stopServerQuery()
    }
 }
 
+<<<<<<< HEAD
 DefineConsoleFunction( stopServerQuery, void, (), , "stopServerQuery();" )
+=======
+DefineConsoleFunction( stopServerQuery, void, (), , "stopServerQuery(...);" )
+>>>>>>> omni_engine
 {
    stopServerQuery();
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineConsoleFunction( startHeartbeat, void, (), , "startHeartbeat();" )
+=======
+DefineConsoleFunction( startHeartbeat, void, (), , "startHeartbeat(...);" )
+>>>>>>> omni_engine
 {
    if (validateAuthenticatedServer()) {
       gHeartbeatSeq++;
@@ -690,19 +762,31 @@ DefineConsoleFunction( startHeartbeat, void, (), , "startHeartbeat();" )
    }
 }
 
+<<<<<<< HEAD
 DefineConsoleFunction( stopHeartbeat, void, (), , "stopHeartbeat();" )
+=======
+DefineConsoleFunction( stopHeartbeat, void, (), , "stopHeartbeat(...);" )
+>>>>>>> omni_engine
 {
    gHeartbeatSeq++;
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DefineConsoleFunction( getServerCount, int, (), , "getServerCount();" )
+=======
+DefineConsoleFunction( getServerCount, int, (), , "getServerCount(...);" )
+>>>>>>> omni_engine
 {
    return gServerList.size();
 }
 
+<<<<<<< HEAD
 DefineConsoleFunction( setServerInfo, bool, (U32 index), , "setServerInfo(index);" )
+=======
+DefineConsoleFunction( setServerInfo, bool, (U32 index), , "setServerInfo(...);" )
+>>>>>>> omni_engine
 {
    if (index < gServerList.size()) {
       ServerInfo& info = gServerList[index];
@@ -1157,7 +1241,11 @@ static void processMasterServerQuery( U32 session )
             keepGoing = pickMasterServer();
             if ( keepGoing )
             {
+<<<<<<< HEAD
                Con::executef( "onServerQueryStatus", "update", "Switching master servers...", "0" );
+=======
+               onServerQueryStatus_callback("update", "Switching master servers...", "0" );
+>>>>>>> omni_engine
                Net::addressToString( &gMasterServerPing.address, addressString );
             }
          }
@@ -1193,7 +1281,11 @@ static void processMasterServerQuery( U32 session )
 
             Con::printf( "Requesting the server list from master server %s (%d tries left)...", addressString, gMasterServerPing.tryCount );
             if ( gMasterServerPing.tryCount < gMasterServerRetryCount - 1 )
+<<<<<<< HEAD
                Con::executef( "onServerQueryStatus", "update", "Retrying the master server...", "0" );
+=======
+               onServerQueryStatus_callback("update", "Retrying the master server...", "0" );
+>>>>>>> omni_engine
          }
       }
 
@@ -1205,7 +1297,11 @@ static void processMasterServerQuery( U32 session )
       else
       {
          Con::errorf( "There are no more master servers to try!" );
+<<<<<<< HEAD
          Con::executef( "onServerQueryStatus", "done", "No master servers found.", "0" );
+=======
+         onServerQueryStatus_callback("done", "No master servers found.", "0" );
+>>>>>>> omni_engine
       }
    }
 }
@@ -1337,7 +1433,11 @@ static void processPingsAndQueries( U32 session, bool schedule )
       else
          dSprintf( msg, sizeof( msg ), "%d servers found.", foundCount );
 
+<<<<<<< HEAD
       Con::executef( "onServerQueryStatus", "done", (const char*)msg, "1");
+=======
+      onServerQueryStatus_callback("done", msg, "1");
+>>>>>>> omni_engine
    }
 }
 
@@ -1432,7 +1532,11 @@ static void updatePingProgress()
       progress = F32( gServerPingCount - pingsLeft ) / F32( gServerPingCount * 2 );
 
    //Con::errorf( ConsoleLogEntry::General, "Ping progress - %d of %d left - progress = %.2f", pingsLeft, gServerPingCount, progress );
+<<<<<<< HEAD
    Con::executef( "onServerQueryStatus", "ping", msg, Con::getFloatArg( progress ) );
+=======
+   onServerQueryStatus_callback("ping", msg, Con::getFloatArg( progress ) );
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -1452,7 +1556,11 @@ static void updateQueryProgress()
       progress += ( F32( gServerQueryCount - queriesLeft ) / F32( gServerQueryCount * 2 ) );
 
    //Con::errorf( ConsoleLogEntry::General, "Query progress - %d of %d left - progress = %.2f", queriesLeft, gServerQueryCount, progress );
+<<<<<<< HEAD
    Con::executef( "onServerQueryStatus", "query", msg, Con::getFloatArg( progress ) );
+=======
+   onServerQueryStatus_callback("query", msg, Con::getFloatArg( progress ) );
+>>>>>>> omni_engine
 }
 
 
@@ -1470,6 +1578,7 @@ static void handleMasterServerGameTypesResponse( BitStream* stream, U32 /*key*/,
    U8 temp;
    char stringBuf[256];
    stream->read( &temp );
+<<<<<<< HEAD
    Con::executef("onClearGameTypes");
    for ( i = 0; i < U32( temp ); i++ )
    {
@@ -1483,6 +1592,21 @@ static void handleMasterServerGameTypesResponse( BitStream* stream, U32 /*key*/,
    {
       readCString( stream, stringBuf );
       Con::executef("onAddMissionType", stringBuf);
+=======
+   onClearGameTypes_callback();
+   for ( i = 0; i < U32( temp ); i++ )
+   {
+      readCString( stream, stringBuf );
+      onAddGameType_callback( stringBuf );
+   }
+
+   stream->read( &temp );
+   onClearMissionTypes_callback();
+   for ( i = 0; i < U32( temp ); i++ )
+   {
+      readCString( stream, stringBuf );
+      onAddMissionType_callback( stringBuf );
+>>>>>>> omni_engine
    }
 }
 
@@ -2103,3 +2227,187 @@ void DemoNetInterface::handleInfoPacket( const NetAddress* address, U8 packetTyp
 
 
 ConsoleFunctionGroupEnd( ServerQuery );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_cancelServerQuery()
+{
+{
+   cancelServerQuery();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_getServerCount()
+{
+{
+  return (int)( gServerList.size());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_queryAllServers(U32 lanPort, U32 flags, char * x__gameType, char * x__missionType, U32 minPlayers, U32 maxPlayers, U32 maxBots, U32 regionMask, U32 maxPing, U32 minCPU, U32 filterFlags)
+{
+
+const char* gameType = (const char*)x__gameType;
+const char* missionType = (const char*)x__missionType;
+
+
+
+
+{
+   U32 buddyList = 0;
+   clearServerList();
+   queryMasterServer(flags,gameType,missionType,minPlayers,maxPlayers,
+      maxBots,regionMask,maxPing,minCPU,filterFlags,0,&buddyList);
+   queryLanServers(lanPort, flags, gameType, missionType, minPlayers, maxPlayers, maxBots,
+	   regionMask, maxPing, minCPU, filterFlags);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_queryLanServers(U32 lanPort, U32 flags, char * x__gameType, char * x__missionType, U32 minPlayers, U32 maxPlayers, U32 maxBots, U32 regionMask, U32 maxPing, U32 minCPU, U32 filterFlags)
+{
+
+const char* gameType = (const char*)x__gameType;
+const char* missionType = (const char*)x__missionType;
+
+
+
+
+{
+   clearServerList();
+   queryLanServers(lanPort, flags, gameType, missionType, minPlayers, maxPlayers, maxBots,
+	   regionMask, maxPing, minCPU, filterFlags);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_queryMasterServer(U32 lanPort, U32 flags, char * x__gameType, char * x__missionType, U32 minPlayers, U32 maxPlayers, U32 maxBots, U32 regionMask, U32 maxPing, U32 minCPU, U32 filterFlags)
+{
+
+const char* gameType = (const char*)x__gameType;
+const char* missionType = (const char*)x__missionType;
+
+
+
+
+{
+   U32 buddyList = 0;
+   clearServerList();
+   queryMasterServer(flags,gameType,missionType,minPlayers,maxPlayers,
+      maxBots,regionMask,maxPing,minCPU,filterFlags,0,&buddyList);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_querySingleServer(char * x__addrText, U8 flags)
+{
+const char* addrText = (const char*)x__addrText;
+
+{
+   NetAddress addr;
+   Net::stringToAddress( addrText, &addr );
+   querySingleServer(&addr,flags);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_setServerInfo(U32 index)
+{
+bool wle_returnObject;
+{
+   if (index < gServerList.size()) {
+      ServerInfo& info = gServerList[index];
+      char addrString[256];
+      Net::addressToString( &info.address, addrString );
+      Con::setIntVariable("ServerInfo::Status",info.status);
+      Con::setVariable("ServerInfo::Address",addrString);
+      Con::setVariable("ServerInfo::Name",info.name);
+      Con::setVariable("ServerInfo::GameType",info.gameType);
+      Con::setVariable("ServerInfo::MissionName",info.missionName);
+      Con::setVariable("ServerInfo::MissionType",info.missionType);
+      Con::setVariable("ServerInfo::State",info.statusString);
+      Con::setVariable("ServerInfo::Info",info.infoString);
+      Con::setIntVariable("ServerInfo::PlayerCount",info.numPlayers);
+      Con::setIntVariable("ServerInfo::MaxPlayers",info.maxPlayers);
+      Con::setIntVariable("ServerInfo::BotCount",info.numBots);
+      Con::setIntVariable("ServerInfo::Version",info.version);
+      Con::setIntVariable("ServerInfo::Ping",info.ping);
+      Con::setIntVariable("ServerInfo::CPUSpeed",info.cpuSpeed);
+      Con::setBoolVariable("ServerInfo::Favorite",info.isFavorite);
+      Con::setBoolVariable("ServerInfo::Dedicated",info.isDedicated());
+      Con::setBoolVariable("ServerInfo::Password",info.isPassworded());
+      {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_startHeartbeat()
+{
+{
+   if (validateAuthenticatedServer()) {
+      gHeartbeatSeq++;
+      processHeartbeat(gHeartbeatSeq);     }
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_stopHeartbeat()
+{
+{
+   gHeartbeatSeq++;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_stopServerQuery()
+{
+{
+   stopServerQuery();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

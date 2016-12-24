@@ -31,6 +31,15 @@
 #include "gfx/gfxDevice.h"
 #include "gfx/gfxDrawUtil.h"
 #include "gui/containers/guiRolloutCtrl.h"
+//Copyright Winterleaf Entertainment L.L.C. 2013
+#include "core/strings/StringUnit.h" 
+#include <vector>
+#include <algorithm>
+#include "console/simObject.h"
+
+
+std::vector<U32> openWindows;
+//Copyright Winterleaf Entertainment L.L.C. 2013
 
 
 IMPLEMENT_CONOBJECT( GuiWindowCtrl );
@@ -67,6 +76,16 @@ IMPLEMENT_CALLBACK( GuiWindowCtrl, onCollapse, void, (), (),
 IMPLEMENT_CALLBACK( GuiWindowCtrl, onRestore, void, (), (),
    "Called when the window is restored from minimized, maximized, or collapsed state." );
 
+IMPLEMENT_CALLBACK( GuiWindowCtrl, onLoseFocus, void, (), () , "When the canvas the window is on loses focus");
+IMPLEMENT_CALLBACK( GuiWindowCtrl, onGainFocus, void, (), () , "When the canvas the window is on loses focus");
+
+//Copyright Winterleaf Entertainment L.L.C. 2013
+IMPLEMENT_CALLBACK( GuiWindowCtrl, onPopWindow, void, (), (),
+   "Called when the window is Popped out of the main canvas." );
+
+IMPLEMENT_CALLBACK( GuiWindowCtrl, onPopWindowClosed, void, (), (),
+   "Called when the window is Popped back into the main canvas." );
+//Copyright Winterleaf Entertainment L.L.C. 2013
 //-----------------------------------------------------------------------------
 
 GuiWindowCtrl::GuiWindowCtrl()
@@ -84,7 +103,17 @@ GuiWindowCtrl::GuiWindowCtrl()
       mCollapseGroup(-1),
       mCollapseGroupNum(-1),
       mIsCollapsed(false),
+<<<<<<< HEAD
       mIsMouseResizing(false)
+=======
+       mIsMouseResizing(false),
+//Copyright Winterleaf Entertainment L.L.C. 2013
+		mShowTitle(true),
+		mCanPopWindow(false),
+		mIsInPopUp(false),
+		mPopWindowShowTitle(true)
+//Copyright Winterleaf Entertainment L.L.C. 2013 
+>>>>>>> omni_engine
 {
    // mTitleHeight will change in instanciation most likely...
    mTitleHeight = 24;
@@ -98,10 +127,17 @@ GuiWindowCtrl::GuiWindowCtrl()
    mMouseMovingWin = false;
    mMouseResizeWidth = false;
    mMouseResizeHeight = false;
+<<<<<<< HEAD
    mMinimizeIndex = -1;
    mTabIndex = -1;
    mBitmapBounds = NULL;
    setExtent(100, 200);
+=======
+   setExtent(100, 200);
+   mMinimizeIndex = -1;
+   mTabIndex = -1;
+   mBitmapBounds = NULL;
+>>>>>>> omni_engine
 
    RectI closeRect(80, 2, 16, 16);
    mCloseButton = closeRect;
@@ -115,8 +151,24 @@ GuiWindowCtrl::GuiWindowCtrl()
    mCloseButtonPressed = false;
    mMaximizeButtonPressed = false;
    mMinimizeButtonPressed = false;
+<<<<<<< HEAD
 
    mText = "New Window";
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   mPopWindowButtonPressed = false;
+   mLastWindowPosition = Point2I(0,0);
+   mPopWindowLastExtent = Point2I(0,0);
+   closeRect.point.x -= 18;
+   mPopWindowButton = closeRect;
+   mOldParentGroup = NULL;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+
+   mText = "New Window";
+
+   // Context Menu Options
+   mContextFlag.set( contextMove );    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -148,6 +200,26 @@ void GuiWindowCtrl::initPersistFields()
          
    endGroup( "Window" );
 
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   addGroup( "Context Menu Options" );
+		addProtectedField("setTitle", TypeBool, NULL,
+			&_setTitle, &_getTitle,
+			"Allows the user to set the title of the control in the game." );
+
+	endGroup("Context Menu Options");
+
+	addGroup( "PopOut" );
+      
+		addField( "ShowTitle",         TypeBool,         Offset( mShowTitle,GuiWindowCtrl ),   "Whether the Title Ctrl will show." );   
+		addField( "AllowPopWindow",    TypeBool,         Offset( mCanPopWindow, GuiWindowCtrl),"Whether the window can be poped out.");
+		addField( "isInPopup",         TypeBool,         Offset( mIsInPopUp, GuiWindowCtrl),   "If the windowctrl is being shown on own canvas");
+		
+	endGroup( "PopOut" );				
+
+   // @Copyright end
+
    Parent::initPersistFields();
 }
 
@@ -166,6 +238,10 @@ void GuiWindowCtrl::moveFromCollapseGroup()
 
    S32 groupVec = mCollapseGroup;
    S32 vecPos = mCollapseGroupNum;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	if (parent->mCollapseGroupVec.size() == 0)
+		return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    S32 groupVecCount = parent->mCollapseGroupVec[groupVec].size() - 1;
 
    CollapseGroupNumVec collapseGroupNumVec;
@@ -243,6 +319,10 @@ void GuiWindowCtrl::moveFromCollapseGroup()
 
 void GuiWindowCtrl::moveToCollapseGroup(GuiWindowCtrl* hitWindow, bool orientation )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	if (this->mIsInPopUp || hitWindow->mIsInPopUp)
+		return;
+//Copyright Winterleaf Entertainment L.L.C. 2013	
    // Orientation 0 - window in question is being connected to top of another window
    // Orientation 1 - window in question is being connected to bottom of another window
 
@@ -256,6 +336,10 @@ void GuiWindowCtrl::moveToCollapseGroup(GuiWindowCtrl* hitWindow, bool orientati
    
    if(mCollapseGroup == attatchedGroupVec && vecPos != -1)
       return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (parent->mCollapseGroupVec.size() == 0)
+	  return;
+//Copyright Winterleaf Entertainment L.L.C. 2013	  
 
    CollapseGroupNumVec collapseGroupNumVec;
 
@@ -380,6 +464,10 @@ void GuiWindowCtrl::refreshCollapseGroups()
    GuiControl *parent = getParent();
    if( !parent )
       return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (parent->mCollapseGroupVec.size() == 0)
+	  return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    
    CollapseGroupNumVec	collapseGroupNumVec;
 
@@ -408,6 +496,10 @@ void GuiWindowCtrl::moveWithCollapseGroup(Point2I windowPosition)
    GuiControl *parent = getParent();
    if( !parent )
       return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (parent->mCollapseGroupVec.size() == 0)
+	  return;
+//Copyright Winterleaf Entertainment L.L.C. 2013	
 
    Point2I newChildPosition(0, 0);
    S32 addedPosition = getExtent().y;
@@ -462,6 +554,10 @@ void GuiWindowCtrl::handleCollapseGroup()
    GuiControl *parent = getParent();
    if( !parent )
       return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (parent->mCollapseGroupVec.size() == 0)
+	  return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
 
    CollapseGroupNumVec	collapseGroupNumVec;
 
@@ -550,6 +646,10 @@ bool GuiWindowCtrl::resizeCollapseGroup(bool resizeX, bool resizeY, Point2I resi
    CollapseGroupNumVec	collapseGroupNumVec;
 
    bool canResize = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (parent->mCollapseGroupVec.size() == 0)
+	   return false;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    CollapseGroupNumVec::iterator iter = parent->mCollapseGroupVec[mCollapseGroup].begin();
    for(; iter != parent->mCollapseGroupVec[mCollapseGroup].end(); iter++ )
    {
@@ -626,6 +726,9 @@ S32 GuiWindowCtrl::findHitEdges( const Point2I &globalPoint )
    else if( edges.top.hit( cursorHorzEdge ) )
    {
       // Only the top window in a collapse group can be extended from the top
+//Copyright Winterleaf Entertainment L.L.C. 2013
+		if (!parent->mCollapseGroupVec.size() == 0)
+//Copyright Winterleaf Entertainment L.L.C. 2013
       if( mCanCollapse && mCollapseGroup >= 0 )
       {
          if( parent->mCollapseGroupVec[mCollapseGroup].first() !=  this )
@@ -654,7 +757,14 @@ void GuiWindowCtrl::getSnappableWindows( Vector<GuiWindowCtrl*> &windowOutVector
       
       if( canCollapse && !childWindow->mCanCollapse )
          continue;
+<<<<<<< HEAD
 
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+		if (childWindow->mIsInPopUp)
+			continue;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+>>>>>>> omni_engine
       windowOutVector.push_back(childWindow);
    }
 
@@ -778,9 +888,20 @@ void GuiWindowCtrl::onMouseDown(const GuiEvent &event)
          mMaximizeButtonPressed = mCanMaximize;
       }
       else if (mCanMinimize && mMinimizeButton.pointInRect(localPoint))
+<<<<<<< HEAD
       {
          mMinimizeButtonPressed = mCanMinimize;
       }
+=======
+         mMinimizeButtonPressed = mCanMinimize;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+		else if (!mIsInPopUp && mCanPopWindow && mPopWindowButton.pointInRect (localPoint))
+			{
+			mPopWindowButtonPressed = true;
+			OnWindowPopOut();
+			}
+//Copyright Winterleaf Entertainment L.L.C. 2013
+>>>>>>> omni_engine
       else // We clicked anywhere else within the title
       {
          S32 docking = getDocking();
@@ -813,7 +934,11 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
 {
    GuiControl *parent = getParent();
    GuiCanvas *root = getRoot();
+<<<<<<< HEAD
    if ( !root ) 
+=======
+   if ( !root || /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */!isContextMovable()) 
+>>>>>>> omni_engine
       return;
 
    mMousePosition = globalToLocalCoord(event.mousePoint);
@@ -828,6 +953,7 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
 
    if (mMouseMovingWin && parent)
    {
+<<<<<<< HEAD
       if( parent != root )
       {
          newPosition.x = mOrigBounds.point.x + deltaMousePosition.x;
@@ -839,6 +965,18 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
          newPosition.x = getMax(0, getMin(parent->getWidth() - getWidth(), mOrigBounds.point.x + deltaMousePosition.x));
          newPosition.y = getMax(0, getMin(parent->getHeight() - getHeight(), mOrigBounds.point.y + deltaMousePosition.y));
       }
+=======
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+      newPosition.x = getMax(0, getMin(parent->getWidth() - getWidth(), mOrigBounds.point.x + deltaMousePosition.x));   
+      newPosition.y = getMax(0, getMin(parent->getHeight() - getHeight(), mOrigBounds.point.y + deltaMousePosition.y));    
+	  if( parent != root )
+      {
+         mRepositionWindow = true;
+      }
+      // @Copyright end
+>>>>>>> omni_engine
 
       // Check snapping to other windows
       if( mEdgeSnap )
@@ -930,12 +1068,18 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
       if( mResizeEdge & edgeBottom )
       {
          newExtent.y = getMin(parent->getHeight(), mOrigBounds.extent.y + deltaMousePosition.y);
+		 if(newExtent.y > mMaxExtent.y)   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+			 newExtent.y = mMaxExtent.y;     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
          resizeY = true;
       }
       else if ( mResizeEdge & edgeTop )
       {
          newExtent.y = getMin(parent->getHeight(), mOrigBounds.extent.y - deltaMousePosition.y);
+<<<<<<< HEAD
          if ( newExtent.y >= mMinExtent.y )
+=======
+		 if ( newExtent.y >= mMinExtent.y /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */&& newExtent.y <= mMaxExtent.y)
+>>>>>>> omni_engine
          {
             // Standard reposition as we're not travelling into the min extent range
             newPosition.y = mOrigBounds.point.y + deltaMousePosition.y;
@@ -944,7 +1088,17 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
          {
             // We're into the min extent, so adjust the position up to the min extent
             // so the window doesn't appear to jump
+<<<<<<< HEAD
             newPosition.y = mOrigBounds.point.y + (mOrigBounds.extent.y - mMinExtent.y);
+=======
+			 if(newExtent.y < mMinExtent.y)
+				newPosition.y = mOrigBounds.point.y + (mOrigBounds.extent.y - mMinExtent.y);
+			 else
+			 {
+				 newPosition.y = mOrigBounds.point.y - (mMaxExtent.y - mOrigBounds.extent.y);      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+				 newExtent.y = mMaxExtent.y;    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+			 }
+>>>>>>> omni_engine
          }
          resizeY = true;
       }
@@ -952,12 +1106,18 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
       if( mResizeEdge & edgeRight )
       {
          newExtent.x = getMin(parent->getWidth(), mOrigBounds.extent.x + deltaMousePosition.x);
+		 if( newExtent.x > mMaxExtent.x)  // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+			 newExtent.x = mMaxExtent.x;  // Copyright (C) 2013 WinterLeaf Entertainment LLC.
          resizeX = true;
       }
       else if( mResizeEdge & edgeLeft )
       {
          newExtent.x = getMin(parent->getWidth(), mOrigBounds.extent.x - deltaMousePosition.x);
+<<<<<<< HEAD
          if ( newExtent.x >= mMinExtent.x )
+=======
+		 if ( newExtent.x >= mMinExtent.x /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */&& newExtent.x <= mMaxExtent.x)
+>>>>>>> omni_engine
          {
             // Standard reposition as we're not travelling into the min extent range
             newPosition.x = mOrigBounds.point.x + deltaMousePosition.x;
@@ -966,7 +1126,17 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
          {
             // We're into the min extent, so adjust the position up to the min extent
             // so the window doesn't appear to jump
+<<<<<<< HEAD
             newPosition.x = mOrigBounds.point.x + (mOrigBounds.extent.x - mMinExtent.x);
+=======
+			 if(newExtent.x < mMinExtent.x)
+				newPosition.x = mOrigBounds.point.x + (mOrigBounds.extent.x - mMinExtent.x);
+			 else
+			 {
+				 newPosition.x = mOrigBounds.point.x - (mMaxExtent.x - mOrigBounds.extent.x);      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+				 newExtent.x = mMaxExtent.x;    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+			 }
+>>>>>>> omni_engine
          }
          resizeX = true;
       }
@@ -982,7 +1152,11 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
    if(mCanCollapse && mCollapseGroup >= 0 && mResizeWindow == true )
    {	
       // Resize the window if allowed
+<<<<<<< HEAD
       if( newExtent.y >= getMinExtent().y && newExtent.x >= getMinExtent().x)
+=======
+	   if( newExtent.y >= getMinExtent().y && newExtent.x >= getMinExtent().x /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */&& newExtent.y <= getMaxExtent().y && newExtent.x <= getMaxExtent().x)
+>>>>>>> omni_engine
       {
          mIsMouseResizing = true;
          if( resizeCollapseGroup( resizeX, resizeY, (getPosition() - newPosition), (getExtent() - newExtent) ) )
@@ -1193,7 +1367,14 @@ void GuiWindowCtrl::onMouseUp(const GuiEvent &event)
                break;
             }
          }
+<<<<<<< HEAD
          
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013    
+			if ( windowList[i]->mCollapseGroup != -1)
+			{
+//Copyright Winterleaf Entertainment L.L.C. 2013	         
+>>>>>>> omni_engine
          if( (windowList[i]->mCollapseGroupNum == -1) || (windowList[i]->mCollapseGroupNum == mCollapseGroupNum - 1) ||
                (!parent->mCollapseGroupVec.empty() && parent->mCollapseGroupVec[windowList[i]->mCollapseGroup].last() ==  windowList[i]) )
          {
@@ -1205,6 +1386,9 @@ void GuiWindowCtrl::onMouseUp(const GuiEvent &event)
                snapType = 1;
                newExtent.x = snapRect.right.position.x - snapRect.left.position.x;
                break;
+//Copyright Winterleaf Entertainment L.L.C. 2013			   
+            }
+//Copyright Winterleaf Entertainment L.L.C. 2013
             }
          }
       }
@@ -1212,7 +1396,11 @@ void GuiWindowCtrl::onMouseUp(const GuiEvent &event)
       // We're either moving out of a collapse group or moving to another one
       // Not valid for windows not previously in a group
       if( mCollapseGroup >= 0 && 
+<<<<<<< HEAD
 		  (snapType == -1 || (hitWindow && snapType >= 0 && mCollapseGroup != hitWindow->mCollapseGroup)))
+=======
+         ( snapType == -1 || ( snapType >= 0 && mCollapseGroup != hitWindow->mCollapseGroup) ) )
+>>>>>>> omni_engine
          moveFromCollapseGroup();
       
       // No window to connect to
@@ -1271,6 +1459,30 @@ bool GuiWindowCtrl::onKeyDown(const GuiEvent &event)
 
 //-----------------------------------------------------------------------------
 
+void GuiWindowCtrl::onRightMouseUp(const GuiEvent &evt)
+{
+	Parent::onRightMouseUp(evt);    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiWindowCtrl::setWindowTitle( const char *title)
+{
+   mText = title;
+}
+
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+
+const char *GuiWindowCtrl::getWindowTitle( )
+{
+   return mText;
+}
+
+//-----------------------------------------------------------------------------
+
+
 void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
    if( !mProfile || mProfile->mFont == NULL || mProfile->mBitmapArrayRects.size() < NumBitmaps )
@@ -1286,6 +1498,7 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
    bool isKey = (!firstResponder || controlIsChild(firstResponder));
 
    U32 topBase = isKey ? BorderTopLeftKey : BorderTopLeftNoKey;
+<<<<<<< HEAD
    winRect.point.x += mBitmapBounds[BorderLeft].extent.x;
    winRect.point.y += mBitmapBounds[topBase + 2].extent.y;
 
@@ -1302,6 +1515,28 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
    drawUtil->drawBitmapSR(mTextureObject, offset, mBitmapBounds[topBase]);
    drawUtil->drawBitmapSR(mTextureObject, Point2I(offset.x + getWidth() - mBitmapBounds[topBase+1].extent.x, offset.y),
                    mBitmapBounds[topBase + 1]);
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	if (mShowTitle ==true && mPopWindowShowTitle == true)
+		{
+		winRect.point.x += mBitmapBounds[BorderLeft].extent.x;
+		winRect.point.y += mBitmapBounds[topBase + 2].extent.y;
+	
+		winRect.extent.x -= mBitmapBounds[BorderLeft].extent.x + mBitmapBounds[BorderRight].extent.x;
+		winRect.extent.y -= mBitmapBounds[topBase + 2].extent.y + mBitmapBounds[BorderBottom].extent.y;
+   
+		winRect.extent.x += 1;
+		}
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	GFX->getDrawUtil()->drawRectFill(winRect, mProfile->mFillColor);
+
+	//GFX->getDrawUtil()->clearBitmapModulation();
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	if (mShowTitle==true && mPopWindowShowTitle == true)
+		{
+   GFX->getDrawUtil()->drawBitmapSR(mTextureObject, offset, mBitmapBounds[topBase]);
+		GFX->getDrawUtil()->drawBitmapSR(mTextureObject, Point2I(offset.x + getWidth() - mBitmapBounds[topBase+1].extent.x, offset.y),mBitmapBounds[topBase + 1]);
+>>>>>>> omni_engine
 
    RectI destRect;
    destRect.point.x = offset.x + mBitmapBounds[topBase].extent.x;
@@ -1310,7 +1545,11 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
    destRect.extent.y = mBitmapBounds[topBase + 2].extent.y;
    RectI stretchRect = mBitmapBounds[topBase + 2];
    stretchRect.inset(1,0);
+<<<<<<< HEAD
    drawUtil->drawBitmapStretchSR(mTextureObject, destRect, stretchRect);
+=======
+   GFX->getDrawUtil()->drawBitmapStretchSR(mTextureObject, destRect, stretchRect);
+>>>>>>> omni_engine
 
    destRect.point.x = offset.x;
    destRect.point.y = offset.y + mBitmapBounds[topBase].extent.y;
@@ -1318,7 +1557,11 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
    destRect.extent.y = getHeight() - mBitmapBounds[topBase].extent.y - mBitmapBounds[BorderBottomLeft].extent.y;
    stretchRect = mBitmapBounds[BorderLeft];
    stretchRect.inset(0,1);
+<<<<<<< HEAD
    drawUtil->drawBitmapStretchSR(mTextureObject, destRect, stretchRect);
+=======
+   GFX->getDrawUtil()->drawBitmapStretchSR(mTextureObject, destRect, stretchRect);
+>>>>>>> omni_engine
 
    destRect.point.x = offset.x + getWidth() - mBitmapBounds[BorderRight].extent.x;
    destRect.extent.x = mBitmapBounds[BorderRight].extent.x;
@@ -1327,10 +1570,17 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 
    stretchRect = mBitmapBounds[BorderRight];
    stretchRect.inset(0,1);
+<<<<<<< HEAD
    drawUtil->drawBitmapStretchSR(mTextureObject, destRect, stretchRect);
 
    drawUtil->drawBitmapSR(mTextureObject, offset + Point2I(0, getHeight() - mBitmapBounds[BorderBottomLeft].extent.y), mBitmapBounds[BorderBottomLeft]);
    drawUtil->drawBitmapSR(mTextureObject, offset + getExtent() - mBitmapBounds[BorderBottomRight].extent, mBitmapBounds[BorderBottomRight]);
+=======
+   GFX->getDrawUtil()->drawBitmapStretchSR(mTextureObject, destRect, stretchRect);
+
+   GFX->getDrawUtil()->drawBitmapSR(mTextureObject, offset + Point2I(0, getHeight() - mBitmapBounds[BorderBottomLeft].extent.y), mBitmapBounds[BorderBottomLeft]);
+   GFX->getDrawUtil()->drawBitmapSR(mTextureObject, offset + getExtent() - mBitmapBounds[BorderBottomRight].extent, mBitmapBounds[BorderBottomRight]);
+>>>>>>> omni_engine
 
    destRect.point.x = offset.x + mBitmapBounds[BorderBottomLeft].extent.x;
    destRect.extent.x = getWidth() - mBitmapBounds[BorderBottomLeft].extent.x - mBitmapBounds[BorderBottomRight].extent.x;
@@ -1340,13 +1590,21 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
    stretchRect = mBitmapBounds[BorderBottom];
    stretchRect.inset(1,0);
 
+<<<<<<< HEAD
    drawUtil->drawBitmapStretchSR(mTextureObject, destRect, stretchRect);
+=======
+   GFX->getDrawUtil()->drawBitmapStretchSR(mTextureObject, destRect, stretchRect);
+>>>>>>> omni_engine
 
    // Draw the title
    // dhc addition: copied/modded from renderJustifiedText, since we enforce a
    // different color usage here. NOTE: it currently CAN overdraw the controls
    // if mis-positioned or 'scrunched' in a small width.
+<<<<<<< HEAD
    drawUtil->setBitmapModulation(mProfile->mFontColor);
+=======
+   GFX->getDrawUtil()->setBitmapModulation(mProfile->mFontColor);
+>>>>>>> omni_engine
    S32 textWidth = mProfile->mFont->getStrWidth((const UTF8 *)mText);
    Point2I start(0,0);
 
@@ -1361,7 +1619,11 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
    if( textWidth > winRect.extent.x ) start.set( 0, 0 );
    // center the vertical
 //   start.y = ( winRect.extent.y - ( font->getHeight() - 2 ) ) / 2;
+<<<<<<< HEAD
    drawUtil->drawText( mProfile->mFont, start + offset + mProfile->mTextOffset, mText );
+=======
+   GFX->getDrawUtil()->drawText( mProfile->mFont, start + offset + mProfile->mTextOffset, mText );
+>>>>>>> omni_engine
 
    // Deal with rendering the titlebar controls
    AssertFatal(root, "Unable to get the root GuiCanvas.");
@@ -1380,8 +1642,13 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
             bmp += BmpHilite;
       }
 
+<<<<<<< HEAD
       drawUtil->clearBitmapModulation();
       drawUtil->drawBitmapSR(mTextureObject, offset + mCloseButton.point, mBitmapBounds[bmp]);
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      GFX->getDrawUtil()->drawBitmapSR(mTextureObject, offset + mCloseButton.point, mBitmapBounds[bmp]);
+>>>>>>> omni_engine
    }
 
    // Draw the maximize button
@@ -1399,8 +1666,13 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
             bmp += BmpHilite;
       }
 
+<<<<<<< HEAD
       drawUtil->clearBitmapModulation();
       drawUtil->drawBitmapSR( mTextureObject, offset + mMaximizeButton.point, mBitmapBounds[bmp] );
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      GFX->getDrawUtil()->drawBitmapSR( mTextureObject, offset + mMaximizeButton.point, mBitmapBounds[bmp] );
+>>>>>>> omni_engine
    }
 
    // Draw the minimize button
@@ -1418,6 +1690,7 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
             bmp += BmpHilite;
       }
 
+<<<<<<< HEAD
       drawUtil->clearBitmapModulation();
       drawUtil->drawBitmapSR( mTextureObject, offset + mMinimizeButton.point, mBitmapBounds[bmp] );
    }
@@ -1428,6 +1701,34 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
       renderChildControls( offset, updateRect );
    }
 }
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      GFX->getDrawUtil()->drawBitmapSR( mTextureObject, offset + mMinimizeButton.point, mBitmapBounds[bmp] );
+   }
+
+//Copyright Winterleaf Entertainment L.L.C. 2013
+			if (mCanPopWindow && !mIsInPopUp)
+				{
+				bmp = BmpStates * BmpPopWindow;
+				if( mPopWindowButton.pointInRect( mMousePosition ) )
+					{
+					if( mPopWindowButtonPressed )
+						bmp += BmpDown;
+					else
+						bmp += BmpHilite;
+					}
+				GFX->getDrawUtil()->clearBitmapModulation();
+				GFX->getDrawUtil()->drawBitmapSR( mTextureObject, offset + mPopWindowButton.point, mBitmapBounds[bmp] );
+				}
+			}
+//Copyright Winterleaf Entertainment L.L.C. 2013
+		   if( !mMinimized )
+		   {
+		      // Render the children
+		      renderChildControls( offset, updateRect );
+		   }
+		}
+>>>>>>> omni_engine
 
 //=============================================================================
 //    Misc.
@@ -1438,6 +1739,7 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 
 const RectI GuiWindowCtrl::getClientRect()
 {
+<<<<<<< HEAD
    if( !mProfile || mProfile->mBitmapArrayRects.size() < NumBitmaps )
       return Parent::getClientRect();
       
@@ -1457,6 +1759,43 @@ const RectI GuiWindowCtrl::getClientRect()
    // winRect.inset( mSizingOptions.mPadding.point.x, mSizingOptions.mPadding.point.y );
 
    return winRect;
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	if (mShowTitle==true && mPopWindowShowTitle==true)
+		{
+//Copyright Winterleaf Entertainment L.L.C. 2013
+		   if( !mProfile || mProfile->mBitmapArrayRects.size() < NumBitmaps )
+		      return Parent::getClientRect();
+      
+		   if( !mBitmapBounds )
+		      mBitmapBounds = mProfile->mBitmapArrayRects.address();
+
+		   RectI winRect;
+		   winRect.point.x = mBitmapBounds[BorderLeft].extent.x;
+		   winRect.point.y = mBitmapBounds[BorderTopKey].extent.y;
+
+		   winRect.extent.y = getHeight() - ( winRect.point.y  + mBitmapBounds[BorderBottom].extent.y );
+		   winRect.extent.x = getWidth() - ( winRect.point.x  + mBitmapBounds[BorderRight].extent.x );
+
+		   // Finally, inset it by padding
+		   // Inset by padding.  margin is specified for all t/b/l/r but 
+		   // uses only pointx pointy uniformly on both ends. This should be fixed. - JDD
+		   // winRect.inset( mSizingOptions.mPadding.point.x, mSizingOptions.mPadding.point.y );
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	   return winRect;
+		}
+	else
+		{
+		RectI winRect = Parent::getClientRect();
+		if (mIsInPopUp &&  (mCanClose ||  mCanMinimize || mCanMaximize))
+			{
+			if (winRect.point.y - mBitmapBounds[BorderTopKey].extent.y >= 0)
+				winRect.point.y = winRect.point.y - mBitmapBounds[BorderTopKey].extent.y;
+			}
+		return winRect;
+		}
+//Copyright Winterleaf Entertainment L.L.C. 2013
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -1480,7 +1819,11 @@ void GuiWindowCtrl::positionButtons(void)
 
    // Until a pref, if alignment is LEFT, put buttons RIGHT justified.
    // ELSE, put buttons LEFT justified.
+<<<<<<< HEAD
    S32 closeLeft = mainOff.x, closeTop = mainOff.y, closeOff = buttonWidth + 2;
+=======
+   int closeLeft = mainOff.x, closeTop = mainOff.y, closeOff = buttonWidth + 2;
+>>>>>>> omni_engine
    if ( mProfile->mAlignment == GuiControlProfile::LeftJustify )
    {
       closeOff = -closeOff;
@@ -1489,6 +1832,13 @@ void GuiWindowCtrl::positionButtons(void)
    RectI closeRect(closeLeft, closeTop, buttonHeight, buttonWidth);
    mCloseButton = closeRect;
 
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	if (mCanPopWindow && !mIsInPopUp)
+	{
+		closeRect.point.x += closeOff;
+		mPopWindowButton = closeRect;
+	}
+//Copyright Winterleaf Entertainment L.L.C. 2013
    // Always put Minimize on left side of Maximize.
    closeRect.point.x += closeOff;
    if (closeOff>0)
@@ -1537,6 +1887,214 @@ bool GuiWindowCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 
    return true;
 }
+
+//Copyright Winterleaf Entertainment L.L.C. 2013
+void GuiWindowCtrl::setVisible(bool value)
+{
+	if (mIsInPopUp)
+		{
+		const char* tname = this->getName();
+		if (dStrcmp (tname,"")==0)
+			{
+			Con::errorf ("POP OUT FAILED, GuiWindow is not named!");
+			return;
+			}
+		const char* newName =StringTable->insert(( String("Canvas_") + String(tname)).c_str());
+		GuiCanvas* targetCanvas = dynamic_cast<GuiCanvas*>(Sim::findObject(newName));
+		if (targetCanvas)
+			if (value)
+				targetCanvas->getPlatformWindow()->show();
+			else
+				targetCanvas->getPlatformWindow()->hide();
+			
+		}
+	else
+		Parent::setVisible(value);
+}
+
+
+
+void GuiWindowCtrl::OnWindowPopOut()
+{
+	
+	if (!this->getName())
+	   {
+		Con::errorf ("POP OUT FAILED, GuiWindow is not named!");
+		return;
+	   }
+	const char* tname = this->getName();
+	if (tname==NULL)
+		tname = StringTable->insert("");
+	const char* newName =StringTable->insert(( String("Canvas_") + String(tname)).c_str());
+	//Lets see if the target canvas already exists. 
+	GuiCanvas* targetCanvas = dynamic_cast<GuiCanvas*>(Sim::findObject(newName));
+	//If it doesn't exist, then we can pop out to one.
+	if (!targetCanvas)
+		{
+		//Save the original position and extent for use when they close the window.
+		mOrigPosition = this->getPosition();
+		mOrigExtent = this->getExtent();
+		mOldParentGroup = this->getParent();
+		mPopWindowShowTitle = false;
+		String s = String("$pref::Video::Canvas::mode");
+		const char *pref = Con::getVariable( StringTable->insert(s.c_str()));
+		const char* newvideomode = pref;
+		const char * p2 = StringTable->insert( StringUnit::getUnit( pref, 2, " \t\n") );
+		const char * p3 = StringTable->insert( StringUnit::getUnit( pref, 3, " \t\n") );
+		const char * p4 = StringTable->insert( StringUnit::getUnit( pref, 4, " \t\n") );
+		const char * p5 = StringTable->insert( StringUnit::getUnit( pref, 5, " \t\n") );
+		if (mPopWindowLastExtent.x==0 && mPopWindowLastExtent.y == 0)
+			{
+			newvideomode =StringTable->insert( (
+			    String(Con::getIntArg(this->getExtent().x)) + String(" ") + 
+				 String(Con::getIntArg(this->getExtent().y)) + String(" ") + 
+				 String(p2)  + String(" ") + 
+				 String(p3)  + String(" ") + 
+				 String(p4)  + String(" ") + 
+				 String(p5)).c_str());
+			}
+		else
+			{
+			newvideomode =StringTable->insert( (
+			    String(Con::getIntArg(this->mPopWindowLastExtent.x)) + String(" ") + 
+				 String(Con::getIntArg(this->mPopWindowLastExtent.y)) + String(" ") + 
+				 String(p2)  + String(" ") + 
+				 String(p3)  + String(" ") + 
+				 String(p4)  + String(" ") + 
+				 String(p5)).c_str());
+			}
+		targetCanvas = new GuiCanvas();
+		targetCanvas->setOverrideMode(newvideomode);
+		targetCanvas->assignName(StringTable->insert(newName));
+		targetCanvas->setInternalName(StringTable->insert(newName));
+		targetCanvas->registerObject();
+		targetCanvas->setWindowTitle(StringTable->insert(this->mText.c_str()));
+		targetCanvas->setContentControl(this);
+
+		if( !mBitmapBounds )
+		   mBitmapBounds = mProfile->mBitmapArrayRects.address();
+
+		
+		//VertResizeBottom gives us problems when we pop a control
+		//out of the game canvas.  It's math is based on the 
+		//Window Bar across the top of the window.  Since it is gone
+		//in the case of a pop out we need to adjust the position
+		//of any child gui control that is using that setting.
+		//We must also reverse this out when the window is put
+		//back into the game canvas.
+		for( iterator i = begin(); i != end(); i++)
+			{
+			GuiControl *ctrl = static_cast<GuiControl *>(*i);
+			if (ctrl->getParent()!=this)
+				continue;
+
+			if (ctrl->mVertSizing == vertResizeBottom)
+				{
+				Point2I position =ctrl->getPosition ();
+				if (position.y - mBitmapBounds[BorderTopKey].extent.y > 0)
+					{
+					position.y -= mBitmapBounds[BorderTopKey].extent.y;
+					ctrl->setPosition(position);
+					}
+				/*else if (position.y == 3)
+					{
+					position.y += (mBitmapBounds[BorderTopKey].extent.y * 2);
+					ctrl->setPosition(position);
+					}*/
+
+				}
+			}
+
+
+		targetCanvas->mIsPopUp = true;
+		if (mLastWindowPosition.x != 0 && mLastWindowPosition.y != 0)
+			targetCanvas->setOverridePosition(mLastWindowPosition);
+		Point2I newpos = targetCanvas->getPlatformWindow()->getPosition();
+		mIsInPopUp=true;
+
+		openWindows.push_back(targetCanvas->getId());
+		onPopWindow_callback();
+		}
+}
+void GuiWindowCtrl::UpdateRendering()
+	{
+	RectI clientRect = getClientRect();
+	layoutControls( clientRect );
+	GuiControl *parent = getParent();
+	S32 docking = getDocking();
+	if( parent && docking != Docking::dockNone && docking != Docking::dockInvalid )
+		setUpdateLayout( updateParent );
+	// Set the button coords
+	positionButtons();
+	}
+
+void GuiWindowCtrl::PopUpClosed(GuiCanvas* canvas)
+{
+	if (std::find(openWindows.begin(), openWindows.end(), this->getId()) != openWindows.end())
+		openWindows.erase(std::remove(openWindows.begin(), openWindows.end(), canvas->getId()), openWindows.end());
+}
+void GuiWindowCtrl::PopUpClosed()
+	{
+	//VertResizeBottom gives us problems when we pop a control
+	//out of the game canvas.  It's math is based on the 
+	//Window Bar across the top of the window.  Since it is gone
+	//in the case of a pop out we need to adjust the position
+	//of any child gui control that is using that setting.
+	//We must also reverse this out when the window is put
+	//back into the game canvas.
+	
+
+	if( !mBitmapBounds )
+		mBitmapBounds = mProfile->mBitmapArrayRects.address();
+	for( iterator i = begin(); i != end(); i++)
+		{
+		GuiControl *ctrl = static_cast<GuiControl *>(*i);
+		if (ctrl->getParent()!=this)
+			continue;
+		/*if (ctrl->mIsContainer)
+			continue;*/
+		if (ctrl->mVertSizing == vertResizeBottom)
+			{
+			Point2I position =ctrl->getPosition ();
+			position.y += mBitmapBounds[BorderTopKey].extent.y;
+			ctrl->setPosition(position);
+			}
+		}
+	onPopWindowClosed_callback();
+}
+
+void GuiWindowCtrl::CloseAllWindows()
+{
+	for (std::vector<U32>::iterator it = openWindows.begin(); it != openWindows.end(); ++it)
+	{
+		U32 id = *it;
+		GuiCanvas* canvas;
+		canvas = dynamic_cast<GuiCanvas*>(Sim::findObject(id));
+		if (canvas)
+		{
+			canvas->onWindowClose();
+		}
+	}
+	openWindows.clear();
+}
+
+
+void GuiWindowCtrl::ClosePopOut()
+{
+	if (mIsInPopUp)
+		{
+		if (std::find(openWindows.begin(), openWindows.end(), this->getId())!=openWindows.end())
+			openWindows.erase(std::remove(openWindows.begin(), openWindows.end(), this->getId()), openWindows.end());
+		const char* tname = this->getName();
+		if (tname==NULL)
+			return;
+		const char* newName =StringTable->insert(( String("Canvas_") + String(tname)).c_str());
+		GuiCanvas* targetCanvas = dynamic_cast<GuiCanvas*>(Sim::findObject(newName));
+		targetCanvas->onWindowClose();
+		}
+		//PopUpClosed();
+}
+//Copyright Winterleaf Entertainment L.L.C. 2013
 
 //-----------------------------------------------------------------------------
 
@@ -1617,6 +2175,10 @@ void GuiWindowCtrl::selectWindow(void)
 {
    // First make sure this window is the front most of its siblings
    GuiControl *parent = getParent();
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	if (parent->mCollapseGroupVec.size() == 0)
+		return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    if (parent && *parent->end() != this )
    {
       // Valid collapse groups have to be selected together
@@ -1642,6 +2204,11 @@ void GuiWindowCtrl::selectWindow(void)
 
 void GuiWindowCtrl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent &lastGuiEvent)
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	//OMNI POPUP code, we don't mess w/ the cursor if the guiwindow is in its own canvas.
+   if (mIsInPopUp)
+	   return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    GuiCanvas *pRoot = getRoot();
    if( !pRoot )
       return;
@@ -1663,7 +2230,13 @@ void GuiWindowCtrl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEve
       desiredCursor = PlatformCursorController::curResizeNWSE;
    else if( hitEdges & edgeTop && hitEdges & edgeRight && mResizeHeight )
       desiredCursor = PlatformCursorController::curResizeNESW;
+<<<<<<< HEAD
    else if( hitEdges & edgeTop && mResizeHeight )
+=======
+
+   else if( hitEdges & edgeTop && mResizeHeight )
+
+>>>>>>> omni_engine
       desiredCursor = PlatformCursorController::curResizeHorz;
    else if ( hitEdges & edgeLeft && mResizeWidth )
       desiredCursor = PlatformCursorController::curResizeVert;
@@ -1718,6 +2291,10 @@ void GuiWindowCtrl::parentResized(const RectI &oldParentRect, const RectI &newPa
          
          // Lets grab the information we need (this should probably be already stored on each individual window object)
          S32 groupNum = mCollapseGroup;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+			if (parent->mCollapseGroupVec.size() == 0)
+				return;
+//Copyright Winterleaf Entertainment L.L.C. 2013
          S32 groupMax = parent->mCollapseGroupVec[ groupNum ].size() - 1;
 
          // Set up vars that we're going to be using
@@ -1886,7 +2463,33 @@ void GuiWindowCtrl::parentResized(const RectI &oldParentRect, const RectI &newPa
 // MARK: ---- Console Methods ----
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+
+DefineConsoleFunction(CloseAllPopOuts, void, (), ,
+	"()"
+	"Returns all pop'd out windows to the main canvas."
+	)
+{
+	GuiWindowCtrl::CloseAllWindows();
+}
+DefineEngineMethod( GuiWindowCtrl, ClosePopOut, void, (),,
+   "Puts the guiwindow back on the main canvas." )
+{
+   object->ClosePopOut();
+}
+
+
+
+DefineEngineMethod( GuiWindowCtrl, OpenPopOut, void, (),,
+   "Puts the guiwindow on a new canvas." )
+{
+   object->OnWindowPopOut();
+}
+//Copyright Winterleaf Entertainment L.L.C. 2013
+>>>>>>> omni_engine
 DefineEngineMethod( GuiWindowCtrl, selectWindow, void, (),,
    "Bring the window to the front." )
 {
@@ -1919,6 +2522,38 @@ DefineEngineMethod( GuiWindowCtrl, attachTo, void, ( GuiWindowCtrl* window ),,
 
 //-----------------------------------------------------------------------------
 
+DefineEngineMethod( GuiWindowCtrl, setWindowTitle, void, ( const char *title),,
+   "Sets the title of the window." )
+{
+	object->setWindowTitle( title);
+}
+
+//-----------------------------------------------------------------------------
+
+DefineEngineMethod( GuiWindowCtrl, getWindowTitle, const char *, ( ),,
+   "Returns the title of the window." )
+{
+	return object->getWindowTitle( );
+}
+
+//-----------------------------------------------------------------------------
+
+DefineEngineMethod( GuiWindowCtrl, setContextTitle, void, (bool title),,
+   "Displays the option to set the title of the window." )
+{
+	object->setContextTitle( title );
+}
+
+//-----------------------------------------------------------------------------
+
+DefineEngineMethod( GuiWindowCtrl, isTitleSet, bool, ( ),,
+   "Returns if the title can be set or not." )
+{
+	return object->isTitleSet( );
+}
+
+//-----------------------------------------------------------------------------
+
 DefineEngineStaticMethod( GuiWindowCtrl, attach, void, ( GuiWindowCtrl* bottomWindow, GuiWindowCtrl* topWindow ),,
    "Attach @a bottomWindow to @topWindow so that @a bottomWindow moves along with @a topWindow when it is dragged.\n\n"
    "@param bottomWindow \n"
@@ -1932,3 +2567,171 @@ DefineEngineStaticMethod( GuiWindowCtrl, attach, void, ( GuiWindowCtrl* bottomWi
 
    bottomWindow->moveToCollapseGroup( topWindow, 1 );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_CloseAllPopOuts()
+{
+{
+	GuiWindowCtrl::CloseAllWindows();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_attachTo(char * x__object, char * x__window)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+GuiWindowCtrl* window; Sim::findObject(x__window, window ); 
+{
+   object->moveToCollapseGroup( window, 1 );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_ClosePopOut(char * x__object)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->ClosePopOut();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_getWindowTitle(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+	{wle_returnObject =object->getWindowTitle( );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiWindowCtrl_isTitleSet(char * x__object)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+	{wle_returnObject =object->isTitleSet( );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_OpenPopOut(char * x__object)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->OnWindowPopOut();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_selectWindow(char * x__object)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->selectWindow();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_setCollapseGroup(char * x__object, bool state)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setCollapseGroup(state);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_setContextTitle(char * x__object, bool title)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setContextTitle( title );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_setWindowTitle(char * x__object, char * x__title)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* title = (const char*)x__title;
+{
+	object->setWindowTitle( title);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiWindowCtrl_toggleCollapseGroup(char * x__object)
+{
+GuiWindowCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->toggleCollapseGroup();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -253,6 +253,7 @@ function parseMissionGroupForIds( %className, %childGroup )
          %classIds = %classIds @ parseMissionGroupForIds( %className, (%currentGroup).getObject(%i).getId());
    } 
    return trim( %classIds );
+   //return %classIds;
 }
 
 //------------------------------------------------------------------------------

@@ -15,7 +15,12 @@
    #if _XBOX_VER >= 200 
       #pragma message("Compiling on Xbox 360...")
       #define PLATFORM_XENON
+<<<<<<< HEAD
 	#elif defined( _WIN32 ) || defined( WIN32 )
+=======
+   #elif defined( _WIN64 ) || defined( WIN64 ) || \
+         defined( _WIN32 ) || defined( WIN32 )
+>>>>>>> omni_engine
 		#pragma message("Compiling on Windows...")
 		#define PLATFORM_WINDOWS
    #elif defined(SN_TARGET_PS3)

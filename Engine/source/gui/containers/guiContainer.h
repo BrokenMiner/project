@@ -91,7 +91,11 @@ class  GuiContainer : public GuiControl
       inline void setAnchorRight(bool val) { mSizingOptions.mAnchorRight = val; }
 
       ControlSizing getSizingOptions() const { return mSizingOptions; }
+<<<<<<< HEAD
       void setSizingOptions(const ControlSizing& val) { mSizingOptions = val; }
+=======
+      void setSizingOptions(ControlSizing val) { mSizingOptions = val; }
+>>>>>>> omni_engine
 
       /// @}   
 

@@ -47,13 +47,20 @@ gui control at a time, is for it to get a rewrite.
 
 IMPLEMENT_CONOBJECT(GuiDecoyCtrl);
 
+IMPLEMENT_CALLBACK(GuiDecoyCtrl, onMouseEnter, void, (), (), "");
+IMPLEMENT_CALLBACK(GuiDecoyCtrl, onMouseLeave, void, (), (), "");
+
 ConsoleDocClass( GuiDecoyCtrl,
 				"@brief Designed soley for buttons, primarily used in editor.\n\n"
 				"Currently editor use only, no real application without extension.\n\n "
 				"@internal");
 
 GuiDecoyCtrl::GuiDecoyCtrl() : mIsDecoy(true),
+<<<<<<< HEAD
 							   mMouseOver(false),
+=======
+							   //mMouseOver(false),
+>>>>>>> omni_engine
 							   mDecoyReference(NULL)
 {
 }
@@ -98,6 +105,8 @@ void GuiDecoyCtrl::onMouseUp(const GuiEvent &event)
 		}
 		mVisible = true;
 	}
+
+	Parent::onMouseUp( event );
 }
 
 void GuiDecoyCtrl::onMouseDown(const GuiEvent &event)
@@ -120,6 +129,7 @@ void GuiDecoyCtrl::onMouseDown(const GuiEvent &event)
 		mVisible = true;
 	}
 	
+	Parent::onMouseDown( event );
    execConsoleCallback();
    setUpdate();
 }
@@ -164,6 +174,7 @@ void GuiDecoyCtrl::onMouseMove(const GuiEvent &event)
 
 void GuiDecoyCtrl::onMouseDragged(const GuiEvent &event)
 {
+	Parent::onMouseDragged( event );
 }
 
 void GuiDecoyCtrl::onMouseEnter(const GuiEvent &event)
@@ -172,8 +183,16 @@ void GuiDecoyCtrl::onMouseEnter(const GuiEvent &event)
       return;
 
    setUpdate();
+<<<<<<< HEAD
    Con::executef( this , "onMouseEnter" );
    mMouseOver = true;
+=======
+   onMouseEnter_callback();
+   mMouseOver = true;
+
+   // fade control
+   fadeControl();		// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 }
 
 void GuiDecoyCtrl::onMouseLeave(const GuiEvent &event)
@@ -182,8 +201,14 @@ void GuiDecoyCtrl::onMouseLeave(const GuiEvent &event)
       return;
 
    setUpdate();
+<<<<<<< HEAD
    Con::executef( this , "onMouseLeave" );
    mMouseOver = false;
+=======
+   onMouseLeave_callback();
+   mMouseOver = false;
+   smCapturedControl = this;		// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 }
 
 bool GuiDecoyCtrl::onMouseWheelUp( const GuiEvent &event )
@@ -218,8 +243,14 @@ void GuiDecoyCtrl::onRightMouseDown(const GuiEvent &)
 {
 }
 
+<<<<<<< HEAD
 void GuiDecoyCtrl::onRightMouseUp(const GuiEvent &)
 {
+=======
+void GuiDecoyCtrl::onRightMouseUp(const GuiEvent /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */&event)
+{
+	Parent::onRightMouseUp(event);		// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 }
 
 void GuiDecoyCtrl::onRightMouseDragged(const GuiEvent &)

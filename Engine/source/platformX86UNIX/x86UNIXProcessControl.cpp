@@ -31,13 +31,17 @@
 #include <signal.h>
 
 #ifndef TORQUE_DEDICATED
+<<<<<<< HEAD
 #include <SDL.h>
+=======
+#include <SDL/SDL.h>
+>>>>>>> omni_engine
 #endif
 
 //-----------------------------------------------------------------------------
 // This is a mainly a debugging function for intercepting a nonzero exit code
 // and generating a core dump for a stack trace.
-// Need an S64 here because postQuitMessage uses a U32, and
+// Need an S64 here because postQuitMessage uses a U32, and 
 // forceshutdown uses an S32.  So S64 is needed to
 // accomodate them both
 static void CheckExitCode(S64 exitCode)
@@ -141,7 +145,11 @@ void ProcessControlInit()
 }
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 void Platform::postQuitMessage(const S32 in_quitVal)
+=======
+void Platform::postQuitMessage(const U32 in_quitVal)
+>>>>>>> omni_engine
 {
    // if we have a window send a quit event, otherwise just force shutdown
 #if 0
@@ -171,6 +179,8 @@ void Platform::debugBreak()
 //-----------------------------------------------------------------------------
 void Platform::forceShutdown(S32 returnValue)
 {
+   CheckExitCode(returnValue);
+
 #if 0
    // if a dedicated server is running, turn it off
    if (x86UNIXState->isDedicated() && Game->isRunning())

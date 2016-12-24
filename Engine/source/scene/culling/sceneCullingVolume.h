@@ -79,7 +79,11 @@ class SceneCullingVolume
 
       ///
       SceneCullingVolume( Type type, const PlaneSetF& planes )
+<<<<<<< HEAD
          : mType( type ), mSortPoint( 1.f ), mClippingPlanes( planes ) {}
+=======
+         : mType( type ), mClippingPlanes( planes ), mSortPoint( 1.f ) {}
+>>>>>>> omni_engine
 
       /// Return the type of volume defined by this culling volume, i.e. whether it includes
       /// or excludes space.

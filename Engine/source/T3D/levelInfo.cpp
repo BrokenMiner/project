@@ -78,8 +78,14 @@ static SFXAmbience sDefaultAmbience;
 
 LevelInfo::LevelInfo()
    :  mNearClip( 0.1f ),
+<<<<<<< HEAD
       mVisibleDistance( 1000.0f ),
       mVisibleGhostDistance ( 0 ),
+=======
+      mFrustumOffset( Point4F::Zero ),
+      mVisibleDistance( 1000.0f ),
+	  mVisibleDistance_Ghost (200.0f),
+>>>>>>> omni_engine
       mDecalBias( 0.0015f ),
       mCanvasClearColor( 255, 0, 255, 255 ),
       mSoundAmbience( NULL ),
@@ -116,11 +122,25 @@ void LevelInfo::initPersistFields()
    addGroup( "Visibility" );
 
       addField( "nearClip", TypeF32, Offset( mNearClip, LevelInfo ), "Closest distance from the camera's position to render the world." );
+<<<<<<< HEAD
       addField( "visibleDistance", TypeF32, Offset( mVisibleDistance, LevelInfo ), "Furthest distance from the camera's position to render the world." );
       addField( "visibleGhostDistance", TypeF32, Offset( mVisibleGhostDistance, LevelInfo ), "Furthest distance from the camera's position to render players. Defaults to visibleDistance." );
       addField( "decalBias", TypeF32, Offset( mDecalBias, LevelInfo ),
          "NearPlane bias used when rendering Decal and DecalRoad. This should be tuned to the visibleDistance in your level." );
 
+=======
+      addField( "visibleDistance", TypeF32, Offset( mVisibleDistance, LevelInfo ), "Furthest distance fromt he camera's position to render the world." );
+	  //Winterleaf Modification
+      addField( "visibleDistance_Ghost", TypeF32, Offset( mVisibleDistance_Ghost, LevelInfo ), "Furthest distance fromt he camera's position to render players." );  
+      //Winterleaf Modification
+
+      addField( "decalBias", TypeF32, Offset( mDecalBias, LevelInfo ),
+         "NearPlane bias used when rendering Decal and DecalRoad. This should be tuned to the visibleDistance in your level." );
+
+      addField( "frustumOffset", TypePoint4F, Offset( mFrustumOffset, LevelInfo ),
+         "Point4F(left, right, top, bottom) - Offset to allow non axis aligned frustum.  For full frustum use (0,1,0,1)" );
+
+>>>>>>> omni_engine
    endGroup( "Visibility" );
 
    addGroup( "Fog" );
@@ -304,7 +324,15 @@ void LevelInfo::_updateSceneGraph()
    
    scene->setNearClip( mNearClip );
    scene->setVisibleDistance( mVisibleDistance );
+<<<<<<< HEAD
    scene->setVisibleGhostDistance( mVisibleGhostDistance );
+=======
+   scene->setFrustumOffset(mFrustumOffset);
+   //Winterleaf Modification
+   scene->setVisibleDistance_Ghost( mVisibleDistance_Ghost );
+   //Winterleaf Modification
+
+>>>>>>> omni_engine
 
    gDecalBias = mDecalBias;
 
@@ -341,4 +369,110 @@ void LevelInfo::_onLMActivate(const char *lm, bool enable)
       lightMgr->getLightBinManager()->MRTLightmapsDuringPrePass(mAdvancedLightmapSupport);
    }
 #endif
+<<<<<<< HEAD
 }
+=======
+}
+void LevelInfo::setNearClip( F32 nearClip )
+{
+   // We must update both scene graphs.
+   SceneManager *sm;
+   if ( isClientObject() )
+      sm = gClientSceneGraph;
+   else
+      sm = gServerSceneGraph;
+
+
+   // Clamp above zero before setting on the sceneGraph.
+   // If we don't we get serious crashes.
+   if ( nearClip <= 0.0f )
+      nearClip = 0.001f;
+   mNearClip = nearClip;
+   sm->setNearClip( mNearClip );
+}
+
+ConsoleMethod( LevelInfo, setNearClip, void, 3, 3, "( F32 nearClip )")
+{
+	object->setNearClip( dAtof( argv[2] ));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnLevelInfo_setNearClip(char * x__object, char * x__a2)
+{
+LevelInfo* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* a2 = (const char*)x__a2;
+{
+S32 argc = 3;
+argc=3;
+std::vector<const char*> arguments;
+arguments.push_back("");
+arguments.push_back("");
+arguments.push_back(a2);
+const char** argv = &arguments[0];
+{
+	object->setNearClip( dAtof( argv[2] ));
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

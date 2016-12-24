@@ -82,6 +82,10 @@ protected:
 public:
    VideoFrameGrabberD3D9();
    ~VideoFrameGrabberD3D9();
+<<<<<<< HEAD
 };
 
 #endif // _GFX_D3D_VIDEOCAPTURED3D9_H_
+=======
+};
+>>>>>>> omni_engine

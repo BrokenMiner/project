@@ -193,7 +193,11 @@ class VideoEncoderTheora : public VideoEncoder, public Thread
    
 public:
    VideoEncoderTheora() :
+<<<<<<< HEAD
       mCurrentFrame(0), td(NULL), mLastFrame(NULL)
+=======
+      mLastFrame(NULL)      
+>>>>>>> omni_engine
    {
       setStatus(false);      
    }

@@ -25,7 +25,11 @@
 
 
 /// A vector with a compile-time constant size.
+<<<<<<< HEAD
 template< typename T, S32 SIZE >
+=======
+template< typename T, intptr_t SIZE >
+>>>>>>> omni_engine
 class FixedSizeVector
 {
    protected:
@@ -60,7 +64,11 @@ class FixedSizeVector
       FixedSizeVector( const T& a, const T& b, const T& c, const T& d, const T& e, const T& f, const T& g, const T& h, const T& i, const T& j, const T& k, const T& l, const T& m )
          { mArray[ 0 ] = a; mArray[ 1 ] = b; mArray[ 2 ] = c; mArray[ 3 ] = d; mArray[ 4 ] = e; mArray[ 5 ] = f; mArray[ 6 ] = g; mArray[ 7 ] = h; mArray[ 8 ] = i; mArray[ 9 ] = j; mArray[ 10 ] = k; mArray[ 11 ] = l; mArray[ 12 ] =m; }
 
+<<<<<<< HEAD
       U32 size() const { return SIZE; }
+=======
+      U64 size() const { return SIZE; }
+>>>>>>> omni_engine
       bool empty() const { return ( SIZE == 0 ); }
       const T* address() const { return mArray; }
       T* address() { return mArray; }
@@ -91,12 +99,20 @@ class FixedSizeVector
          return mArray[ size() - 1 ];
       }
 
+<<<<<<< HEAD
       const T& operator []( U32 index ) const
+=======
+      const T& operator []( U64 index ) const
+>>>>>>> omni_engine
       {
          AssertFatal( index <= size(), "FixedSizeVector::operator[] - Index out of range" );
          return mArray[ index ];
       }
+<<<<<<< HEAD
       T& operator []( U32 index )
+=======
+      T& operator []( U64 index )
+>>>>>>> omni_engine
       {
          AssertFatal( index <= size(), "FixedSizeVector::operator[] - Index out of range" );
          return mArray[ index ];

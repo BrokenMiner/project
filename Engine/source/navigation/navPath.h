@@ -1,5 +1,9 @@
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 // Copyright (c) 2014 Daniel Buckmaster
+=======
+// Copyright (c) 2013 GarageGames, LLC
+>>>>>>> omni_engine
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -30,12 +34,19 @@
 
 class NavPath: public SceneObject {
    typedef SceneObject Parent;
+<<<<<<< HEAD
    static const U32 MaxPathLen = 2048;
+=======
+   /// Maximum size of Detour path.
+   static const U32 MaxPathLen = 1024;
+
+>>>>>>> omni_engine
 public:
    /// @name NavPath
    /// Functions for planning and accessing the path.
    /// @{
 
+<<<<<<< HEAD
    String mMeshName;
    NavMesh *mMesh;
    SimPath::Path *mWaypoints;
@@ -57,6 +68,27 @@ public:
 
    /// What sort of link types are we allowed to move on?
    LinkData mLinkTypes;
+=======
+   SimObjectPtr<NavMesh> mMesh;
+   SimObjectPtr<SimPath::Path> mWaypoints;
+
+   /// Location to start at.
+   Point3F mFrom;
+   /// Has a starting location been set?
+   bool mFromSet;
+   /// Location to end at.
+   Point3F mTo;
+   /// Has an end been set?
+   bool mToSet;
+
+   /// This path should include a segment from the end to the start.
+   bool mIsLooping;
+
+   /// Render even when not selected in the editor.
+   bool mAlwaysRender;
+   /// Render on top of other objects.
+   bool mXray;
+>>>>>>> omni_engine
 
    /// Plan the path.
    bool plan();
@@ -69,6 +101,7 @@ public:
    /// @return True if the plan was successful overall.
    bool finalise();
 
+<<<<<<< HEAD
    /// Did the path plan successfully?
    bool success() const { return dtStatusSucceed(mStatus); }
 
@@ -91,6 +124,22 @@ public:
 
    /// Get the flags for a given path node.
    U16 getFlags(S32 idx) const;
+=======
+   /// @}
+
+   /// @name Path interface
+   /// @{
+
+   /// Return world-space position of a path node.
+   /// @param[in] idx Node index to retrieve.
+   Point3F getNode(S32 idx);
+
+   /// Return the number of nodes in this path.
+   S32 getCount();
+
+   /// Return the length of this path.
+   F32 getLength() { return mLength; };
+>>>>>>> omni_engine
 
    /// @}
 
@@ -136,6 +185,7 @@ private:
    /// Create appropriate data structures and stuff.
    bool init();
 
+<<<<<<< HEAD
    /// Plan the path.
    bool planInstant();
 
@@ -156,11 +206,30 @@ private:
    Vector<Point3F> mPoints;
    Vector<U16> mFlags;
    Vector<Point3F> mVisitPoints;
+=======
+   /// 'Visit' the most recent two points on our visit list.
+   bool visitNext();
+
+   /// Detour path query.
+   dtNavMeshQuery *mQuery;
+   /// Current status of our Detour query.
+   dtStatus mStatus;
+   /// Filter that provides the movement costs for paths.
+   dtQueryFilter mFilter;
+   
+   /// List of points the path should visit (waypoints, if you will).
+   Vector<Point3F> mVisitPoints;
+   /// List of points in the final path.
+   Vector<Point3F> mPoints;
+
+   /// Total length of path in world units.
+>>>>>>> omni_engine
    F32 mLength;
 
    /// Resets our world transform and bounds to fit our point list.
    void resize();
 
+<<<<<<< HEAD
    /// Function used to set mMesh object from console.
    static bool setProtectedMesh(void *obj, const char *index, const char *data);
 
@@ -176,6 +245,20 @@ private:
    static bool setProtectedFrom(void *obj, const char *index, const char *data);
    static bool setProtectedTo(void *obj, const char *index, const char *data);
    static const char *getProtectedFrom(void *obj, const char *data);
+=======
+   /// @name Protected console getters/setters
+   /// @{
+   static bool setProtectedMesh(void *obj, const char *index, const char *data);
+   static const char *getProtectedMesh(void *obj, const char *data);
+   static bool setProtectedWaypoints(void *obj, const char *index, const char *data);
+
+   static bool setProtectedAlwaysRender(void *obj, const char *index, const char *data);
+
+   static bool setProtectedFrom(void *obj, const char *index, const char *data);
+   static const char *getProtectedFrom(void *obj, const char *data);
+
+   static bool setProtectedTo(void *obj, const char *index, const char *data);
+>>>>>>> omni_engine
    static const char *getProtectedTo(void *obj, const char *data);
    /// @}
 };

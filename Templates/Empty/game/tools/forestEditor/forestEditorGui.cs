@@ -50,9 +50,13 @@ function ForestEditorGui::onActiveForestUpdated( %this, %forest, %createNew )
 /// Called from a message box when a forest is not found.
 function ForestEditorGui::createForest( %this )
 {
+<<<<<<< HEAD
    %forestObject = parseMissionGroupForIds("Forest", "");
  
    if ( isObject( %forestObject ) )
+=======
+   if ( isObject( theForest ) )
+>>>>>>> omni_engine
    {
       error( "Cannot create a second 'theForest' Forest!" );
       return;
@@ -66,6 +70,7 @@ function ForestEditorGui::createForest( %this )
    };
    
    MECreateUndoAction::submit( theForest );
+<<<<<<< HEAD
 
    ForestEditorGui.setActiveForest( theForest );
 
@@ -102,6 +107,10 @@ function ForestEditorGui::createForest( %this )
             ForestEditorEraseSelectedModeBtn.performClick();
       }
    }   
+=======
+   
+   ForestEditorInspector.inspect( theForest );
+>>>>>>> omni_engine
    
    EWorldEditor.isDirty = true;
 }

@@ -93,7 +93,11 @@ class SimConsoleEvent : public SimEvent
 {
 protected:
    S32 mArgc;
+<<<<<<< HEAD
    ConsoleValueRef *mArgv;
+=======
+   char **mArgv;
+>>>>>>> omni_engine
    bool mOnObject;
 public:
 
@@ -110,6 +114,7 @@ public:
    ///
    /// @see Con::execute(S32 argc, const char *argv[])
    /// @see Con::execute(SimObject *object, S32 argc, const char *argv[])
+<<<<<<< HEAD
    SimConsoleEvent(S32 argc, ConsoleValueRef *argv, bool onObject);
 
    ~SimConsoleEvent();
@@ -121,17 +126,34 @@ public:
 
 
 // NOTE: SimConsoleThreadExecCallback & SimConsoleThreadExecEvent moved to engineAPI.h
+=======
+   SimConsoleEvent(S32 argc, const char **argv, bool onObject);
+
+   ~SimConsoleEvent();
+   virtual void process(SimObject *object);
+};
+
+>>>>>>> omni_engine
 /// Used by Con::threadSafeExecute()
 struct SimConsoleThreadExecCallback
 {
    Semaphore   *sem;
+<<<<<<< HEAD
    ConsoleValueRef retVal;
+=======
+   const char  *retVal;
+>>>>>>> omni_engine
 
    SimConsoleThreadExecCallback();
    ~SimConsoleThreadExecCallback();
 
+<<<<<<< HEAD
    void handleCallback(ConsoleValueRef ret);
    ConsoleValueRef waitForResult();
+=======
+   void handleCallback(const char *ret);
+   const char *waitForResult();
+>>>>>>> omni_engine
 };
 
 class SimConsoleThreadExecEvent : public SimConsoleEvent
@@ -139,9 +161,14 @@ class SimConsoleThreadExecEvent : public SimConsoleEvent
    SimConsoleThreadExecCallback *cb;
 
 public:
+<<<<<<< HEAD
    SimConsoleThreadExecEvent(S32 argc, ConsoleValueRef *argv, bool onObject, SimConsoleThreadExecCallback *callback);
 
    SimConsoleThreadExecCallback& getCB() { return *cb; }
+=======
+   SimConsoleThreadExecEvent(S32 argc, const char **argv, bool onObject, SimConsoleThreadExecCallback *callback);
+
+>>>>>>> omni_engine
    virtual void process(SimObject *object);
 };
 

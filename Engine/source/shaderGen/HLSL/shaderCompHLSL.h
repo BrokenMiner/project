@@ -45,7 +45,11 @@ public:
    virtual void reset();
    virtual void sortVars();
 
+<<<<<<< HEAD
    virtual void print( Stream &stream, bool isVertexShader );
+=======
+   virtual void print( Stream &stream );
+>>>>>>> omni_engine
 };
 
 
@@ -59,14 +63,22 @@ protected:
 class VertexParamsDefHLSL : public ParamsDefHLSL
 {
 public:
+<<<<<<< HEAD
    virtual void print( Stream &stream, bool isVerterShader );
+=======
+   virtual void print( Stream &stream );
+>>>>>>> omni_engine
 };
 
 
 class PixelParamsDefHLSL : public ParamsDefHLSL
 {
 public:
+<<<<<<< HEAD
    virtual void print( Stream &stream, bool isVerterShader );
+=======
+   virtual void print( Stream &stream );
+>>>>>>> omni_engine
 };
 
 #endif // _SHADERCOMP_HLSL_H_

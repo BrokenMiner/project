@@ -41,6 +41,7 @@
 // For player object bounds workaround.
 #include "T3D/player.h"
 
+
 extern bool gEditingMission;
 
 
@@ -113,8 +114,17 @@ SceneManager::SceneManager( bool isClient )
      mDisplayTargetResolution( 0, 0 ),
      mDefaultRenderPass( NULL ),
      mVisibleDistance( 500.f ),
+<<<<<<< HEAD
      mVisibleGhostDistance( 0 ),
      mNearClip( 0.1f ),
+=======
+	 //Winterleaf Modification
+     mVisibleDistance_Ghost(200.0f),
+     //Winterleaf Modification
+
+     mNearClip( 0.1f ),
+	 mFrustumOffset( Point4F::Zero ),
+>>>>>>> omni_engine
      mAmbientLightColor( ColorF( 0.1f, 0.1f, 0.1f, 1.0f ) ),
      mZoneManager( NULL )
 {
@@ -237,6 +247,7 @@ void SceneManager::renderScene( SceneRenderState* renderState, U32 objectMask, S
       // Store previous values
       RectI originalVP = GFX->getViewport();
       MatrixF originalWorld = GFX->getWorldMatrix();
+<<<<<<< HEAD
       Frustum originalFrustum = GFX->getFrustum();
 
       Point2F projOffset = GFX->getCurrentProjectionOffset();
@@ -252,6 +263,28 @@ void SceneManager::renderScene( SceneRenderState* renderState, U32 objectMask, S
 
       Frustum gfxFrustum = originalFrustum;
       MathUtils::makeFovPortFrustum(&gfxFrustum, gfxFrustum.isOrtho(), gfxFrustum.getNearDist(), gfxFrustum.getFarDist(), currentFovPort[0], eyeTransforms[0]);
+=======
+
+      Point2F projOffset = GFX->getCurrentProjectionOffset();
+      Point3F eyeOffset = GFX->getStereoEyeOffset();
+
+      // Indicate that we're about to start a field
+      GFX->beginField();
+
+      // Render left half of display
+      RectI leftVP = originalVP;
+      leftVP.extent.x *= 0.5;
+      GFX->setViewport(leftVP);
+
+      MatrixF leftWorldTrans(true);
+      leftWorldTrans.setPosition(Point3F(eyeOffset.x, eyeOffset.y, eyeOffset.z));
+      MatrixF leftWorld(originalWorld);
+      leftWorld.mulL(leftWorldTrans);
+      GFX->setWorldMatrix(leftWorld);
+
+      Frustum gfxFrustum = GFX->getFrustum();
+      gfxFrustum.setProjectionOffset(Point2F(projOffset.x, projOffset.y));
+>>>>>>> omni_engine
       GFX->setFrustum(gfxFrustum);
 
       SceneCameraState cameraStateLeft = SceneCameraState::fromGFX();
@@ -262,6 +295,7 @@ void SceneManager::renderScene( SceneRenderState* renderState, U32 objectMask, S
       renderSceneNoLights( &renderStateLeft, objectMask, baseObject, baseZone );
 
       // Indicate that we've just finished a field
+<<<<<<< HEAD
       //GFX->clear(GFXClearTarget | GFXClearZBuffer | GFXClearStencil, ColorI(255,0,0), 1.0f, 0);
       GFX->endField();
       
@@ -272,6 +306,27 @@ void SceneManager::renderScene( SceneRenderState* renderState, U32 objectMask, S
 
       gfxFrustum = originalFrustum;
       MathUtils::makeFovPortFrustum(&gfxFrustum, gfxFrustum.isOrtho(), gfxFrustum.getNearDist(), gfxFrustum.getFarDist(), currentFovPort[1], eyeTransforms[1]);
+=======
+      GFX->endField();
+
+      // Indicate that we're about to start a field
+      GFX->beginField();
+
+      // Render right half of display
+      RectI rightVP = originalVP;
+      rightVP.extent.x *= 0.5;
+      rightVP.point.x += rightVP.extent.x;
+      GFX->setViewport(rightVP);
+
+      MatrixF rightWorldTrans(true);
+      rightWorldTrans.setPosition(Point3F(-eyeOffset.x, eyeOffset.y, eyeOffset.z));
+      MatrixF rightWorld(originalWorld);
+      rightWorld.mulL(rightWorldTrans);
+      GFX->setWorldMatrix(rightWorld);
+
+      gfxFrustum = GFX->getFrustum();
+      gfxFrustum.setProjectionOffset(Point2F(-projOffset.x, projOffset.y));
+>>>>>>> omni_engine
       GFX->setFrustum(gfxFrustum);
 
       SceneCameraState cameraStateRight = SceneCameraState::fromGFX();
@@ -287,7 +342,12 @@ void SceneManager::renderScene( SceneRenderState* renderState, U32 objectMask, S
 
       // Restore previous values
       GFX->setWorldMatrix(originalWorld);
+<<<<<<< HEAD
       GFX->setFrustum(originalFrustum);
+=======
+      gfxFrustum.clearProjectionOffset();
+      GFX->setFrustum(gfxFrustum);
+>>>>>>> omni_engine
       GFX->setViewport(originalVP);
    }
    else
@@ -723,8 +783,15 @@ DefineConsoleFunction( sceneDumpZoneStates, void, ( bool updateFirst ), ( true )
 }
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 
 DefineConsoleFunction( sceneGetZoneOwner, SceneObject*, ( U32 zoneId ), ( true ),
+=======
+//DefineConsoleFunction( sceneGetZoneOwner, SceneObject*, ( U32 zoneId ), ( true ),
+//WLE - Vince - Sometimes I don't get what they are thinking.  Why would they use
+//true for a default for a U32?  why not just 1?
+DefineConsoleFunction( sceneGetZoneOwner, SceneObject*, ( U32 zoneId ), ( 1 ),
+>>>>>>> omni_engine
    "Return the SceneObject that contains the given zone.\n\n"
    "@param zoneId ID of zone.\n"
    "@return A SceneObject or NULL if the given @a zoneId is invalid.\n\n"
@@ -752,3 +819,125 @@ DefineConsoleFunction( sceneGetZoneOwner, SceneObject*, ( U32 zoneId ), ( true )
 
    return manager->getZoneOwner( zoneId );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sceneDumpZoneStates(bool updateFirst)
+{
+{
+   if( !gClientSceneGraph )
+   {
+      Con::errorf( "sceneDumpZoneStates - Only valid on client!" );
+      return;
+   }
+   SceneZoneSpaceManager* manager = gClientSceneGraph->getZoneManager();
+   if( !manager )
+   {
+      Con::errorf( "sceneDumpZoneStates - Scene is not using zones!" );
+      return;
+   }
+   manager->dumpZoneStates( updateFirst );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sceneGetZoneOwner(U32 zoneId,  char* retval)
+{
+dSprintf(retval,1024,"");
+SceneObject* wle_returnObject;
+{
+   if( !gClientSceneGraph )
+   {
+      Con::errorf( "sceneGetZoneOwner - Only valid on client!" );
+      {wle_returnObject =NULL;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+   }
+   SceneZoneSpaceManager* manager = gClientSceneGraph->getZoneManager();
+   if( !manager )
+   {
+      Con::errorf( "sceneGetZoneOwner - Scene is not using zones!" );
+      {wle_returnObject =NULL;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+   }
+   if( !manager->isValidZoneId( zoneId ) )
+   {
+      Con::errorf( "sceneGetZoneOwner - Invalid zone ID: %i", zoneId );
+      {wle_returnObject =NULL;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+   }
+   {wle_returnObject =manager->getZoneOwner( zoneId );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

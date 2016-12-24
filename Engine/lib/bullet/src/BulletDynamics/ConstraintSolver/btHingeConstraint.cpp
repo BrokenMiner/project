@@ -805,11 +805,15 @@ void btHingeConstraint::getInfo2InternalUsingFrameOffset(btConstraintInfo2* info
 		for (i=0; i<3; i++) info->m_J1linearAxis[s0+i] = p[i];
 		for (i=0; i<3; i++) info->m_J1linearAxis[s1+i] = q[i];
 		for (i=0; i<3; i++) info->m_J1linearAxis[s2+i] = ax1[i];
+<<<<<<< HEAD
 
 		for (i=0; i<3; i++) info->m_J2linearAxis[s0+i] = -p[i];
 		for (i=0; i<3; i++) info->m_J2linearAxis[s1+i] = -q[i];
 		for (i=0; i<3; i++) info->m_J2linearAxis[s2+i] = -ax1[i];
 
+=======
+	
+>>>>>>> omni_engine
 	// compute three elements of right hand side
 	
 		btScalar rhs = k * p.dot(ofs);

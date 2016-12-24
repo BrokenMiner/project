@@ -50,6 +50,12 @@ switch( T3D_Generator::$platform )
       addLibSrcDir( 'libtheora/lib/enc/x86_32' );
       break;
 }
+addLibSrcDir( 'libtheora/lib/enc/x86_32_vs' );
+
+
+addLibSrcFile( 'libtheora/lib/enc/x86_64/dsp_mmx.c' );
+addLibSrcFile( 'libtheora/lib/enc/x86_64/fdct_mmx.c' );
+addLibSrcFile( 'libtheora/lib/enc/x86_64/recon_mmx.c' );
 
 addLibIncludePath( 'libtheora/include' );
 addLibIncludePath( 'libogg/include' );

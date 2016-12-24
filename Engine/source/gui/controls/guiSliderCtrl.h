@@ -48,7 +48,11 @@ class GuiSliderCtrl : public GuiControl
       F32 mIncAmount;
       bool mDisplayValue;
       bool mDepressed;
+<<<<<<< HEAD
       bool mMouseOver;
+=======
+      //bool mMouseOver;      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
       bool mMouseDragged;
       bool mHasTexture;
 

@@ -33,7 +33,11 @@
    #include "core/bitSet.h"
 #endif
 
+<<<<<<< HEAD
 
+=======
+class SimXMLDocument;   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 class Stream;
 class LightManager;
 class SimFieldDictionary;
@@ -263,6 +267,7 @@ class SimObject: public ConsoleObject
          SelectedOnly         = BIT( 0 ), ///< Indicates that only objects marked as selected should be outputted. Used in SimSet.
          NoName               = BIT( 1 ), ///< Indicates that the object name should not be saved.
          IgnoreCanSave        = BIT( 2 ), ///< Write out even if CannotSave=true.
+		   XmlOutput			   = BIT( 3 ), ///< Write the object into the XMLOutput   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
       };
 
    private:
@@ -283,6 +288,7 @@ class SimObject: public ConsoleObject
          NoNameChange      = BIT( 11 ),   ///< Whether changing the name of this object is allowed.
          Hidden            = BIT( 12 ),   ///< Object is hidden in editors.
          Locked            = BIT( 13 ),   ///< Object is locked in editors.
+		   Editable		      = BIT( 14 ),	///< Object is editable in the game.     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
       };
       
       // dictionary information stored on the object
@@ -337,10 +343,23 @@ class SimObject: public ConsoleObject
          { if( static_cast< SimObject* >( object )->isHidden() ) return "1"; return "0"; }
       static const char* _getLocked( void* object, const char* data )
          { if( static_cast< SimObject* >( object )->isLocked() ) return "1"; return "0"; }
+
       static bool _setHidden( void* object, const char* index, const char* data )
          { static_cast< SimObject* >( object )->setHidden( dAtob( data ) ); return false; }
       static bool _setLocked( void* object, const char* index, const char* data )
          { static_cast< SimObject* >( object )->setLocked( dAtob( data ) ); return false; }
+
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+	  ///Set and get editable field
+	  static bool _setEditable( void* object, const char* index, const char* data )
+		{ static_cast<SimObject* >( object )->setEditable( dAtob(data) ); return false; }
+
+	  static const char* _getEditable( void* object, const char* data )
+		{ if( static_cast< SimObject* >( object )->isEditable() ) return "1"; return "0"; }
+
+      // @Copyright end
 
       // Namespace protected set methods
       static bool setClass( void *object, const char *index, const char *data )
@@ -354,8 +373,18 @@ class SimObject: public ConsoleObject
       // Object name protected set method
       static bool setProtectedName(void *object, const char *index, const char *data);
 
+<<<<<<< HEAD
    protected:
    
+=======
+
+   public:		
+	  String      mWLE_OVERRIDE_PROXY_CLASSTYPE;
+   protected:
+   
+		
+
+>>>>>>> omni_engine
       /// Id number for this object.
       SimObjectId mId;
       
@@ -364,7 +393,12 @@ class SimObject: public ConsoleObject
       
       static bool          smForceId;   ///< Force a registered object to use the given Id.  Cleared upon use.
       static SimObjectId   smForcedId;  ///< The Id to force upon the object.  Poor object.
+<<<<<<< HEAD
       
+=======
+	  static SimXMLDocument* mXMLDocument;	///< The XML Document for saving the object attributes.
+
+>>>>>>> omni_engine
       /// @name Serialization
       /// @{
       
@@ -411,7 +445,18 @@ class SimObject: public ConsoleObject
       virtual void _onUnselected() {}
    
       /// We can provide more detail, like object name and id.
+<<<<<<< HEAD
       virtual String _getLogMessage(const char* fmt, va_list args) const;
+=======
+      virtual String _getLogMessage(const char* fmt, void* args) const;
+
+      bool mEnabled;   ///< Flag used to indicate whether object is enabled or not.
+	  // set enable flag value
+      static bool setEnabledValue(void* obj, const char *index, const char* data)          { 
+            static_cast<SimObject*>(obj)->setEnabled(dAtob(data)); 
+            return false; 
+            };
+>>>>>>> omni_engine
    
       DEFINE_CREATE_METHOD
       {
@@ -425,8 +470,22 @@ class SimObject: public ConsoleObject
       // EngineObject.
       virtual void _destroySelf();
 
+<<<<<<< HEAD
    public:
       
+=======
+	private:
+		S32 mWLE_OMNI_ARRAY_POSTION;
+
+   public:
+		void setOverrideProxyClasstype(const char* value){ mWLE_OVERRIDE_PROXY_CLASSTYPE = String(StringTable->insert (value));}
+		const char* getOverrideProxyClasstype(){return mWLE_OVERRIDE_PROXY_CLASSTYPE.c_str();}
+		S32 getmWLE_OMNI_ARRAY_POSTION()	{return mWLE_OMNI_ARRAY_POSTION;}
+		void setmWLE_OMNI_ARRAY_POSTION(S32 id) {mWLE_OMNI_ARRAY_POSTION  = id;}
+
+      
+
+>>>>>>> omni_engine
       /// @name Cloning
       /// @{
       
@@ -524,6 +583,17 @@ class SimObject: public ConsoleObject
       /// Save object as a TorqueScript File.
       virtual bool save( const char* pcFilePath, bool bOnlySelected = false, const char *preappend = NULL );
 
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+	   /// Save object as an XML File
+      virtual bool saveToXML( const char *profileName, const char *fileName);
+
+      /// Get the current XML Document
+      SimXMLDocument* getcurrentXML() { return mXMLDocument; }
+
+      // @Copyright end
+
       /// Check if a method exists in the objects current namespace.
       virtual bool isMethod( const char* methodName );
       
@@ -540,7 +610,11 @@ class SimObject: public ConsoleObject
       
       virtual ~SimObject();
 
+<<<<<<< HEAD
       virtual bool processArguments(S32 argc, ConsoleValueRef *argv);  ///< Process constructor options. (ie, new SimObject(1,2,3))
+=======
+      virtual bool processArguments(S32 argc, const char **argv);  ///< Process constructor options. (ie, new SimObject(1,2,3))
+>>>>>>> omni_engine
 
       /// @}
 
@@ -730,6 +804,17 @@ class SimObject: public ConsoleObject
       virtual bool isHidden() const { return mFlags.test( Hidden ); }
       virtual void setHidden(bool b);
 
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+	  ///Check if the object is editable or not
+	  virtual bool isEditable() const { return mFlags.test( Editable ); }
+
+	  ///Set the editable flag.
+	  virtual void setEditable( bool b );
+	  
+     // @Copyright end
+
       /// @}
 
       /// @name Sets
@@ -772,7 +857,11 @@ class SimObject: public ConsoleObject
       ///
       /// @param   stream  Stream for output.
       /// @param   tabStop Indentation level for the fields.
+<<<<<<< HEAD
       virtual void writeFields(Stream &stream, U32 tabStop);
+=======
+	  virtual void writeFields(Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput = false);  
+>>>>>>> omni_engine
 
       virtual bool writeObject(Stream *stream);
       virtual bool readObject(Stream *stream);
@@ -781,7 +870,11 @@ class SimObject: public ConsoleObject
       void setCanSaveDynamicFields( bool bCanSave ) { mCanSaveFieldDictionary	=	bCanSave; }
       
       /// Get whether fields created at runtime should be saved. Default is true.
+<<<<<<< HEAD
       bool getCanSaveDynamicFields( ) { return mCanSaveFieldDictionary;}
+=======
+      bool getCanSaveDynamicFields( bool bCanSave ) { return mCanSaveFieldDictionary;}
+>>>>>>> omni_engine
 
       /// Return the object that this object is copying fields from.
       SimObject* getCopySource() const { return mCopySource; }
@@ -908,6 +1001,14 @@ class SimObject: public ConsoleObject
       virtual void getConsoleMethodData(const char * fname, S32 routingId, S32 * type, S32 * minArgs, S32 * maxArgs, void ** callback, const char ** usage) {}
       
       DECLARE_CONOBJECT( SimObject );
+
+      DECLARE_CALLBACK( void, onDefineFieldTypes, () );
+      DECLARE_CALLBACK( void, setInfo, (const char* info) );
+      DECLARE_CALLBACK( void, setSelectionObjectsByCount, (const char* count));
+      DECLARE_CALLBACK( void, onClick, (const char* SelectedidString) );
+      DECLARE_CALLBACK( void, onDblClick, (const char* SelectedidString) );
+	   DECLARE_CALLBACK( void, onEndDrag, (const char* obj) );
+      DECLARE_CALLBACK( void, onGuiUpdate, (const char* text) );
       
       static SimObject* __findObject( const char* id ) { return Sim::findObject( id ); }
       static const char* __getObjectId( ConsoleObject* object )
@@ -922,6 +1023,11 @@ class SimObject: public ConsoleObject
 
       // EngineObject.
       virtual void destroySelf();
+
+      //this function call chunks stored in dynamic fields
+      void signal(const char* fieldName, const char* args = NULL);
+	  virtual void setEnabled( bool enabled ) { mEnabled = enabled; }
+	  bool isEnabled() const { return mEnabled; }
 };
 
 
@@ -963,7 +1069,11 @@ class SimObjectPtr : public WeakRefPtr< T >
 
       ~SimObjectPtr() { set((WeakRefBase::WeakReference*)NULL); }
 
+<<<<<<< HEAD
       SimObjectPtr<T>& operator=(const SimObjectPtr ref)
+=======
+      SimObjectPtr<T>& operator=(const SimObjectPtr &ref)
+>>>>>>> omni_engine
       {
          set(ref.mReference);
          return *this;

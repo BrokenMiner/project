@@ -423,7 +423,11 @@ U32 GFont::getStrNWidth(const UTF8 *str, U32 n)
 {
    // UTF8 conversion is expensive. Avoid converting in a tight loop.
    FrameTemp<UTF16> str16(n + 1);
+<<<<<<< HEAD
    convertUTF8toUTF16N(str, str16, n + 1);
+=======
+   convertUTF8toUTF16(str, str16, n + 1);
+>>>>>>> omni_engine
    return getStrNWidth(str16, dStrlen(str16));
 }
 
@@ -462,7 +466,11 @@ U32 GFont::getStrNWidth(const UTF16 *str, U32 n)
 U32 GFont::getStrNWidthPrecise(const UTF8 *str, U32 n)
 {
    FrameTemp<UTF16> str16(n + 1);
+<<<<<<< HEAD
    convertUTF8toUTF16N(str, str16, n + 1);
+=======
+   convertUTF8toUTF16(str, str16, n + 1);
+>>>>>>> omni_engine
    return getStrNWidthPrecise(str16, dStrlen(str16));
 }
 
@@ -600,7 +608,11 @@ void GFont::wrapString(const UTF8 *txt, U32 lineWidth, Vector<U32> &startLineOff
       if (!needsNewLine)
       {
          // we are done!
+<<<<<<< HEAD
          lineLen.push_back(i - startLine - wide);
+=======
+         lineLen.push_back(i - startLine);
+>>>>>>> omni_engine
          return;
       }
 
@@ -633,7 +645,11 @@ void GFont::wrapString(const UTF8 *txt, U32 lineWidth, Vector<U32> &startLineOff
          }
       }
 
+<<<<<<< HEAD
       lineLen.push_back(j - startLine - wide);
+=======
+      lineLen.push_back(j - startLine);
+>>>>>>> omni_engine
       i = j;
 
       // Now we need to increment through any space characters at the
@@ -729,10 +745,17 @@ bool GFont::read(Stream& io_rStream)
       io_rStream.read(buffLen, inBuff);
 
       // Decompress.
+<<<<<<< HEAD
       uLongf destLen = (maxGlyph-minGlyph+1)*sizeof(S32);
       uncompress((Bytef*)&mRemapTable[minGlyph], &destLen, (Bytef*)(S32*)inBuff, buffLen);
 
       AssertISV(destLen == (maxGlyph-minGlyph+1)*sizeof(S32), "GFont::read - invalid remap table data!");
+=======
+      uLongf destLen = (maxGlyph-minGlyph+1)*sizeof(S64);
+      uncompress((Bytef*)&mRemapTable[minGlyph], &destLen, (Bytef*)(S32*)inBuff, buffLen);
+
+     // AssertISV(destLen == (maxGlyph-minGlyph+1)*sizeof(S32), "GFont::read - invalid remap table data!");
+>>>>>>> omni_engine
 
       // Make sure we've got the right endianness.
       for(i = minGlyph; i <= maxGlyph; i++)
@@ -806,9 +829,15 @@ bool GFont::write(Stream& stream)
       {
          // Compress.
          const U32 buffSize = 128 * 1024;
+<<<<<<< HEAD
          FrameTemp<S32> outBuff(buffSize);
          uLongf destLen = buffSize * sizeof(S32);
          compress2((Bytef*)(S32*)outBuff, &destLen, (Bytef*)(S32*)&mRemapTable[minGlyph], (maxGlyph-minGlyph+1)*sizeof(S32), 9);
+=======
+         FrameTemp<S64> outBuff(buffSize);
+         uLongf destLen = buffSize * sizeof(S64);
+         compress2((Bytef*)(S64*)outBuff, &destLen, (Bytef*)(S64*)&mRemapTable[minGlyph], (maxGlyph-minGlyph+1)*sizeof(S64), 9);
+>>>>>>> omni_engine
 
          // Write out.
          stream.write((U32)destLen);
@@ -923,6 +952,7 @@ void GFont::importStrip(const char *fileName, U32 padding, U32 kerning)
 
       // Allocate a new bitmap for this glyph, taking into account kerning and padding.
       glyphList.increment();
+<<<<<<< HEAD
       GlyphMap& lastGlyphMap = glyphList.last();
       lastGlyphMap.bitmap = new GBitmap(mCharInfoList[i].width + kerning + 2 * padding, mCharInfoList[i].height + 2 * padding, false, strip->getFormat());
       lastGlyphMap.charId = i;
@@ -935,6 +965,19 @@ void GFont::importStrip(const char *fileName, U32 padding, U32 kerning)
       // Update glyph attributes.
       mCharInfoList[i].width = lastGlyphMap.bitmap->getWidth();
       mCharInfoList[i].height = lastGlyphMap.bitmap->getHeight();
+=======
+      glyphList.last().bitmap = new GBitmap(mCharInfoList[i].width + kerning + 2*padding, mCharInfoList[i].height + 2*padding, false, strip->getFormat());
+      glyphList.last().charId = i;
+
+      // Copy the rect.
+      RectI ri(curWidth, getBaseline() - mCharInfoList[i].yOrigin, glyphList.last().bitmap->getWidth(), glyphList.last().bitmap->getHeight());
+      Point2I outRi(0,0);
+      glyphList.last().bitmap->copyRect(strip, ri, outRi); 
+
+      // Update glyph attributes.
+      mCharInfoList[i].width = glyphList.last().bitmap->getWidth();
+      mCharInfoList[i].height = glyphList.last().bitmap->getHeight();
+>>>>>>> omni_engine
       mCharInfoList[i].xOffset -= kerning + padding;
       mCharInfoList[i].xIncrement += kerning;
       mCharInfoList[i].yOffset -= padding;
@@ -1292,4 +1335,266 @@ DefineEngineFunction( duplicateCachedFont, void,
       Con::errorf( "      o Could not open '%s' for write", newFontFile.c_str() );
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_dumpFontCacheStatus()
+{
+{
+   Resource<GFont>   theFont = ResourceManager::get().startResourceList( Resource<GFont>::signature() );
+ 
+   Con::printf("--------------------------------------------------------------------------");
+   Con::printf("   Font Cache Usage Report");
+   while( theFont != NULL )
+   {
+      theFont->dumpInfo();
+      theFont = ResourceManager::get().nextResource();
+   }
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_duplicateCachedFont(char * x__oldFontName, S32 oldFontSize, char * x__newFontName)
+{
+const char* oldFontName = (const char*)x__oldFontName;
+
+const char* newFontName = (const char*)x__newFontName;
+{
+   String newFontFile = GFont::getFontCacheFilename(newFontName, oldFontSize);
+      Resource<GFont> font = GFont::create(oldFontName, oldFontSize, Con::getVariable("$GUI::fontCacheDirectory"));
+      if (font == NULL)
+   {
+      Con::errorf(" o Couldn't find font : %s", oldFontName);
+      return;
+   }
+      FileStream stream;
+   stream.open( newFontFile, Torque::FS::File::Write );
+   if(stream.getStatus() == Stream::Ok) 
+   {
+      Con::printf( "      o Writing duplicate font '%s' to disk...", newFontFile.c_str() );
+      font->write(stream);
+      stream.close();
+   }
+   else
+   {
+      Con::errorf( "      o Could not open '%s' for write", newFontFile.c_str() );
+   }
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_exportCachedFont(char * x__faceName, S32 fontSize, char * x__fileName, S32 padding, S32 kerning)
+{
+const char* faceName = (const char*)x__faceName;
+
+const char* fileName = (const char*)x__fileName;
+
+{
+      Resource<GFont> f = GFont::create(faceName, fontSize, Con::getVariable("$GUI::fontCacheDirectory"));
+   if(f == NULL)
+   {
+      Con::errorf("exportCachedFont - could not load font '%s %d'", faceName, fontSize);
+      return;
+   }
+   f->exportStrip(fileName, padding, kerning);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_importCachedFont(char * x__faceName, S32 fontSize, char * x__fileName, S32 padding, S32 kerning)
+{
+const char* faceName = (const char*)x__faceName;
+
+const char* fileName = (const char*)x__fileName;
+
+{
+      Resource<GFont> f = GFont::create(faceName, fontSize, Con::getVariable("$GUI::fontCacheDirectory"));
+   if(f == NULL)
+   {
+      Con::errorf("importCachedFont - could not load font '%s %d'", faceName, fontSize);
+      return;
+   }
+   f->importStrip(fileName, padding, kerning);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_populateAllFontCacheRange(U32 rangeStart, U32 rangeEnd)
+{
+
+{
+   if(rangeStart > rangeEnd)
+   {
+      Con::errorf("populateAllFontCacheRange - range start is after end!");
+      return;
+   }
+   Resource<GFont>   theFont = ResourceManager::get().startResourceList( Resource<GFont>::signature() );
+   Con::printf("Populating font cache with range 0x%x to 0x%x", rangeStart, rangeEnd);
+   while( theFont != NULL )
+   {
+      const String   fileName( theFont.getPath() );
+      if(theFont->hasPlatformFont())
+      {
+                  Con::printf("   o Populating font '%s'", fileName.c_str());
+         for(U32 i=rangeStart; i<rangeEnd; i++)
+         {
+            if(theFont->isValidChar(i))
+               theFont->getCharWidth(i);
+            else
+               Con::warnf("populateAllFontCacheRange - skipping invalid char 0x%x",  i);
+         }
+      }
+      else
+      {
+         Con::errorf("populateAllFontCacheRange - font '%s' has no platform font. Cannot generate more characters.", fileName.c_str());
+      }
+      theFont = ResourceManager::get().nextResource();
+   }
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_populateAllFontCacheString(char * x__string)
+{
+const char* string = (const char*)x__string;
+{
+   Resource<GFont> theFont = ResourceManager::get().startResourceList( Resource<GFont>::signature() );
+   Con::printf("Populating font cache with string '%s'", string);
+   while( theFont != NULL )
+   {
+      if(theFont->hasPlatformFont())
+      {
+                  theFont->getStrWidthPrecise( string );
+      }
+      else
+      {
+         const String   fileName( theFont.getPath() );
+         Con::errorf("populateAllFontCacheString - font '%s' has no platform font. Cannot generate more characters.", fileName.c_str());
+      }
+      theFont = ResourceManager::get().nextResource();
+   }
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_populateFontCacheRange(char * x__faceName, S32 fontSize, U32 rangeStart, U32 rangeEnd)
+{
+const char* faceName = (const char*)x__faceName;
+
+
+{
+   Resource<GFont> f = GFont::create(faceName, fontSize, Con::getVariable("$GUI::fontCacheDirectory"));
+   if(f == NULL)
+   {
+      Con::errorf("populateFontCacheRange - could not load font '%s %d'", faceName, fontSize);
+      return;
+   }
+   if(rangeStart > rangeEnd)
+   {
+      Con::errorf("populateFontCacheRange - range start is after end");
+      return;
+   }
+   if(!f->hasPlatformFont())
+   {
+      Con::errorf("populateFontCacheRange - font '%s %d' has no platform font Cannot generate more characters.", faceName, fontSize);
+      return;
+   }
+      for(U32 i=rangeStart; i<rangeEnd; i++)
+   {
+      if(f->isValidChar(i))
+         f->getCharWidth(i);
+      else
+         Con::warnf("populateFontCacheRange - skipping invalid char 0x%x",  i);
+   }
+   }
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_populateFontCacheString(char * x__faceName, S32 fontSize, char * x__string)
+{
+const char* faceName = (const char*)x__faceName;
+
+const char* string = (const char*)x__string;
+{
+   Resource<GFont> f = GFont::create(faceName, fontSize, Con::getVariable("$GUI::fontCacheDirectory"));
+   if(f == NULL)
+   {
+      Con::errorf("populateFontCacheString - could not load font '%s %d'", faceName, fontSize);
+      return;
+   }
+   if(!f->hasPlatformFont())
+   {
+      Con::errorf("populateFontCacheString - font '%s %d' has no platform font. Cannot generate more characters.", faceName, fontSize);
+      return;
+   }
+      f->getStrWidthPrecise( string );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_writeFontCache()
+{
+{
+   Resource<GFont>   theFont = ResourceManager::get().startResourceList( Resource<GFont>::signature() );
+   Con::printf("--------------------------------------------------------------------------");
+   Con::printf("   Writing font cache to disk");
+   while( theFont != NULL )
+   {
+      const String   fileName( theFont.getPath() );
+      FileStream stream;
+      stream.open(fileName, Torque::FS::File::Write);
+      if(stream.getStatus() == Stream::Ok) 
+      {
+         Con::printf("      o Writing '%s' to disk...", fileName.c_str());
+         theFont->write(stream);
+      }
+      else
+      {
+         Con::errorf("      o Could not open '%s' for write", fileName.c_str());
+      }
+      theFont = ResourceManager::get().nextResource();
+  }
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

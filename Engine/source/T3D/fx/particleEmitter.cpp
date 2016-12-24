@@ -926,7 +926,11 @@ void ParticleEmitter::prepRenderImage(SceneRenderState* state)
    ri->softnessDistance = mDataBlock->softnessDistance; 
 
    // Sort by texture too.
+<<<<<<< HEAD
    ri->defaultKey = ri->diffuseTex ? (uintptr_t)ri->diffuseTex : (uintptr_t)ri->vertBuff;
+=======
+   ri->defaultKey = ri->diffuseTex ? (U32)ri->diffuseTex : (U32)ri->vertBuff;
+>>>>>>> omni_engine
 
    renderManager->addInst( ri );
 
@@ -1833,22 +1837,38 @@ void ParticleEmitter::setupOriented( Particle *part,
    lVerts->point = start + crossDir;
    lVerts->color = partCol;
    // Here and below, we copy UVs from particle datablock's texCoords (oriented)
+<<<<<<< HEAD
    lVerts->texCoord = part->dataBlock->texCoords[1];
+=======
+   lVerts->texCoord = part->dataBlock->texCoords[0];
+>>>>>>> omni_engine
    ++lVerts;
 
    lVerts->point = start - crossDir;
    lVerts->color = partCol;
+<<<<<<< HEAD
    lVerts->texCoord = part->dataBlock->texCoords[2];
+=======
+   lVerts->texCoord = part->dataBlock->texCoords[1];
+>>>>>>> omni_engine
    ++lVerts;
 
    lVerts->point = end - crossDir;
    lVerts->color = partCol;
+<<<<<<< HEAD
    lVerts->texCoord = part->dataBlock->texCoords[3];
+=======
+   lVerts->texCoord = part->dataBlock->texCoords[2];
+>>>>>>> omni_engine
    ++lVerts;
 
    lVerts->point = end + crossDir;
    lVerts->color = partCol;
+<<<<<<< HEAD
    lVerts->texCoord = part->dataBlock->texCoords[0];
+=======
+   lVerts->texCoord = part->dataBlock->texCoords[3];
+>>>>>>> omni_engine
    ++lVerts;
 }
 
@@ -2025,3 +2045,73 @@ DefineEngineMethod(ParticleEmitterData, reload, void,(),,
 {
    object->reload();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnParticleEmitterData_reload(char * x__object)
+{
+ParticleEmitterData* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->reload();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -977,6 +977,17 @@ function ObjectBuilderGui::buildObserverDropPoint(%this)
    %this.process();
 }
 
+function ObjectBuilderGui::buildVolumetricFog(%this)
+{
+ OBObjectName.setValue("");
+ %this.objectClassName = "VolumetricFog";
+ %this.addField("ShapeName","TypeFile","Shape (Fog Volume)", "" , "*.dts;*.dae");
+ %this.addfield("Scale", "TypePoint3","Scale","1 1 1");
+ %this.addfield("FogColor","TypeColorI","FogColor","200 200 200 128");
+ %this.process();
+   
+}
+
 //------------------------------------------------------------------------------
 // System
 //------------------------------------------------------------------------------

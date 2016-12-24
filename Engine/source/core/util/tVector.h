@@ -684,13 +684,21 @@ template<class T> inline void Vector<T>::pop_back()
 
 template<class T> inline T& Vector<T>::operator[](U32 index)
 {
+<<<<<<< HEAD
    AssertFatal(index < mElementCount, avar("Vector<T>::operator[%i/%i] - out of bounds array access!", index, mElementCount));
+=======
+   AssertFatal(index < mElementCount, "Vector<T>::operator[] - out of bounds array access!");
+>>>>>>> omni_engine
    return mArray[index];
 }
 
 template<class T> inline const T& Vector<T>::operator[](U32 index) const
 {
+<<<<<<< HEAD
    AssertFatal(index < mElementCount, avar("Vector<T>::operator[%i/%i] - out of bounds array access!", index, mElementCount));
+=======
+   AssertFatal(index < mElementCount, "Vector<T>::operator[] - out of bounds array access!");
+>>>>>>> omni_engine
    return mArray[index];
 }
 

@@ -143,6 +143,7 @@
 
 /// This #define is used by the FrameAllocator to set the size of the frame.
 ///
+
 /// It was previously set to 3MB but I've increased it to 32MB due to the
 /// FrameAllocator being used as temporary storage for bitmaps in the D3D9
 /// texture manager.

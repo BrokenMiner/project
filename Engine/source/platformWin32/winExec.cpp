@@ -30,6 +30,8 @@
 #include "core/util/safeDelete.h"
 #include "util/tempAlloc.h"
 
+IMPLEMENT_GLOBAL_CALLBACK( onExecuteDone, void, ( const char * data ), ( data ), "");
+
 //-----------------------------------------------------------------------------
 // Thread for executing in
 //-----------------------------------------------------------------------------
@@ -64,8 +66,12 @@ public:
 
    virtual void process(SimObject *object)
    {
-      if( Con::isFunction( "onExecuteDone" ) )
-         Con::executef( "onExecuteDone", Con::getIntArg( mOK ) );
+	//<<<<<<< HEAD
+      //if( Con::isFunction( "onExecuteDone" ) )
+      //   Con::executef( "onExecuteDone", Con::getIntArg( mOK ) );
+	//=======
+      onExecuteDone_callback( Con::getIntArg( mOK ) );
+	//>>>>>>> omni_engine
       SAFE_DELETE(mThread);
    }
 };
@@ -88,15 +94,25 @@ ExecuteThread::ExecuteThread(const char *executable, const char *args /* = NULL 
 
 #ifdef UNICODE
    WCHAR exe[ 1024 ];
+<<<<<<< HEAD
    convertUTF8toUTF16( exeBuf, exe );
+=======
+   convertUTF8toUTF16( exeBuf, exe, sizeof( exe ) / sizeof( exe[ 0 ] ) );
+>>>>>>> omni_engine
 
    TempAlloc< WCHAR > argsBuf( ( args ? dStrlen( args ) : 0 ) + 1 );
    argsBuf[ argsBuf.size - 1 ] = 0;
 
    if( args )
+<<<<<<< HEAD
       convertUTF8toUTF16N( args, argsBuf, argsBuf.size );
    if( directory )
       convertUTF8toUTF16N( directory, dirBuf, dirBuf.size );
+=======
+      convertUTF8toUTF16( args, argsBuf, argsBuf.size );
+   if( directory )
+      convertUTF8toUTF16( directory, dirBuf, dirBuf.size );
+>>>>>>> omni_engine
 #else
    char* exe = exeBuf;
    char* argsBuf = args;
@@ -163,7 +179,11 @@ void Platform::openFolder(const char* path )
 
 #ifdef UNICODE
    WCHAR p[ 1024 ];
+<<<<<<< HEAD
    convertUTF8toUTF16( filePath, p );
+=======
+   convertUTF8toUTF16( filePath, p, sizeof( p ) / sizeof( p[ 0 ] ) );
+>>>>>>> omni_engine
 #else
    char* p = filePath;
 #endif
@@ -173,6 +193,30 @@ void Platform::openFolder(const char* path )
    ::ShellExecute( NULL,TEXT("explore"),p, NULL, NULL, SW_SHOWNORMAL);
 }
 
+void Platform::selectFile(const char* path )
+{
+   char filePath[1024];
+   Platform::makeFullPathName(path, filePath, sizeof(filePath));
+
+#ifdef UNICODE
+   WCHAR p[ 1024 ];
+   convertUTF8toUTF16( filePath, p, sizeof( p ) / sizeof( p[ 0 ] ) );
+#else
+   char* p = filePath;
+#endif
+
+   backslash( p );
+
+   String args;
+   args = "/select,\"";
+   args += p;
+   args += "\"";
+   WCHAR strArgs[1024]; 
+   convertUTF8toUTF16( args.c_str(), strArgs, sizeof( strArgs ) / sizeof( strArgs[0] ) );
+
+   ::ShellExecute(NULL, TEXT("open"), TEXT("explorer.exe"), strArgs, NULL, SW_NORMAL);
+}
+
 void Platform::openFile(const char* path )
 {
    char filePath[1024];
@@ -180,7 +224,11 @@ void Platform::openFile(const char* path )
 
 #ifdef UNICODE
    WCHAR p[ 1024 ];
+<<<<<<< HEAD
    convertUTF8toUTF16( filePath, p );
+=======
+   convertUTF8toUTF16( filePath, p, sizeof( p ) / sizeof( p[ 0 ] ) );
+>>>>>>> omni_engine
 #else
    char* p = filePath;
 #endif
@@ -191,4 +239,81 @@ void Platform::openFile(const char* path )
 }
 
 #endif // !TORQUE_SDL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_shellExecute(char * x__executable, char * x__args, char * x__directory)
+{
+const char* executable = (const char*)x__executable;
+const char* args = (const char*)x__args;
+const char* directory = (const char*)x__directory;
+bool wle_returnObject;
+{
+   ExecuteThread *et = new ExecuteThread( executable, args, directory );
+   if(! et->isAlive())
+   {
+      delete et;
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

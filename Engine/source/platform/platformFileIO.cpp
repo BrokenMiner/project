@@ -421,8 +421,12 @@ StringTableEntry Platform::makeRelativePathName(const char *path, const char *to
 
    else
    {
+<<<<<<< HEAD
       // FIXME: This condition is clearly wrong
       if((*pathPtr == 0 && *toPtr == '/') || (*toPtr == '/' && *pathPtr == 0))
+=======
+      if(*pathPtr == 0 && *toPtr == '/')
+>>>>>>> omni_engine
          branch = pathPtr;
 
       // Allocate a new temp so we aren't prone to buffer overruns.
@@ -531,3 +535,116 @@ DefineConsoleFunction( getUserHomeDirectory, const char *, (), , "getUserHomeDir
 {
    return Platform::getUserHomeDirectory();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getTemporaryDirectory(char* retval)
+{
+dSprintf(retval,16384,"");
+const char * wle_returnObject;
+{
+   {wle_returnObject =Platform::getTemporaryDirectory();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getTemporaryFileName(char* retval)
+{
+dSprintf(retval,16384,"");
+const char * wle_returnObject;
+{
+   {wle_returnObject =Platform::getTemporaryFileName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getUserDataDirectory(char* retval)
+{
+dSprintf(retval,16384,"");
+const char * wle_returnObject;
+{
+   {wle_returnObject =Platform::getUserDataDirectory();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getUserHomeDirectory(char* retval)
+{
+dSprintf(retval,16384,"");
+const char * wle_returnObject;
+{
+   {wle_returnObject =Platform::getUserHomeDirectory();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -53,7 +53,11 @@ btHashedOverlappingPairCache::~btHashedOverlappingPairCache()
 
 void	btHashedOverlappingPairCache::cleanOverlappingPair(btBroadphasePair& pair,btDispatcher* dispatcher)
 {
+<<<<<<< HEAD
 	if (pair.m_algorithm && dispatcher)
+=======
+	if (pair.m_algorithm)
+>>>>>>> omni_engine
 	{
 		{
 			pair.m_algorithm->~btCollisionAlgorithm();

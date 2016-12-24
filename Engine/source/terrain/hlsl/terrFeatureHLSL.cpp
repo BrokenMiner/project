@@ -30,6 +30,7 @@
 #include "shaderGen/langElement.h"
 #include "shaderGen/shaderOp.h"
 #include "shaderGen/featureMgr.h"
+<<<<<<< HEAD
 #include "shaderGen/shaderGen.h"
 #include "core/module.h"
 
@@ -40,6 +41,17 @@ namespace
       if(type != Direct3D9 && type != Direct3D9_360)
          return;
 
+=======
+#include "core/module.h"
+
+
+MODULE_BEGIN( TerrainFeatHLSL )
+
+   MODULE_INIT_AFTER( ShaderGenFeatureMgr )
+
+   MODULE_INIT
+   {
+>>>>>>> omni_engine
       FEATUREMGR->registerFeature( MFT_TerrainBaseMap, new TerrainBaseMapFeatHLSL );
       FEATUREMGR->registerFeature( MFT_TerrainParallaxMap, new NamedFeatureHLSL( "Terrain Parallax Texture" ) );   
       FEATUREMGR->registerFeature( MFT_TerrainDetailMap, new TerrainDetailMapFeatHLSL );
@@ -458,7 +470,11 @@ void TerrainDetailMapFeatHLSL::processPix(   Vector<ShaderComponent*> &component
    }
 
    // Add to the blend total.
+<<<<<<< HEAD
    meta->addStatement( new GenOp( "   @ += @;\r\n", blendTotal, detailBlend ) );
+=======
+   meta->addStatement( new GenOp( "   @ = max( @, @ );\r\n", blendTotal, blendTotal, detailBlend ) );
+>>>>>>> omni_engine
 
    // If we had a parallax feature... then factor in the parallax
    // amount so that it fades out with the layer blending.
@@ -468,6 +484,7 @@ void TerrainDetailMapFeatHLSL::processPix(   Vector<ShaderComponent*> &component
       Var *normalMap = _getNormalMapTex();
 
       // Call the library function to do the rest.
+<<<<<<< HEAD
       if(fd.features.hasFeature( MFT_IsDXTnm, detailIndex ) )
       {
          meta->addStatement( new GenOp( "   @.xy += parallaxOffsetDxtnm( @, @.xy, @, @.z * @ );\r\n", 
@@ -478,6 +495,10 @@ void TerrainDetailMapFeatHLSL::processPix(   Vector<ShaderComponent*> &component
          meta->addStatement( new GenOp( "   @.xy += parallaxOffset( @, @.xy, @, @.z * @ );\r\n", 
             inDet, normalMap, inDet, negViewTS, detailInfo, detailBlend ) );
       }
+=======
+      meta->addStatement( new GenOp( "   @.xy += parallaxOffset( @, @.xy, @, @.z * @ );\r\n", 
+         inDet, normalMap, inDet, negViewTS, detailInfo, detailBlend ) );
+>>>>>>> omni_engine
    }
 
    // If this is a prepass then we skip color.
@@ -550,10 +571,18 @@ void TerrainDetailMapFeatHLSL::processPix(   Vector<ShaderComponent*> &component
    meta->addStatement( new GenOp( "      @ *= @.y * @.w;\r\n",
                                     detailColor, detailInfo, inDet ) );
 
+<<<<<<< HEAD
    Var *outColor = (Var*)LangElement::find( "col" );
 
    meta->addStatement( new GenOp( "      @ += @ * @;\r\n",
                                     outColor, detailColor, detailBlend));
+=======
+   Var *baseColor = (Var*)LangElement::find( "baseColor" );
+   Var *outColor = (Var*)LangElement::find( "col" );
+
+   meta->addStatement( new GenOp( "      @ = lerp( @, @ + @, @ );\r\n",
+                                    outColor, outColor, baseColor, detailColor, detailBlend ) );
+>>>>>>> omni_engine
 
    meta->addStatement( new GenOp( "   }\r\n" ) );
 
@@ -749,7 +778,11 @@ void TerrainMacroMapFeatHLSL::processPix(   Vector<ShaderComponent*> &componentL
    }
 
    // Add to the blend total.
+<<<<<<< HEAD
    meta->addStatement( new GenOp( "   @ += @;\r\n", blendTotal, detailBlend ) );
+=======
+   meta->addStatement( new GenOp( "   @ = max( @, @ );\r\n", blendTotal, blendTotal, detailBlend ) );
+>>>>>>> omni_engine
 
    // If this is a prepass then we skip color.
    if ( fd.features.hasFeature( MFT_PrePassConditioner ) )
@@ -822,8 +855,14 @@ void TerrainMacroMapFeatHLSL::processPix(   Vector<ShaderComponent*> &componentL
    //Var *baseColor = (Var*)LangElement::find( "baseColor" );
    Var *outColor = (Var*)LangElement::find( "col" );
 
+<<<<<<< HEAD
    meta->addStatement(new GenOp("      @ += @ * @;\r\n",
                                     outColor, detailColor, detailBlend));
+=======
+   meta->addStatement( new GenOp( "      @ = lerp( @, @ + @, @ );\r\n",
+                                    outColor, outColor, outColor, detailColor, detailBlend ) );
+   //outColor, outColor, baseColor, detailColor, detailBlend ) );
+>>>>>>> omni_engine
 
    meta->addStatement( new GenOp( "   }\r\n" ) );
 

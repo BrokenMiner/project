@@ -56,7 +56,12 @@ ConsoleDocClass( GuiBitmapCtrl,
 GuiBitmapCtrl::GuiBitmapCtrl(void)
  : mBitmapName(),
    mStartPoint( 0, 0 ),
+<<<<<<< HEAD
    mWrap( false )
+=======
+   mWrap( false ),
+   mChangeBitmap( false )
+>>>>>>> omni_engine
 {	
 }
 
@@ -83,6 +88,19 @@ void GuiBitmapCtrl::initPersistFields()
          "If true, the bitmap is tiled inside the control rather than stretched to fit." );
       
    endGroup( "Bitmap" );
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   addGroup( "Context Menu Options" );
+
+		addProtectedField("setBitmap", TypeBool, NULL,
+			&_setBitmapControl, &_getBitmapControl,
+			"Allows the user to set the bitmap of the control in the game." );
+
+	endGroup( "Context Menu Options" );
+
+   // @Copyright end
 
    Parent::initPersistFields();
 }
@@ -168,7 +186,11 @@ void GuiBitmapCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
    if (mTextureObject)
    {
+<<<<<<< HEAD
       GFX->getDrawUtil()->clearBitmapModulation();
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();
+>>>>>>> omni_engine
 		if(mWrap)
 		{
          // We manually draw each repeat because non power of two textures will 
@@ -209,6 +231,7 @@ void GuiBitmapCtrl::onRender(Point2I offset, const RectI &updateRect)
    }
 
    renderChildControls(offset, updateRect);
+
 }
 
 void GuiBitmapCtrl::setValue(S32 x, S32 y)
@@ -264,3 +287,87 @@ DefineConsoleMethod( GuiBitmapCtrl, setBitmap, void, ( const char * fileRoot, bo
    Con::expandScriptFilename(filename, sizeof(filename), fileRoot);
    object->setBitmap(filename, resize );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiBitmapCtrl_setBitmap(char * x__object, char * x__fileRoot, bool resize)
+{
+GuiBitmapCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* fileRoot = (const char*)x__fileRoot;
+
+{
+   char filename[1024];
+   Con::expandScriptFilename(filename, sizeof(filename), fileRoot);
+   object->setBitmap(filename, resize );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiBitmapCtrl_setValue(char * x__object, S32 x, S32 y)
+{
+GuiBitmapCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setValue(x, y);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 #include <stdio.h>
 #include "console/consoleInternal.h"
 #include "console/stringStack.h"
@@ -37,12 +38,27 @@ void ConsoleValueStack::getArgcArgv(StringTableEntry name, U32 *argc, ConsoleVal
       ConsoleValueRef *ref = &mArgv[i+1];
       ref->value = &mStack[startStack + i];
    }
+=======
+#include "console/stringStack.h"
+
+void StringStack::getArgcArgv(StringTableEntry name, U32 *argc, const char ***in_argv, bool popStackFrame /* = false */)
+{
+   U32 startStack = mFrameOffsets[mNumFrames-1] + 1;
+   U32 argCount   = getMin(mStartStackSize - startStack, (U32)MaxArgs - 1);
+
+   *in_argv = mArgV;
+   mArgV[0] = name;
+   
+   for(U32 i = 0; i < argCount; i++)
+      mArgV[i+1] = mBuffer + mStartOffsets[startStack + i];
+>>>>>>> omni_engine
    argCount++;
    
    *argc = argCount;
 
    if(popStackFrame)
       popFrame();
+<<<<<<< HEAD
 }
 
 ConsoleValueStack::ConsoleValueStack() : 
@@ -247,3 +263,6 @@ void ConsoleValueStack::popFrame()
    mStackPos = start;
    mFrame--;
 }
+=======
+}
+>>>>>>> omni_engine

@@ -78,7 +78,11 @@
       new GuiTabBookCtrl(ppOptionsTabBook) {
          tabPosition = "Top";
          tabMargin = "7";
+<<<<<<< HEAD
          minTabWidth = "32";
+=======
+         minTabWidth = "64";
+>>>>>>> omni_engine
          tabHeight = "20";
          allowReorder = "0";
          defaultPage = "-1";
@@ -1689,12 +1693,20 @@
             canSave = "1";
             canSaveDynamicFields = "0";
 
+<<<<<<< HEAD
            new GuiSliderCtrl(ppOptionsLightRaysBrightScalar) {
+=======
+            new GuiSliderCtrl(ppOptionsLightRaysBrightScalar) {
+>>>>>>> omni_engine
                range = "0 5";
                ticks = "1000";
                snap = "0";
                value = "0.75";
+<<<<<<< HEAD
                position = "96 46";
+=======
+               position = "96 96";
+>>>>>>> omni_engine
                extent = "264 17";
                minExtent = "8 2";
                horizSizing = "right";
@@ -1707,7 +1719,11 @@
                isContainer = "0";
                canSave = "1";
                canSaveDynamicFields = "0";
+<<<<<<< HEAD
             };			
+=======
+            };
+>>>>>>> omni_engine
             new GuiTextCtrl(ppOptionsLightRaysBrightnessScalarLabel) {
                text = "Brightness";
                maxLength = "1024";
@@ -1717,7 +1733,11 @@
                anchorBottom = "0";
                anchorLeft = "1";
                anchorRight = "0";
+<<<<<<< HEAD
                position = "26 48";
+=======
+               position = "26 98";
+>>>>>>> omni_engine
                extent = "87 15";
                minExtent = "8 2";
                horizSizing = "right";

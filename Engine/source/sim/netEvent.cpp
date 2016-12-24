@@ -344,7 +344,11 @@ void NetConnection::eventReadPacket(BitStream *bstream)
       if(unguaranteedPhase)
       {
          evt->process(this);
+<<<<<<< HEAD
          evt = NULL;
+=======
+         evt->decRef();
+>>>>>>> omni_engine
          if(mErrorBuffer.isNotEmpty())
             return;
          continue;

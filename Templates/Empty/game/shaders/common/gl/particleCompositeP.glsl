@@ -58,5 +58,9 @@ void main()
 #endif
 	
 	// Sample offscreen target and return
+<<<<<<< HEAD
    OUT_col = texture( colorSource, uvScene.xy );
+=======
+   OUT_FragColor0 = texture( colorSource, uvScene.xy );
+>>>>>>> omni_engine
 }

@@ -50,6 +50,7 @@ bool addConsoleParser(char *ext, fnGetCurrentFile gcf, fnGetCurrentLine gcl, fnP
 	AssertFatal(ext && gcf && gcl && p && r, "AddConsoleParser called with one or more NULL arguments");
 
 	ConsoleParser * pParser = new ConsoleParser;
+<<<<<<< HEAD
 
    pParser->ext = ext;
    pParser->getCurrentFile = gcf;
@@ -65,6 +66,26 @@ bool addConsoleParser(char *ext, fnGetCurrentFile gcf, fnGetCurrentLine gcl, fnP
    gParserList = pParser;
 
    return true;
+=======
+	if(pParser != NULL)
+	{
+		pParser->ext = ext;
+		pParser->getCurrentFile = gcf;
+		pParser->getCurrentLine = gcl;
+		pParser->parse = p;
+		pParser->restart = r;
+		pParser->setScanBuffer = ssb;
+
+		if(def)
+			gDefaultParser = pParser;
+
+		pParser->next = gParserList;
+		gParserList = pParser;
+
+		return true;
+	}
+	return false;
+>>>>>>> omni_engine
 }
 
 ConsoleParser * getParserForFile(const char *filename)

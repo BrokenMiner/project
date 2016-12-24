@@ -127,13 +127,21 @@ struct WheeledVehicleData: public VehicleData
    // Initialized onAdd
    struct Wheel 
    {
+<<<<<<< HEAD
       S32 opposite;              // Opposite wheel on Y axis (or -1 for none)
+=======
+      S64 opposite;              // Opposite wheel on Y axis (or -1 for none)
+>>>>>>> omni_engine
       Point3F pos;               // Root pos of spring
       S32 springNode;            // Wheel spring/hub node
       S32 springSequence;        // Suspension animation
       F32 springLength;          // Suspension animation length
    } wheel[MaxWheels];
+<<<<<<< HEAD
    U32 wheelCount;
+=======
+   U64 wheelCount;
+>>>>>>> omni_engine
    ClippedPolyList rigidBody;    // Extracted from shape
    S32 brakeLightSequence;       // Brakes
    S32 steeringSequence;         // Steering animation

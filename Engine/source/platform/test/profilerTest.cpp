@@ -33,10 +33,17 @@ TEST(Profiler, ProfileStartEnd)
    // Do work.
    if(true)
    {
+<<<<<<< HEAD
       PROFILE_END();
       return;
    }
    PROFILE_END();
+=======
+      PROFILE_END(ProfileStartEndTest);
+      return;
+   }
+   PROFILE_END(ProfileStartEndTest);
+>>>>>>> omni_engine
 }
 
 TEST(Profiler, ProfileScope)

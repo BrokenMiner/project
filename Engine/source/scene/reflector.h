@@ -62,6 +62,12 @@ class ReflectorDesc : public SimDataBlock
 
 public:
 
+   enum Type {
+      PLANE = 0,
+      CUBE
+   };
+   U32 type;
+
    ReflectorDesc();
    virtual ~ReflectorDesc();
 
@@ -224,8 +230,12 @@ protected:
 public:
 
    GFXTextureTargetRef reflectTarget;
+<<<<<<< HEAD
    GFXTexHandle reflectTex;
    GFXTexHandle depthBuff;
+=======
+   GFXTexHandle reflectTex;   
+>>>>>>> omni_engine
    PlaneF refplane;
    bool objectSpace;
 };

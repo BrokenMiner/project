@@ -16,6 +16,9 @@
    hovertime = "1000";
 
    new GuiWindowCollapseCtrl(ESnapOptions) {
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       internalName = "SnapOptionsWindow";
       Enabled = "1";
       isContainer = "1";

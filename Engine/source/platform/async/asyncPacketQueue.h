@@ -156,6 +156,7 @@ class AsyncPacketQueue
                            Consumer consumer,
                            TickType totalTicks = 0,
                            bool dropPackets = false )
+<<<<<<< HEAD
          : mDropPackets( dropPackets ),
            mTotalTicks( totalTicks ),
            mTotalQueuedTicks( 0 ),
@@ -163,6 +164,14 @@ class AsyncPacketQueue
            mTimeSource( timeSource ),
            mConsumer( consumer )
 
+=======
+         : mTotalTicks( totalTicks ),
+           mTotalQueuedTicks( 0 ),
+           mPacketQueue( maxQueuedPackets ),
+           mTimeSource( timeSource ),
+           mConsumer( consumer ),
+           mDropPackets( dropPackets )
+>>>>>>> omni_engine
       {
          #ifdef TORQUE_DEBUG
          mTotalQueuedPackets = 0;

@@ -563,7 +563,7 @@ void ColladaAppMesh::getPrimitives(const domGeometry* geometry)
                vertTuples.push_back(VertTuple(vertTuples.last()));
 
             // Split the primitive at the current triangle
-            S32 indicesRemaining = (numTriangles - iTri) * 3;
+            const S32 indicesRemaining = ((S32)numTriangles - iTri) * 3;
             if (iTri > 0)
             {
                daeErrorHandler::get()->handleWarning(avar("Splitting primitive "

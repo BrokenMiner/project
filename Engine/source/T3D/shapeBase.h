@@ -72,6 +72,8 @@ class SceneRenderState;
 class TSThread;
 class GameConnection;
 struct CameraScopeQuery;
+class ParticleEmitter;
+class ParticleEmitterData;
 class ProjectileData;
 class ExplosionData;
 struct DebrisData;
@@ -324,10 +326,14 @@ struct ShapeBaseImageData: public GameBaseData {
    /// @{
    bool              shakeCamera;
    VectorF           camShakeFreq;
+<<<<<<< HEAD
    VectorF           camShakeAmp;
    F32               camShakeDuration;
    F32               camShakeRadius;
    F32               camShakeFalloff;
+=======
+   VectorF           camShakeAmp;         
+>>>>>>> omni_engine
    /// @}
 
    /// Maximum number of sounds this image can play at a time.
@@ -491,8 +497,13 @@ struct ShapeBaseImageData: public GameBaseData {
 
    /// @name Callbacks
    /// @{
+<<<<<<< HEAD
    DECLARE_CALLBACK( void, onMount, ( ShapeBase* obj, S32 slot, F32 dt ) );
    DECLARE_CALLBACK( void, onUnmount, ( ShapeBase* obj, S32 slot, F32 dt ) );
+=======
+   DECLARE_CALLBACK( void, onImageMount, ( ShapeBase* obj, S32 slot, F32 dt ) );
+   DECLARE_CALLBACK( void, onImageUnmount, ( ShapeBase* obj, S32 slot, F32 dt ) );
+>>>>>>> omni_engine
    /// @}
 };
 
@@ -711,6 +722,10 @@ protected:
    ShapeBase*        mControllingObject;        ///< Controlling object
    bool              mTrigger[MaxTriggerKeys];  ///< What triggers are set, if any.
 
+   //Winterleaf
+   S32 mVisibleDistance;
+   //Winterleaf
+
 
    /// @name Scripted Sound
    /// @{
@@ -905,6 +920,9 @@ protected:
    F32 mWhiteOut;
 
    bool mFlipFadeVal;
+
+   /// Camera shake caused by weapon fire.
+   CameraShake *mWeaponCamShake;
 
  public:
 
@@ -1101,11 +1119,18 @@ protected:
    virtual void onImageAnimThreadChange(U32 imageSlot, S32 imageShapeIndex, ShapeBaseImageData::StateData* lastState, const char* anim, F32 pos, F32 timeScale, bool reset=false);
    virtual void onImageAnimThreadUpdate(U32 imageSlot, S32 imageShapeIndex, F32 dt);
    virtual void ejectShellCasing( U32 imageSlot );
+<<<<<<< HEAD
    virtual void shakeCamera( U32 imageSlot );
    virtual void updateDamageLevel();
    virtual void updateDamageState();
    virtual void onImpact(SceneObject* obj, const VectorF& vec);
    virtual void onImpact(const VectorF& vec);
+=======
+   virtual void updateDamageLevel();
+   virtual void updateDamageState();
+   virtual void onImpact(SceneObject* obj, VectorF vec);
+   virtual void onImpact(VectorF vec);
+>>>>>>> omni_engine
    /// @}
 
    /// The inner prep render function that does the 
@@ -1113,6 +1138,12 @@ protected:
    void _prepRenderImage(  SceneRenderState* state, 
                            bool renderSelf, 
                            bool renderMountedImages );
+   
+   //WLE - Vince 9/28/2014 - Added this function so I could preload all the lods to a shapebase when
+   //the game starts. 
+   void PreLoadAllLOD (SceneRenderState* state);
+   //WLE - END
+   
 
    /// Renders the shape bounds as well as the 
    /// bounds of all mounted shape images.
@@ -1183,7 +1214,15 @@ public:
 
    /// @name Mesh Visibility
    /// @{
+<<<<<<< HEAD
    
+=======
+   //Winterleaf
+   void setVisibleDistance(S32 dist);
+   S32 getVisibleDistance();
+   //Winterleaf
+
+>>>>>>> omni_engine
 protected:
 
    /// A bit vector of the meshes forced to be hidden.

@@ -30,6 +30,7 @@
 
 //--------------------------------------
 // Types
+<<<<<<< HEAD
 #if defined(TORQUE_X86)
 typedef signed long long    S64;
 typedef unsigned long long  U64;
@@ -37,6 +38,10 @@ typedef unsigned long long  U64;
 typedef signed long    S64;
 typedef unsigned long  U64;
 #endif
+=======
+typedef signed long long    S64;
+typedef unsigned long long  U64;
+>>>>>>> omni_engine
 
 
 //--------------------------------------
@@ -78,11 +83,19 @@ typedef unsigned long  U64;
 #  define TORQUE_OS_PS3
 #  include "platform/types.posix.h"
 
+<<<<<<< HEAD
 #elif defined(linux) || defined(LINUX)
 #  define TORQUE_OS_STRING "Linux"
 #  define TORQUE_OS_LINUX
 //#  define TORQUE_SUPPORTS_NASM
 //#  define TORQUE_SUPPORTS_GCC_INLINE_X86_ASM
+=======
+#elif defined(linux)
+#  define TORQUE_OS_STRING "Linux"
+#  define TORQUE_OS_LINUX
+#  define TORQUE_SUPPORTS_NASM
+#  define TORQUE_SUPPORTS_GCC_INLINE_X86_ASM
+>>>>>>> omni_engine
 #  include "platform/types.posix.h"
 
 #elif defined(__OpenBSD__)

@@ -389,6 +389,7 @@ void dPrintf(const char *format, ...)
    va_list args;
    va_start(args, format);
    vprintf(format, args);
+<<<<<<< HEAD
    va_end(args);
 }
 
@@ -398,6 +399,16 @@ S32 dVprintf(const char *format, va_list arglist)
 }
 
 S32 dSprintf(char *buffer, U32 bufferSize, const char *format, ...)
+=======
+}
+
+S32 dVprintf(const char *format, void *arglist)
+{
+   return vprintf(format, (char*)arglist);
+}
+
+S32 dSprintf(char *buffer, dsize_t bufferSize, const char *format, ...)
+>>>>>>> omni_engine
 {
    va_list args;
    va_start(args, format);
@@ -411,9 +422,15 @@ S32 dSprintf(char *buffer, U32 bufferSize, const char *format, ...)
 }
 
 
+<<<<<<< HEAD
 S32 dVsprintf(char *buffer, U32 bufferSize, const char *format, va_list arglist)
 {
    S32 len = vsnprintf(buffer, bufferSize, format, arglist);
+=======
+S32 dVsprintf(char *buffer, dsize_t bufferSize, const char *format, void * arglist)
+{
+   S32 len = vsnprintf(buffer, bufferSize, format, (char*)arglist);
+>>>>>>> omni_engine
    
    AssertWarn( len < bufferSize, "Buffer too small in call to dVsprintf!" );
 
@@ -472,9 +489,13 @@ S32 dSscanf(const char *buffer, const char *format, ...)
 #else
    va_list args;
    va_start(args, format);
+<<<<<<< HEAD
    S32 res = vsscanf(buffer, format, args);
    va_end(args);
    return res;
+=======
+   return vsscanf(buffer, format, args);
+>>>>>>> omni_engine
 #endif
 }
 
@@ -520,7 +541,11 @@ char* dStristr( char* str1, const char* str2 )
 
    // Slow but at least we have it.
 
+<<<<<<< HEAD
    U32 str2len = strlen( str2 );
+=======
+   const dsize_t str2len = strlen( str2 );
+>>>>>>> omni_engine
    while( *str1 )
    {
       if( strncasecmp( str1, str2, str2len ) == 0 )

@@ -32,7 +32,11 @@
 #include "app/game.h"
 #include "T3D/gameBase/gameConnection.h"
 #include "T3D/gameBase/gameConnectionEvents.h"
+<<<<<<< HEAD
 #include "console/engineAPI.h"
+=======
+#include "torqueConfig.h"
+>>>>>>> omni_engine
 
 #define DebugChecksum 0xF00DBAAD
 
@@ -159,8 +163,22 @@ void SimDataBlockEvent::pack(NetConnection *conn, BitStream *bstream)
    }
 }
 
+<<<<<<< HEAD
 void SimDataBlockEvent::unpack(NetConnection *cptr, BitStream *bstream)
 {
+=======
+void SimDataBlockEvent::unpack(NetConnection *cptr, BitStream *bstream, bool NoCache)
+{
+#ifdef ENABLE_DATABLOCK_CACHE
+    //We want to mark the current stream position so we know what part
+    //of this stream we want to record for this Datablock.
+    //If we grab the starting point in the stream here, and the ending point at the end
+    //of this function then we know what part of the data in this stream is related to this
+    //datablock and thus we can save it for disk loading later.
+    S32 BeginBufferPoint = bstream->getCurPos();
+#endif
+
+>>>>>>> omni_engine
    if(bstream->readFlag())
    {
       mProcess = true;
@@ -214,7 +232,46 @@ void SimDataBlockEvent::unpack(NetConnection *cptr, BitStream *bstream)
             mObj->getClassName()) );
 #endif
 
+<<<<<<< HEAD
    }
+=======
+#ifdef ENABLE_DATABLOCK_CACHE
+
+        //If this is from a load of a cache then we don't want to cache it
+        //and this function will be called with nocache = true;
+        if (NoCache)
+            return;
+        //Ok, the current position of this stream is the end of the datablock information.
+        //So we just need to snip the data and save it.
+
+        //First set up a scratch buffer.
+        U8 scratchBuffer[Net::MaxPacketDataSize];
+
+        //Get the current position in the buffer, this is the end of the data.
+        S32 EndBufferPoint = bstream->getCurPos();
+
+        //Now we need to rewind the buffer back to the position it was at when it entered this function.
+        bstream->setCurPos(BeginBufferPoint);
+
+        //Now we read in all the bits till the end point into the scratchBuffer
+        bstream->readBits(EndBufferPoint - BeginBufferPoint,scratchBuffer);
+
+        if ( ((GameConnection *)cptr)->clientBitStream->getCurPos() == 0 )
+        {
+            U32 crc = dAtoui(Con::getVariable("$ServerDatablockCacheCRC"));
+            ((GameConnection *)cptr)->clientBitStream->writeuInt(crc,32);
+        }
+
+        ((GameConnection *)cptr)->clientBitStream->writeBits(EndBufferPoint - BeginBufferPoint,scratchBuffer);
+
+#endif
+    }
+}
+
+void SimDataBlockEvent::unpack(NetConnection *cptr, BitStream *bstream)
+{
+    unpack(cptr, bstream, false);
+>>>>>>> omni_engine
 }
 
 void SimDataBlockEvent::write(NetConnection *cptr, BitStream *bstream)
@@ -235,7 +292,11 @@ void SimDataBlockEvent::process(NetConnection *cptr)
    if(mProcess)
    {
       //call the console function to set the number of blocks to be sent
+<<<<<<< HEAD
       Con::executef("onDataBlockObjectReceived", mIndex, mTotal);
+=======
+      Con::executef("onDataBlockObjectReceived", Con::getIntArg(mIndex), Con::getIntArg(mTotal));
+>>>>>>> omni_engine
 
       String &errorBuffer = NetConnection::getErrorBuffer();
                      

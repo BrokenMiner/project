@@ -59,7 +59,11 @@ inline void sRead( BitStream* stream, T** ptr )
       {
          StringTableEntry name = stream->readSTString();
          
+<<<<<<< HEAD
          AssertFatal( !( uintptr_t( name ) & 0x1 ), "sRead - misaligned pointer" ); // StringTableEntry pointers are always word-aligned.
+=======
+         AssertFatal( !( U32( name ) & 0x1 ), "sRead - misaligned pointer" ); // StringTableEntry pointers are always word-aligned.
+>>>>>>> omni_engine
          
          *( ( StringTableEntry* ) ptr ) = name;
       }

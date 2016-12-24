@@ -24,6 +24,7 @@
 #include "gfx/gl/gfxGLPrimitiveBuffer.h"
 #include "gfx/gl/gfxGLEnumTranslate.h"
 
+<<<<<<< HEAD
 #include "gfx/gl/tGL/tGL.h"
 #include "gfx/gl/gfxGLUtils.h"
 
@@ -51,13 +52,30 @@ GFXGLPrimitiveBuffer::GFXGLPrimitiveBuffer(GFXDevice *device, U32 indexCount, U3
    PRESERVE_INDEX_BUFFER();
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(U16), NULL, GFXGLBufferType[bufferType]);   
+=======
+#include "gfx/gl/ggl/ggl.h"
+#include "gfx/gl/gfxGLUtils.h"
+
+GFXGLPrimitiveBuffer::GFXGLPrimitiveBuffer(GFXDevice *device, U32 indexCount, U32 primitiveCount, GFXBufferType bufferType) :
+GFXPrimitiveBuffer(device, indexCount, primitiveCount, bufferType), mZombieCache(NULL) 
+{
+   PRESERVE_INDEX_BUFFER();
+	// Generate a buffer and allocate the needed memory
+	glGenBuffers(1, &mBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(U16), NULL, GFXGLBufferType[bufferType]);
+>>>>>>> omni_engine
 }
 
 GFXGLPrimitiveBuffer::~GFXGLPrimitiveBuffer()
 {
 	// This is heavy handed, but it frees the buffer memory
+<<<<<<< HEAD
    if( mBufferType != GFXBufferTypeVolatile )
 	   glDeleteBuffers(1, &mBuffer);
+=======
+	glDeleteBuffersARB(1, &mBuffer);
+>>>>>>> omni_engine
    
    if( mZombieCache )
       delete [] mZombieCache;
@@ -65,6 +83,7 @@ GFXGLPrimitiveBuffer::~GFXGLPrimitiveBuffer()
 
 void GFXGLPrimitiveBuffer::lock(U32 indexStart, U32 indexEnd, void **indexPtr)
 {
+<<<<<<< HEAD
    if( mBufferType == GFXBufferTypeVolatile )
    {
       AssertFatal(indexStart == 0, "");
@@ -79,10 +98,22 @@ void GFXGLPrimitiveBuffer::lock(U32 indexStart, U32 indexEnd, void **indexPtr)
 
    lockedIndexStart = indexStart;
    lockedIndexEnd = indexEnd;
+=======
+	// Preserve previous binding
+   PRESERVE_INDEX_BUFFER();
+   
+   // Bind ourselves and map
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndexCount * sizeof(U16), NULL, GFXGLBufferType[mBufferType]);
+   
+   // Offset the buffer to indexStart
+	*indexPtr = (void*)((U8*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY) + (indexStart * sizeof(U16)));
+>>>>>>> omni_engine
 }
 
 void GFXGLPrimitiveBuffer::unlock()
 {
+<<<<<<< HEAD
    PROFILE_SCOPE(GFXGLPrimitiveBuffer_unlock);
 
    if( mBufferType == GFXBufferTypeVolatile )
@@ -110,15 +141,29 @@ void GFXGLPrimitiveBuffer::unlock()
 
    lockedIndexStart = 0;
    lockedIndexEnd = 0;
+=======
+	// Preserve previous binding
+   PRESERVE_INDEX_BUFFER();
+   
+   // Bind ourselves and unmap
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
+	bool res = glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+   AssertFatal(res, "GFXGLPrimitiveBuffer::unlock - shouldn't fail!");
+>>>>>>> omni_engine
 }
 
 void GFXGLPrimitiveBuffer::prepare()
 {
 	// Bind
+<<<<<<< HEAD
    GFXGLDevice* glDevice = static_cast<GFXGLDevice*>(mDevice);
    glDevice->setPB(this);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
    glDevice->getOpenglCache()->setCacheBinded(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
+=======
+	static_cast<GFXGLDevice*>(mDevice)->setPB(this);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
+>>>>>>> omni_engine
 }
 
 void GFXGLPrimitiveBuffer::finish()
@@ -130,7 +175,11 @@ void GFXGLPrimitiveBuffer::finish()
 GLvoid* GFXGLPrimitiveBuffer::getBuffer()
 {
 	// NULL specifies no offset into the hardware buffer
+<<<<<<< HEAD
    return (GLvoid*)mBufferOffset;
+=======
+	return (GLvoid*)NULL;
+>>>>>>> omni_engine
 }
 
 void GFXGLPrimitiveBuffer::zombify()

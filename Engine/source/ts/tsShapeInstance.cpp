@@ -576,7 +576,7 @@ S32 TSShapeInstance::setDetailFromDistance( const SceneRenderState *state, F32 s
    smLastScaledDistance = scaledDistance;
 
    // Shortcut if the distance is really close or negative.
-   if ( scaledDistance <= 0.0f )
+   if ( scaledDistance <= 0.1f )
    {
       mShape->mDetailLevelLookup[0].get( mCurrentDetailLevel, mCurrentIntraDetailLevel );
       return mCurrentDetailLevel;

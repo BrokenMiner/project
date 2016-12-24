@@ -64,7 +64,11 @@ void main()
 
    float fac = dot( normalize( pos ), sunDir );
    fac = max( nightInterpAndExposure.y, pow( clamp( fac, 0.0, 1.0 ), 2 ) );
+<<<<<<< HEAD
    OUT_col = mix( color, nightSkyColor, nightInterpAndExposure.y );
+=======
+   OUT_FragColor0 = mix( color, nightSkyColor, nightInterpAndExposure.y );
+>>>>>>> omni_engine
    
    // Clip based on the camera-relative
    // z position of the vertex, passed through
@@ -72,6 +76,11 @@ void main()
    if(zPosition < 0.0)
       discard;
 
+<<<<<<< HEAD
    OUT_col.a = 1;
    OUT_col = hdrEncode( OUT_col );
+=======
+   OUT_FragColor0.a = 1;
+   OUT_FragColor0 = hdrEncode( OUT_FragColor0 );
+>>>>>>> omni_engine
 }

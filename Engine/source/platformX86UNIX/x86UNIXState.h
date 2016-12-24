@@ -67,13 +67,22 @@ class x86UNIXPlatformState
       // loop runs in a separate thread.  If you need the display pointer,
       // use the DisplayPtrManager class.  See the clipboard functions in 
       // x86unixinput.cc for an example.
+<<<<<<< HEAD
       //Display *getDisplayPointer() { return mDisplay; }
+=======
+      Display *getDisplayPointer() { return mDisplay; }
+>>>>>>> omni_engine
 
    public:
       U32      currentTime;
 
+<<<<<<< HEAD
       void setDisplayPointer( Display *displayPointer )     { mDisplay = displayPointer; }
       Display* getDisplayPointer()                          { return mDisplay; }
+=======
+      void setDisplayPointer( Display *displayPointer ) 
+          { mDisplay = displayPointer; }
+>>>>>>> omni_engine
 
       void setScreenNumber( int newNumber ) { mScreenNumber = newNumber; }
       int getScreenNumber() { return mScreenNumber; }

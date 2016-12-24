@@ -336,12 +336,35 @@ S32 BitStream::readInt(S32 bitCount)
 
 void BitStream::writeInt(S32 val, S32 bitCount)
 {
+<<<<<<< HEAD
    AssertFatal((bitCount == 32) || ((val >> bitCount) == 0), avar("BitStream::writeInt: value out of range: %i/%i (%i bits)", val, 1 << bitCount, bitCount));
+=======
+   AssertWarn((bitCount == 32) || ((val >> bitCount) == 0), "BitStream::writeInt: value out of range");
+>>>>>>> omni_engine
 
    val = convertHostToLEndian(val);
    writeBits(bitCount, &val);
 }
 
+S32 BitStream::readuInt(S32 bitCount)
+{
+   U32 ret = 0;
+   readBits(bitCount, &ret);
+   ret = convertLEndianToHost(ret);
+   if(bitCount == 32)
+      return ret;
+   else
+      ret &= (1 << bitCount) - 1;
+   return ret;
+}
+
+void BitStream::writeuInt(U32 val, S32 bitCount)
+{
+   AssertWarn((bitCount == 32) || ((val >> bitCount) == 0), "BitStream::writeInt: value out of range");
+
+   val = convertHostToLEndian(val);
+   writeBits(bitCount, &val);
+}
 void BitStream::writeFloat(F32 f, S32 bitCount)
 {
    writeInt((S32)(f * ((1 << bitCount) - 1)), bitCount);

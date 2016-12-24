@@ -166,8 +166,13 @@ public:
 						collisionPair.m_internalTmpValue =  2;
 					} else
 					{
+<<<<<<< HEAD
 						btCollisionObjectWrapper ob0(0,colObj0->getCollisionShape(),colObj0,colObj0->getWorldTransform(),-1,-1);
 						btCollisionObjectWrapper ob1(0,colObj1->getCollisionShape(),colObj1,colObj1->getWorldTransform(),-1,-1);
+=======
+						btCollisionObjectWrapper ob0(0,colObj0->getCollisionShape(),colObj0,colObj0->getWorldTransform());
+						btCollisionObjectWrapper ob1(0,colObj1->getCollisionShape(),colObj1,colObj1->getWorldTransform());
+>>>>>>> omni_engine
 
 						collisionPair.m_algorithm = m_dispatcher->findAlgorithm(&ob0,&ob1);
 						collisionPair.m_internalTmpValue = 3;
@@ -245,8 +250,13 @@ void	SpuGatheringCollisionDispatcher::dispatchAllCollisionPairs(btOverlappingPai
 							if (dispatcher->needsCollision(colObj0,colObj1))
 							{
 							//discrete collision detection query
+<<<<<<< HEAD
 								btCollisionObjectWrapper ob0(0,colObj0->getCollisionShape(),colObj0,colObj0->getWorldTransform(),-1,-1);
 								btCollisionObjectWrapper ob1(0,colObj1->getCollisionShape(),colObj1,colObj1->getWorldTransform(),-1,-1);
+=======
+								btCollisionObjectWrapper ob0(0,colObj0->getCollisionShape(),colObj0,colObj0->getWorldTransform());
+								btCollisionObjectWrapper ob1(0,colObj1->getCollisionShape(),colObj1,colObj1->getWorldTransform());
+>>>>>>> omni_engine
 
 								btManifoldResult contactPointResult(&ob0,&ob1);
 								

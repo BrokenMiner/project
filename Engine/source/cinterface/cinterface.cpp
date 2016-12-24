@@ -268,8 +268,12 @@ extern "C" {
 		if (!entry)
 			return;
 
+<<<<<<< HEAD
 		StringStackConsoleWrapper args(argc, argv);
 		entry->cb.mVoidCallbackFunc(NULL, args.count(), args);
+=======
+		entry->cb.mVoidCallbackFunc(NULL, argc, argv);      
+>>>>>>> omni_engine
 	}
 
 	F32 torque_callfloatfunction(const char* nameSpace, const char* name, S32 argc, const char ** argv)
@@ -280,8 +284,12 @@ extern "C" {
 		if (!entry)
 			return 0.0f;
 
+<<<<<<< HEAD
 		StringStackConsoleWrapper args(argc, argv);
 		return entry->cb.mFloatCallbackFunc(NULL, args.count(), args);
+=======
+		return entry->cb.mFloatCallbackFunc(NULL, argc, argv);      
+>>>>>>> omni_engine
 	}
 
 	S32 torque_callintfunction(const char* nameSpace, const char* name, S32 argc, const char ** argv)
@@ -292,8 +300,12 @@ extern "C" {
 		if (!entry)
 			return 0;
 
+<<<<<<< HEAD
 		StringStackConsoleWrapper args(argc, argv);
 		return entry->cb.mIntCallbackFunc(NULL, args.count(), args);
+=======
+		return entry->cb.mIntCallbackFunc(NULL, argc, argv);      
+>>>>>>> omni_engine
 	}
 
 
@@ -304,8 +316,12 @@ extern "C" {
 		if (!entry)
 			return "";
 
+<<<<<<< HEAD
 		StringStackConsoleWrapper args(argc, argv);
 		return entry->cb.mStringCallbackFunc(NULL, args.count(), args);
+=======
+		return entry->cb.mStringCallbackFunc(NULL, argc, argv);      
+>>>>>>> omni_engine
 	}
 
 	bool torque_callboolfunction(const char* nameSpace, const char* name, S32 argc, const char ** argv)
@@ -315,8 +331,12 @@ extern "C" {
 		if (!entry)
 			return false;
 
+<<<<<<< HEAD
 		StringStackConsoleWrapper args(argc, argv);
 		return entry->cb.mBoolCallbackFunc(NULL, args.count(), args);
+=======
+		return entry->cb.mBoolCallbackFunc(NULL, argc, argv);      
+>>>>>>> omni_engine
 	}
 
 
@@ -330,8 +350,12 @@ extern "C" {
 		if(!entry->mFunctionOffset)
 			return "";
 
+<<<<<<< HEAD
 		StringStackConsoleWrapper args(argc, argv);
 		const char* ret = entry->mCode->exec(entry->mFunctionOffset, StringTable->insert(name), entry->mNamespace, args.count(), args, false, entry->mPackage);
+=======
+		const char* ret = entry->mCode->exec(entry->mFunctionOffset, StringTable->insert(name), entry->mNamespace, argc, argv, false, entry->mPackage);
+>>>>>>> omni_engine
 
 		if (!ret || !dStrlen(ret))
 			return "";
@@ -427,7 +451,11 @@ extern "C" {
 			PlatformWindowManager::get()->getFirstWindow()->setSize(Point2I(width,height));
 	}
 
+<<<<<<< HEAD
 #if defined(TORQUE_OS_WIN) && !defined(TORQUE_SDL)
+=======
+#ifdef TORQUE_OS_WIN
+>>>>>>> omni_engine
    // retrieve the hwnd of our render window
    void* torque_gethwnd()
    {
@@ -487,4 +515,90 @@ DefineConsoleFunction( testJavaScriptBridge, const char *, (const char* arg1, co
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_testJavaScriptBridge(char * x__arg1, char * x__arg2, char * x__arg3,  char* retval)
+{
+dSprintf(retval,16384,"");
+const char* arg1 = (const char*)x__arg1;
+const char* arg2 = (const char*)x__arg2;
+const char* arg3 = (const char*)x__arg3;
+const char * wle_returnObject;
+{
+	S32 failed = 0;
+		if (dStrcmp(arg1,"one"))
+			failed = 2;
+		if (dStrcmp(arg2,"two"))
+			failed = 2;
+		if (dStrcmp(arg3,"three"))
+			failed = 2;
+	
+		const char* jret = Con::evaluate("JS::bridgeCallback(\"one\",\"two\",\"three\");");
+	if (dStrcmp(jret,"42"))
+		failed = 3;
+	static const U32 bufSize = 256;
+	char *ret = Con::getReturnBuffer(bufSize);
+	dSprintf(ret, bufSize, "%i", failed);
+	{wle_returnObject =ret;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

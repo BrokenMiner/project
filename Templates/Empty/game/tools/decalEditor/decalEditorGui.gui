@@ -37,7 +37,14 @@
    currentDecalID = "175";
    Docking = "None";
    
+<<<<<<< HEAD
    new GuiWindowCollapseCtrl(DecalEditorWindow) {      
+=======
+   new GuiWindowCollapseCtrl(DecalEditorWindow) { 
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      AllowPopWindow = "1";     
+//Copyright Winterleaf Entertainment L.L.C. 2013      
+>>>>>>> omni_engine
       canSaveDynamicFields = "0";
       Enabled = "1";
       isContainer = "1";
@@ -382,6 +389,7 @@
 
    
    new GuiWindowCollapseCtrl(DecalPreviewWindow) {
+      AllowPopWindow = "1";
       canSaveDynamicFields = "0";
       internalName = "";
       Enabled = "1";
@@ -409,7 +417,11 @@
       canMinimize = "0";
       canMaximize = "0";
       minSize = "152 235";
+<<<<<<< HEAD
       closeCommand = "EPainter.parentGroup.setVisible(false);";
+=======
+      closeCommand = "TerrainPainter.parentGroup.setVisible(false);";
+>>>>>>> omni_engine
       EdgeSnap = "1";
       text = "Decal Properties";
       

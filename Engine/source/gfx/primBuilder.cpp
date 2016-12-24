@@ -179,6 +179,7 @@ void end( bool useGenericShaders )
       }
    }
 
+<<<<<<< HEAD
     if ( useGenericShaders )
     {
         GFXStateBlock *currentBlock = GFX->getStateBlock();
@@ -192,6 +193,10 @@ void end( bool useGenericShaders )
         else
             GFX->setupGenericShaders( GFXDevice::GSColor );
     }
+=======
+   if ( useGenericShaders )
+      GFX->setupGenericShaders( GFXDevice::GSModColorTexture );
+>>>>>>> omni_engine
 
    const GFXVertexPCT *srcVerts = mTempVertBuff.address();
    U32 numVerts = mCurVertIndex;

@@ -9,8 +9,13 @@ AC_PREREQ([2.54])
 #----------------------------------------------------------------------------
 AC_INIT(
     [bullet],
+<<<<<<< HEAD
     [2.82],
     [erwin.coumans@gmail.com])
+=======
+    [2.81],
+    [bullet@erwincoumans.com])
+>>>>>>> omni_engine
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR([configure.ac])
 AM_INIT_AUTOMAKE
@@ -163,7 +168,11 @@ CXXFLAGS="$ARCH_SPECIFIC_CFLAGS $CXXFLAGS $CFLAGS"
 #----------------------------------------------------------------------------
 # Emit generated files.
 #----------------------------------------------------------------------------
+<<<<<<< HEAD
 AC_CONFIG_FILES([bullet.pc Makefile Demos/Makefile Demos/SoftDemo/Makefile Demos/AllBulletDemos/Makefile Demos/MultiThreadedDemo/Makefile  Demos/OpenGL/Makefile  Demos/ForkLiftDemo/Makefile Demos/FeatherstoneMultiBodyDemo/Makefile Demos/BasicDemo/Makefile Demos/CcdPhysicsDemo/Makefile Demos/VehicleDemo/Makefile Demos/TerrainDemo/Makefile src/Makefile Extras/Makefile])
+=======
+AC_CONFIG_FILES([bullet.pc Makefile Demos/Makefile Demos/SoftDemo/Makefile Demos/AllBulletDemos/Makefile Demos/MultiThreadedDemo/Makefile  Demos/OpenGL/Makefile Demos/BasicDemo/Makefile Demos/CcdPhysicsDemo/Makefile Demos/VehicleDemo/Makefile Demos/TerrainDemo/Makefile src/Makefile Extras/Makefile])
+>>>>>>> omni_engine
 AC_OUTPUT
 
 AC_MSG_NOTICE([

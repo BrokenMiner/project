@@ -163,7 +163,11 @@ EulerF MatrixF::toEuler() const
    const F32 * mat = m;
 
    EulerF r;
+<<<<<<< HEAD
    r.x = mAsin(mClampF(mat[MatrixF::idx(2,1)], -1.0, 1.0));
+=======
+   r.x = mAsin(mat[MatrixF::idx(2,1)]);
+>>>>>>> omni_engine
 
    if(mCos(r.x) != 0.f)
    {

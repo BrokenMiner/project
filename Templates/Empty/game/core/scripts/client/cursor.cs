@@ -62,7 +62,11 @@ function GuiCanvas::checkCursor(%this)
       if ((%control.noCursor $= "") || !%control.noCursor)
       {
          showCursor();
+<<<<<<< HEAD
          return true;
+=======
+         return;
+>>>>>>> omni_engine
       }
    }
    // If we get here, every control requested a hidden cursor, so we oblige.

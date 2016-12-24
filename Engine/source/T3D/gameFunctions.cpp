@@ -98,6 +98,9 @@ namespace CameraAndFOV{
    static F32 sTargetFov               = 90.f;     ///< the desired FOV
    static F32 sLastCameraUpdateTime    = 0;        ///< last time camera was updated
    static S32 sZoomSpeed               = 500;      ///< ms per 90deg fov change
+   static Point4F sFrustumOffset = Point4F::Zero;
+
+   F32 mFarClippingDistance     = 0.0f; //Set the Far Clipping.
 
    /// A scale to apply to the normal visible distance
    /// typically used for tuning performance.
@@ -203,6 +206,25 @@ DefineEngineFunction( setFov, void, ( F32 FOV ),,
    CameraAndFOV::sTargetFov = mClampF(FOV, MinCameraFov, MaxCameraFov);
 }
 
+DefineEngineFunction( setFrustumOffset, void, ( Point4F offset ),,
+				"@brief .\n")
+{
+   CameraAndFOV::sFrustumOffset = offset;
+}
+DefineEngineFunction( getFrustumOffset, Point4F, (),,
+				"@brief .\n")
+{
+   return CameraAndFOV::sFrustumOffset;
+}
+void GameSetCameraFov(Point4F offset)
+{
+   CameraAndFOV::sFrustumOffset = offset;
+}
+Point4F GameGetFrustumOffset()
+{
+   return CameraAndFOV::sFrustumOffset;
+}
+
 F32 GameGetCameraFov()
 {
    return(CameraAndFOV::sCameraFov);
@@ -228,7 +250,11 @@ void GameUpdateCameraFov()
       F32 delta = time - CameraAndFOV::sLastCameraUpdateTime;
 
       // snap zoom?
+<<<<<<< HEAD
       if((CameraAndFOV::sZoomSpeed == 0) || (delta <= 0.0f))
+=======
+      if((CameraAndFOV::sZoomSpeed == 0) || (delta <= 0.f))
+>>>>>>> omni_engine
          CameraAndFOV::sCameraFov = CameraAndFOV::sTargetFov;
       else
       {
@@ -346,6 +372,7 @@ bool GameProcessCameraQuery(CameraQuery *query)
       // tuning scale which we never let over 1.
       CameraAndFOV::sVisDistanceScale = mClampF( CameraAndFOV::sVisDistanceScale, 0.01f, 1.0f );
       query->farPlane = gClientSceneGraph->getVisibleDistance() * CameraAndFOV::sVisDistanceScale;
+<<<<<<< HEAD
 
       // Provide some default values
       query->projectionOffset = Point2F::Zero;
@@ -356,6 +383,14 @@ bool GameProcessCameraQuery(CameraQuery *query)
       query->hasFovPort = false;
       query->hasStereoTargets = false;
       
+=======
+	  query->frustumOffset = gClientSceneGraph->getFrustumOffset(); 
+
+      // Provide some default values
+      query->projectionOffset = Point2F::Zero;
+      query->eyeOffset = Point3F::Zero;
+
+>>>>>>> omni_engine
       F32 cameraFov = 0.0f;
       bool fovSet = false;
 
@@ -363,6 +398,7 @@ bool GameProcessCameraQuery(CameraQuery *query)
       // is not open
       if(!gEditingMission && connection->hasDisplayDevice())
       {
+<<<<<<< HEAD
          IDisplayDevice* display = connection->getDisplayDevice();
          // Note: all eye values are invalid until this is called
          display->setDrawCanvas(query->drawCanvas);
@@ -371,6 +407,16 @@ bool GameProcessCameraQuery(CameraQuery *query)
 
          // Display may activate AFTER so we need to call this again just in case
          display->onStartFrame();
+=======
+         const IDisplayDevice* display = connection->getDisplayDevice();
+
+         // The connection's display device may want to set the FOV
+         if(display->providesYFOV())
+         {
+            cameraFov = mRadToDeg(display->getYFOV());
+            fovSet = true;
+         }
+>>>>>>> omni_engine
 
          // The connection's display device may want to set the projection offset
          if(display->providesProjectionOffset())
@@ -379,6 +425,7 @@ bool GameProcessCameraQuery(CameraQuery *query)
          }
 
          // The connection's display device may want to set the eye offset
+<<<<<<< HEAD
          if(display->providesEyeOffsets())
          {
             display->getEyeOffsets(query->eyeOffset);
@@ -407,6 +454,16 @@ bool GameProcessCameraQuery(CameraQuery *query)
 
       // Use the connection's FOV settings if requried
       if(!connection->getControlCameraFov(&cameraFov))
+=======
+         if(display->providesEyeOffset())
+         {
+            query->eyeOffset = display->getEyeOffset();
+         }
+      }
+
+      // Use the connection's FOV settings if requried
+      if(!fovSet && !connection->getControlCameraFov(&cameraFov))
+>>>>>>> omni_engine
       {
          return false;
       }
@@ -452,6 +509,13 @@ static void RegisterGameFunctions()
    Con::addVariable( "$cameraFov", TypeF32, &CameraAndFOV::sConsoleCameraFov, 
       "The camera's Field of View.\n\n"
 	   "@ingroup Game" );
+
+	Con::addVariable( "$pref::Camera::FarDistance", TypeF32, &CameraAndFOV::mFarClippingDistance, 
+      "The camera's Far Clipping Distance.\n\n"
+	   "@ingroup Game" );
+
+
+	
 
    // Stuff game types into the console
    Con::setIntVariable("$TypeMasks::StaticObjectType",         StaticObjectType);
@@ -520,3 +584,154 @@ static void RegisterGameFunctions()
       "Bounce ease for curve movement.\n"
 	   "@ingroup Game");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_containerFindFirst(U32 typeMask, char * x__origin, char * x__size,  char* retval)
+{
+dSprintf(retval,16384,"");
+Point3F origin = Point3F();
+sscanf(x__origin,"%f %f %f",&origin.x,&origin.y,&origin.z);
+Point3F size = Point3F();
+sscanf(x__size,"%f %f %f",&size.x,&size.y,&size.z);
+const char* wle_returnObject;
+{
+   
+      Box3F queryBox;
+   queryBox.minExtents = origin;
+   queryBox.maxExtents = origin;
+   queryBox.minExtents -= size;
+   queryBox.maxExtents += size;
+      sgServerQueryList.mList.clear();
+   gServerContainer.findObjects(queryBox, typeMask, SimpleQueryList::insertionCallback, &sgServerQueryList);
+      sgServerQueryIndex = 0;
+   static const U32 bufSize = 100;
+   char *buff = Con::getReturnBuffer(bufSize);
+   if (sgServerQueryList.mList.size())
+      dSprintf(buff, bufSize, "%d", sgServerQueryList.mList[sgServerQueryIndex++]->getId());
+   else
+      buff[0] = '\0';
+   {wle_returnObject =buff;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_containerFindNext(char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+      static const U32 bufSize = 100;
+   char *buff = Con::getReturnBuffer(bufSize);
+   if (sgServerQueryIndex < sgServerQueryList.mList.size())
+      dSprintf(buff, bufSize, "%d", sgServerQueryList.mList[sgServerQueryIndex++]->getId());
+   else
+      buff[0] = '\0';
+   {wle_returnObject =buff;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getFrustumOffset(char* retval)
+{
+dSprintf(retval,1024,"");
+Point4F wle_returnObject;
+{
+   {wle_returnObject =CameraAndFOV::sFrustumOffset;
+dSprintf(retval,1024,"%g %g %g %g ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z,wle_returnObject.w);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_setDefaultFov(F32 defaultFOV)
+{
+{
+   CameraAndFOV::sDefaultFov = mClampF(defaultFOV, MinCameraFov, MaxCameraFov);
+   if(CameraAndFOV::sCameraFov == CameraAndFOV::sTargetFov)
+      CameraAndFOV::sTargetFov = CameraAndFOV::sDefaultFov;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_setFov(F32 FOV)
+{
+{
+   CameraAndFOV::sTargetFov = mClampF(FOV, MinCameraFov, MaxCameraFov);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_setFrustumOffset(char * x__offset)
+{
+Point4F offset = Point4F();
+sscanf(x__offset,"%g %g %g %g",&offset.x,&offset.y,&offset.z,&offset.w);
+{
+   CameraAndFOV::sFrustumOffset = offset;
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_setZoomSpeed(S32 speed)
+{
+{
+   CameraAndFOV::sZoomSpeed = mClamp(speed, 0, CameraAndFOV::MaxZoomSpeed);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

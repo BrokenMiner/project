@@ -73,11 +73,19 @@ U32 CloudLayer::smVertCount = smVertStride * smVertStride;
 U32 CloudLayer::smTriangleCount = smStrideMinusOne * smStrideMinusOne * 2;
 
 CloudLayer::CloudLayer()
+<<<<<<< HEAD
 : mLastTime( 0 ),
   mBaseColor( 0.9f, 0.9f, 0.9f, 1.0f ),
   mExposure( 1.0f ),
   mCoverage( 0.5f ),
   mWindSpeed( 1.0f )
+=======
+: mBaseColor( 0.9f, 0.9f, 0.9f, 1.0f ),
+  mCoverage( 0.5f ),
+  mExposure( 1.0f ),
+  mWindSpeed( 1.0f ),
+  mLastTime( 0 )
+>>>>>>> omni_engine
 {
    mTypeMask |= EnvironmentObjectType | StaticObjectType;
    mNetFlags.set(Ghostable | ScopeAlways);
@@ -378,7 +386,11 @@ void CloudLayer::renderObject( ObjectRenderInst *ri, SceneRenderState *state, Ba
 
    mShaderConsts->setSafe( mExposureSC, mExposure );
 
+<<<<<<< HEAD
    GFX->setTexture( mNormalHeightMapSC->getSamplerRegister(), mTexture );                            
+=======
+   GFX->setTexture( 0, mTexture );                            
+>>>>>>> omni_engine
    GFX->setVertexBuffer( mVB );            
    GFX->setPrimitiveBuffer( mPB );
 
@@ -501,4 +513,8 @@ void CloudLayer::_initBuffers()
    }
 
    mPB.unlock();   
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> omni_engine

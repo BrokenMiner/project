@@ -27,6 +27,8 @@
 #include "console/console.h"
 #include "console/consoleInternal.h"
 #include "core/frameAllocator.h"
+#include "console/SimXMLDocument.h" // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+#include "console/simObject.h"
 
 SimFieldDictionary::Entry *SimFieldDictionary::smFreeList = NULL;
 
@@ -168,6 +170,22 @@ SimFieldDictionary::Entry *SimFieldDictionary::findDynamicField( StringTableEntr
    return NULL;
 }
 
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+SimFieldDictionary::Entry *SimFieldDictionary::findField( StringTableEntry fieldName) const
+{
+	for(U32 i = 0; i < HashTableSize; i++)
+	{
+	   Entry *walk = mHashTable[i];
+	   if(walk)
+	   {
+		   if( !dStricmp(walk->slotName, fieldName) )
+			   return walk;
+	   }
+	}
+	return NULL;
+}
+// @Copyright end
 
 void SimFieldDictionary::setFieldValue(StringTableEntry slotName, const char *value)
 {
@@ -236,7 +254,11 @@ static S32 QSORT_CALLBACK compareEntries(const void* a,const void* b)
    return dStricmp(fa->slotName, fb->slotName);
 }
 
+<<<<<<< HEAD
 void SimFieldDictionary::writeFields(SimObject *obj, Stream &stream, U32 tabStop)
+=======
+void SimFieldDictionary::writeFields(SimObject *obj, Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput )
+>>>>>>> omni_engine
 {
    const AbstractClassRep::FieldList &list = obj->getFieldList();
    Vector<Entry *> flist(__FILE__, __LINE__);
@@ -271,9 +293,29 @@ void SimFieldDictionary::writeFields(SimObject *obj, Stream &stream, U32 tabStop
       U32 nBufferSize = (dStrlen( (*itr)->value ) * 2) + dStrlen( (*itr)->slotName ) + 16;
       FrameTemp<char> expandedBuffer( nBufferSize );
 
+<<<<<<< HEAD
       stream.writeTabs(tabStop+1);
 
       const char *typeName = (*itr)->type && (*itr)->type->getTypeID() != TypeString ? (*itr)->type->getTypeName() : "";
+=======
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+	  /// For XML Output
+	  if(XMLOutput)
+	  {
+		  obj->getcurrentXML()->pushNewElement("Setting");
+		  obj->getcurrentXML()->setAttribute("name",(*itr)->slotName);
+		  obj->getcurrentXML()->addData((*itr)->value);
+		  obj->getcurrentXML()->popElement();
+		  continue;
+	  }
+     // @Copyright end
+
+	  /// For Stream Output
+	  stream.writeTabs(tabStop+1);
+	  const char *typeName = (*itr)->type && (*itr)->type->getTypeID() != TypeString ? (*itr)->type->getTypeName() : "";
+>>>>>>> omni_engine
       dSprintf(expandedBuffer, nBufferSize, "%s%s%s = \"", typeName, *typeName ? " " : "", (*itr)->slotName);
       if ( (*itr)->value )
          expandEscape((char*)expandedBuffer + dStrlen(expandedBuffer), (*itr)->value);
@@ -283,6 +325,7 @@ void SimFieldDictionary::writeFields(SimObject *obj, Stream &stream, U32 tabStop
    }
 
 }
+
 void SimFieldDictionary::printFields(SimObject *obj)
 {
    const AbstractClassRep::FieldList &list = obj->getFieldList();

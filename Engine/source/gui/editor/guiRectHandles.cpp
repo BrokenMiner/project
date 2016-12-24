@@ -36,6 +36,9 @@ ConsoleDocClass( GuiRectHandles,
    "@internal"
 );
 
+IMPLEMENT_CALLBACK( GuiRectHandles, onHandleRectChange, void, (), (), "" );
+
+
 //--------------------------------------------------------------------------
 GuiRectHandles::GuiRectHandles() : GuiControl()
 {
@@ -59,6 +62,15 @@ void GuiRectHandles::initPersistFields()
    addField("handleColor",    TypeColorI, Offset(mHandleColor,  GuiRectHandles),    "Use given custom color for handles." );
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
 }
 
 //--------------------------------------------------------------------------
@@ -267,8 +279,12 @@ void GuiRectHandles::onMouseDragged(const GuiEvent &event)
    mHandleRect = box;
    mHitPoint = localMousePoint;
 
+<<<<<<< HEAD
    if( isMethod( "onHandleRectChange" ) )
       Con::executef(this, "onHandleRectChange" );
+=======
+   onHandleRectChange_callback();
+>>>>>>> omni_engine
 }
 
 //--------------------------------------------------------------------------
@@ -287,14 +303,20 @@ void GuiRectHandles::onRender(Point2I offset, const RectI &updateRect)
    Point2I size(extent.x*mHandleRect.extent.x, extent.y*mHandleRect.extent.y);
    RectI box(offset+pos, size);
 
+<<<<<<< HEAD
    GFXDrawUtil* drawUtil = GFX->getDrawUtil();
 
    // Draw border
    drawUtil->drawRect(box, handleColor);
+=======
+   // Draw border
+   GFX->getDrawUtil()->drawRect(box, handleColor);
+>>>>>>> omni_engine
 
    // Draw each handle
    Point2I handleSize(mHandleSize, mHandleSize);
    RectI handleRect(box.point, handleSize);
+<<<<<<< HEAD
    drawUtil->drawRectFill(handleRect, handleColor);      // Upper left
    handleRect.point = Point2I(box.point.x+size.x-handleSize.x, box.point.y);
    drawUtil->drawRectFill(handleRect, handleColor);      // Upper right
@@ -302,10 +324,20 @@ void GuiRectHandles::onRender(Point2I offset, const RectI &updateRect)
    drawUtil->drawRectFill(handleRect, handleColor);      // Lower left
    handleRect.point = Point2I(box.point.x+size.x-handleSize.x, box.point.y+size.y-handleSize.y);
    drawUtil->drawRectFill(handleRect, handleColor);      // Lower right
+=======
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Upper left
+   handleRect.point = Point2I(box.point.x+size.x-handleSize.x, box.point.y);
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Upper right
+   handleRect.point = Point2I(box.point.x, box.point.y+size.y-handleSize.y);
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Lower left
+   handleRect.point = Point2I(box.point.x+size.x-handleSize.x, box.point.y+size.y-handleSize.y);
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Lower right
+>>>>>>> omni_engine
 
    Point2I halfSize = size / 2;
    Point2I halfHandleSize = handleSize / 2;
    handleRect.point = Point2I(box.point.x+halfSize.x-halfHandleSize.x, box.point.y);
+<<<<<<< HEAD
    drawUtil->drawRectFill(handleRect, handleColor);      // Upper middle
    handleRect.point = Point2I(box.point.x+halfSize.x-halfHandleSize.x, box.point.y+size.y-handleSize.y);
    drawUtil->drawRectFill(handleRect, handleColor);      // Lower middle
@@ -316,6 +348,18 @@ void GuiRectHandles::onRender(Point2I offset, const RectI &updateRect)
 
    handleRect.point = Point2I(box.point.x+halfSize.x-halfHandleSize.x, box.point.y+halfSize.y-halfHandleSize.y);
    drawUtil->drawRectFill(handleRect, handleColor);      // Middle
+=======
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Upper middle
+   handleRect.point = Point2I(box.point.x+halfSize.x-halfHandleSize.x, box.point.y+size.y-handleSize.y);
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Lower middle
+   handleRect.point = Point2I(box.point.x, box.point.y+halfSize.y-halfHandleSize.y);
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Left middle
+   handleRect.point = Point2I(box.point.x+size.x-handleSize.x, box.point.y+halfSize.y-halfHandleSize.y);
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Right middle
+
+   handleRect.point = Point2I(box.point.x+halfSize.x-halfHandleSize.x, box.point.y+halfSize.y-halfHandleSize.y);
+   GFX->getDrawUtil()->drawRectFill(handleRect, handleColor);      // Middle
+>>>>>>> omni_engine
 
    renderChildControls(offset, updateRect);
 }

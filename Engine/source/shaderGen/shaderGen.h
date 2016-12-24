@@ -155,7 +155,11 @@ public:
                         Vector<GFXShaderMacro> &macros );
 
    // Returns a shader that implements the features listed by dat.
+<<<<<<< HEAD
    GFXShader* getShader( const MaterialFeatureData &dat, const GFXVertexFormat *vertexFormat, const Vector<GFXShaderMacro> *macros, const Vector<String> &samplers );
+=======
+   GFXShader* getShader( const MaterialFeatureData &dat, const GFXVertexFormat *vertexFormat, const Vector<GFXShaderMacro> *macros );
+>>>>>>> omni_engine
 
    // This will delete all of the procedural shaders that we have.  Used to regenerate shaders when
    // the ShaderFeatures have changed (due to lighting system change, or new plugin)

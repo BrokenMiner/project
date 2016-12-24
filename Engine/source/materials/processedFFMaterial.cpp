@@ -369,7 +369,11 @@ void ProcessedFFMaterial::_initPassStateBlock( RenderPassData *rpd, GFXStateBloc
       result.blendDefined = true;
       result.blendEnable = true;
       result.blendSrc = GFXBlendOne;
+<<<<<<< HEAD
       result.blendDest = GFXBlendZero;
+=======
+      result.blendDest = GFXBlendOne;
+>>>>>>> omni_engine
    }
 
    // This is here for generic FF shader fallbacks.

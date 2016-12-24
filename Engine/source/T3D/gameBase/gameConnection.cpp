@@ -38,6 +38,7 @@
 #include "T3D/gameBase/gameConnectionEvents.h"
 #include "console/engineAPI.h"
 #include "math/mTransform.h"
+#include "torqueConfig.h"
 
 #ifdef TORQUE_HIFI_NET
    #include "T3D/gameBase/hifi/hifiMoveList.h"
@@ -45,6 +46,10 @@
    #include "T3D/gameBase/extended/extendedMoveList.h"
 #else
    #include "T3D/gameBase/std/stdMoveList.h"
+#endif
+
+#ifdef ENABLE_DATABLOCK_CACHE
+#include "core/stream/fileStream.h"
 #endif
 
 //----------------------------------------------------------------------------
@@ -153,6 +158,7 @@ IMPLEMENT_CALLBACK( GameConnection, onDataBlocksDone, void, (U32 sequence), (seq
    "the server every time a mission is loaded.\n\n"
    "@see GameConnection::transmitDataBlocks()\n\n");
 
+<<<<<<< HEAD
 IMPLEMENT_GLOBAL_CALLBACK( onDataBlockObjectReceived, void, (U32 index, U32 total), (index, total),
    "@brief Called on the client each time a datablock has been received.\n\n"
    "This callback is typically used to notify the player of how far along "
@@ -161,6 +167,16 @@ IMPLEMENT_GLOBAL_CALLBACK( onDataBlockObjectReceived, void, (U32 index, U32 tota
    "@param total The total number of datablocks to be received.\n\n"
    "@see GameConnection, GameConnection::transmitDataBlocks(), GameConnection::onDataBlocksDone()\n\n"
    "@ingroup Networking\n");
+=======
+IMPLEMENT_GLOBAL_CALLBACK( onDataBlockObjectReceived, void, (const char* index, const char* total), (index, total),
+                           "@brief Called on the client each time a datablock has been received.\n\n"
+                           "This callback is typically used to notify the player of how far along "
+                           "in the datablock download process they are.\n\n"
+                           "@param index The index of the datablock just received.\n"
+                           "@param total The total number of datablocks to be received.\n\n"
+                           "@see GameConnection, GameConnection::transmitDataBlocks(), GameConnection::onDataBlocksDone()\n\n"
+                           "@ingroup Networking\n");
+>>>>>>> omni_engine
 
 IMPLEMENT_CALLBACK( GameConnection, onFlash, void, (bool state), (state),
    "@brief Called on the client when the damage flash or white out states change.\n\n"
@@ -171,9 +187,18 @@ IMPLEMENT_CALLBACK( GameConnection, onFlash, void, (bool state), (state),
 //----------------------------------------------------------------------------
 GameConnection::GameConnection()
 {
+<<<<<<< HEAD
    mLagging = false;
    mControlObject = NULL;
    mCameraObject = NULL;
+=======
+#ifdef ENABLE_DATABLOCK_CACHE
+    clientBitStream = new InfiniteBitStream;
+#endif
+    mLagging = false;
+    mControlObject = NULL;
+    mCameraObject = NULL;
+>>>>>>> omni_engine
 
 #ifdef TORQUE_HIFI_NET
    mMoveList = new HifiMoveList();
@@ -206,9 +231,15 @@ GameConnection::GameConnection()
    mCameraFov = 90.f;
    mUpdateCameraFov = false;
 
+<<<<<<< HEAD
    mAIControlled = false;
 
    mLastPacketTime = 0;
+=======
+    mCameraFrustumOffset = Point4F::Zero;
+
+    mAIControlled = false;
+>>>>>>> omni_engine
 
    mDisconnectReason[0] = 0;
 
@@ -228,13 +259,18 @@ GameConnection::GameConnection()
    mAddYawToAbsRot = false;
    mAddPitchToAbsRot = false;
 
+<<<<<<< HEAD
    mVisibleGhostDistance = 0.0f;
+=======
+   didFirstRender = false;
+>>>>>>> omni_engine
 
    clearDisplayDevice();
 }
 
 GameConnection::~GameConnection()
 {
+<<<<<<< HEAD
    setDisplayDevice(NULL);
    delete mAuthInfo;
    for(U32 i = 0; i < mConnectArgc; i++)
@@ -254,6 +290,20 @@ F32 GameConnection::getVisibleGhostDistance()
 {
    return mVisibleGhostDistance;
 }
+=======
+#ifdef ENABLE_DATABLOCK_CACHE
+    delete clientBitStream;
+#endif
+
+    delete mAuthInfo;
+    for(U32 i = 0; i < mConnectArgc; i++)
+        dFree(mConnectArgv[i]);
+    dFree(mJoinPassword);
+    delete mMoveList;
+}
+
+//----------------------------------------------------------------------------
+>>>>>>> omni_engine
 
 bool GameConnection::canRemoteCreate()
 {
@@ -296,8 +346,12 @@ ConsoleMethod(GameConnection, setConnectArgs, void, 3, 17,
    
    "@see GameConnection::onConnect()\n\n")
 {
+<<<<<<< HEAD
    StringStackWrapper args(argc - 2, argv + 2);
    object->setConnectArgs(args.count(), args);
+=======
+   object->setConnectArgs(argc - 2, argv + 2);
+>>>>>>> omni_engine
 }
 
 void GameConnection::onTimedOut()
@@ -459,6 +513,7 @@ bool GameConnection::readConnectRequest(BitStream *stream, const char **errorStr
       *errorString = "CR_INVALID_ARGS";
       return false;
    }
+<<<<<<< HEAD
    ConsoleValueRef connectArgv[MaxConnectArgs + 3];
    ConsoleValue connectArgvValue[MaxConnectArgs + 3];
 
@@ -468,6 +523,9 @@ bool GameConnection::readConnectRequest(BitStream *stream, const char **errorStr
 	   connectArgvValue[i].init();
    }
 
+=======
+   const char *connectArgv[MaxConnectArgs + 3];
+>>>>>>> omni_engine
    for(U32 i = 0; i < mConnectArgc; i++)
    {
       char argString[256];
@@ -475,11 +533,18 @@ bool GameConnection::readConnectRequest(BitStream *stream, const char **errorStr
       mConnectArgv[i] = dStrdup(argString);
       connectArgv[i + 3] = mConnectArgv[i];
    }
+<<<<<<< HEAD
    connectArgvValue[0].setStackStringValue("onConnectRequest");
    connectArgvValue[1].setIntValue(0);
    char buffer[256];
    Net::addressToString(getNetAddress(), buffer);
    connectArgvValue[2].setStackStringValue(buffer);
+=======
+   connectArgv[0] = "onConnectRequest";
+   char buffer[256];
+   Net::addressToString(getNetAddress(), buffer);
+   connectArgv[2] = buffer;
+>>>>>>> omni_engine
 
    // NOTE: Cannot convert over to IMPLEMENT_CALLBACK as it has variable args.
    const char *ret = Con::execute(this, mConnectArgc + 3, connectArgv);
@@ -674,6 +739,7 @@ bool GameConnection::getControlCameraTransform(F32 dt, MatrixF* mat)
    return true;
 }
 
+<<<<<<< HEAD
 bool GameConnection::getControlCameraEyeTransforms(IDisplayDevice *display, MatrixF *transforms)
 {
    GameBase* obj = getCameraObject();
@@ -698,6 +764,57 @@ bool GameConnection::getControlCameraEyeTransforms(IDisplayDevice *display, Matr
 }
 
 
+=======
+bool GameConnection::getControlCameraEarTransform(F32 dt, MatrixF* mat)
+{
+    GameBase* obj = getCameraObject();
+    if(!obj)
+        return false;
+
+    GameBase* cObj = obj;
+    while((cObj = cObj->getControlObject()) != 0)
+    {
+        if(cObj->useObjsEyePoint())
+            obj = cObj;
+    }
+
+    if (dt)
+    {
+        if (mFirstPerson || obj->onlyFirstPerson())
+        {
+            if (mCameraPos > 0)
+                if ((mCameraPos -= mCameraSpeed * dt) <= 0)
+                    mCameraPos = 0;
+        }
+        else
+        {
+            if (mCameraPos < 1)
+                if ((mCameraPos += mCameraSpeed * dt) > 1)
+                    mCameraPos = 1;
+        }
+    }
+
+    if (!sChaseQueueSize || mFirstPerson || obj->onlyFirstPerson())
+        obj->getCameraEarTransform(&mCameraPos,mat);
+    else
+    {
+        MatrixF& hm = sChaseQueue[sChaseQueueHead];
+        MatrixF& tm = sChaseQueue[sChaseQueueTail];
+        obj->getCameraEarTransform(&mCameraPos,&hm);
+        *mat = tm;
+        if (dt)
+        {
+            if ((sChaseQueueHead += 1) >= sChaseQueueSize)
+                sChaseQueueHead = 0;
+            if (sChaseQueueHead == sChaseQueueTail)
+                if ((sChaseQueueTail += 1) >= sChaseQueueSize)
+                    sChaseQueueTail = 0;
+        }
+    }
+    return true;
+}
+
+>>>>>>> omni_engine
 bool GameConnection::getControlCameraDefaultFov(F32 * fov)
 {
    //find the last control object in the chain (client->player->turret->whatever...)
@@ -734,6 +851,12 @@ bool GameConnection::getControlCameraFov(F32 * fov)
    }
 
    return(false);
+}
+
+bool GameConnection::getControlCameraFrustumOffset(Point4F *offset)
+{
+    *offset = mCameraFrustumOffset;
+    return true;
 }
 
 bool GameConnection::isValidControlCameraFov(F32 fov)
@@ -778,20 +901,56 @@ bool GameConnection::setControlCameraFov(F32 fov)
 
 bool GameConnection::getControlCameraVelocity(Point3F *vel)
 {
+<<<<<<< HEAD
    if (GameBase* obj = getCameraObject()) {
       *vel = obj->getVelocity();
       return true;
    }
    return false;
+=======
+    if (GameBase* obj = getCameraObject())
+    {
+        *vel = obj->getVelocity();
+        return true;
+    }
+    return false;
+}
+
+bool GameConnection::setControlCameraFrustumOffset(Point4F offset)
+{
+    //find the last control object in the chain (client->player->turret->whatever...)
+    GameBase *obj = getCameraObject();
+    GameBase *cObj = NULL;
+    while (obj)
+    {
+        cObj = obj;
+        obj = obj->getControlObject();
+    }
+    if (cObj)
+    {
+        mCameraFrustumOffset = offset;
+        return(true);
+    }
+    return(false);
+>>>>>>> omni_engine
 }
 
 bool GameConnection::isControlObjectRotDampedCamera()
 {
+<<<<<<< HEAD
    if (Camera* cam = dynamic_cast<Camera*>(getCameraObject())) {
       if(cam->isRotationDamped())
          return true;
    }
    return false;
+=======
+    if (Camera* cam = dynamic_cast<Camera*>(getCameraObject()))
+    {
+        if(cam->isRotationDamped())
+            return true;
+    }
+    return false;
+>>>>>>> omni_engine
 }
 
 void GameConnection::setFirstPerson(bool firstPerson)
@@ -1024,10 +1183,15 @@ bool GameConnection::readDemoStartBlock(BitStream *stream)
 
 void GameConnection::demoPlaybackComplete()
 {
+<<<<<<< HEAD
    static const char* demoPlaybackArgv[1] = { "demoPlaybackComplete" };
    static StringStackConsoleWrapper demoPlaybackCmd(1, demoPlaybackArgv);
 
    Sim::postCurrentEvent(Sim::getRootGroup(), new SimConsoleEvent(demoPlaybackCmd.argc, demoPlaybackCmd.argv, false));
+=======
+   static const char *demoPlaybackArgv[1] = { "demoPlaybackComplete" };
+   Sim::postCurrentEvent(Sim::getRootGroup(), new SimConsoleEvent(1, demoPlaybackArgv, false));
+>>>>>>> omni_engine
    Parent::demoPlaybackComplete();
 }
 
@@ -1467,6 +1631,7 @@ void GameConnection::play3D(SFXProfile* profile, const MatrixF *transform)
       // of the sound effect and if the control object can get
       // into hearing range within time?
 
+<<<<<<< HEAD
       // Only post the event if it's within audible range
       // of the control object.
       Point3F ear,pos;
@@ -1475,6 +1640,24 @@ void GameConnection::play3D(SFXProfile* profile, const MatrixF *transform)
       if ((ear - pos).len() < profile->getDescription()->mMaxDistance)
          postNetEvent(new Sim3DAudioEvent(profile,transform));
    } 
+=======
+        // Only post the event if it's within audible range
+        // of the control object.
+        Point3F ear,pos;
+        transform->getColumn(3,&pos);
+
+        static MatrixF mat;
+        static F32 state = 0;
+        if (!this->isFirstPerson())
+            state = 1.0f;
+
+        mControlObject->getCameraEarTransform(&state, &mat);
+        mat.getColumn(3,&ear);
+
+        if ((ear - pos).len() < profile->getDescription()->mMaxDistance)
+            postNetEvent(new Sim3DAudioEvent(profile,transform));
+    }
+>>>>>>> omni_engine
 }
 
 void GameConnection::doneScopingScene()
@@ -1613,6 +1796,31 @@ void GameConnection::handleConnectionMessage(U32 message, U32 sequence, U32 ghos
    {
       if(message == DataBlocksDone)
       {
+#ifdef ENABLE_DATABLOCK_CACHE
+            //We do no caching if this is not in client mode.
+            if (!this->isLocalConnection())
+            {
+                //Ok, so the client has received all of there datablocks.
+                //So now we need to take all of the data in clientBitStream and spool it out to a file.
+                const char * missionName = Con::getVariable("$ServerDatablockCacheMissionName");
+                Con::printf("### Datablock Cache: Writing Cache File '%s'.",missionName);
+
+                FileStream* datablocksOut;
+                datablocksOut = FileStream::createAndOpen(missionName, Torque::FS::File::Write );
+                if (datablocksOut==NULL)
+                    Con::printf("### Datablock Cache: Unable to create %s",Con::getVariable("$ServerDatablockCacheMissionName"));
+                else
+                {
+                    //We append 8 zero bits to the end of the stream, this ensures when we
+                    //load the file, the first few readflags will have something to read.
+                    clientBitStream->writeInt(0,8);
+                    datablocksOut->writeBitStream(clientBitStream);
+                    datablocksOut->close();
+                    delete datablocksOut;
+                }
+            }
+
+#endif
          mDataBlockLoadList.push_back(NULL);
          mDataBlockSequence = sequence;
          if(mDataBlockLoadList.size() == 1)
@@ -1631,6 +1839,70 @@ void GameConnection::handleConnectionMessage(U32 message, U32 sequence, U32 ghos
    }
    Parent::handleConnectionMessage(message, sequence, ghostCount);
 }
+
+#ifdef ENABLE_DATABLOCK_CACHE
+bool GameConnection::LoadDatablocksFromFile(U32 crc)
+{
+    FileStream source;
+    const char* name = Con::getVariable("$ServerDatablockCacheMissionName");
+    Con::printf("### Datablock Cache: Attempting to read '%s'.",name);
+
+    if (!source.open(name,  Torque::FS::File::Read))
+    {
+        Con::printf("### Datablock Cache: Failed To open %s.",Con::getVariable("$ServerDatablockCacheMissionName"));
+        return false;
+    }
+
+    static char* scratchpad = new char[source.getStreamSize()];
+    if (!source.read(source.getStreamSize(),scratchpad))
+    {
+        Con::printf("### Datablock Cache: Failed to load cache file");
+        source.close();
+
+        delete [] scratchpad;
+        return false;
+    }
+
+    delete clientBitStream;
+    clientBitStream = new BitStream(scratchpad,source.getStreamSize());
+    source.close();
+
+
+    U32 filecrc = clientBitStream->readInt(32);
+    if (filecrc != crc)
+    {
+        delete clientBitStream;
+        clientBitStream = new InfiniteBitStream;
+        Con::printf("### Datablock Cache: Server/Client CRC's do not match.");
+        return false;
+    }
+    Con::printf("### Datablock Cache: Reading Cache File");
+    while (clientBitStream->readFlag())
+    {
+        clientBitStream->setCurPos(clientBitStream->getCurPos()-1);
+        SimDataBlockEvent sdbe;
+        sdbe.unpack(this, clientBitStream, true);
+        sdbe.process(this);
+    }
+
+    delete clientBitStream;
+    clientBitStream = new InfiniteBitStream;
+    return true;
+}
+#endif
+DefineEngineMethod( GameConnection, LoadDatablocksFromFile, bool, (U32 crc),,"" )
+{
+	#ifdef ENABLE_DATABLOCK_CACHE
+    //This only works if this is a remote client.
+    if (!object->isNetworkConnection())
+        return false;
+    return object->LoadDatablocksFromFile(crc);
+#else
+	return 0;
+	#endif
+}
+
+
 
 //----------------------------------------------------------------------------
 
@@ -1712,7 +1984,11 @@ DefineEngineMethod( GameConnection, transmitDataBlocks, void, (S32 sequence),,
             pDataBlock->unpackData(&mStream);
 
             // Call the console function to set the number of blocks to be sent.
+<<<<<<< HEAD
             onDataBlockObjectReceived_callback(i, iCount);
+=======
+            onDataBlockObjectReceived_callback( StringTable->insert(Con::getIntArg(i)), StringTable->insert(Con::getIntArg(iCount)) );
+>>>>>>> omni_engine
 
             // Preload the datablock on the dummy client.
             pDataBlock->preload(false, NetConnection::getErrorBuffer());
@@ -2249,6 +2525,7 @@ DefineEngineMethod( GameConnection, getControlSchemeAbsoluteRotation, bool, (),,
    return object->getControlSchemeAbsoluteRotation();
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( GameConnection, setVisibleGhostDistance, void, (F32 dist),,
    "@brief Sets the distance that objects around it will be ghosted. If set to 0, "
    "it may be defined by the LevelInfo.\n\n"
@@ -2266,3 +2543,647 @@ DefineEngineMethod( GameConnection, getVisibleGhostDistance, F32, (),,
 {
    return object->getVisibleGhostDistance();
 }
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_activateGhosting(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->activateGhosting();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_chaseCam(char * x__object, S32 size)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (size != sChaseQueueSize) 
+   {
+      SAFE_DELETE_ARRAY(sChaseQueue);
+      sChaseQueueSize = size;
+      sChaseQueueHead = sChaseQueueTail = 0;
+      if (size) 
+      {
+         sChaseQueue = new MatrixF[size];
+         {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+      }
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_clearCameraObject(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setCameraObject(NULL);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_clearDisplayDevice(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->clearDisplayDevice();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_delete(char * x__object, char * x__reason)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* reason = (const char*)x__reason;
+{
+   object->setDisconnectReason(reason);
+   object->deleteObject();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_getCameraObject(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+SimObject* wle_returnObject;
+{
+   SimObject *obj = dynamic_cast<SimObject*>(object->getCameraObject());
+   {wle_returnObject =obj;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGameConnection_getControlCameraDefaultFov(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+   F32 fov = 0.0f;
+   if(!object->getControlCameraDefaultFov(&fov))
+     return (F32)((0.0f));
+  return (F32)((fov));
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGameConnection_getControlCameraFov(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+   F32 fov = 0.0f;
+   if(!object->getControlCameraFov(&fov))
+     return (F32)((0.0f));
+  return (F32)((fov));
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_getControlObject(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+GameBase* wle_returnObject;
+{
+   {wle_returnObject =object->getControlObject();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_getControlSchemeAbsoluteRotation(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->getControlSchemeAbsoluteRotation();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGameConnection_getDamageFlash(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getDamageFlash());
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGameConnection_getWhiteOut(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getWhiteOut());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_isAIControlled(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isAIControlled();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_isControlObjectRotDampedCamera(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isControlObjectRotDampedCamera();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_isDemoPlaying(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isPlayingBack();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_isDemoRecording(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isRecording();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_isFirstPerson(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+         {wle_returnObject =object->isFirstPerson();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_listClassIDs(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   Con::printf("--------------- Class ID Listing ----------------");
+   Con::printf(" id    |   name");
+   for(AbstractClassRep *rep = AbstractClassRep::getClassList();
+      rep;
+      rep = rep->getNextClass())
+   {
+      ConsoleObject *obj = rep->create();
+      if(obj && rep->getClassId(object->getNetClassGroup()) >= 0)
+         Con::printf("%7.7d| %s", rep->getClassId(object->getNetClassGroup()), rep->getClassName());
+      delete obj;
+   }
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_LoadDatablocksFromFile(char * x__object, U32 crc)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+	#ifdef ENABLE_DATABLOCK_CACHE
+        if (!object->isNetworkConnection())
+        {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+    {wle_returnObject =object->LoadDatablocksFromFile(crc);
+return (S32)(wle_returnObject);}
+#else
+	{wle_returnObject =0;
+return (S32)(wle_returnObject);}
+	#endif
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_play2D(char * x__object, char * x__profile)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+SFXProfile* profile; Sim::findObject(x__profile, profile ); 
+bool wle_returnObject;
+{
+   if(!profile)
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   object->play2D(profile);
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_play3D(char * x__object, char * x__profile, char * x__location)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+SFXProfile* profile; Sim::findObject(x__profile, profile ); 
+TransformF location = TransformF();
+sscanf( x__location,"%f %f %f %f %f %f %f", &location.mPosition.x, &location.mPosition.y, &location.mPosition.z, &location.mOrientation.axis.x, &location.mOrientation.axis.y, &location.mOrientation.axis.z, &location.mOrientation.angle);
+bool wle_returnObject;
+{
+   if(!profile)
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   MatrixF mat = location.getMatrix();
+   object->play3D(profile,&mat);
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_playDemo(char * x__object, char * x__demoFileName)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* demoFileName = (const char*)x__demoFileName;
+bool wle_returnObject;
+{
+   char filename[1024];
+   Con::expandScriptFilename(filename, sizeof(filename), demoFileName);
+      object->onConnectionEstablished(true);
+   object->setEstablished();
+   if(!object->replayDemoRecord(filename))
+   {
+      Con::printf("Unable to open demo file %s.", filename);
+      object->deleteObject();
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   }
+         GameConnection::smPlayingDemo.trigger();
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_resetGhosting(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->resetGhosting();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_setBlackOut(char * x__object, bool doFade, S32 timeMS)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setBlackOut(doFade, timeMS);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_setCameraObject(char * x__object, char * x__camera)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+GameBase* camera; Sim::findObject(x__camera, camera ); 
+bool wle_returnObject;
+{
+   if(!camera)
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   object->setCameraObject(camera);
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_setConnectArgs(char * x__object, char * x__a2, char * x__a3, char * x__a4, char * x__a5, char * x__a6, char * x__a7, char * x__a8, char * x__a9, char * x__a10, char * x__a11, char * x__a12, char * x__a13, char * x__a14, char * x__a15, char * x__a16)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* a2 = (const char*)x__a2;
+const char* a3 = (const char*)x__a3;
+const char* a4 = (const char*)x__a4;
+const char* a5 = (const char*)x__a5;
+const char* a6 = (const char*)x__a6;
+const char* a7 = (const char*)x__a7;
+const char* a8 = (const char*)x__a8;
+const char* a9 = (const char*)x__a9;
+const char* a10 = (const char*)x__a10;
+const char* a11 = (const char*)x__a11;
+const char* a12 = (const char*)x__a12;
+const char* a13 = (const char*)x__a13;
+const char* a14 = (const char*)x__a14;
+const char* a15 = (const char*)x__a15;
+const char* a16 = (const char*)x__a16;
+{
+S32 argc = 17;
+if ( dStrlen(a16) == 0 )
+if ( dStrlen(a15) == 0 )
+if ( dStrlen(a14) == 0 )
+if ( dStrlen(a13) == 0 )
+if ( dStrlen(a12) == 0 )
+if ( dStrlen(a11) == 0 )
+if ( dStrlen(a10) == 0 )
+if ( dStrlen(a9) == 0 )
+if ( dStrlen(a8) == 0 )
+if ( dStrlen(a7) == 0 )
+if ( dStrlen(a6) == 0 )
+if ( dStrlen(a5) == 0 )
+if ( dStrlen(a4) == 0 )
+if ( dStrlen(a3) == 0 )
+argc=3;
+else
+argc=4;
+else
+argc=5;
+else
+argc=6;
+else
+argc=7;
+else
+argc=8;
+else
+argc=9;
+else
+argc=10;
+else
+argc=11;
+else
+argc=12;
+else
+argc=13;
+else
+argc=14;
+else
+argc=15;
+else
+argc=16;
+else
+argc=17;
+std::vector<const char*> arguments;
+arguments.push_back("");
+arguments.push_back("");
+arguments.push_back(a2);
+if ( argc >3 )
+arguments.push_back(a3);
+if ( argc >4 )
+arguments.push_back(a4);
+if ( argc >5 )
+arguments.push_back(a5);
+if ( argc >6 )
+arguments.push_back(a6);
+if ( argc >7 )
+arguments.push_back(a7);
+if ( argc >8 )
+arguments.push_back(a8);
+if ( argc >9 )
+arguments.push_back(a9);
+if ( argc >10 )
+arguments.push_back(a10);
+if ( argc >11 )
+arguments.push_back(a11);
+if ( argc >12 )
+arguments.push_back(a12);
+if ( argc >13 )
+arguments.push_back(a13);
+if ( argc >14 )
+arguments.push_back(a14);
+if ( argc >15 )
+arguments.push_back(a15);
+if ( argc >16 )
+arguments.push_back(a16);
+const char** argv = &arguments[0];
+{
+   object->setConnectArgs(argc - 2, argv + 2);
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_setControlCameraFov(char * x__object, F32 newFOV)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setControlCameraFov(newFOV);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGameConnection_setControlObject(char * x__object, char * x__ctrlObj)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+GameBase* ctrlObj; Sim::findObject(x__ctrlObj, ctrlObj ); 
+bool wle_returnObject;
+{
+   if(!ctrlObj)
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   object->setControlObject(ctrlObj);
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_setControlSchemeParameters(char * x__object, bool absoluteRotation, bool addYawToAbsRot, bool addPitchToAbsRot)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setControlSchemeParameters(absoluteRotation, addYawToAbsRot, addPitchToAbsRot);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_setFirstPerson(char * x__object, bool firstPerson)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setFirstPerson(firstPerson);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_setJoinPassword(char * x__object, char * x__password)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* password = (const char*)x__password;
+{
+   object->setJoinPassword(password);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_setMissionCRC(char * x__object, S32 CRC)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if(object->isConnectionToServer())
+      return;
+   object->postNetEvent(new SetMissionCRCEvent(CRC));
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_startRecording(char * x__object, char * x__fileName)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* fileName = (const char*)x__fileName;
+{
+   char expFileName[1024];
+   Con::expandScriptFilename(expFileName, sizeof(expFileName), fileName);
+   object->startDemoRecord(expFileName);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_stopRecording(char * x__object)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->stopRecording();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGameConnection_transmitDataBlocks(char * x__object, S32 sequence)
+{
+GameConnection* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+        object->setDataBlockSequence(sequence);
+        SimDataBlockGroup* pGroup = Sim::getDataBlockGroup();
+        const U32 iCount = pGroup->size();
+        if (GameConnection::getLocalClientConnection() == object)
+    {
+                SimDataBlock* pDataBlock = 0;
+                U8 iBuffer[16384];
+        BitStream mStream(iBuffer, 16384);
+                for (U32 i = 0; i < iCount; i++)
+        {
+                        pDataBlock = (SimDataBlock*)(*pGroup)[i];
+                        object->setMaxDataBlockModifiedKey(pDataBlock->getModifiedKey());
+                        mStream.setPosition(0);
+            mStream.clearCompressionPoint();
+            pDataBlock->packData(&mStream);
+                        mStream.setPosition(0);
+            mStream.clearCompressionPoint();
+            pDataBlock->unpackData(&mStream);
+                        onDataBlockObjectReceived_callback( StringTable->insert(Con::getIntArg(i)), StringTable->insert(Con::getIntArg(iCount)) );
+                        pDataBlock->preload(false, NetConnection::getErrorBuffer());
+        }
+                if (pDataBlock)
+        {
+                        object->setDataBlockModifiedKey(object->getMaxDataBlockModifiedKey());
+                        object->sendConnectionMessage(GameConnection::DataBlocksDone, object->getDataBlockSequence());
+        }
+    } 
+    else
+    {
+                const S32 iKey = object->getDataBlockModifiedKey();
+                U32 i = 0;
+        for (; i < iCount; i++)
+        {
+                        if (((SimDataBlock*)(*pGroup)[i])->getModifiedKey() > iKey)
+            {
+                break;
+            }
+        }
+                if (i == iCount)
+        {
+                        object->sendConnectionMessage(GameConnection::DataBlocksDone, object->getDataBlockSequence());
+                        return;
+        }
+                object->setMaxDataBlockModifiedKey(iKey);
+                const U32 iMax = getMin(i + DataBlockQueueCount, iCount);
+                for (;i < iMax; i++)
+        {
+                        SimDataBlock* pDataBlock = (SimDataBlock*)(*pGroup)[i];
+                        object->postNetEvent(new SimDataBlockEvent(pDataBlock, i, iCount, object->getDataBlockSequence()));
+        }
+    }
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

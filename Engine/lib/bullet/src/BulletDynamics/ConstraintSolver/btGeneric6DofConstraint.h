@@ -569,7 +569,11 @@ public:
 	
 };
 
+<<<<<<< HEAD
 
+=======
+///do not change those serialization structures, it requires an updated sBulletDNAstr/sBulletDNAstr64
+>>>>>>> omni_engine
 struct btGeneric6DofConstraintData
 {
 	btTypedConstraintData	m_typeConstraintData;
@@ -586,6 +590,7 @@ struct btGeneric6DofConstraintData
 	int m_useOffsetForConstraintFrame;
 };
 
+<<<<<<< HEAD
 struct btGeneric6DofConstraintDoubleData2
 {
 	btTypedConstraintDoubleData	m_typeConstraintData;
@@ -605,32 +610,56 @@ struct btGeneric6DofConstraintDoubleData2
 SIMD_FORCE_INLINE	int	btGeneric6DofConstraint::calculateSerializeBufferSize() const
 {
 	return sizeof(btGeneric6DofConstraintData2);
+=======
+SIMD_FORCE_INLINE	int	btGeneric6DofConstraint::calculateSerializeBufferSize() const
+{
+	return sizeof(btGeneric6DofConstraintData);
+>>>>>>> omni_engine
 }
 
 	///fills the dataBuffer and returns the struct name (and 0 on failure)
 SIMD_FORCE_INLINE	const char*	btGeneric6DofConstraint::serialize(void* dataBuffer, btSerializer* serializer) const
 {
 
+<<<<<<< HEAD
 	btGeneric6DofConstraintData2* dof = (btGeneric6DofConstraintData2*)dataBuffer;
 	btTypedConstraint::serialize(&dof->m_typeConstraintData,serializer);
 
 	m_frameInA.serialize(dof->m_rbAFrame);
 	m_frameInB.serialize(dof->m_rbBFrame);
+=======
+	btGeneric6DofConstraintData* dof = (btGeneric6DofConstraintData*)dataBuffer;
+	btTypedConstraint::serialize(&dof->m_typeConstraintData,serializer);
+
+	m_frameInA.serializeFloat(dof->m_rbAFrame);
+	m_frameInB.serializeFloat(dof->m_rbBFrame);
+>>>>>>> omni_engine
 
 		
 	int i;
 	for (i=0;i<3;i++)
 	{
+<<<<<<< HEAD
 		dof->m_angularLowerLimit.m_floats[i] =  m_angularLimits[i].m_loLimit;
 		dof->m_angularUpperLimit.m_floats[i] =  m_angularLimits[i].m_hiLimit;
 		dof->m_linearLowerLimit.m_floats[i] = m_linearLimits.m_lowerLimit[i];
 		dof->m_linearUpperLimit.m_floats[i] = m_linearLimits.m_upperLimit[i];
+=======
+		dof->m_angularLowerLimit.m_floats[i] =  float(m_angularLimits[i].m_loLimit);
+		dof->m_angularUpperLimit.m_floats[i] =  float(m_angularLimits[i].m_hiLimit);
+		dof->m_linearLowerLimit.m_floats[i] = float(m_linearLimits.m_lowerLimit[i]);
+		dof->m_linearUpperLimit.m_floats[i] = float(m_linearLimits.m_upperLimit[i]);
+>>>>>>> omni_engine
 	}
 	
 	dof->m_useLinearReferenceFrameA = m_useLinearReferenceFrameA? 1 : 0;
 	dof->m_useOffsetForConstraintFrame = m_useOffsetForConstraintFrame ? 1 : 0;
 
+<<<<<<< HEAD
 	return btGeneric6DofConstraintDataName;
+=======
+	return "btGeneric6DofConstraintData";
+>>>>>>> omni_engine
 }
 
 

@@ -456,7 +456,11 @@ class IEngineObjectPool
    
       /// Allocate a new object memory block of the given size.
       /// @return Pointer to a new memory block or NULL on failure.
+<<<<<<< HEAD
       virtual void* allocateObject( U32 size TORQUE_TMM_ARGS_DECL ) = 0;
+=======
+      virtual void* allocateObject( dsize_t size TORQUE_TMM_ARGS_DECL ) = 0;
+>>>>>>> omni_engine
       
       /// Return the member for the object at the given address to the
       /// allocator for reuse.
@@ -485,7 +489,11 @@ class EngineCRuntimeObjectPool : public IEngineObjectPool
       static EngineCRuntimeObjectPool* instance() { return &smInstance; }
       
       // IEngineObjectPool
+<<<<<<< HEAD
       virtual void* allocateObject( U32 size TORQUE_TMM_ARGS_DECL );
+=======
+      virtual void* allocateObject( dsize_t size TORQUE_TMM_ARGS_DECL );
+>>>>>>> omni_engine
       virtual void freeObject( void* ptr );
 };
 
@@ -540,14 +548,23 @@ class EngineObject : public StrongRefBase
                   
       #ifndef TORQUE_DISABLE_MEMORY_MANAGER
       // Make sure no matter what, we get the new/delete calls.
+<<<<<<< HEAD
       void* operator new( size_t size );
       void* operator new( size_t size, IEngineObjectPool* pool );
+=======
+      void* operator new( dsize_t size );
+      void* operator new( dsize_t size, IEngineObjectPool* pool );
+>>>>>>> omni_engine
       #endif
       
       /// Allocate a new object in the default object pool.
       /// @param size Size of the object in bytes.
       /// @return Memory block for new object; never NULL.
+<<<<<<< HEAD
       void* operator new( size_t size TORQUE_TMM_ARGS_DECL );
+=======
+      void* operator new( dsize_t size TORQUE_TMM_ARGS_DECL );
+>>>>>>> omni_engine
       
       /// Allocate a new object in the given object pool.
       ///
@@ -557,10 +574,17 @@ class EngineObject : public StrongRefBase
       /// @param size Size of the object in bytes.
       /// @param pool Object pool to allocate the object in.
       /// @return Memory block for the new object; never NULL.
+<<<<<<< HEAD
       void* operator new( size_t size, IEngineObjectPool* pool TORQUE_TMM_ARGS_DECL );
       
       /// Placement new.
       void* operator new( size_t size, void* ptr ) { return ptr; }
+=======
+      void* operator new( dsize_t size, IEngineObjectPool* pool TORQUE_TMM_ARGS_DECL );
+      
+      /// Placement new.
+      void* operator new( dsize_t size, void* ptr ) { return ptr; }
+>>>>>>> omni_engine
             
       /// Release the given object's memory in the pool it has been allocated from.
       void operator delete( void* ptr );

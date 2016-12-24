@@ -227,14 +227,20 @@ void RenderFormatToken::_updateTargets()
             1, mTargetAALevel );
          mTargetChain[i]->attachTexture( GFXTextureTarget::Color0, mTargetColorTexture[i] );
       }
+<<<<<<< HEAD
       }
 
 
+=======
+
+      mTargetChain[i]->attachTexture( GFXTextureTarget::Color0, mTargetColorTexture[i] );
+>>>>>>> omni_engine
       
 
       // Update depth target
       if(mDepthFormat != GFXFormat_COUNT)
       {
+<<<<<<< HEAD
          // try reuse of old depth texture
          if( !mTargetDepthStencilTexture[i] || mTargetDepthStencilTexture[i].getFormat() != mColorFormat 
             || mTargetDepthStencilTexture[i].getWidthHeight() != rtSize)
@@ -247,6 +253,14 @@ void RenderFormatToken::_updateTargets()
       }
 
      
+=======
+         mTargetDepthStencilTexture[i].set( rtSize.x, rtSize.y, mDepthFormat, 
+            &GFXDefaultZTargetProfile, avar( "%s() - (line %d)", __FUNCTION__, __LINE__ ),
+            1, mTargetAALevel );
+      }
+
+      mTargetChain[i]->attachTexture( GFXTextureTarget::DepthStencil, mTargetDepthStencilTexture[i] );
+>>>>>>> omni_engine
    }
 }
 

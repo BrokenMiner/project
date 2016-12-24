@@ -452,12 +452,16 @@ namespace _Private {
    _DECLARE_TYPE( type )                                                                     \
    template<>                                                                                \
    struct _EngineTypeTraits< type > : public _EngineEnumTypeTraits< type > {};
+<<<<<<< HEAD
 
 #define _DECLARE_ENUM_R( type )                                                              \
    _DECLARE_TYPE_R( type )                                                                   \
    template<>                                                                                \
    struct _EngineTypeTraits< type > : public _EngineEnumTypeTraits< type > {};
 
+=======
+   
+>>>>>>> omni_engine
 #define _DECLARE_BITFIELD( type )                                                            \
    _DECLARE_TYPE( type )                                                                     \
    template<>                                                                                \
@@ -617,11 +621,19 @@ namespace _Private {
 
 ///
 #define FIELD_AS( type, fieldName, exportName, numElements, doc ) \
+<<<<<<< HEAD
    { #exportName, doc, numElements, TYPE( *( ( type* ) &( ( ThisType* ) 16 )->fieldName ) ), (U32)FIELDOFFSET( fieldName ) }, // Artificial offset to avoid compiler warnings.
    
 ///
 #define FIELDOFFSET( fieldName ) \
    uintptr_t( ( ( const char* ) &( ( ( ThisType* ) 16 )->fieldName ) ) - 16 ) // Artificial offset to avoid compiler warnings.
+=======
+   { #exportName, doc, numElements, TYPE( *( ( type* ) &( ( ThisType* ) 16 )->fieldName ) ), FIELDOFFSET( fieldName ) }, // Artificial offset to avoid compiler warnings.
+   
+///
+#define FIELDOFFSET( fieldName ) \
+   U32( ( ( const char* ) &( ( ( ThisType* ) 16 )->fieldName ) ) - 16 ) // Artificial offset to avoid compiler warnings.
+>>>>>>> omni_engine
    
 ///
 #define CLASSDOC( className, doc ) \

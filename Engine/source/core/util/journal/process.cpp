@@ -43,6 +43,7 @@ static Process* _theOneProcess = NULL; ///< the one instance of the Process clas
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void Process::requestShutdown(S32 status)
 {
    Process::get()._RequestShutdown = true;
@@ -52,12 +53,21 @@ void Process::requestShutdown(S32 status)
 S32 Process::getReturnStatus()
 {
    return Process::get()._ReturnStatus;
+=======
+void Process::requestShutdown()
+{
+   Process::get()._RequestShutdown = true;
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
 
 Process::Process()
+<<<<<<< HEAD
 :  _RequestShutdown( false ), _ReturnStatus( 0 )
+=======
+:  _RequestShutdown( false )
+>>>>>>> omni_engine
 {
 }
 

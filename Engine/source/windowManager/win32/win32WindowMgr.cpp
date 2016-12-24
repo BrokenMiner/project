@@ -28,6 +28,8 @@
 #include "core/strings/unicode.h"
 
 #if !defined( TORQUE_SDL )
+//WLE Vince
+#include "OMNI/Omni.h"
 
 // ------------------------------------------------------------------------
 
@@ -183,10 +185,17 @@ BOOL Win32WindowManager::MonitorRegionEnumProc(HMONITOR hMonitor, HDC hdcMonitor
 
    regions->increment();
    RectI& lastRegion = regions->last();
+   // ATTENTION! From Torque
    lastRegion.point.x = lprcMonitor->left;
    lastRegion.point.y = lprcMonitor->top;
    lastRegion.extent.x = lprcMonitor->right - lprcMonitor->left;
-   lastRegion.extent.y = lprcMonitor->bottom - lprcMonitor->top;
+   lastRegion.extent.y = lprcMonitor->bottom - lprcMonitor->top; 
+   // ATTENTION! From OMNI
+   regions->last().point.x = lprcMonitor->left;
+   regions->last().point.y = lprcMonitor->top;
+   regions->last().extent.x = lprcMonitor->right - lprcMonitor->left;
+   regions->last().extent.y = lprcMonitor->bottom - lprcMonitor->top;
+   ////////////////////////
 
    return true;
 }
@@ -291,6 +300,10 @@ PlatformWindow *Win32WindowManager::createWindow(GFXDevice *device, const GFXVid
 
    // Update it if needed.
    UpdateWindow( w32w->mWindowHandle );
+   
+   //WLE Vince Set Window Handle Icon
+   if (Winterleaf_EngineCallback::mWLE_setIcon)
+		Winterleaf_EngineCallback::mWLE_setIcon(w32w->mWindowHandle);
 
    return w32w;
 }
@@ -502,6 +515,7 @@ void Win32WindowManager::lowerCurtain()
 
    // Get the monitor's extents.
    MONITORINFO monInfo;
+
    dMemset(&monInfo, 0, sizeof(MONITORINFO));
    monInfo.cbSize = sizeof(MONITORINFO);
 

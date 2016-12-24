@@ -409,6 +409,7 @@ void ShaderGen::_printVertShader( Stream &stream )
    _printFeatureList(stream);
 
    // print out structures
+<<<<<<< HEAD
    mComponents[C_VERT_STRUCT]->print( stream, true );
    mComponents[C_CONNECTOR]->print( stream, true );
 
@@ -416,6 +417,15 @@ void ShaderGen::_printVertShader( Stream &stream )
 
    mComponents[C_VERT_MAIN]->print( stream, true );
    mComponents[C_VERT_STRUCT]->printOnMain( stream, true );
+=======
+   mComponents[C_VERT_STRUCT]->print( stream );
+   mComponents[C_CONNECTOR]->print( stream );
+
+   mPrinter->printMainComment(stream);
+
+   mComponents[C_VERT_MAIN]->print( stream );
+
+>>>>>>> omni_engine
 
    // print out the function
    _printFeatures( stream );
@@ -430,13 +440,21 @@ void ShaderGen::_printPixShader( Stream &stream )
    _printDependencies(stream); // TODO: Split into vert and pix dependencies?
    _printFeatureList(stream);
 
+<<<<<<< HEAD
    mComponents[C_CONNECTOR]->print( stream, false );
+=======
+   mComponents[C_CONNECTOR]->print( stream );
+>>>>>>> omni_engine
 
    mPrinter->printPixelShaderOutputStruct(stream, mFeatureData);
    mPrinter->printMainComment(stream);
 
+<<<<<<< HEAD
    mComponents[C_PIX_MAIN]->print( stream, false );
    mComponents[C_CONNECTOR]->printOnMain( stream, false );
+=======
+   mComponents[C_PIX_MAIN]->print( stream );
+>>>>>>> omni_engine
 
    // print out the function
    _printFeatures( stream );
@@ -444,7 +462,11 @@ void ShaderGen::_printPixShader( Stream &stream )
    mPrinter->printPixelShaderCloser(stream);
 }
 
+<<<<<<< HEAD
 GFXShader* ShaderGen::getShader( const MaterialFeatureData &featureData, const GFXVertexFormat *vertexFormat, const Vector<GFXShaderMacro> *macros, const Vector<String> &samplers )
+=======
+GFXShader* ShaderGen::getShader( const MaterialFeatureData &featureData, const GFXVertexFormat *vertexFormat, const Vector<GFXShaderMacro> *macros )
+>>>>>>> omni_engine
 {
    PROFILE_SCOPE( ShaderGen_GetShader );
 
@@ -489,7 +511,11 @@ GFXShader* ShaderGen::getShader( const MaterialFeatureData &featureData, const G
 
    GFXShader *shader = GFX->createShader();
    shader->mInstancingFormat.copy( mInstancingFormat ); // TODO: Move to init() below!
+<<<<<<< HEAD
    if ( !shader->init( vertFile, pixFile, pixVersion, shaderMacros, samplers ) )
+=======
+   if ( !shader->init( vertFile, pixFile, pixVersion, shaderMacros ) )
+>>>>>>> omni_engine
    {
       delete shader;
       return NULL;

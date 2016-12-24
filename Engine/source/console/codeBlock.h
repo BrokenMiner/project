@@ -129,7 +129,11 @@ public:
    /// with, zero being the top of the stack. If the the index is
    /// -1 a new frame is created. If the index is out of range the
    /// top stack frame is used.
+<<<<<<< HEAD
    ConsoleValueRef compileExec(StringTableEntry fileName, const char *script, 
+=======
+   const char *compileExec(StringTableEntry fileName, const char *script, 
+>>>>>>> omni_engine
       bool noCalls, S32 setFrame = -1 );
 
    /// Executes the existing code in the CodeBlock. The return string is any 
@@ -147,8 +151,13 @@ public:
    /// -1 a new frame is created. If the index is out of range the
    /// top stack frame is used.
    /// @param packageName The code package name or null.
+<<<<<<< HEAD
    ConsoleValueRef exec(U32 offset, const char *fnName, Namespace *ns, U32 argc, 
       ConsoleValueRef *argv, bool noCalls, StringTableEntry packageName,
+=======
+   const char *exec(U32 offset, const char *fnName, Namespace *ns, U32 argc, 
+      const char **argv, bool noCalls, StringTableEntry packageName, 
+>>>>>>> omni_engine
       S32 setFrame = -1);
 };
 

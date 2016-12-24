@@ -415,7 +415,15 @@ void Splash::onRemove()
 
    ringList.clear();
 
+<<<<<<< HEAD
    removeFromScene();
+=======
+   if( getSceneManager() )
+      getSceneManager()->removeObjectFromScene(this);
+
+   if( getContainer() )
+      getContainer()->removeObject(this);
+>>>>>>> omni_engine
 
    Parent::onRemove();
 }

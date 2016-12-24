@@ -198,14 +198,22 @@ void GuiToolboxButtonCtrl::onRender(Point2I offset, const RectI& updateRect)
 
    GFX->getDrawUtil()->setBitmapModulation( mProfile->mFontColor );
    renderJustifiedText(textPos, getExtent(), mButtonText);
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> omni_engine
 }
 
 void GuiToolboxButtonCtrl::renderStateRect( GFXTexHandle &texture, const RectI& rect )
 {
    if (texture)
    {
+<<<<<<< HEAD
       GFX->getDrawUtil()->clearBitmapModulation();
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
       GFX->getDrawUtil()->drawBitmapStretch( texture, rect );
    }
 }
@@ -221,8 +229,107 @@ void GuiToolboxButtonCtrl::renderButton(GFXTexHandle &texture, Point2I &offset, 
       finalOffset.x += ( ( getWidth() / 2 ) - ( texture.getWidth() / 2 ) );
       finalOffset.y += ( ( getHeight() / 2 ) - ( texture.getHeight() / 2 ) );
 
+<<<<<<< HEAD
       GFX->getDrawUtil()->clearBitmapModulation();
       GFX->getDrawUtil()->drawBitmap(texture, finalOffset);
       renderChildControls( offset, updateRect);
    }
 }
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();  // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      GFX->getDrawUtil()->drawBitmap(texture, finalOffset);
+      renderChildControls( offset, updateRect);
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiToolboxButtonCtrl_setHoverBitmap(char * x__object, char * x__name)
+{
+GuiToolboxButtonCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+{
+   object->setHoverBitmap(name);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiToolboxButtonCtrl_setLoweredBitmap(char * x__object, char * x__name)
+{
+GuiToolboxButtonCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+{
+   object->setLoweredBitmap(name);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiToolboxButtonCtrl_setNormalBitmap(char * x__object, char * x__name)
+{
+GuiToolboxButtonCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+{
+   object->setNormalBitmap(name);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

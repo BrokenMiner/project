@@ -40,7 +40,11 @@ void main()
    gl_Position = modelview * vec4(vPosition.xyz, 1.0);
    
    color = vColor;
+<<<<<<< HEAD
    texCoord = vTexCoord0.st;
+=======
+   texCoord = vTexCoord1.st;
+>>>>>>> omni_engine
    
    float fromCasterDist = length(vPosition.xyz - shadowCasterPosition) - shadowLength;
    fade = 1.0 - clamp( fromCasterDist / shadowLength , 0.0, 1.0 );

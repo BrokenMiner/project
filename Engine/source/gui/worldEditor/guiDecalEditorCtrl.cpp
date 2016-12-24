@@ -44,6 +44,17 @@
 
 IMPLEMENT_CONOBJECT(GuiDecalEditorCtrl);
 
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, syncNodeDetails, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, rebuildInstanceTree, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, paletteSync, void, (const char * mode), (mode), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, undoDeleteDecalDatablock, void, (const char * datablock), (datablock), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, redoDeleteDecalDatablock, void, (const char * datablock), (datablock), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, prepGizmoTransform, void, (const char * decalId, const char * nodeDetails), (decalId, nodeDetails), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, completeGizmoTransform, void, (const char * decalId, const char * nodeDetails), (decalId, nodeDetails), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, onSelectInstance, void, (const char * decalId, const char * lookupName), (decalId, lookupName), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, onCreateInstance, void, (const char * decalId, const char * lookupName), (decalId, lookupName), "" );
+IMPLEMENT_CALLBACK( GuiDecalEditorCtrl, onDeleteInstance, void, (const char * decalId, const char * lookupName), (decalId, lookupName), "" );
+
 ConsoleDocClass( GuiDecalEditorCtrl,
    "@brief The base class for the Decal Editor tool\n\n"
    "Editor use only.\n\n"
@@ -177,7 +188,11 @@ void GuiDecalEditorCtrl::on3DMouseDown(const Gui3DMouseEvent & event)
 				mSELDecal->mTangent.x, mSELDecal->mTangent.y, mSELDecal->mTangent.z,
 				mSELDecal->mSize);
 
+<<<<<<< HEAD
 				Con::executef( this, "prepGizmoTransform", Con::getIntArg(mSELDecal->mId), returnBuffer );
+=======
+				prepGizmoTransform_callback( Con::getIntArg(mSELDecal->mId), returnBuffer );
+>>>>>>> omni_engine
 
 				return;
 			}
@@ -188,12 +203,18 @@ void GuiDecalEditorCtrl::on3DMouseDown(const Gui3DMouseEvent & event)
 			mHLDecal = NULL;            
 			selectDecal( pDecal );   
 
+<<<<<<< HEAD
 			if ( isMethod( "onSelectInstance" ) )
 			{
 				char idBuf[512];
 				dSprintf(idBuf, 512, "%i", pDecal->mId);
 				Con::executef( this, "onSelectInstance", String(idBuf).c_str(), pDecal->mDataBlock->lookupName.c_str() );
 			}
+=======
+			char idBuf[512];
+			dSprintf(idBuf, 512, "%i", pDecal->mId);
+			onSelectInstance_callback( String(idBuf).c_str(), pDecal->mDataBlock->lookupName.c_str() );
+>>>>>>> omni_engine
 
 			return;
 		}
@@ -216,12 +237,19 @@ void GuiDecalEditorCtrl::on3DMouseDown(const Gui3DMouseEvent & event)
 				mHLDecal = NULL;            
 				selectDecal( pDecal );   
 
+<<<<<<< HEAD
 				if ( isMethod( "onSelectInstance" ) )
 				{
 					char idBuf[512];
 					dSprintf(idBuf, 512, "%i", pDecal->mId);
 					Con::executef( this, "onSelectInstance", String(idBuf).c_str(), pDecal->mDataBlock->lookupName.c_str() );
 				}
+=======
+				char idBuf[512];
+				dSprintf(idBuf, 512, "%i", pDecal->mId);
+				onSelectInstance_callback( String(idBuf).c_str(), pDecal->mDataBlock->lookupName.c_str() );
+
+>>>>>>> omni_engine
 				setMode( String("SelectDecalMode"), true );
 			}
 			return;	
@@ -257,12 +285,18 @@ void GuiDecalEditorCtrl::on3DMouseDown(const Gui3DMouseEvent & event)
 				// Submit it.               
 				undoMan->addAction( action );
 
+<<<<<<< HEAD
 				if ( isMethod( "onCreateInstance" ) )
 				{
 					char buffer[512];
 					dSprintf(buffer, 512, "%i", decalInst->mId);
 					Con::executef( this, "onCreateInstance", buffer, decalInst->mDataBlock->lookupName.c_str());
 				}
+=======
+				char buffer[512];
+				dSprintf(buffer, 512, "%i", decalInst->mId);
+				onCreateInstance_callback( buffer, decalInst->mDataBlock->lookupName.c_str());
+>>>>>>> omni_engine
 			}
 
 			return;
@@ -297,7 +331,11 @@ void GuiDecalEditorCtrl::on3DMouseUp(const Gui3DMouseEvent & event)
 			mSELDecal->mTangent.x, mSELDecal->mTangent.y, mSELDecal->mTangent.z,
 			mSELDecal->mSize);
 
+<<<<<<< HEAD
 			Con::executef( this, "completeGizmoTransform", Con::getIntArg(mSELDecal->mId), returnBuffer );
+=======
+			completeGizmoTransform_callback( Con::getIntArg(mSELDecal->mId), returnBuffer );
+>>>>>>> omni_engine
 
 			mGizmo->markClean();
 		}
@@ -367,12 +405,19 @@ void GuiDecalEditorCtrl::on3DMouseDragged(const Gui3DMouseEvent & event)
 			action->mEditor = this;
 			undoMan->addAction( action );
 
+<<<<<<< HEAD
 			if ( isMethod( "onCreateInstance" ) )
 			{
 				char buffer[512];
 				dSprintf( buffer, 512, "%i", mSELDecal->mId );
 				Con::executef( this, "onCreateInstance", buffer, mSELDecal->mDataBlock->lookupName.c_str());
 			}
+=======
+			char buffer[512];
+			dSprintf( buffer, 512, "%i", mSELDecal->mId );
+			onCreateInstance_callback( buffer, mSELDecal->mDataBlock->lookupName.c_str() );
+
+>>>>>>> omni_engine
 		}
    }
 
@@ -418,7 +463,11 @@ void GuiDecalEditorCtrl::on3DMouseDragged(const Gui3DMouseEvent & event)
 
       gDecalManager->notifyDecalModified( mSELDecal );
 
+<<<<<<< HEAD
 	   Con::executef( this, "syncNodeDetails" );
+=======
+	   syncNodeDetails_callback();
+>>>>>>> omni_engine
    }
 }
 
@@ -641,6 +690,7 @@ void GuiDecalEditorCtrl::deleteSelectedDecal()
 	// Submit it.               
 	undoMan->addAction( action );
 	
+<<<<<<< HEAD
 	if ( isMethod( "onDeleteInstance" ) )
 	{
 		char buffer[512];
@@ -650,6 +700,14 @@ void GuiDecalEditorCtrl::deleteSelectedDecal()
 
    gDecalManager->removeDecal( mSELDecal );
    mSELDecal = NULL;
+=======
+	char buffer[512];
+	dSprintf(buffer, 512, "%i", mSELDecal->mId);
+	onDeleteInstance_callback( String(buffer).c_str(), mSELDecal->mDataBlock->lookupName.c_str() );
+   
+    gDecalManager->removeDecal( mSELDecal );
+    mSELDecal = NULL;
+>>>>>>> omni_engine
 }
 
 void GuiDecalEditorCtrl::deleteDecalDatablock( String lookupName )
@@ -692,12 +750,18 @@ void GuiDecalEditorCtrl::deleteDecalDatablock( String lookupName )
 			if( (*iter)->mId != -1 )
 			{
 				//make sure to call onDeleteInstance as well
+<<<<<<< HEAD
 				if ( isMethod( "onDeleteInstance" ) )
 				{
 					char buffer[512];
 					dSprintf(buffer, 512, "%i", (*iter)->mId);
 					Con::executef( this, "onDeleteInstance", String(buffer).c_str(), (*iter)->mDataBlock->lookupName.c_str() );
 				}
+=======
+				char buffer[512];
+				dSprintf(buffer, 512, "%i", (*iter)->mId);
+				onDeleteInstance_callback( String(buffer).c_str(), (*iter)->mDataBlock->lookupName.c_str() );
+>>>>>>> omni_engine
 				
 				action->deleteDecal( *(*iter) );
 				
@@ -783,7 +847,11 @@ void GuiDecalEditorCtrl::setMode( String mode, bool sourceShortcut = false )
 	mMode = mode;
 
 	if( sourceShortcut )
+<<<<<<< HEAD
 		Con::executef( this, "paletteSync", mMode );
+=======
+    { paletteSync_callback( mMode ); }
+>>>>>>> omni_engine
 }
 
 DefineConsoleMethod( GuiDecalEditorCtrl, deleteSelectedDecal, void, (), , "deleteSelectedDecal()" )
@@ -817,6 +885,7 @@ DefineConsoleMethod( GuiDecalEditorCtrl, getDecalCount, S32, (), , "getDecalCoun
 
 DefineConsoleMethod( GuiDecalEditorCtrl, getDecalTransform, const char*, ( U32 id ), , "getDecalTransform()" )
 {
+<<<<<<< HEAD
    DecalInstance *decalInstance = gDecalManager->mDecalInstanceVec[id];
 
    if( decalInstance == NULL )
@@ -824,11 +893,22 @@ DefineConsoleMethod( GuiDecalEditorCtrl, getDecalTransform, const char*, ( U32 i
 
    static const U32 bufSize = 256;
    char* returnBuffer = Con::getReturnBuffer(bufSize);
+=======
+	DecalInstance *decalInstance = gDecalManager->mDecalInstanceVec[id];
+	if( decalInstance == NULL )
+		return "";
+
+	char* returnBuffer = Con::getReturnBuffer(256);
+>>>>>>> omni_engine
    returnBuffer[0] = 0;
 
    if ( decalInstance )
    {
+<<<<<<< HEAD
 	   dSprintf(returnBuffer, bufSize, "%f %f %f %f %f %f %f",
+=======
+	   dSprintf(returnBuffer, 256, "%f %f %f %f %f %f %f",
+>>>>>>> omni_engine
          decalInstance->mPosition.x, decalInstance->mPosition.y, decalInstance->mPosition.z, 
 		   decalInstance->mTangent.x, decalInstance->mTangent.y, decalInstance->mTangent.z,
 		   decalInstance->mSize);
@@ -905,7 +985,11 @@ ConsoleDocClass( DICreateUndoAction,
 				"@internal");
 
 DICreateUndoAction::DICreateUndoAction( const UTF8* actionName )
+<<<<<<< HEAD
    :  UndoAction( actionName ), mEditor(0), mDatablockId(0)
+=======
+   :  UndoAction( actionName )
+>>>>>>> omni_engine
 {
 }
 
@@ -918,7 +1002,11 @@ void DICreateUndoAction::initPersistFields()
    Parent::initPersistFields();
 }
 
+<<<<<<< HEAD
 void DICreateUndoAction::addDecal(const DecalInstance& decal)
+=======
+void DICreateUndoAction::addDecal( DecalInstance decal )
+>>>>>>> omni_engine
 {
 	mDecalInstance = decal;
 	mDatablockId = decal.mDataBlock->getId();
@@ -935,12 +1023,18 @@ void DICreateUndoAction::undo()
 		if( (*iter)->mId != mDecalInstance.mId )
 			continue;
 
+<<<<<<< HEAD
 		if ( mEditor->isMethod( "onDeleteInstance" ) )
 		{
 			char buffer[512];
 			dSprintf(buffer, 512, "%i", (*iter)->mId);
 			Con::executef( mEditor, "onDeleteInstance", String(buffer).c_str(), (*iter)->mDataBlock->lookupName.c_str() );
 		}
+=======
+		char buffer[512];
+		dSprintf(buffer, 512, "%i", (*iter)->mId);
+		mEditor->onDeleteInstance_callback( String(buffer).c_str(), (*iter)->mDataBlock->lookupName.c_str() );
+>>>>>>> omni_engine
 		
 		// Decal manager handles clearing the vector if the decal contains a valid id
 		if( mEditor->mSELDecal == (*iter) )
@@ -975,12 +1069,19 @@ void DICreateUndoAction::redo()
 	// We take care of filling in the vector space that was once there
 	gDecalManager->mDecalInstanceVec[decal->mId] = decal;
 
+<<<<<<< HEAD
 	if ( mEditor->isMethod( "onCreateInstance" ) )
 	{
 		char buffer[512];
 		dSprintf(buffer, 512, "%i", decal->mId);
 		Con::executef( mEditor, "onCreateInstance", buffer, decal->mDataBlock->lookupName.c_str());
 	}
+=======
+	char buffer[512];
+	dSprintf(buffer, 512, "%i", decal->mId);
+	mEditor->onCreateInstance_callback( buffer, decal->mDataBlock->lookupName.c_str());
+
+>>>>>>> omni_engine
 	mEditor->selectDecal( decal );
 }
 
@@ -993,7 +1094,11 @@ ConsoleDocClass( DIDeleteUndoAction,
 				"@internal");
 
 DIDeleteUndoAction::DIDeleteUndoAction( const UTF8 *actionName )
+<<<<<<< HEAD
    :  UndoAction( actionName ), mEditor(0), mDatablockId(0)
+=======
+   :  UndoAction( actionName )
+>>>>>>> omni_engine
 {
 }
 
@@ -1006,7 +1111,11 @@ void DIDeleteUndoAction::initPersistFields()
    Parent::initPersistFields();
 }
 
+<<<<<<< HEAD
 void DIDeleteUndoAction::deleteDecal(const DecalInstance& decal)
+=======
+void DIDeleteUndoAction::deleteDecal( DecalInstance decal )
+>>>>>>> omni_engine
 {
 	mDecalInstance = decal;
 	mDatablockId = decal.mDataBlock->getId();
@@ -1033,12 +1142,19 @@ void DIDeleteUndoAction::undo()
 	// We take care of filling in the vector space that was once there
 	gDecalManager->mDecalInstanceVec[decal->mId] = decal;
 
+<<<<<<< HEAD
 	if ( mEditor->isMethod( "onCreateInstance" ) )
 	{
 		char buffer[512];
 		dSprintf(buffer, 512, "%i", decal->mId);
 		Con::executef( mEditor, "onCreateInstance", buffer, decal->mDataBlock->lookupName.c_str());
 	}
+=======
+	char buffer[512];
+	dSprintf(buffer, 512, "%i", decal->mId);
+	mEditor->onCreateInstance_callback( buffer, decal->mDataBlock->lookupName.c_str() );
+
+>>>>>>> omni_engine
 	mEditor->selectDecal( decal );
 }
 
@@ -1053,12 +1169,18 @@ void DIDeleteUndoAction::redo()
 		if( (*iter)->mId != mDecalInstance.mId )
 			continue;
 
+<<<<<<< HEAD
 		if ( mEditor->isMethod( "onDeleteInstance" ) )
 		{
 			char buffer[512];
 			dSprintf(buffer, 512, "%i", (*iter)->mId);
 			Con::executef( mEditor, "onDeleteInstance", String(buffer).c_str(), (*iter)->mDataBlock->lookupName.c_str() );
 		}
+=======
+		char buffer[512];
+		dSprintf(buffer, 512, "%i", (*iter)->mId);
+		mEditor->onDeleteInstance_callback( String(buffer).c_str(), (*iter)->mDataBlock->lookupName.c_str() );
+>>>>>>> omni_engine
 		
 		// Decal manager handles clearing the vector if the decal contains a valid id
 		if( mEditor->mSELDecal == (*iter) )
@@ -1081,7 +1203,11 @@ ConsoleDocClass( DBDeleteUndoAction,
 				"@internal");
 
 DBDeleteUndoAction::DBDeleteUndoAction( const UTF8 *actionName )
+<<<<<<< HEAD
    :  UndoAction( actionName ), mEditor(0), mDatablockId(0)
+=======
+   :  UndoAction( actionName )
+>>>>>>> omni_engine
 {
 }
 
@@ -1094,7 +1220,11 @@ void DBDeleteUndoAction::initPersistFields()
    Parent::initPersistFields();
 }
 
+<<<<<<< HEAD
 void DBDeleteUndoAction::deleteDecal(const DecalInstance& decal)
+=======
+void DBDeleteUndoAction::deleteDecal( DecalInstance decal )
+>>>>>>> omni_engine
 {
 	mDecalInstanceVec.increment();
    mDecalInstanceVec.last() = decal;
@@ -1103,8 +1233,13 @@ void DBDeleteUndoAction::deleteDecal(const DecalInstance& decal)
 void DBDeleteUndoAction::undo()
 {
 	DecalData * datablock = dynamic_cast<DecalData *>( Sim::findObject( mDatablockId ) );
+<<<<<<< HEAD
 	if ( mEditor->isMethod( "undoDeleteDecalDatablock" ) )
 			Con::executef( mEditor, "undoDeleteDecalDatablock", datablock->lookupName.c_str());
+=======
+
+	mEditor->undoDeleteDecalDatablock_callback( datablock->lookupName.c_str());
+>>>>>>> omni_engine
 
 	// Create and restore the decal instances
 	for ( S32 i= mDecalInstanceVec.size()-1; i >= 0; i-- )
@@ -1130,12 +1265,18 @@ void DBDeleteUndoAction::undo()
 		// We take care of filling in the vector space that was once there
 		gDecalManager->mDecalInstanceVec[decalInstance->mId] = decalInstance;
 
+<<<<<<< HEAD
 		if ( mEditor->isMethod( "onCreateInstance" ) )
 		{
 			char buffer[512];
 			dSprintf(buffer, 512, "%i", decalInstance->mId);
 			Con::executef( mEditor, "onCreateInstance", buffer, decalInstance->mDataBlock->lookupName.c_str());
 		}
+=======
+		char buffer[512];
+		dSprintf(buffer, 512, "%i", decalInstance->mId);
+		mEditor->onCreateInstance_callback( buffer, decalInstance->mDataBlock->lookupName.c_str());
+>>>>>>> omni_engine
 	}
 	
 }
@@ -1156,12 +1297,18 @@ void DBDeleteUndoAction::redo()
 			if( decalInstance->mId != vecInstance.mId )
 				continue;
 
+<<<<<<< HEAD
 			if ( mEditor->isMethod( "onDeleteInstance" ) )
 			{
 				char buffer[512];
 				dSprintf(buffer, 512, "%i", decalInstance->mId);
 				Con::executef( mEditor, "onDeleteInstance", String(buffer).c_str(), decalInstance->mDataBlock->lookupName.c_str() );
 			}
+=======
+			char buffer[512];
+			dSprintf(buffer, 512, "%i", decalInstance->mId);
+			mEditor->onDeleteInstance_callback( String(buffer).c_str(), decalInstance->mDataBlock->lookupName.c_str() );
+>>>>>>> omni_engine
 			
 			// Decal manager handles clearing the vector if the decal contains a valid id
 			if( mEditor->mSELDecal == decalInstance )
@@ -1176,8 +1323,13 @@ void DBDeleteUndoAction::redo()
 	}
 	
 	DecalData * datablock = dynamic_cast<DecalData *>( Sim::findObject( mDatablockId ) );
+<<<<<<< HEAD
 	if ( mEditor->isMethod( "redoDeleteDecalDatablock" ) )
 		Con::executef( mEditor, "redoDeleteDecalDatablock", datablock->lookupName.c_str());
+=======
+	
+	mEditor->redoDeleteDecalDatablock_callback( datablock->lookupName.c_str() );
+>>>>>>> omni_engine
 }
 
 //------------------------------
@@ -1190,7 +1342,11 @@ ConsoleDocClass( DBRetargetUndoAction,
 				"@internal");
 
 DBRetargetUndoAction::DBRetargetUndoAction( const UTF8 *actionName )
+<<<<<<< HEAD
    :  UndoAction( actionName ), mEditor(0), mDBFromId(0), mDBToId(0)
+=======
+   :  UndoAction( actionName )
+>>>>>>> omni_engine
 {
 }
 
@@ -1222,8 +1378,13 @@ void DBRetargetUndoAction::undo()
 		(*iter)->mDataBlock = ptrFrom;
 		mEditor->forceRedraw((*iter));
 	}
+<<<<<<< HEAD
 	if ( mEditor->isMethod( "rebuildInstanceTree" ) )
 			Con::executef( mEditor, "rebuildInstanceTree" );
+=======
+
+    mEditor->rebuildInstanceTree_callback();
+>>>>>>> omni_engine
 }
 
 void DBRetargetUndoAction::redo()
@@ -1240,7 +1401,248 @@ void DBRetargetUndoAction::redo()
 		mEditor->forceRedraw((*iter));
 	}
 	
+<<<<<<< HEAD
 	if ( mEditor->isMethod( "rebuildInstanceTree" ) )
 		Con::executef( mEditor, "rebuildInstanceTree" );
 }
 #endif
+=======
+	mEditor->rebuildInstanceTree_callback();
+}
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_deleteDecalDatablock(char * x__object, char * x__datablock)
+{
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* datablock = (const char*)x__datablock;
+{
+	String lookupName( datablock );
+	if( lookupName == String::EmptyString )
+		return;
+	
+	object->deleteDecalDatablock( lookupName );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_deleteSelectedDecal(char * x__object)
+{
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->deleteSelectedDecal();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_editDecalDetails(char * x__object, U32 id, char * x__pos, char * x__tan, F32 size)
+{
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+Point3F tan = Point3F();
+sscanf(x__tan,"%f %f %f",&tan.x,&tan.y,&tan.z);
+{
+	DecalInstance *decalInstance = gDecalManager->mDecalInstanceVec[id];
+	if( decalInstance == NULL )
+		return;
+   decalInstance->mPosition = pos;
+	decalInstance->mTangent = tan;
+	decalInstance->mSize = size;
+	
+	if ( decalInstance == object->mSELDecal )
+		object->setGizmoFocus( decalInstance );
+	object->forceRedraw( decalInstance );
+	gDecalManager->notifyDecalModified( decalInstance );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiDecalEditorCtrl_getDecalCount(char * x__object)
+{
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	return gDecalManager->mDecalInstanceVec.size();
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_getDecalLookupName(char * x__object, U32 id,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	DecalInstance *decalInstance = gDecalManager->mDecalInstanceVec[id];
+	if( decalInstance == NULL )
+		{wle_returnObject ="invalid";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+	{wle_returnObject =decalInstance->mDataBlock->lookupName;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_getDecalTransform(char * x__object, U32 id,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	DecalInstance *decalInstance = gDecalManager->mDecalInstanceVec[id];
+	if( decalInstance == NULL )
+		{wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+	char* returnBuffer = Con::getReturnBuffer(256);
+   returnBuffer[0] = 0;
+   if ( decalInstance )
+   {
+	   dSprintf(returnBuffer, 256, "%f %f %f %f %f %f %f",
+         decalInstance->mPosition.x, decalInstance->mPosition.y, decalInstance->mPosition.z, 
+		   decalInstance->mTangent.x, decalInstance->mTangent.y, decalInstance->mTangent.z,
+		   decalInstance->mSize);
+   }
+	{wle_returnObject =returnBuffer;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_getMode(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	{wle_returnObject =object->mMode;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiDecalEditorCtrl_getSelectionCount(char * x__object)
+{
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   if ( object->mSELDecal != NULL )
+     return (S32)( 1);
+  return (S32)( 0);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_retargetDecalDatablock(char * x__object, char * x__dbFrom, char * x__dbTo)
+{
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* dbFrom = (const char*)x__dbFrom;
+const char* dbTo = (const char*)x__dbTo;
+{
+   if( dStrcmp( dbFrom, "" ) != 0 && dStrcmp( dbTo, "" ) != 0 )
+		object->retargetDecalDatablock( dbFrom, dbTo );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_selectDecal(char * x__object, U32 id)
+{
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	DecalInstance *decalInstance = gDecalManager->mDecalInstanceVec[id];
+	if( decalInstance == NULL )
+		return;
+	object->selectDecal( decalInstance );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiDecalEditorCtrl_setMode(char * x__object, char * x__newMode)
+{
+GuiDecalEditorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+String newMode = String( x__newMode);
+{
+	object->setMode( newMode );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

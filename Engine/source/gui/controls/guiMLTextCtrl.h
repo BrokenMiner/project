@@ -65,10 +65,18 @@ class GuiMLTextCtrl : public GuiControl
 
    struct URL
    {
+<<<<<<< HEAD
       bool mouseDown;
       U32 textStart;
       U32 len;
       bool noUnderline;
+=======
+	  //Rearranging the fields according to their sizes
+      U32 textStart;
+      U32 len;
+      bool noUnderline;
+      bool mouseDown;
+>>>>>>> omni_engine
    };
 
    struct Style
@@ -128,7 +136,11 @@ class GuiMLTextCtrl : public GuiControl
    ~GuiMLTextCtrl();
 
    DECLARE_CALLBACK( void, onURL, (const char* url));
+<<<<<<< HEAD
    DECLARE_CALLBACK( void, onResize, ( S32 width, S32 maxY ));
+=======
+   DECLARE_CALLBACK( void, onResize, ( const char* width, const char* maxY ));
+>>>>>>> omni_engine
 
    // Text retrieval functions
    U32 getNumChars() const;

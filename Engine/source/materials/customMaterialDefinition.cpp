@@ -138,6 +138,7 @@ bool CustomMaterial::onAdd()
             return false;
          }
          
+<<<<<<< HEAD
          // Assert sampler names are defined on ShaderData
          S32 pos = -1;
          String samplerName = entry->slotName + dStrlen(samplerDecl);
@@ -159,6 +160,11 @@ bool CustomMaterial::onAdd()
          }
          mSamplerNames[pos] = samplerName;
          mTexFilename[pos] = entry->value;
+=======
+      	mSamplerNames[i] = entry->slotName + dStrlen(samplerDecl);
+         mSamplerNames[i].insert(0, '$');
+         mTexFilename[i] = entry->value;
+>>>>>>> omni_engine
          ++i;
       }
    }

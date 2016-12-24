@@ -56,7 +56,11 @@ Point3F Selection<ForestItem>::getOrigin()
 
    Selection<ForestItem>::iterator itr = begin();
 
+<<<<<<< HEAD
    for (; itr != end(); ++itr)
+=======
+   for ( ; itr != end(); itr++ )
+>>>>>>> omni_engine
    {
       const MatrixF &mat = itr->getTransform();
       Point3F wPos;
@@ -450,11 +454,18 @@ void ForestSelectionTool::onRender2D()
       F32 hscale = wwidth * 2 / F32(mEditor->getWidth());
       F32 vscale = wheight * 2 / F32(mEditor->getHeight());
 
+<<<<<<< HEAD
       Point2I editorPosition = mEditor->getPosition();
       F32 left = (mDragRect.point.x - editorPosition.x) * hscale - wwidth;
       F32 right = (mDragRect.point.x - editorPosition.x + mDragRect.extent.x) * hscale - wwidth;
       F32 top = wheight - vscale * (mDragRect.point.y - editorPosition.y);
       F32 bottom = wheight - vscale * (mDragRect.point.y - editorPosition.y + mDragRect.extent.y);
+=======
+      F32 left = (mDragRect.point.x - mEditor->getPosition().x) * hscale - wwidth;
+      F32 right = (mDragRect.point.x - mEditor->getPosition().x + mDragRect.extent.x) * hscale - wwidth;
+      F32 top = wheight - vscale * (mDragRect.point.y - mEditor->getPosition().y);
+      F32 bottom = wheight - vscale * (mDragRect.point.y - mEditor->getPosition().y + mDragRect.extent.y);
+>>>>>>> omni_engine
       gDragFrustum.set(lastCameraQuery.ortho, left, right, top, bottom, lastCameraQuery.nearPlane, lastCameraQuery.farPlane, lastCameraQuery.cameraMatrix );
 
       mForest->getData()->getItems( gDragFrustum, &mDragSelection );      
@@ -516,9 +527,14 @@ bool ForestSelectionTool::updateGuiInfo()
          text = "Scale selection.";        
    }   
 
+<<<<<<< HEAD
    Con::executef( statusbar, "setInfo", text.c_str() );
 
    Con::executef( statusbar, "setSelectionObjectsByCount", mSelection.size() );
+=======
+   statusbar->setInfo_callback( text.c_str() );
+   statusbar->setSelectionObjectsByCount_callback( Con::getIntArg( mSelection.size() ) );
+>>>>>>> omni_engine
 
    return true;
 }
@@ -589,4 +605,118 @@ DefineConsoleMethod( ForestSelectionTool, pasteSelection, void, (), , "" )
 {
    object->pasteSelection();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestSelectionTool_clearSelection(char * x__object)
+{
+ForestSelectionTool* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->clearSelection();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestSelectionTool_copySelection(char * x__object)
+{
+ForestSelectionTool* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->copySelection();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestSelectionTool_cutSelection(char * x__object)
+{
+ForestSelectionTool* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->cutSelection();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestSelectionTool_deleteSelection(char * x__object)
+{
+ForestSelectionTool* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->deleteSelection();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_ForestSelectionTool_getSelectionCount(char * x__object)
+{
+ForestSelectionTool* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getSelectionCount());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestSelectionTool_pasteSelection(char * x__object)
+{
+ForestSelectionTool* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->pasteSelection();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

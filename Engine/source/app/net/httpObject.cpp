@@ -266,6 +266,7 @@ void HTTPObject::onConnected()
    char *pt = dStrchr(mHostName, ':');
    if(pt)
       *pt = 0;
+<<<<<<< HEAD
 
    //If we want to do a get request
    if(mPost == NULL)
@@ -279,6 +280,9 @@ void HTTPObject::onConnected()
          expPath, mHostName, dStrlen(mPost), mPost);
    }
 
+=======
+   dSprintf(buffer, sizeof(buffer), "GET %s HTTP/1.1\r\nHost: %s\r\n\r\n", expPath, mHostName);
+>>>>>>> omni_engine
    if(pt)
       *pt = ':';
 
@@ -443,6 +447,8 @@ DefineEngineMethod( HTTPObject, post, void, ( const char* Address, const char* r
    "@param requirstURI Specific location on the server to access (IE: \"index.php\".)\n"
    "@param query Actual data to transmit to the server. Can be anything required providing it sticks with limitations of the HTTP protocol. \n"
    "@param post Submission data to be processed.\n"
+   
+   "@note The post() method is currently non-functional.\n"
 
    "@tsexample\n"
 	   "// Create an HTTP object for communications\n"
@@ -462,3 +468,92 @@ DefineEngineMethod( HTTPObject, post, void, ( const char* Address, const char* r
 {
    object->post(Address, requirstURI, query, post);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnHTTPObject_get(char * x__object, char * x__Address, char * x__requirstURI, char * x__query)
+{
+HTTPObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* Address = (const char*)x__Address;
+const char* requirstURI = (const char*)x__requirstURI;
+const char* query = (const char*)x__query;
+{
+   if( !query || !query[ 0 ] )
+		object->get(Address, requirstURI, NULL);
+   else
+		object->get(Address, requirstURI, query);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnHTTPObject_post(char * x__object, char * x__Address, char * x__requirstURI, char * x__query, char * x__post)
+{
+HTTPObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* Address = (const char*)x__Address;
+const char* requirstURI = (const char*)x__requirstURI;
+const char* query = (const char*)x__query;
+const char* post = (const char*)x__post;
+{
+   object->post(Address, requirstURI, query, post);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

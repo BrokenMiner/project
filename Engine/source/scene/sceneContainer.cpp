@@ -1042,11 +1042,11 @@ bool SceneContainer::_castRay( U32 type, const Point3F& start, const Point3F& en
          {
             U32 checkX = currXBin % csmNumBins;
 
-            F32 subStartT = (subStartX - currStartX) / (currEndX - currStartX);
-            F32 subEndT   = getMin(F32((subEndX   - currStartX) / (currEndX - currStartX)), 1.f);
+            F64 subStartT = (subStartX - currStartX) / (currEndX - currStartX);
+            F64 subEndT   = getMin(F32((subEndX   - currStartX) / (currEndX - currStartX)), 1.f);
 
-            F32 subY1 = y1 + (y2 - y1) * subStartT;
-            F32 subY2 = y1 + (y2 - y1) * subEndT;
+            F64 subY1 = y1 + (y2 - y1) * subStartT;
+            F64 subY2 = y1 + (y2 - y1) * subEndT;
 
             U32 newMinY, newMaxY;
             getBinRange(getMin(subY1, subY2), getMax(subY1, subY2), newMinY, newMaxY);
@@ -1378,9 +1378,15 @@ F32 SceneContainer::containerSearchCurrRadiusDist()
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void SceneContainer::getBinRange( const F32 min, const F32 max, U32& minBin, U32& maxBin )
 {
    AssertFatal(max >= min, avar("Error, bad range in getBinRange. min: %f, max: %f", min, max));
+=======
+void SceneContainer::getBinRange( const F64 min, const F64 max, U32& minBin, U32& maxBin )
+{
+   AssertFatal(max >= min, "Error, bad range! in getBinRange");
+>>>>>>> omni_engine
 
    if ((max - min) >= (SceneContainer::csmTotalBinSize - SceneContainer::csmBinSize))
    {
@@ -1433,7 +1439,11 @@ void SceneContainer::getBinRange( const F32 min, const F32 max, U32& minBin, U32
       minBin = U32(minCoord / SceneContainer::csmBinSize);
       maxBin = U32(maxCoord / SceneContainer::csmBinSize);
       AssertFatal(minBin < SceneContainer::csmNumBins, avar("Error, bad clipping(min)! (%g, %d)", maxCoord, minBin));
+<<<<<<< HEAD
       AssertFatal(minBin < SceneContainer::csmNumBins, avar("Error, bad clipping(max)! (%g, %d)", maxCoord, maxBin));
+=======
+      AssertFatal(maxBin < SceneContainer::csmNumBins, avar("Error, bad clipping(max)! (%g, %d)", maxCoord, maxBin));
+>>>>>>> omni_engine
 
       // MSVC6 seems to be generating some bad floating point code around
       // here when full optimizations are on.  The min != max test should
@@ -1655,3 +1665,178 @@ DefineEngineFunction( containerRayCast, const char*,
 }
 
 ConsoleFunctionGroupEnd( Containers );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_containerBoxEmpty(U32 mask, char * x__center, F32 xRadius, F32 yRadius, F32 zRadius, bool useClientContainer)
+{
+Point3F center = Point3F();
+sscanf(x__center,"%f %f %f",&center.x,&center.y,&center.z);
+
+
+bool wle_returnObject;
+{
+   Point3F extent( xRadius, yRadius, zRadius );
+   extent.y = extent.y >= 0 ? extent.y : extent.x;
+   extent.z = extent.z >= 0 ? extent.z : extent.x;
+   Box3F    B(center - extent, center + extent, true);
+   EarlyOutPolyList polyList;
+   polyList.mPlaneList.clear();
+   polyList.mNormal.set(0,0,0);
+   polyList.mPlaneList.setSize(6);
+   polyList.mPlaneList[0].set(B.minExtents, VectorF(-1,0,0));
+   polyList.mPlaneList[1].set(B.maxExtents, VectorF(0,1,0));
+   polyList.mPlaneList[2].set(B.maxExtents, VectorF(1,0,0));
+   polyList.mPlaneList[3].set(B.minExtents, VectorF(0,-1,0));
+   polyList.mPlaneList[4].set(B.minExtents, VectorF(0,0,-1));
+   polyList.mPlaneList[5].set(B.maxExtents, VectorF(0,0,1));
+   SceneContainer* pContainer = useClientContainer ? &gClientContainer : &gServerContainer;
+   {wle_returnObject =! pContainer->buildPolyList(PLC_Collision, B, mask, &polyList);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_containerRayCast(char * x__start, char * x__end, U32 mask, char * x__pExempt, bool useClientContainer,  char* retval)
+{
+dSprintf(retval,16384,"");
+Point3F start = Point3F();
+sscanf(x__start,"%f %f %f",&start.x,&start.y,&start.z);
+Point3F end = Point3F();
+sscanf(x__end,"%f %f %f",&end.x,&end.y,&end.z);
+
+SceneObject* pExempt; Sim::findObject(x__pExempt, pExempt ); 
+const char* wle_returnObject;
+{
+   if (pExempt)
+      pExempt->disableCollision();
+   SceneContainer* pContainer = useClientContainer ? &gClientContainer : &gServerContainer;
+   RayInfo rinfo;
+   S32 ret = 0;
+   if (pContainer->castRay(start, end, mask, &rinfo) == true)
+      ret = rinfo.object->getId();
+   if (pExempt)
+      pExempt->enableCollision();
+      static const U32 bufSize = 256;
+   char *returnBuffer = Con::getReturnBuffer(bufSize);
+   if(ret)
+   {
+      dSprintf(returnBuffer, bufSize, "%d %g %g %g %g %g %g %g",
+               ret, rinfo.point.x, rinfo.point.y, rinfo.point.z,
+               rinfo.normal.x, rinfo.normal.y, rinfo.normal.z, rinfo.distance);
+   }
+   else
+   {
+      returnBuffer[0] = '0';
+      returnBuffer[1] = '\0';
+   }
+   {wle_returnObject =(returnBuffer);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fn_containerSearchCurrDist(bool useClientContainer)
+{
+{
+   SceneContainer* pContainer = useClientContainer ? &gClientContainer : &gServerContainer;
+  return (F32)( pContainer->containerSearchCurrDist());
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fn_containerSearchCurrRadiusDist(bool useClientContainer)
+{
+{
+   SceneContainer* pContainer = useClientContainer ? &gClientContainer : &gServerContainer;
+  return (F32)( pContainer->containerSearchCurrRadiusDist());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_containerSearchNext(bool useClientContainer,  char* retval)
+{
+dSprintf(retval,1024,"");
+SceneObject* wle_returnObject;
+{
+   SceneContainer* pContainer = useClientContainer ? &gClientContainer : &gServerContainer;
+   {wle_returnObject =pContainer->containerSearchNextObject();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_initContainerRadiusSearch(char * x__pos, F32 radius, U32 mask, bool useClientContainer)
+{
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+
+{
+   SceneContainer* pContainer = useClientContainer ? &gClientContainer : &gServerContainer;
+   pContainer->initRadiusSearch( pos, radius, mask );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_initContainerTypeSearch(U32 mask, bool useClientContainer)
+{
+
+{
+   SceneContainer* pContainer = useClientContainer ? &gClientContainer : &gServerContainer;
+   pContainer->initTypeSearch( mask );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

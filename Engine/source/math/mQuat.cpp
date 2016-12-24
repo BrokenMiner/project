@@ -32,6 +32,7 @@ const QuatF QuatF::Identity(0.0f,0.0f,0.0f,1.0f);
 
 QuatF& QuatF::set( const EulerF & e )
 {
+<<<<<<< HEAD
 	/*
 	F32 cx, sx;
 	F32 cy, sy;
@@ -74,6 +75,35 @@ QuatF& QuatF::set( const EulerF & e )
 	z =c1*s2*c3 - s1*c2*s3;
 
 	return *this;
+=======
+   F32 cx, sx;
+   F32 cy, sy;
+   F32 cz, sz;
+   mSinCos( -e.x * 0.5f, sx, cx );
+   mSinCos( -e.y * 0.5f, sy, cy );
+   mSinCos( -e.z * 0.5f, sz, cz );
+
+   // Qyaw(z)   = [ (0, 0, sin z/2), cos z/2 ]
+   // Qpitch(x) = [ (sin x/2, 0, 0), cos x/2 ]
+   // Qroll(y)  = [ (0, sin y/2, 0), cos y/2 ]
+   // this = Qresult = Qyaw*Qpitch*Qroll  ZXY
+   //
+   // The code that folows is a simplification of:
+   //    roll*=pitch;
+   //    roll*=yaw;
+   //    *this = roll;
+   F32 cycz, sysz, sycz, cysz;
+   cycz = cy*cz;
+   sysz = sy*sz;
+   sycz = sy*cz;
+   cysz = cy*sz;
+   w = cycz*cx + sysz*sx;
+   x = cycz*sx + sysz*cx;
+   y = sycz*cx - cysz*sx;
+   z = cysz*cx - sycz*sx;
+
+   return *this;
+>>>>>>> omni_engine
 }
 
 QuatF& QuatF::operator *=( const QuatF & b )
@@ -304,7 +334,11 @@ QuatF & QuatF::interpolate( const QuatF & q1, const QuatF & q2, F32 t )
    return *this;
 }
 
+<<<<<<< HEAD
 Point3F & QuatF::mulP(const Point3F& p, Point3F* r) const
+=======
+Point3F & QuatF::mulP(const Point3F& p, Point3F* r)
+>>>>>>> omni_engine
 {
    QuatF qq;
    QuatF qi = *this;

@@ -355,7 +355,11 @@ bool ParticleData::protectedSetSizes( void *object, const char *index, const cha
    U32 i;
 
    if (!index)
+<<<<<<< HEAD
       return (val >= 0.f && val <= MaxParticleSize);
+=======
+      i = 0;
+>>>>>>> omni_engine
    else
       i = dAtoui(index);
 
@@ -371,7 +375,11 @@ bool ParticleData::protectedSetTimes( void *object, const char *index, const cha
    U32 i;
 
    if (!index)
+<<<<<<< HEAD
       return (val >= 0.f && val <= 1.f);
+=======
+      i = 0;
+>>>>>>> omni_engine
    else
       i = dAtoui(index);
 
@@ -653,3 +661,74 @@ DefineEngineMethod(ParticleData, reload, void, (),,
    char errorBuffer[256];
    object->reload(errorBuffer);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnParticleData_reload(char * x__object)
+{
+ParticleData* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   char errorBuffer[256];
+   object->reload(errorBuffer);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -32,6 +32,8 @@
 
 IMPLEMENT_CONOBJECT(GuiMessageVectorCtrl);
 
+IMPLEMENT_CALLBACK( GuiMessageVectorCtrl, urlClickCallback, void, (const char * url), (url), "" );
+
 ConsoleDocClass( GuiMessageVectorCtrl,
 	"@brief A chat HUD control that displays messages from a MessageVector.\n\n"
 
@@ -391,9 +393,15 @@ void GuiMessageVectorCtrl::createSpecialMarkers(SpecialMarkers& rSpecial, const 
       if (pMinMatch[0] != '\0') {
          AssertFatal(minMatchType != 0xFFFFFFFF, "Hm, that's bad");
          // Found a match => now find the end
+<<<<<<< HEAD
          U32 start = pMinMatch - pLCCopy;
          U32 j;
          for (j = 1; pLCCopy[start + j] != '\0'; j++) {
+=======
+         U64 start = pMinMatch - pLCCopy;
+         U64 j;
+         for ( j = 1; pLCCopy[start + j] != '\0'; j++) {
+>>>>>>> omni_engine
             if (pLCCopy[start + j] == '\n' ||
                 pLCCopy[start + j] == ' '  ||
                 pLCCopy[start + j] == '\t')
@@ -675,6 +683,53 @@ void GuiMessageVectorCtrl::onSleep()
    Parent::onSleep();
 }
 
+//--------------------------------------------------------------------------
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiMessageVectorCtrl::copyProfileSettings()
+{
+	if(!mProfileSettingsCopied)
+	{
+		mSpecialColorCopy = mSpecialColor;
+		
+		Parent::copyProfileSettings();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiMessageVectorCtrl::resetProfileSettings()
+{
+	mSpecialColor = mSpecialColorCopy;
+	
+	Parent::resetProfileSettings();
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiMessageVectorCtrl::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   //Set the alpha value
+   if(mSpecialColor)
+	   mSpecialColor.alpha = mSpecialColorCopy.alpha *mRenderAlpha;
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiMessageVectorCtrl::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "matchColor" ))
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+
+		mSpecialColorCopy = color;
+	}
+}
+// @Copyright end
 
 //--------------------------------------------------------------------------
 void GuiMessageVectorCtrl::onRender(Point2I      offset,
@@ -907,7 +962,11 @@ void GuiMessageVectorCtrl::onMouseUp(const GuiEvent& event)
       dStrncpy(copyURL, &mMessageVector->getLine(currSpecialLine).message[specialStart], specialEnd - specialStart + 1);
       copyURL[specialEnd - specialStart + 1] = '\0';
 
+<<<<<<< HEAD
       Con::executef(this, "urlClickCallback", copyURL);
+=======
+      urlClickCallback_callback( copyURL );
+>>>>>>> omni_engine
       delete [] copyURL;
    }
 
@@ -915,4 +974,97 @@ void GuiMessageVectorCtrl::onMouseUp(const GuiEvent& event)
    mMouseSpecialLine = -1;
    mMouseSpecialRef  = -1;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiMessageVectorCtrl_attach(char * x__object, char * x__item)
+{
+GuiMessageVectorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+MessageVector* item; Sim::findObject(x__item, item ); 
+bool wle_returnObject;
+{
+	if (item == NULL)
+	{
+		Con::errorf(ConsoleLogEntry::General, "Could not find MessageVector: %s", item);
+		{wle_returnObject =false;
+return (S32)(wle_returnObject);}
+	}
+	
+	{wle_returnObject =object->attach(item);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMessageVectorCtrl_detach(char * x__object)
+{
+GuiMessageVectorCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	if (object->isAttached() == false)
+	{
+		Con::warnf(ConsoleLogEntry::General, "GuiMessageVectorCtrl: double detach");
+		return;
+	}
+	object->detach();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

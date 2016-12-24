@@ -41,6 +41,7 @@ singleton ShaderData( PFX_EdgeAADetectShader )
    OGLPixelShaderFile   = "shaders/common/postFx/edgeaa/gl/edgeDetectP.glsl";
       
    samplerNames[0] = "$prepassBuffer";
+   //samplerNames[0] = "$inputTex";
    
    pixVersion = 3.0;
 };
@@ -55,6 +56,10 @@ singleton ShaderData( PFX_EdgeAAShader )
       
    samplerNames[0] = "$edgeBuffer";
    samplerNames[1] = "$backBuffer";
+   //OGLVertexShaderFile  = "shaders/common/postFx/gl//postFxV.glsl";
+   //OGLPixelShaderFile   = "shaders/common/postFx/gl/passthruP.glsl";
+      
+   //samplerNames[0] = "$inputTex";
    
    pixVersion = 3.0;
 };
@@ -68,6 +73,10 @@ singleton ShaderData( PFX_EdgeAADebugShader )
    OGLPixelShaderFile   = "shaders/common/postFx/edgeaa/gl/dbgEdgeDisplayP.glsl";
       
    samplerNames[0] = "$edgeBuffer";
+   //OGLVertexShaderFile  = "shaders/common/postFx/gl//postFxV.glsl";
+   //OGLPixelShaderFile   = "shaders/common/postFx/gl/passthruP.glsl";
+      
+   //samplerNames[0] = "$inputTex";
    
    pixVersion = 3.0;
 };

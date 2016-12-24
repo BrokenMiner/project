@@ -119,6 +119,7 @@ void GFXGLEnumTranslate::init()
    
    
    // Texture formats
+<<<<<<< HEAD
    for(int i = 0; i < GFXFormat_COUNT; ++i)
    {
       GFXGLTextureInternalFormat[i] = GL_NONE;
@@ -142,12 +143,36 @@ void GFXGLEnumTranslate::init()
    GFXGLTextureInternalFormat[GFXFormatD24X8] = GL_DEPTH24_STENCIL8;
    GFXGLTextureInternalFormat[GFXFormatD24S8] = GL_DEPTH24_STENCIL8;
    GFXGLTextureInternalFormat[GFXFormatR16G16B16A16] = GL_RGBA16;
+=======
+   GFXGLTextureInternalFormat[GFXFormatA8] = GL_ALPHA8;
+   GFXGLTextureInternalFormat[GFXFormatL8] = GL_LUMINANCE8;
+   GFXGLTextureInternalFormat[GFXFormatR5G6B5] = GL_RGB5_A1;  // OpenGL has no R5G6B5 format.
+   GFXGLTextureInternalFormat[GFXFormatR5G5B5A1] = GL_RGB5_A1;
+   GFXGLTextureInternalFormat[GFXFormatR5G5B5X1] = GL_RGB5_A1;
+   GFXGLTextureInternalFormat[GFXFormatL16] = GL_LUMINANCE16;
+   GFXGLTextureInternalFormat[GFXFormatR16F] = GL_ZERO;
+   GFXGLTextureInternalFormat[GFXFormatD16] = GL_DEPTH_COMPONENT;
+   GFXGLTextureInternalFormat[GFXFormatR8G8B8] = GL_RGB8;
+   GFXGLTextureInternalFormat[GFXFormatR8G8B8A8] = GL_RGBA8;
+   GFXGLTextureInternalFormat[GFXFormatR8G8B8X8] = GL_RGBA8;
+   GFXGLTextureInternalFormat[GFXFormatR32F] = GL_ZERO; 
+   GFXGLTextureInternalFormat[GFXFormatR16G16] = GL_RGBA16;
+   GFXGLTextureInternalFormat[GFXFormatR16G16F] = GL_ZERO;
+   GFXGLTextureInternalFormat[GFXFormatR10G10B10A2] = GL_ZERO;
+   GFXGLTextureInternalFormat[GFXFormatD32] = GL_DEPTH_COMPONENT32;
+   GFXGLTextureInternalFormat[GFXFormatD24X8] = GL_DEPTH_COMPONENT24;
+   GFXGLTextureInternalFormat[GFXFormatD24S8] = GL_DEPTH_COMPONENT24;
+   GFXGLTextureInternalFormat[GFXFormatR16G16B16A16] = GL_ZERO;
+   GFXGLTextureInternalFormat[GFXFormatR16G16B16A16F] = GL_ZERO;
+   GFXGLTextureInternalFormat[GFXFormatR32G32B32A32F] = GL_ZERO;
+>>>>>>> omni_engine
    GFXGLTextureInternalFormat[GFXFormatDXT1] = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
    GFXGLTextureInternalFormat[GFXFormatDXT2] = GL_ZERO;
    GFXGLTextureInternalFormat[GFXFormatDXT3] = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
    GFXGLTextureInternalFormat[GFXFormatDXT4] = GL_ZERO;
    GFXGLTextureInternalFormat[GFXFormatDXT5] = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
    
+<<<<<<< HEAD
    GFXGLTextureFormat[GFXFormatA8] = GL_RED;
    GFXGLTextureFormat[GFXFormatL8] = GL_RED;
    GFXGLTextureFormat[GFXFormatR5G5B5A1] = GL_RGBA;
@@ -163,6 +188,29 @@ void GFXGLEnumTranslate::init()
    GFXGLTextureFormat[GFXFormatD24X8] = GL_DEPTH_STENCIL;
    GFXGLTextureFormat[GFXFormatD24S8] = GL_DEPTH_STENCIL;
    GFXGLTextureFormat[GFXFormatR16G16B16A16] = GL_RGBA;
+=======
+   GFXGLTextureFormat[GFXFormatA8] = GL_ALPHA;
+   GFXGLTextureFormat[GFXFormatL8] = GL_LUMINANCE;
+   GFXGLTextureFormat[GFXFormatR5G6B5] = GL_RGBA;
+   GFXGLTextureFormat[GFXFormatR5G5B5A1] = GL_RGBA;
+   GFXGLTextureFormat[GFXFormatR5G5B5X1] = GL_RGBA;
+   GFXGLTextureFormat[GFXFormatL16] = GL_LUMINANCE;
+   GFXGLTextureFormat[GFXFormatR16F] = GL_ZERO;
+   GFXGLTextureFormat[GFXFormatD16] = GL_DEPTH_COMPONENT;
+   GFXGLTextureFormat[GFXFormatR8G8B8] = GL_RGB;
+   GFXGLTextureFormat[GFXFormatR8G8B8A8] = GL_BGRA;
+   GFXGLTextureFormat[GFXFormatR8G8B8X8] = GL_BGRA;
+   GFXGLTextureFormat[GFXFormatR32F] = GL_RGBA;
+   GFXGLTextureFormat[GFXFormatR16G16] = GL_RGBA;
+   GFXGLTextureFormat[GFXFormatR16G16F] = GL_ZERO;
+   GFXGLTextureFormat[GFXFormatR10G10B10A2] = GL_RGBA;
+   GFXGLTextureFormat[GFXFormatD32] = GL_DEPTH_COMPONENT;
+   GFXGLTextureFormat[GFXFormatD24X8] = GL_DEPTH_COMPONENT;
+   GFXGLTextureFormat[GFXFormatD24S8] = GL_DEPTH_COMPONENT;
+   GFXGLTextureFormat[GFXFormatR16G16B16A16] = GL_RGBA;
+   GFXGLTextureFormat[GFXFormatR16G16B16A16F] = GL_RGBA;
+   GFXGLTextureFormat[GFXFormatR32G32B32A32F] = GL_RGBA;
+>>>>>>> omni_engine
    GFXGLTextureFormat[GFXFormatDXT1] = GL_RGBA;
    GFXGLTextureFormat[GFXFormatDXT2] = GL_ZERO;
    GFXGLTextureFormat[GFXFormatDXT3] = GL_RGBA;
@@ -171,25 +219,47 @@ void GFXGLEnumTranslate::init()
    
    GFXGLTextureType[GFXFormatA8] = GL_UNSIGNED_BYTE;
    GFXGLTextureType[GFXFormatL8] = GL_UNSIGNED_BYTE;
+<<<<<<< HEAD
    GFXGLTextureType[GFXFormatR5G5B5A1] = GL_UNSIGNED_SHORT_5_5_5_1;
    GFXGLTextureType[GFXFormatR5G5B5X1] = GL_UNSIGNED_SHORT_5_5_5_1;
    GFXGLTextureType[GFXFormatL16] = GL_UNSIGNED_SHORT;
+=======
+   GFXGLTextureType[GFXFormatR5G6B5] = GL_UNSIGNED_BYTE;
+   GFXGLTextureType[GFXFormatR5G5B5A1] = GL_UNSIGNED_BYTE;
+   GFXGLTextureType[GFXFormatR5G5B5X1] = GL_UNSIGNED_BYTE;
+   GFXGLTextureType[GFXFormatL16] = GL_UNSIGNED_SHORT;
+   GFXGLTextureType[GFXFormatR16F] = GL_ZERO;
+>>>>>>> omni_engine
    GFXGLTextureType[GFXFormatD16] = GL_UNSIGNED_SHORT;
    GFXGLTextureType[GFXFormatR8G8B8] = GL_UNSIGNED_BYTE;
    GFXGLTextureType[GFXFormatR8G8B8A8] = GL_UNSIGNED_BYTE;
    GFXGLTextureType[GFXFormatR8G8B8X8] = GL_UNSIGNED_BYTE;
+<<<<<<< HEAD
    GFXGLTextureType[GFXFormatB8G8R8A8] = GL_UNSIGNED_BYTE;;
    GFXGLTextureType[GFXFormatR10G10B10A2] = GL_UNSIGNED_INT_10_10_10_2;
    GFXGLTextureType[GFXFormatD32] = GL_UNSIGNED_INT;
    GFXGLTextureType[GFXFormatD24X8] = GL_UNSIGNED_INT_24_8;
    GFXGLTextureType[GFXFormatD24S8] = GL_UNSIGNED_INT_24_8;
    GFXGLTextureType[GFXFormatR16G16B16A16] = GL_UNSIGNED_SHORT;
+=======
+   GFXGLTextureType[GFXFormatR32F] = GL_FLOAT;
+   GFXGLTextureType[GFXFormatR16G16] = GL_UNSIGNED_SHORT;
+   GFXGLTextureType[GFXFormatR16G16F] = GL_FLOAT;
+   GFXGLTextureType[GFXFormatR10G10B10A2] = GL_UNSIGNED_SHORT;
+   GFXGLTextureType[GFXFormatD32] = GL_UNSIGNED_BYTE;
+   GFXGLTextureType[GFXFormatD24X8] = GL_UNSIGNED_BYTE;
+   GFXGLTextureType[GFXFormatD24S8] = GL_UNSIGNED_BYTE;
+   GFXGLTextureType[GFXFormatR16G16B16A16] = GL_UNSIGNED_SHORT;
+   GFXGLTextureType[GFXFormatR16G16B16A16F] = GL_FLOAT;
+   GFXGLTextureType[GFXFormatR32G32B32A32F] = GL_FLOAT;
+>>>>>>> omni_engine
    GFXGLTextureType[GFXFormatDXT1] = GL_UNSIGNED_BYTE;
    GFXGLTextureType[GFXFormatDXT2] = GL_ZERO;
    GFXGLTextureType[GFXFormatDXT3] = GL_UNSIGNED_BYTE;
    GFXGLTextureType[GFXFormatDXT4] = GL_ZERO;
    GFXGLTextureType[GFXFormatDXT5] = GL_UNSIGNED_BYTE;
 
+<<<<<<< HEAD
    static GLint Swizzle_GFXFormatA8[] = { GL_NONE, GL_NONE, GL_NONE, GL_RED };
    static GLint Swizzle_GFXFormatL[] = { GL_RED, GL_RED, GL_RED, GL_ALPHA };
    GFXGLTextureSwizzle[GFXFormatA8] = Swizzle_GFXFormatA8; // old GL_ALPHA8   
@@ -267,6 +337,13 @@ void GFXGLEnumTranslate::init()
    GFXGLCullMode[GFXCullCW] = GL_FRONT;
    GFXGLCullMode[GFXCullCCW] = GL_BACK;
 
+=======
+   // Cull
+   GFXGLCullMode[GFXCullNone] = GL_BACK;
+   GFXGLCullMode[GFXCullCW] = GL_BACK;
+   GFXGLCullMode[GFXCullCCW] = GL_FRONT;
+   
+>>>>>>> omni_engine
    // Fill
    GFXGLFillMode[GFXFillPoint] = GL_POINT;
    GFXGLFillMode[GFXFillWireframe] = GL_LINE;

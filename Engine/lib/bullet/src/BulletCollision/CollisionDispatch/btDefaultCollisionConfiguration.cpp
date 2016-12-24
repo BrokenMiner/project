@@ -34,6 +34,7 @@ subject to the following restrictions:
 
 
 
+#include "LinearMath/btStackAlloc.h"
 #include "LinearMath/btPoolAllocator.h"
 
 
@@ -111,6 +112,16 @@ btDefaultCollisionConfiguration::btDefaultCollisionConfiguration(const btDefault
 	collisionAlgorithmMaxElementSize = btMax(collisionAlgorithmMaxElementSize,maxSize2);
 	collisionAlgorithmMaxElementSize = btMax(collisionAlgorithmMaxElementSize,maxSize3);
 
+	if (constructionInfo.m_stackAlloc)
+	{
+		m_ownsStackAllocator = false;
+		this->m_stackAlloc = constructionInfo.m_stackAlloc;
+	} else
+	{
+		m_ownsStackAllocator = true;
+		void* mem = btAlignedAlloc(sizeof(btStackAlloc),16);
+		m_stackAlloc = new(mem)btStackAlloc(constructionInfo.m_defaultStackAllocatorSize);
+	}
 		
 	if (constructionInfo.m_persistentManifoldPool)
 	{
@@ -139,6 +150,12 @@ btDefaultCollisionConfiguration::btDefaultCollisionConfiguration(const btDefault
 
 btDefaultCollisionConfiguration::~btDefaultCollisionConfiguration()
 {
+	if (m_ownsStackAllocator)
+	{
+		m_stackAlloc->destroy();
+		m_stackAlloc->~btStackAlloc();
+		btAlignedFree(m_stackAlloc);
+	}
 	if (m_ownsCollisionAlgorithmPool)
 	{
 		m_collisionAlgorithmPool->~btPoolAllocator();

@@ -224,8 +224,13 @@ class SFXFormat
                   U8 bitsPerSample = 0,
                   U32 samplesPerSecond = 0 )
          :  mChannels( channels ),
+<<<<<<< HEAD
             mBitsPerSample( bitsPerSample ),
             mSamplesPerSecond( samplesPerSecond )
+=======
+            mSamplesPerSecond( samplesPerSecond ), 
+            mBitsPerSample( bitsPerSample )
+>>>>>>> omni_engine
       {}
 
       /// Copy constructor.

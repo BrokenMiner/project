@@ -26,7 +26,11 @@
 #include "gfx/gfxDevice.h"
 #include "gfx/gfxTextureManager.h"
 #include "gfx/gl/gfxGLTextureObject.h"
+<<<<<<< HEAD
 #include "gfx/gl/tGL/tGL.h"
+=======
+#include "gfx/gl/ggl/ggl.h"
+>>>>>>> omni_engine
 
 class GFXGLTextureManager : public GFXTextureManager
 {   

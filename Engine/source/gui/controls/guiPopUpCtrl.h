@@ -112,7 +112,11 @@ protected:
    S32 mRevNum;
    bool mInAction;
    bool mReplaceText;
+<<<<<<< HEAD
    bool mMouseOver; //  Added
+=======
+   //bool mMouseOver; // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    bool mRenderScrollInNA; //  Added
    bool mReverseTextList;	//  Added - Should we reverse the text list if we display up?
    StringTableEntry mBitmapName; //  Added
@@ -166,6 +170,9 @@ public:
    DECLARE_CONOBJECT( GuiPopUpMenuCtrl );
    DECLARE_CATEGORY( "Gui Lists" );
    DECLARE_DESCRIPTION( "A control that allows to select a value from a drop-down list." );
+
+   DECLARE_CALLBACK(void, onSelect, (const char* id, const char* text));
+   DECLARE_CALLBACK(void, onCancel, ());
    
    static void initPersistFields(void);
 

@@ -80,7 +80,11 @@ public:
 
    enum
    {
+<<<<<<< HEAD
       NumTextures = 8,
+=======
+      NumTextures = 6,
+>>>>>>> omni_engine
    };
 
 protected:

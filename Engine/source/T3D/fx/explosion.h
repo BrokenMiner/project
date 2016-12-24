@@ -41,6 +41,7 @@ class ParticleEmitterData;
 class TSThread;
 class SFXTrack;
 struct DebrisData;
+class ShockwaveData;
 
 //--------------------------------------------------------------------------
 class ExplosionData : public GameBaseData {
@@ -75,6 +76,10 @@ class ExplosionData : public GameBaseData {
 
    ParticleEmitterData*    emitterList[EC_NUM_EMITTERS];
    S32                     emitterIDList[EC_NUM_EMITTERS];
+
+   ShockwaveData *         shockwave;
+   S32                     shockwaveID;
+   bool                    shockwaveOnTerrain;
 
    DebrisData *   debrisList[EC_NUM_DEBRIS_TYPES];
    S32            debrisIDList[EC_NUM_DEBRIS_TYPES];

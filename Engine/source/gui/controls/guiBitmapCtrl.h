@@ -51,6 +51,21 @@ class GuiBitmapCtrl : public GuiControl
       static bool setBitmapName( void *object, const char *index, const char *data );
       static const char *getBitmapName( void *obj, const char *data );
 
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+	  ///Context menu options
+
+	  bool mChangeBitmap;
+	  
+	  static bool _setBitmapControl( void* object, const char* index, const char* data )
+	  { static_cast<GuiBitmapCtrl* >( object )->setBitmapControl( dAtob(data) ); return false; }
+	  
+	  static const char* _getBitmapControl( void* object, const char* data )
+	  { if( static_cast< GuiBitmapCtrl* >( object )->canChangeBitmap() ) return "1"; return "0"; }
+
+     // @Copyright end
+
    public:
       
       GuiBitmapCtrl();
@@ -68,6 +83,15 @@ class GuiBitmapCtrl : public GuiControl
 
       void onRender(Point2I offset, const RectI &updateRect);
       void setValue(S32 x, S32 y);
+
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+	  // Context Menu Options
+	  bool canChangeBitmap() const { return mChangeBitmap; }
+	  void setBitmapControl( bool change) { mChangeBitmap = change; }
+
+     // @Copyright end
 
       DECLARE_CONOBJECT( GuiBitmapCtrl );
       DECLARE_CATEGORY( "Gui Images" );

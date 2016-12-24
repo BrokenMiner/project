@@ -1,5 +1,8 @@
 //--- OBJECT WRITE BEGIN ---
 %guiContent = new GuiWindowCollapseCtrl(ShapeEdPropWindow) {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    canSaveDynamicFields = "0";
    isContainer = "1";
    Profile = "ToolsGuiWindowProfile";

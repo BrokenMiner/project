@@ -130,6 +130,15 @@ void GuiSplitContainer::initPersistFields()
    endGroup( "Splitter" );
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
 }
 
 //-----------------------------------------------------------------------------
@@ -444,7 +453,11 @@ bool GuiSplitContainer::layoutControls( RectI &clientRect )
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void GuiSplitContainer::solvePanelConstraints(Point2I newDragPos, GuiContainer * firstPanel, GuiContainer * secondPanel, const RectI& clientRect)
+=======
+void GuiSplitContainer::solvePanelConstraints( Point2I newDragPos, GuiContainer * firstPanel, GuiContainer * secondPanel, RectI clientRect )
+>>>>>>> omni_engine
 {
    if( !firstPanel || !secondPanel )
       return;

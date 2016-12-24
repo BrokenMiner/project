@@ -103,6 +103,7 @@ struct UTF16Cache
       dMemcpy(mString, other.mString, mLength * sizeof(UTF16));
    }
 
+<<<<<<< HEAD
    UTF16Cache & operator =(const UTF16Cache &other)
    {
       if (&other != this)
@@ -114,6 +115,15 @@ struct UTF16Cache
          dMemcpy(mString, other.mString, mLength * sizeof(UTF16));
       }
       return *this;
+=======
+   void operator =(const UTF16Cache &other)
+   {
+      delete [] mString;
+
+      mLength = other.mLength;
+      mString = new UTF16[mLength];
+      dMemcpy(mString, other.mString, mLength * sizeof(UTF16));
+>>>>>>> omni_engine
    }
 
    ~UTF16Cache()
@@ -150,7 +160,11 @@ inline bool isAboveBMP(U32 codepoint)
 }
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 U32 convertUTF8toUTF16N(const UTF8 *unistring, UTF16 *outbuffer, U32 len)
+=======
+U32 convertUTF8toUTF16(const UTF8 *unistring, UTF16 *outbuffer, U32 len)
+>>>>>>> omni_engine
 {
    AssertFatal(len >= 1, "Buffer for unicode conversion must be large enough to hold at least the null terminator.");
    PROFILE_SCOPE(convertUTF8toUTF16);
@@ -163,6 +177,7 @@ U32 convertUTF8toUTF16N(const UTF8 *unistring, UTF16 *outbuffer, U32 len)
    {
       const UTF16Cache &cache = (*cacheItr).value;
       cache.copyToBuffer(outbuffer, len);
+      outbuffer[len-1] = '\0';
       return getMin(cache.mLength,len - 1);
    }
 #endif
@@ -194,7 +209,11 @@ U32 convertUTF8toUTF16N(const UTF8 *unistring, UTF16 *outbuffer, U32 len)
 }
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 U32 convertUTF16toUTF8N( const UTF16 *unistring, UTF8  *outbuffer, U32 len)
+=======
+U32 convertUTF16toUTF8( const UTF16 *unistring, UTF8  *outbuffer, U32 len)
+>>>>>>> omni_engine
 {
    AssertFatal(len >= 1, "Buffer for unicode conversion must be large enough to hold at least the null terminator.");
    PROFILE_START(convertUTF16toUTF8);
@@ -246,16 +265,26 @@ U32 convertUTF16toUTF8DoubleNULL( const UTF16 *unistring, UTF8  *outbuffer, U32 
 //-----------------------------------------------------------------------------
 // Functions that convert buffers of unicode code points
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 UTF16* createUTF16string( const UTF8* unistring)
 {
    PROFILE_SCOPE(createUTF16string);
+=======
+UTF16* convertUTF8toUTF16( const UTF8* unistring)
+{
+   PROFILE_SCOPE(convertUTF8toUTF16_create);
+>>>>>>> omni_engine
    
    // allocate plenty of memory.
    U32 nCodepoints, len = dStrlen(unistring) + 1;
    FrameTemp<UTF16> buf(len);
    
    // perform conversion
+<<<<<<< HEAD
    nCodepoints = convertUTF8toUTF16N( unistring, buf, len);
+=======
+   nCodepoints = convertUTF8toUTF16( unistring, buf, len);
+>>>>>>> omni_engine
    
    // add 1 for the NULL terminator the converter promises it included.
    nCodepoints++;
@@ -268,16 +297,26 @@ UTF16* createUTF16string( const UTF8* unistring)
 }
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 UTF8*  createUTF8string( const UTF16* unistring)
 {
    PROFILE_SCOPE(createUTF8string);
+=======
+UTF8*  convertUTF16toUTF8( const UTF16* unistring)
+{
+   PROFILE_SCOPE(convertUTF16toUTF8_create);
+>>>>>>> omni_engine
 
    // allocate plenty of memory.
    U32 nCodeunits, len = dStrlen(unistring) * 3 + 1;
    FrameTemp<UTF8> buf(len);
       
    // perform conversion
+<<<<<<< HEAD
    nCodeunits = convertUTF16toUTF8N( unistring, buf, len);
+=======
+   nCodeunits = convertUTF16toUTF8( unistring, buf, len);
+>>>>>>> omni_engine
    
    // add 1 for the NULL terminator the converter promises it included.
    nCodeunits++;
@@ -513,6 +552,21 @@ U32 dStrlen(const UTF32 *unistring)
 }
 
 //-----------------------------------------------------------------------------
+U32 dStrncmp(const UTF16* unistring1, const UTF16* unistring2, U32 len)
+{
+   UTF16 c1, c2;
+   for(U32 i = 0; i<len; i++)
+   {
+      c1 = *unistring1++;
+      c2 = *unistring2++;
+      if(c1 < c2) return -1;
+      if(c1 > c2) return 1;
+      if(!c1) return 0;
+   }
+   return 0;
+}
+
+//-----------------------------------------------------------------------------
 
 const UTF16* dStrrchr(const UTF16* unistring, U32 c)
 {
@@ -589,6 +643,7 @@ bool chompUTF8BOM( const char *inString, char **outStringPtr )
 {
    *outStringPtr = const_cast<char *>( inString );
 
+<<<<<<< HEAD
    bool valid = false;
    if (inString[0] && inString[1] && inString[2])
    {
@@ -596,6 +651,12 @@ bool chompUTF8BOM( const char *inString, char **outStringPtr )
       dMemcpy(bom, inString, 4);
       valid = isValidUTF8BOM(bom);
    }
+=======
+   U8 bom[4];
+   dMemcpy( bom, inString, 4 );
+
+   bool valid = isValidUTF8BOM( bom );
+>>>>>>> omni_engine
 
    // This is hackey, but I am not sure the best way to do it at the present.
    // The only valid BOM is a UTF8 BOM, which is 3 bytes, even though we read

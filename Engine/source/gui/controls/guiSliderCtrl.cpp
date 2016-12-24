@@ -96,7 +96,11 @@ GuiSliderCtrl::GuiSliderCtrl()
      mShiftExtent( 10 ),
      mIncAmount( 0.f ),
      mDisplayValue( false ),
+<<<<<<< HEAD
      mMouseOver( false ),
+=======
+     //mMouseOver( false ),
+>>>>>>> omni_engine
      mMouseDragged( false ),
      mDepressed( false )
 {
@@ -121,6 +125,15 @@ void GuiSliderCtrl::initPersistFields()
    endGroup( "Slider" );
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
 }
 
 //----------------------------------------------------------------------------
@@ -255,6 +268,9 @@ void GuiSliderCtrl::onMouseEnter(const GuiEvent &event)
       
       mMouseOver = true;
    }
+
+   // fade control
+   fadeControl();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 //----------------------------------------------------------------------------
@@ -265,6 +281,7 @@ void GuiSliderCtrl::onMouseLeave(const GuiEvent &)
    if( isMouseLocked() )
       mDepressed = false;
    mMouseOver = false;
+   smCapturedControl = this;     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 //----------------------------------------------------------------------------
 
@@ -404,12 +421,21 @@ void GuiSliderCtrl::onRender(Point2I offset, const RectI &updateRect)
       S32 index = SliderButtonNormal;
       if(mMouseOver)
          index = SliderButtonHighlight;
+<<<<<<< HEAD
       drawUtil->clearBitmapModulation();
 
       //left border
       drawUtil->drawBitmapSR(mProfile->mTextureObject, Point2I(offset.x,offset.y), mBitmapBounds[SliderLineLeft]);
       //right border
       drawUtil->drawBitmapSR(mProfile->mTextureObject, Point2I(offset.x + getWidth() - mBitmapBounds[SliderLineRight].extent.x, offset.y), mBitmapBounds[SliderLineRight]);
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+
+      //left border
+      GFX->getDrawUtil()->drawBitmapSR(mProfile->mTextureObject, Point2I(offset.x,offset.y), mBitmapBounds[SliderLineLeft]);
+      //right border
+      GFX->getDrawUtil()->drawBitmapSR(mProfile->mTextureObject, Point2I(offset.x + getWidth() - mBitmapBounds[SliderLineRight].extent.x, offset.y), mBitmapBounds[SliderLineRight]);
+>>>>>>> omni_engine
 
 
       //draw our center piece to our slider control's border and stretch it
@@ -423,11 +449,19 @@ void GuiSliderCtrl::onRender(Point2I offset, const RectI &updateRect)
       stretchRect = mBitmapBounds[SliderLineCenter];
       stretchRect.inset(1,0);
 
+<<<<<<< HEAD
       drawUtil->drawBitmapStretchSR(mProfile->mTextureObject, destRect, stretchRect);
 
       //draw our control slider button	
       thumb.point += pos;
       drawUtil->drawBitmapSR(mProfile->mTextureObject,Point2I(thumb.point.x,offset.y ),mBitmapBounds[index]);
+=======
+      GFX->getDrawUtil()->drawBitmapStretchSR(mProfile->mTextureObject, destRect, stretchRect);
+
+      //draw our control slider button	
+      thumb.point += pos;
+      GFX->getDrawUtil()->drawBitmapSR(mProfile->mTextureObject,Point2I(thumb.point.x,offset.y ),mBitmapBounds[index]);
+>>>>>>> omni_engine
 
    }
    else if (getWidth() >= getHeight())
@@ -492,8 +526,13 @@ void GuiSliderCtrl::onRender(Point2I offset, const RectI &updateRect)
    	else if(textStart.x + txt_w > offset.x+getWidth())
    		textStart.x -=((textStart.x + txt_w) - (offset.x+getWidth()));
 
+<<<<<<< HEAD
     	drawUtil->setBitmapModulation(mProfile->mFontColor);
     	drawUtil->drawText(mProfile->mFont, textStart, buf, mProfile->mFontColors);
+=======
+    	GFX->getDrawUtil()->setBitmapModulation(mProfile->mFontColor);
+    	GFX->getDrawUtil()->drawText(mProfile->mFont, textStart, buf, mProfile->mFontColors);
+>>>>>>> omni_engine
    }
    renderChildControls(offset, updateRect);
 }
@@ -583,3 +622,94 @@ DefineEngineMethod( GuiSliderCtrl, isThumbBeingDragged, bool, (),,
 {
    return object->isThumbBeingDragged();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGuiSliderCtrl_getValue(char * x__object)
+{
+GuiSliderCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getValue());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiSliderCtrl_isThumbBeingDragged(char * x__object)
+{
+GuiSliderCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isThumbBeingDragged();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiSliderCtrl_setValue(char * x__object, F32 pos, bool doCallback)
+{
+GuiSliderCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setValue( pos, doCallback );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

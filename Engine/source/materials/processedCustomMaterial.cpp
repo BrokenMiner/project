@@ -298,7 +298,11 @@ bool ProcessedCustomMaterial::setupPass( SceneRenderState *state, const SceneDat
    if ( rpd->shader )
       GFX->setShader( rpd->shader );
    else
+<<<<<<< HEAD
       GFX->setupGenericShaders();
+=======
+      GFX->disableShaders();
+>>>>>>> omni_engine
 
    // Set our textures   
    setTextureStages( state, sgData, pass );   

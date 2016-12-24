@@ -190,7 +190,11 @@ void GuiPaneControl::onRender(Point2I offset, const RectI &updateRect)
    {
       S32 idx = mCollapsed ? 0 : 1;
 
+<<<<<<< HEAD
       GFX->getDrawUtil()->clearBitmapModulation();
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
       GFX->getDrawUtil()->drawBitmapStretchSR(
          mProfile->mTextureObject,
          RectI(offset, mProfile->mBitmapArrayRects[idx].extent),
@@ -216,7 +220,11 @@ void GuiPaneControl::onRender(Point2I offset, const RectI &updateRect)
    // Draw our little bar, too
    if(mProfile->mBitmapArrayRects.size() >= 5)
    {
+<<<<<<< HEAD
       GFX->getDrawUtil()->clearBitmapModulation();
+=======
+      //GFX->getDrawUtil()->clearBitmapModulation();  // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
       S32 barStart = mThumbSize.x + offset.x + textWidth;
       S32 barTop   = mThumbSize.y/2 + offset.y - mProfile->mBitmapArrayRects[3].extent.y /2;
@@ -331,6 +339,9 @@ void GuiPaneControl::onMouseEnter(const GuiEvent &event)
       mMouseOver = true;
    }
 
+   // fade control
+   fadeControl();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+
 }
 
 //-----------------------------------------------------------------------------
@@ -341,6 +352,7 @@ void GuiPaneControl::onMouseLeave(const GuiEvent &event)
    if(isMouseLocked())
       mDepressed = false;
    mMouseOver = false;
+   smCapturedControl = this;     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 //-----------------------------------------------------------------------------
@@ -394,3 +406,73 @@ DefineEngineMethod( GuiPaneControl, setCollapsed, void, ( bool collapse ),,
 {
    object->setCollapsed( collapse );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiPaneControl_setCollapsed(char * x__object, bool collapse)
+{
+GuiPaneControl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setCollapsed( collapse );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

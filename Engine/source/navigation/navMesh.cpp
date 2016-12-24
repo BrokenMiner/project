@@ -1,5 +1,9 @@
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 // Copyright (c) 2014 Daniel Buckmaster
+=======
+// Copyright (c) 2013 GarageGames, LLC
+>>>>>>> omni_engine
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -20,8 +24,14 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 #include "navMesh.h"
 #include "navContext.h"
+=======
+#include <stdio.h>
+
+#include "navMesh.h"
+>>>>>>> omni_engine
 #include <DetourDebugDraw.h>
 #include <RecastDebugDraw.h>
 
@@ -147,11 +157,15 @@ NavMesh::NavMesh()
    mFileName = StringTable->insert("");
    mNetFlags.clear(Ghostable);
 
+<<<<<<< HEAD
    mSaveIntermediates = true;
    nm = NULL;
    ctx = NULL;
 
    mWaterMethod = Ignore;
+=======
+   nm = NULL;
+>>>>>>> omni_engine
 
    dMemset(&cfg, 0, sizeof(cfg));
    mCellSize = mCellHeight = 0.2f;
@@ -252,6 +266,7 @@ void NavMesh::initPersistFields()
    addFieldV("walkableSlope", TypeF32, Offset(mWalkableSlope, NavMesh), &ValidSlopeAngle,
       "Maximum walkable slope in degrees.");
 
+<<<<<<< HEAD
    addField("smallCharacters", TypeBool, Offset(mSmallCharacters, NavMesh),
       "Is this NavMesh for smaller-than-usual characters?");
    addField("regularCharacters", TypeBool, Offset(mRegularCharacters, NavMesh),
@@ -278,6 +293,10 @@ void NavMesh::initPersistFields()
 
    endGroup("NavMesh Annotations");
 
+=======
+   endGroup("NavMesh Options");
+
+>>>>>>> omni_engine
    addGroup("NavMesh Rendering");
 
    addProtectedField("alwaysRender", TypeBool, Offset(mAlwaysRender, NavMesh),
@@ -316,8 +335,13 @@ bool NavMesh::onAdd()
    if(!Parent::onAdd())
       return false;
 
+<<<<<<< HEAD
    mObjBox.set(Point3F(-0.5f, -0.5f, -0.5f),
                Point3F( 0.5f,  0.5f,  0.5f));
+=======
+   mObjBox.set(Point3F(-10.0f, -10.0f, -1.0f),
+      Point3F( 10.0f,  10.0f,  1.0f));
+>>>>>>> omni_engine
    resetWorldBox();
 
    addToScene();
@@ -331,11 +355,15 @@ bool NavMesh::onAdd()
 
    if(isServerObject())
    {
+<<<<<<< HEAD
       getServerSet()->addObject(this);
       ctx = new NavContext();
       setProcessTick(true);
       if(getEventManager())
          getEventManager()->postEvent("NavMeshCreated", getIdString());
+=======
+      setProcessTick(true);
+>>>>>>> omni_engine
    }
 
    load();
@@ -569,6 +597,7 @@ bool NavMesh::build(bool background, bool saveIntermediates)
 {
    if(mBuilding)
       cancelBuild();
+<<<<<<< HEAD
    else
    {
       if(getEventManager())
@@ -579,6 +608,11 @@ bool NavMesh::build(bool background, bool saveIntermediates)
 
    ctx->startTimer(RC_TIMER_TOTAL);
 
+=======
+
+   mBuilding = true;
+
+>>>>>>> omni_engine
    dtFreeNavMesh(nm);
    // Allocate a new navmesh.
    nm = dtAllocNavMesh();
@@ -622,7 +656,11 @@ bool NavMesh::build(bool background, bool saveIntermediates)
 
    if(!background)
    {
+<<<<<<< HEAD
       while(!mDirtyTiles.empty())
+=======
+      while(mDirtyTiles.size())
+>>>>>>> omni_engine
          buildNextTile();
    }
 
@@ -637,8 +675,12 @@ DefineEngineMethod(NavMesh, build, bool, (bool background, bool save), (true, fa
 
 void NavMesh::cancelBuild()
 {
+<<<<<<< HEAD
    while(!mDirtyTiles.empty()) mDirtyTiles.pop();
    ctx->stopTimer(RC_TIMER_TOTAL);
+=======
+   while(mDirtyTiles.size()) mDirtyTiles.pop();
+>>>>>>> omni_engine
    mBuilding = false;
 }
 
@@ -681,7 +723,11 @@ void NavMesh::updateConfig()
    cfg.tileSize = mTileSize / cfg.cs;
 }
 
+<<<<<<< HEAD
 S32 NavMesh::getTile(const Point3F& pos)
+=======
+S32 NavMesh::getTile(Point3F pos)
+>>>>>>> omni_engine
 {
    if(mBuilding)
       return -1;
@@ -706,8 +752,12 @@ void NavMesh::updateTiles(bool dirty)
       return;
 
    mTiles.clear();
+<<<<<<< HEAD
    mTileData.clear();
    while(!mDirtyTiles.empty()) mDirtyTiles.pop();
+=======
+   while(mDirtyTiles.size()) mDirtyTiles.pop();
+>>>>>>> omni_engine
 
    const Box3F &box = DTStoRC(getWorldBox());
    if(box.isEmpty())
@@ -756,7 +806,11 @@ void NavMesh::processTick(const Move *move)
 
 void NavMesh::buildNextTile()
 {
+<<<<<<< HEAD
    if(!mDirtyTiles.empty())
+=======
+   if(mDirtyTiles.size())
+>>>>>>> omni_engine
    {
       // Pop a single dirty tile and process it.
       U32 i = mDirtyTiles.front();
@@ -764,16 +818,23 @@ void NavMesh::buildNextTile()
       const Tile &tile = mTiles[i];
       // Intermediate data for tile build.
       TileData tempdata;
+<<<<<<< HEAD
       TileData &tdata = mSaveIntermediates ? mTileData[i] : tempdata;
       // Generate navmesh for this tile.
       U32 dataSize = 0;
       unsigned char* data = buildTileData(tile, tdata, dataSize);
+=======
+      // Generate navmesh for this tile.
+      U32 dataSize = 0;
+      unsigned char* data = buildTileData(tile, tempdata, dataSize);
+>>>>>>> omni_engine
       if(data)
       {
          // Remove any previous data.
          nm->removeTile(nm->getTileRefAt(tile.x, tile.y, 0), 0, 0);
          // Add new data (navmesh owns and deletes the data).
          dtStatus status = nm->addTile(data, dataSize, DT_TILE_FREE_DATA, 0, 0);
+<<<<<<< HEAD
          int success = 1;
          if(dtStatusFailed(status))
          {
@@ -805,6 +866,20 @@ void NavMesh::buildNextTile()
          }
          mBuilding = false;
       }
+=======
+
+         if(dtStatusFailed(status))
+         {
+            dtFree(data);
+         }
+      }
+      // Did we just build the last tile?
+      if(!mDirtyTiles.size())
+      {
+         mBuilding = false;
+      }
+      setMaskBits(BuildFlag);
+>>>>>>> omni_engine
    }
 }
 
@@ -831,6 +906,7 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
    info.context = PLC_Navigation;
    info.boundingBox = box;
    info.polyList = &data.geom;
+<<<<<<< HEAD
    info.key = this;
    getContainer()->findObjects(box, StaticShapeObjectType | TerrainObjectType, buildCallback, &info);
 
@@ -841,6 +917,9 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
    {
       getContainer()->findObjects(box, WaterObjectType, buildCallback, &info);
    }
+=======
+   getContainer()->findObjects(box, StaticObjectType, buildCallback, &info);
+>>>>>>> omni_engine
 
    // Check for no geometry.
    if(!data.geom.getVertCount())
@@ -851,6 +930,9 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
    width = cfg.tileSize + cfg.borderSize * 2;
    height = cfg.tileSize + cfg.borderSize * 2;
 
+   // Create a dummy context.
+   rcContext ctx(false);
+
    // Create a heightfield to voxelise our input geometry.
    data.hf = rcAllocHeightfield();
    if(!data.hf)
@@ -858,13 +940,18 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
       Con::errorf("Out of memory (rcHeightField) for NavMesh %s", getIdString());
       return NULL;
    }
+<<<<<<< HEAD
    if(!rcCreateHeightfield(ctx, *data.hf, width, height, tileBmin, tileBmax, cfg.cs, cfg.ch))
+=======
+   if(!rcCreateHeightfield(&ctx, *data.hf, width, height, tileBmin, tileBmax, cfg.cs, cfg.ch))
+>>>>>>> omni_engine
    {
       Con::errorf("Could not generate rcHeightField for NavMesh %s", getIdString());
       return NULL;
    }
 
    unsigned char *areas = new unsigned char[data.geom.getTriCount()];
+<<<<<<< HEAD
 
    dMemset(areas, 0, data.geom.getTriCount() * sizeof(unsigned char));
 
@@ -885,15 +972,35 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
    }
    rcRasterizeTriangles(ctx,
       data.geom.getVerts(), data.geom.getVertCount(),
+=======
+   if(!areas)
+   {
+      Con::errorf("Out of memory (area flags) for NavMesh %s", getIdString());
+      return NULL;
+   }
+   dMemset(areas, 0, data.geom.getTriCount() * sizeof(unsigned char));
+
+   // Filter triangles by angle and rasterize.
+   rcMarkWalkableTriangles(&ctx, cfg.walkableSlopeAngle,
+      data.geom.getVerts(), data.geom.getVertCount(),
+      data.geom.getTris(), data.geom.getTriCount(), areas);
+   rcRasterizeTriangles(&ctx, data.geom.getVerts(), data.geom.getVertCount(),
+>>>>>>> omni_engine
       data.geom.getTris(), areas, data.geom.getTriCount(),
       *data.hf, cfg.walkableClimb);
 
    delete[] areas;
 
    // Filter out areas with low ceilings and other stuff.
+<<<<<<< HEAD
    rcFilterLowHangingWalkableObstacles(ctx, cfg.walkableClimb, *data.hf);
    rcFilterLedgeSpans(ctx, cfg.walkableHeight, cfg.walkableClimb, *data.hf);
    rcFilterWalkableLowHeightSpans(ctx, cfg.walkableHeight, *data.hf);
+=======
+   rcFilterLowHangingWalkableObstacles(&ctx, cfg.walkableClimb, *data.hf);
+   rcFilterLedgeSpans(&ctx, cfg.walkableHeight, cfg.walkableClimb, *data.hf);
+   rcFilterWalkableLowHeightSpans(&ctx, cfg.walkableHeight, *data.hf);
+>>>>>>> omni_engine
 
    data.chf = rcAllocCompactHeightfield();
    if(!data.chf)
@@ -901,12 +1008,20 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
       Con::errorf("Out of memory (rcCompactHeightField) for NavMesh %s", getIdString());
       return NULL;
    }
+<<<<<<< HEAD
    if(!rcBuildCompactHeightfield(ctx, cfg.walkableHeight, cfg.walkableClimb, *data.hf, *data.chf))
+=======
+   if(!rcBuildCompactHeightfield(&ctx, cfg.walkableHeight, cfg.walkableClimb, *data.hf, *data.chf))
+>>>>>>> omni_engine
    {
       Con::errorf("Could not generate rcCompactHeightField for NavMesh %s", getIdString());
       return NULL;
    }
+<<<<<<< HEAD
    if(!rcErodeWalkableArea(ctx, cfg.walkableRadius, *data.chf))
+=======
+   if(!rcErodeWalkableArea(&ctx, cfg.walkableRadius, *data.chf))
+>>>>>>> omni_engine
    {
       Con::errorf("Could not erode walkable area for NavMesh %s", getIdString());
       return NULL;
@@ -916,12 +1031,20 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
    // Todo: mark areas here.
    //const ConvexVolume* vols = m_geom->getConvexVolumes();
    //for (int i  = 0; i < m_geom->getConvexVolumeCount(); ++i)
+<<<<<<< HEAD
       //rcMarkConvexPolyArea(m_ctx, vols[i].verts, vols[i].nverts, vols[i].hmin, vols[i].hmax, (unsigned char)vols[i].area, *m_chf);
+=======
+      //rcMarkConvexPolyArea(m_NULL, vols[i].verts, vols[i].nverts, vols[i].hmin, vols[i].hmax, (unsigned char)vols[i].area, *m_chf);
+>>>>>>> omni_engine
    //--------------------------
 
    if(false)
    {
+<<<<<<< HEAD
       if(!rcBuildRegionsMonotone(ctx, *data.chf, cfg.borderSize, cfg.minRegionArea, cfg.mergeRegionArea))
+=======
+      if(!rcBuildRegionsMonotone(&ctx, *data.chf, cfg.borderSize, cfg.minRegionArea, cfg.mergeRegionArea))
+>>>>>>> omni_engine
       {
          Con::errorf("Could not build regions for NavMesh %s", getIdString());
          return NULL;
@@ -929,12 +1052,20 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
    }
    else
    {
+<<<<<<< HEAD
       if(!rcBuildDistanceField(ctx, *data.chf))
+=======
+      if(!rcBuildDistanceField(&ctx, *data.chf))
+>>>>>>> omni_engine
       {
          Con::errorf("Could not build distance field for NavMesh %s", getIdString());
          return NULL;
       }
+<<<<<<< HEAD
       if(!rcBuildRegions(ctx, *data.chf, cfg.borderSize, cfg.minRegionArea, cfg.mergeRegionArea))
+=======
+      if(!rcBuildRegions(&ctx, *data.chf, cfg.borderSize, cfg.minRegionArea, cfg.mergeRegionArea))
+>>>>>>> omni_engine
       {
          Con::errorf("Could not build regions for NavMesh %s", getIdString());
          return NULL;
@@ -947,7 +1078,11 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
       Con::errorf("Out of memory (rcContourSet) for NavMesh %s", getIdString());
       return NULL;
    }
+<<<<<<< HEAD
    if(!rcBuildContours(ctx, *data.chf, cfg.maxSimplificationError, cfg.maxEdgeLen, *data.cs))
+=======
+   if(!rcBuildContours(&ctx, *data.chf, cfg.maxSimplificationError, cfg.maxEdgeLen, *data.cs))
+>>>>>>> omni_engine
    {
       Con::errorf("Could not construct rcContourSet for NavMesh %s", getIdString());
       return NULL;
@@ -964,7 +1099,11 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
       Con::errorf("Out of memory (rcPolyMesh) for NavMesh %s", getIdString());
       return NULL;
    }
+<<<<<<< HEAD
    if(!rcBuildPolyMesh(ctx, *data.cs, cfg.maxVertsPerPoly, *data.pm))
+=======
+   if(!rcBuildPolyMesh(&ctx, *data.cs, cfg.maxVertsPerPoly, *data.pm))
+>>>>>>> omni_engine
    {
       Con::errorf("Could not construct rcPolyMesh for NavMesh %s", getIdString());
       return NULL;
@@ -976,7 +1115,11 @@ unsigned char *NavMesh::buildTileData(const Tile &tile, TileData &data, U32 &dat
       Con::errorf("Out of memory (rcPolyMeshDetail) for NavMesh %s", getIdString());
       return NULL;
    }
+<<<<<<< HEAD
    if(!rcBuildPolyMeshDetail(ctx, *data.pm, *data.chf, cfg.detailSampleDist, cfg.detailSampleMaxError, *data.pmd))
+=======
+   if(!rcBuildPolyMeshDetail(&ctx, *data.pm, *data.chf, cfg.detailSampleDist, cfg.detailSampleMaxError, *data.pmd))
+>>>>>>> omni_engine
    {
       Con::errorf("Could not construct rcPolyMeshDetail for NavMesh %s", getIdString());
       return NULL;
@@ -1083,6 +1226,7 @@ void NavMesh::buildTile(const U32 &tile)
    if(tile < mTiles.size())
    {
       mDirtyTiles.push(tile);
+<<<<<<< HEAD
       ctx->startTimer(RC_TIMER_TOTAL);
    }
 }
@@ -1278,6 +1422,9 @@ bool NavMesh::testEdgeCover(const Point3F &pos, const VectorF &dir, CoverPointDa
       data.trans.setPosition(pos);
    }
    return hits > 0;
+=======
+   }
+>>>>>>> omni_engine
 }
 
 void NavMesh::renderToDrawer()
@@ -1483,6 +1630,7 @@ bool NavMesh::load()
    if(!dStrlen(mFileName))
       return false;
 
+<<<<<<< HEAD
    File file;
    if(file.open(mFileName, File::Read) != File::Ok)
    {
@@ -1508,6 +1656,24 @@ bool NavMesh::load()
       Con::errorf("Navmesh version incorrect when loading navmesh %s; possible corrupt navmesh file %s.",
          getName() ? getName() : getIdString(), mFileName);
       return false;
+=======
+   FILE* fp = fopen(mFileName, "rb");
+   if(!fp)
+      return false;
+
+   // Read header.
+   NavMeshSetHeader header;
+   fread(&header, sizeof(NavMeshSetHeader), 1, fp);
+   if(header.magic != NAVMESHSET_MAGIC)
+   {
+      fclose(fp);
+      return 0;
+   }
+   if(header.version != NAVMESHSET_VERSION)
+   {
+      fclose(fp);
+      return 0;
+>>>>>>> omni_engine
    }
 
    if(nm)
@@ -1515,18 +1681,26 @@ bool NavMesh::load()
    nm = dtAllocNavMesh();
    if(!nm)
    {
+<<<<<<< HEAD
       file.close();
       Con::errorf("Out of memory when loading navmesh %s.",
          getName() ? getName() : getIdString());
+=======
+      fclose(fp);
+>>>>>>> omni_engine
       return false;
    }
 
    dtStatus status = nm->init(&header.params);
    if(dtStatusFailed(status))
    {
+<<<<<<< HEAD
       file.close();
       Con::errorf("Failed to initialise navmesh params when loading navmesh %s.",
          getName() ? getName() : getIdString());
+=======
+      fclose(fp);
+>>>>>>> omni_engine
       return false;
    }
 
@@ -1534,18 +1708,27 @@ bool NavMesh::load()
    for(U32 i = 0; i < header.numTiles; ++i)
    {
       NavMeshTileHeader tileHeader;
+<<<<<<< HEAD
       file.read(sizeof(NavMeshTileHeader), (char*)&tileHeader);
+=======
+      fread(&tileHeader, sizeof(tileHeader), 1, fp);
+>>>>>>> omni_engine
       if(!tileHeader.tileRef || !tileHeader.dataSize)
          break;
 
       unsigned char* data = (unsigned char*)dtAlloc(tileHeader.dataSize, DT_ALLOC_PERM);
       if(!data) break;
       memset(data, 0, tileHeader.dataSize);
+<<<<<<< HEAD
       file.read(tileHeader.dataSize, (char*)data);
+=======
+      fread(data, tileHeader.dataSize, 1, fp);
+>>>>>>> omni_engine
 
       nm->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, tileHeader.tileRef, 0);
    }
 
+<<<<<<< HEAD
    S32 s;
    file.read(sizeof(S32), (char*)&s);
    setLinkCount(s);
@@ -1560,6 +1743,9 @@ bool NavMesh::load()
    mDeleteLinks.fill(false);
 
    file.close();
+=======
+   fclose(fp);
+>>>>>>> omni_engine
 
    updateTiles();
 
@@ -1583,6 +1769,7 @@ bool NavMesh::save()
 {
    if(!dStrlen(mFileName) || !nm)
       return false;
+<<<<<<< HEAD
    
    File file;
    if(file.open(mFileName, File::Write) != File::Ok)
@@ -1592,6 +1779,13 @@ bool NavMesh::save()
          mFileName, getName() ? getName() : getIdString());
       return false;
    }
+=======
+
+   // Save our navmesh into a file to load from next time
+   FILE* fp = fopen(mFileName, "wb");
+   if(!fp)
+      return false;
+>>>>>>> omni_engine
 
    // Store header.
    NavMeshSetHeader header;
@@ -1605,7 +1799,11 @@ bool NavMesh::save()
       header.numTiles++;
    }
    memcpy(&header.params, nm->getParams(), sizeof(dtNavMeshParams));
+<<<<<<< HEAD
    file.write(sizeof(NavMeshSetHeader), (const char*)&header);
+=======
+   fwrite(&header, sizeof(NavMeshSetHeader), 1, fp);
+>>>>>>> omni_engine
 
    // Store tiles.
    for(U32 i = 0; i < nm->getMaxTiles(); ++i)
@@ -1616,6 +1814,7 @@ bool NavMesh::save()
       NavMeshTileHeader tileHeader;
       tileHeader.tileRef = nm->getTileRef(tile);
       tileHeader.dataSize = tile->dataSize;
+<<<<<<< HEAD
 
       file.write(sizeof(tileHeader), (const char*)&tileHeader);
       file.write(tile->dataSize, (const char*)tile->data);
@@ -1631,6 +1830,14 @@ bool NavMesh::save()
    file.write(sizeof(U32) * s,     (const char*)mLinkIDs.address());
 
    file.close();
+=======
+      fwrite(&tileHeader, sizeof(tileHeader), 1, fp);
+
+      fwrite(tile->data, tile->dataSize, 1, fp);
+   }
+
+   fclose(fp);
+>>>>>>> omni_engine
 
    return true;
 }

@@ -91,7 +91,11 @@ class ScenePolyhedralObject : public Base, public IScenePolyhedralObject
 
       // SimObject.
       virtual bool onAdd();
+<<<<<<< HEAD
       virtual void writeFields( Stream& stream, U32 tabStop );
+=======
+      virtual void writeFields( Stream& stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput = false );
+>>>>>>> omni_engine
       virtual bool writeField( StringTableEntry name, const char* value );
 
       static void initPersistFields();

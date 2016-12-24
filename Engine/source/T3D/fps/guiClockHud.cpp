@@ -19,6 +19,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 
 #include "platform/platform.h"
 
@@ -62,6 +63,9 @@ public:
    DECLARE_DESCRIPTION( "Basic HUD clock. Displays the current simulation time offset from some base." );
 };
 
+=======
+#include "guiClockHud.h"
+>>>>>>> omni_engine
 
 //-----------------------------------------------------------------------------
 
@@ -106,6 +110,7 @@ void GuiClockHud::initPersistFields()
    endGroup("Misc");
 
    Parent::initPersistFields();
+<<<<<<< HEAD
 }
 
 
@@ -118,6 +123,95 @@ void GuiClockHud::onRender(Point2I offset, const RectI &updateRect)
    // Background first
    if (mShowFill)
       drawUtil->drawRectFill(updateRect, mFillColor);
+=======
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor" );
+
+   removeField( "controlFillColor" );
+
+   removeField( "backgroundColor" );
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   removeField( "contextFillColor" );
+
+   // @Copyright end
+}
+
+//-----------------------------------------------------------------------------
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiClockHud::copyProfileSettings()
+{
+	if(!mProfileSettingsCopied)
+	{
+		mClockFillColorCopy = mFillColor;
+		mClockFrameColorCopy = mFrameColor;
+		mClockTextColorCopy = mTextColor;
+		
+		Parent::copyProfileSettings();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiClockHud::resetProfileSettings()
+{
+	mFillColor = mClockFillColorCopy;
+	mFrameColor = mClockFrameColorCopy;
+	mTextColor = mClockTextColorCopy;
+	
+	Parent::resetProfileSettings();
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiClockHud::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   /// Set the frame, fill and text alpha.
+   if(mFillColor)
+	   mFillColor.alpha = mClockFillColorCopy.alpha * mRenderAlpha;
+   if(mFrameColor)
+	   mFrameColor.alpha = mClockFrameColorCopy.alpha * mRenderAlpha;;
+   if(mTextColor)
+	   mTextColor.alpha = mClockTextColorCopy.alpha * mRenderAlpha;
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiClockHud::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "fillColor") || !dStricmp( slotName, "frameColor") || !dStricmp( slotName, "textColor") )
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+		
+		if( !dStricmp( slotName, "fillColor") )
+			mClockFillColorCopy = color;
+		else if( !dStricmp( slotName, "frameColor") )
+			mClockFrameColorCopy = color;
+		else
+			mClockTextColorCopy = color;
+	}
+}
+// @Copyright end
+
+//-----------------------------------------------------------------------------
+
+void GuiClockHud::onRender(Point2I offset, const RectI &updateRect)
+{
+   // Background first
+   if (mShowFill)
+      GFX->getDrawUtil()->drawRectFill(updateRect, mFillColor);
+>>>>>>> omni_engine
 
    // Convert ms time into hours, minutes and seconds.
    S32 time = S32(getTime());
@@ -131,6 +225,7 @@ void GuiClockHud::onRender(Point2I offset, const RectI &updateRect)
    // Center the text
    offset.x += (getWidth() - mProfile->mFont->getStrWidth((const UTF8 *)buf)) / 2;
    offset.y += (getHeight() - mProfile->mFont->getHeight()) / 2;
+<<<<<<< HEAD
    drawUtil->setBitmapModulation(mTextColor);
    drawUtil->drawText(mProfile->mFont, offset, buf);
    drawUtil->clearBitmapModulation();
@@ -138,6 +233,15 @@ void GuiClockHud::onRender(Point2I offset, const RectI &updateRect)
    // Border last
    if (mShowFrame)
       drawUtil->drawRect(updateRect, mFrameColor);
+=======
+   GFX->getDrawUtil()->setBitmapModulation(mTextColor);
+   GFX->getDrawUtil()->drawText(mProfile->mFont, offset, buf);
+   GFX->getDrawUtil()->clearBitmapModulation();
+
+   // Border last
+   if (mShowFrame)
+      GFX->getDrawUtil()->drawRect(updateRect, mFrameColor);
+>>>>>>> omni_engine
 }
 
 
@@ -198,3 +302,91 @@ DefineEngineMethod(GuiClockHud, getTime, F32, (),, "Returns the current time, in
 {
    return object->getTime();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGuiClockHud_getTime(char * x__object)
+{
+GuiClockHud* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getTime());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiClockHud_setReverseTime(char * x__object, F32 timeInSeconds)
+{
+GuiClockHud* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setReverseTime(timeInSeconds);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiClockHud_setTime(char * x__object, F32 timeInSeconds)
+{
+GuiClockHud* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setTime(timeInSeconds);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

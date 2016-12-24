@@ -409,7 +409,11 @@ void WaterObject::inspectPostApply()
    setMaskBits( UpdateMask | WaveMask | TextureMask | SoundMask );
 }
 
+<<<<<<< HEAD
 bool WaterObject::processArguments( S32 argc, ConsoleValueRef *argv )
+=======
+bool WaterObject::processArguments( S32 argc, const char **argv )
+>>>>>>> omni_engine
 {
    if( typeid( *this ) == typeid( WaterObject ) )
    {
@@ -780,7 +784,11 @@ void WaterObject::drawUnderwaterFilter( SceneRenderState *state )
    GFX->setWorldMatrix( newMat );   
 
    // set up render states
+<<<<<<< HEAD
    GFX->setupGenericShaders();
+=======
+   GFX->disableShaders();
+>>>>>>> omni_engine
    GFX->setStateBlock( mUnderwaterSB );
 
    /*
@@ -1050,6 +1058,7 @@ void WaterObject::setShaderParams( SceneRenderState *state, BaseMatInstance *mat
    matParams->setSafe( paramHandles.mReflectivitySC, mReflectivity );
 }
 
+<<<<<<< HEAD
 PostEffect* WaterObject::getUnderwaterEffect()
 {
    if ( mUnderwaterPostFx.isValid() )
@@ -1069,16 +1078,60 @@ void WaterObject::updateUnderwaterEffect( SceneRenderState *state )
    PostEffect *effect = getUnderwaterEffect();
    if ( !effect )
       return;
+=======
+void WaterObject::getUnderwaterEffect()
+{
+   if (!mUnderwaterPostFx.isValid())
+
+   {
+   PostEffect *effect;
+   if ( Sim::findObject( "UnderwaterFogPostFx", effect ) )   
+      mUnderwaterPostFx = effect;
+   }
+	 if (!mTurbulenceFx.isValid())
+   {
+		PostEffect *effect;
+		if ( Sim::findObject( "TurbulenceFx", effect ) )   
+			mTurbulenceFx = effect;
+   }
+	 if (!mCausticsPFX.isValid())
+   {
+		PostEffect *effect;
+		if ( Sim::findObject( "CausticsPFX", effect ) )   
+			mCausticsPFX = effect;
+   }
+
+   if (!mLightRayPostEffectPostFx.isValid())
+   {
+		PostEffect *effect;
+		if ( Sim::findObject( "LightRayPostFX", effect ) )   
+			mLightRayPostEffectPostFx = effect;
+   }
+	//WLE - Vince, since we added a second underwater posteffect, having this function just return one was
+	//worthless, so instead I have this function load both of them up if it can
+	//And then I use the var in applying them.
+}
+
+bool WaterObject::processUnderwaterEffect( SceneRenderState *state,PostEffect *effect  )
+{
+	 if ( !effect )
+      return false;
+>>>>>>> omni_engine
 
    // Never use underwater postFx with Basic Lighting, we don't have depth.
    if ( mBasicLighting )
    {
       effect->disable();
+<<<<<<< HEAD
       return;
+=======
+      return false;
+>>>>>>> omni_engine
    }
 
    GameConnection *conn = GameConnection::getConnectionToServer();
    if ( !conn )
+<<<<<<< HEAD
       return;
 
    GameBase *control = conn->getControlObject();
@@ -1089,6 +1142,20 @@ void WaterObject::updateUnderwaterEffect( SceneRenderState *state )
    if ( water == NULL )
       effect->disable();
 
+=======
+      return false;
+
+   GameBase *control = conn->getControlObject();
+   if ( !control )
+      return false;
+
+   WaterObject *water = control->getCurrentWaterObject();
+   if ( water == NULL )
+   {
+      effect->disable();
+	  return false;
+   }
+>>>>>>> omni_engine
    else if ( water == this )
    {
       MatrixF mat;      
@@ -1110,6 +1177,42 @@ void WaterObject::updateUnderwaterEffect( SceneRenderState *state )
       }
       else
          effect->disable();
+   }
+
+   return effect->isEnabled();
+
+}
+
+void WaterObject::updateUnderwaterEffect( SceneRenderState *state )
+{
+   AssertFatal( isClientObject(), "uWaterObject::updateUnderwaterEffect() called on the server" );
+
+   getUnderwaterEffect();
+
+   S32 isOn = (S32)processUnderwaterEffect(state,mUnderwaterPostFx);
+
+   if (isOn == currentlyUnderWater)
+	   return;
+
+   currentlyUnderWater = (S32)isOn;
+
+   if (isOn)
+   {
+   //We are under water.
+   //if (mLightRayPostEffectPostFx)
+	  // mLightRayPostEffectPostFx->disable();
+
+	processUnderwaterEffect(state,mTurbulenceFx);
+	processUnderwaterEffect(state,mCausticsPFX);
+	}
+   else
+   {
+	//We aren't under water.
+   if (mTurbulenceFx)
+	   mTurbulenceFx->disable();
+
+	if (mCausticsPFX)
+	   mCausticsPFX->disable();
    }
 }
 

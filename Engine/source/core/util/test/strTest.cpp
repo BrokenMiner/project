@@ -39,12 +39,20 @@ protected:
       const UTF16* mUTF16;
       U32 mLength;
 
+<<<<<<< HEAD
       StrTest() : mData( 0 ), mUTF16( 0 ), mLength( 0 ) {}
+=======
+      StrTest() : mData( 0 ), mUTF16( 0 ) {}
+>>>>>>> omni_engine
       StrTest( const char* str )
          : mData( str ), mLength( str ? dStrlen( str ) : 0 ), mUTF16( NULL )
       {
          if( str )
+<<<<<<< HEAD
             mUTF16 = createUTF16string( mData );
+=======
+            mUTF16 = convertUTF8toUTF16( mData );
+>>>>>>> omni_engine
       }
       ~StrTest()
       {

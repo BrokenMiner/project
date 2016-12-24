@@ -47,6 +47,21 @@ class GuiCrossHairHud : public GuiBitmapCtrl
    Point2I  mDamageRectSize;
    Point2I  mDamageOffset;
 
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   /// Copy information
+   ColorF mDamageFillColorCopy;
+   ColorF mDamageFrameColorCopy;
+
+   void applyProfileSettings();
+
+   void copyProfileSettings();
+
+   void resetProfileSettings();
+
+   // @Copyright end
+
 protected:
    void drawDamage(Point2I offset, F32 damage, F32 opacity);
 
@@ -55,6 +70,7 @@ public:
 
    void onRender( Point2I, const RectI &);
    static void initPersistFields();
+   void onStaticModified( const char *slotName, const char *newValue );    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    DECLARE_CONOBJECT( GuiCrossHairHud );
    DECLARE_CATEGORY( "Gui Game" );
    DECLARE_DESCRIPTION( "Basic cross hair hud. Reacts to state of control object.\n"
@@ -106,8 +122,84 @@ void GuiCrossHairHud::initPersistFields()
    addField( "damageOffset", TypePoint2I, Offset( mDamageOffset, GuiCrossHairHud ), "Offset for drawing the damage portion of the health control." );
    endGroup("Damage");
    Parent::initPersistFields();
+<<<<<<< HEAD
 }
 
+=======
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor" );
+
+   removeField( "controlFillColor" );
+
+   removeField( "backgroundColor" );
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   removeField( "contextFillColor" );
+
+   // @Copyright end
+}
+
+//-----------------------------------------------------------------------------
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiCrossHairHud::copyProfileSettings()
+{
+	if(!mProfileSettingsCopied)
+	{
+		mDamageFillColorCopy = mDamageFillColor;
+		mDamageFrameColorCopy = mDamageFrameColor;
+		
+		Parent::copyProfileSettings();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiCrossHairHud::resetProfileSettings()
+{
+	mDamageFillColor = mDamageFillColorCopy;
+	mDamageFrameColor = mDamageFrameColorCopy;
+	
+	Parent::resetProfileSettings();
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiCrossHairHud::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   //Set the alpha value
+   if(mDamageFillColor)
+	   mDamageFillColor.alpha = mDamageFillColorCopy.alpha *mRenderAlpha;
+   if(mDamageFrameColor)
+	   mDamageFrameColor.alpha = mDamageFrameColorCopy.alpha * mRenderAlpha;
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiCrossHairHud::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "damageFillColor" ) || !dStricmp( slotName, "damageFrameColor" ) )
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+	
+		if( !dStricmp( slotName, "damageFillColor" ) )
+			mDamageFillColorCopy = color;
+		else
+			mDamageFrameColorCopy = color;
+	}
+}
+// @Copyright end
+>>>>>>> omni_engine
 
 //-----------------------------------------------------------------------------
 

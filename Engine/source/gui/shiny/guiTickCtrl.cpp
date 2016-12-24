@@ -62,4 +62,78 @@ static ConsoleDocFragment _setProcessTicks(
 DefineConsoleMethod( GuiTickCtrl, setProcessTicks, void, (bool tick), (true), "( [tick = true] ) - This will set this object to either be processing ticks or not" )
 {
    object->setProcessTicks(tick);
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiTickCtrl_setProcessTicks(char * x__object, bool tick)
+{
+GuiTickCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setProcessTicks(tick);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

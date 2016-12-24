@@ -89,6 +89,9 @@ function DecalEditorPlugin::onWorldEditorStartup( %this )
 
 function DecalEditorPlugin::onActivated( %this )
 {   
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   DecalEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    EditorGui.bringToFront( DecalEditorGui );
    DecalEditorGui.setVisible( true );
    DecalEditorGui.makeFirstResponder( true );
@@ -123,6 +126,11 @@ function DecalEditorPlugin::onActivated( %this )
 
 function DecalEditorPlugin::onDeactivated( %this )
 {   
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!DecalEditorPlugin.isActive)
+      return;
+   DecalEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    DecalEditorGui.setVisible(false);
    DecalPreviewWindow.setVisible( false );
    DecalEditorWindow.setVisible( false );

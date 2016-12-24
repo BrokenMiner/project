@@ -48,10 +48,25 @@ class GuiSpeedometerHud : public GuiBitmapCtrl
 
    GFXStateBlockRef mBlendSB;
 
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+   
+   /// Copy information
+   ColorF mColorCopy;
+
+   void applyProfileSettings();
+
+   void copyProfileSettings();
+
+   void resetProfileSettings();
+
+   // @Copyright end
+
 public:
    GuiSpeedometerHud();
 
    void onRender( Point2I, const RectI &);
+   void onStaticModified( const char *slotName, const char *newValue );       // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    static void initPersistFields();
    DECLARE_CONOBJECT( GuiSpeedometerHud );
    DECLARE_CATEGORY( "Gui Game" );
@@ -141,8 +156,79 @@ void GuiSpeedometerHud::initPersistFields()
    endGroup("Needle");
 
    Parent::initPersistFields();
+<<<<<<< HEAD
 }
 
+=======
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor" );
+
+   removeField( "controlFillColor" );
+
+   removeField( "backgroundColor" );
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   removeField( "contextFillColor" );
+
+   // @Copyright end
+}
+
+//-----------------------------------------------------------------------------
+
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiSpeedometerHud::copyProfileSettings()
+{
+	if(!mProfileSettingsCopied)
+	{
+		mColorCopy = mColor;
+		
+		Parent::copyProfileSettings();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiSpeedometerHud::resetProfileSettings()
+{
+	mColor = mColorCopy;
+
+	Parent::resetProfileSettings();
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiSpeedometerHud::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   //Set the alpha value
+   if(mColor)
+	   mColor.alpha = mColorCopy.alpha *mRenderAlpha;
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiSpeedometerHud::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "color" ))
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+
+		mColorCopy = color;
+	}
+}
+
+// @Copyright end
+>>>>>>> omni_engine
 
 //-----------------------------------------------------------------------------
 /**

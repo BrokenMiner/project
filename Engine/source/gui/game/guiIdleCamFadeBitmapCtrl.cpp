@@ -36,6 +36,8 @@ public:
    DECLARE_CONOBJECT(GuiIdleCamFadeBitmapCtrl);
    DECLARE_CATEGORY( "Gui Images" );
 
+   DECLARE_CALLBACK( void, click, () );
+
    U32 wakeTime;
    bool done;
    U32 fadeinTime;
@@ -60,11 +62,19 @@ public:
    }
    void onMouseDown(const GuiEvent &)
    {
+<<<<<<< HEAD
       Con::executef(this, "click");
    }
    bool onKeyDown(const GuiEvent &)
    {
       Con::executef(this, "click");
+=======
+      click_callback();
+   }
+   bool onKeyDown(const GuiEvent &)
+   {
+      click_callback();
+>>>>>>> omni_engine
       return true;
    }
    bool onWake()
@@ -170,6 +180,9 @@ public:
 
 IMPLEMENT_CONOBJECT(GuiIdleCamFadeBitmapCtrl);
 
+IMPLEMENT_CALLBACK( GuiIdleCamFadeBitmapCtrl, click, void, (), (), "" );
+
+
 ConsoleDocClass( GuiIdleCamFadeBitmapCtrl,
 				"@brief GUI that will fade the current view in and out.\n\n"
 				"Main difference between this and FadeinBitmap is this appears to "
@@ -188,3 +201,82 @@ DefineConsoleMethod(GuiIdleCamFadeBitmapCtrl, fadeOut, void, (), , "()"
 {
    object->fadeOut();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiIdleCamFadeBitmapCtrl_fadeIn(char * x__object)
+{
+GuiIdleCamFadeBitmapCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->fadeIn();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiIdleCamFadeBitmapCtrl_fadeOut(char * x__object)
+{
+GuiIdleCamFadeBitmapCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->fadeOut();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

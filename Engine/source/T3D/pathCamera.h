@@ -93,7 +93,11 @@ private:
 public:
    DECLARE_CONOBJECT(PathCamera);
    
+<<<<<<< HEAD
    DECLARE_CALLBACK( void, onNode, (S32 node));
+=======
+   DECLARE_CALLBACK( void, onNode, (const char* node));
+>>>>>>> omni_engine
 
    PathCamera();
    ~PathCamera();

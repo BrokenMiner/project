@@ -33,7 +33,7 @@ function initializeShapeEditor()
    exec("./gui/shapeEdPreviewWindow.ed.gui");
    exec("./gui/shapeEdAnimWindow.ed.gui");
    exec("./gui/shapeEdAdvancedWindow.ed.gui");
-   exec("./gui/ShapeEditorToolbar.ed.gui");
+   exec("./gui/shapeEditorToolbar.ed.gui");
    exec("./gui/shapeEdSelectWindow.ed.gui");
    exec("./gui/shapeEdPropWindow.ed.gui");
 
@@ -214,6 +214,9 @@ function ShapeEditorPlugin::open(%this, %filename)
 
 function ShapeEditorPlugin::onActivated(%this)
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   ShapeEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    %this.open("");
 
    // Try to start with the shape selected in the world editor
@@ -249,6 +252,11 @@ function ShapeEditorPlugin::initStatusBar(%this)
 
 function ShapeEditorPlugin::onDeactivated(%this)
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!ShapeEditorPlugin.isActive)
+      return
+   ShapeEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    %this.writeSettings();
 
    // Notify game objects if shape has been modified
@@ -265,12 +273,13 @@ function ShapeEditorPlugin::onDeactivated(%this)
    ShapeEdPropWindow.setVisible(false);
    ShapeEdAnimWindow.setVisible(false);
    ShapeEdAdvancedWindow.setVisible(false);
-   
-   if( EditorGui-->MatEdPropertiesWindow.visible )
+
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+   if( MaterialEditorPropertiesWindow.visible )
    {
       ShapeEdMaterials.editSelectedMaterialEnd( true );
    }
-
+//Copyright Winterleaf Entertainment L.L.C. 2013
    %this.map.pop();
 
    // Restore the original undo manager

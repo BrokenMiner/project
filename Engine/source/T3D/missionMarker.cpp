@@ -99,6 +99,7 @@ bool MissionMarker::onAdd()
       mAddedToScene = true;
    }
 
+   scriptOnAdd();
    return(true);
 }
 
@@ -110,6 +111,7 @@ void MissionMarker::onRemove()
       mAddedToScene = false;
    }
 
+   scriptOnRemove();
    Parent::onRemove();
 }
 
@@ -278,6 +280,8 @@ void WayPoint::unpackUpdate(NetConnection * con, BitStream * stream)
    if(stream->readFlag())
       setHidden(stream->readFlag());
 }
+
+
 
 void WayPoint::initPersistFields()
 {
@@ -504,6 +508,7 @@ ConsoleDocFragment _SpawnSpherespawnObject1(
    "bool spawnObject(string additionalProps);"
 );
 
+//ConsoleMethod(SpawnSphere, spawnObject, S32, 2, 3,
 DefineConsoleMethod(SpawnSphere, spawnObject, S32, (String additionalProps), ,
    "([string additionalProps]) Spawns the object based on the SpawnSphere's "
    "class, datablock, properties, and script settings. Allows you to pass in "
@@ -535,6 +540,12 @@ ConsoleDocClass( CameraBookmark,
    "@internal"
 );
 
+IMPLEMENT_CALLBACK(CameraBookmark, onAdd, void, (), (),"");
+IMPLEMENT_CALLBACK(CameraBookmark, onRemove, void, (), (),"");
+IMPLEMENT_CALLBACK(CameraBookmark, onGroupAdd, void, (), (),"");
+IMPLEMENT_CALLBACK(CameraBookmark, onGroupRemove, void, (), (),"");
+IMPLEMENT_CALLBACK(CameraBookmark, onInspectPostApply, void, (), (),"");
+
 CameraBookmark::CameraBookmark()
 {
    mName = StringTable->insert("");
@@ -551,30 +562,50 @@ bool CameraBookmark::onAdd()
       setMaskBits(UpdateNameMask);
    }
 
+<<<<<<< HEAD
    if( isServerObject() && isMethod("onAdd") )
       Con::executef( this, "onAdd" );
+=======
+   if( isServerObject())
+   { onAdd_callback(); }
+>>>>>>> omni_engine
 
    return(true);
 }
 
 void CameraBookmark::onRemove()
 {
+<<<<<<< HEAD
    if( isServerObject() && isMethod("onRemove") )
       Con::executef( this, "onRemove" );
+=======
+   if( isServerObject() )
+   { onRemove_callback(); }
+>>>>>>> omni_engine
 
    Parent::onRemove();
 }
 
 void CameraBookmark::onGroupAdd()
 {
+<<<<<<< HEAD
    if( isServerObject() && isMethod("onGroupAdd") )
       Con::executef( this, "onGroupAdd" );
+=======
+   if( isServerObject() )
+   { onGroupAdd_callback(); }
+>>>>>>> omni_engine
 }
 
 void CameraBookmark::onGroupRemove()
 {
+<<<<<<< HEAD
    if( isServerObject() && isMethod("onGroupRemove") )
       Con::executef( this, "onGroupRemove" );
+=======
+   if( isServerObject() )
+   { onGroupRemove_callback(); }
+>>>>>>> omni_engine
 }
 
 void CameraBookmark::inspectPostApply()
@@ -584,8 +615,12 @@ void CameraBookmark::inspectPostApply()
       mName = StringTable->insert("");
    setMaskBits(UpdateNameMask);
 
+<<<<<<< HEAD
    if( isMethod("onInspectPostApply") )
       Con::executef( this, "onInspectPostApply" );
+=======
+   onInspectPostApply_callback();
+>>>>>>> omni_engine
 }
 
 U32 CameraBookmark::packUpdate(NetConnection * con, U32 mask, BitStream * stream)
@@ -605,6 +640,7 @@ void CameraBookmark::unpackUpdate(NetConnection * con, BitStream * stream)
 
 void CameraBookmark::initPersistFields()
 {
+<<<<<<< HEAD
    //addGroup("Misc");	
    //addField("name", TypeCaseString, Offset(mName, CameraBookmark));
    //endGroup("Misc");
@@ -613,3 +649,84 @@ void CameraBookmark::initPersistFields()
 
    removeField("nameTag"); // From GameBase
 }
+=======
+   Parent::initPersistFields();
+   removeField("nameTag"); // From GameBase
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SpawnSphere_spawnObject(char * x__object, char * x__additionalProps)
+{
+SpawnSphere* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+String additionalProps = String( x__additionalProps);
+{
+   
+      
+   SimObject* obj = object->spawnObject(additionalProps);
+   if (obj)
+     return (S32)( obj->getId());
+  return (S32)( -1);
+};
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

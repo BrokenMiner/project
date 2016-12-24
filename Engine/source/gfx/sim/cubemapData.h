@@ -60,8 +60,21 @@ public:
    // Force creation of cubemap
    void createMap();   
 
+<<<<<<< HEAD
    // Update a static cubemap @ pos
 	void updateFaces();
+=======
+   // Update a dynamic cubemap @ pos
+   void updateDynamic(SceneManager* sm, const Point3F& pos);
+	void updateFaces();
+   
+   // Dynamic cube map support
+   bool mDynamic;
+   U32 mDynamicSize;   
+   F32 mDynamicNearDist;
+   F32 mDynamicFarDist;
+   U32 mDynamicObjectTypeMask;
+>>>>>>> omni_engine
 
 protected:
 
@@ -70,6 +83,9 @@ protected:
 
    GFXTexHandle mDepthBuff;
    GFXTextureTargetRef mRenderTarget;
+#ifdef INIT_HACK
+   bool mInit;
+#endif
 };
 
 #endif // CUBEMAPDATA

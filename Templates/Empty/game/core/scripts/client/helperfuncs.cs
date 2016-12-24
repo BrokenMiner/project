@@ -252,7 +252,11 @@ function parseMissionGroupForIds( %className, %childGroup )
       if( (%currentGroup).getObject(%i).getClassName() $= "SimGroup" )
          %classIds = %classIds @ parseMissionGroupForIds( %className, (%currentGroup).getObject(%i).getId());
    } 
+<<<<<<< HEAD
    return trim( %classIds );
+=======
+   return %classIds;
+>>>>>>> omni_engine
 }
 
 //------------------------------------------------------------------------------

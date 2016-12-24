@@ -268,6 +268,10 @@ protected:
    /// equal mShapeResource if it was created from a resource.
    TSShape *mShape;
 
+   public:
+	   int getSmallestVisibleDL(){return mShape->mSmallestVisibleDL;}
+   protected:
+
    
    bool            mOwnMaterialList; ///< Does this own the material list pointer?
 

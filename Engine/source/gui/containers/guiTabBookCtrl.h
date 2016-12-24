@@ -65,7 +65,12 @@ class GuiTabBookCtrl : public GuiContainer
       enum TabPosition
       {
          AlignTop,   ///< Align the tabs on the top of the tab book control
+<<<<<<< HEAD
          AlignBottom ///< Align the tabs on the bottom of the tab book control
+=======
+         AlignBottom, ///< Align the tabs on the bottom of the tab book control
+		 AlignRight	  ///< Align the tabs on the right of the tab book control	//TabBookChanges
+>>>>>>> omni_engine
       };
 
       struct TabHeaderInfo
@@ -158,7 +163,11 @@ class GuiTabBookCtrl : public GuiContainer
       /// Tab rendering subroutine, renders one tab with specified options
       /// @param   tabRect   the rectangle to render the tab into
       /// @param   tab   pointer to the tab page control for which to render the tab
+<<<<<<< HEAD
       void renderTab(const RectI& tabRect, GuiTabPageCtrl* tab);
+=======
+      void renderTab( RectI tabRect, GuiTabPageCtrl* tab );
+>>>>>>> omni_engine
 
       /// @}
 

@@ -66,7 +66,11 @@ AIClient::AIClient() {
    mMoveTolerance = 0.25f;
 
    // Clear the triggers
+<<<<<<< HEAD
    for( S32 i = 0; i < MaxTriggerKeys; i++ )
+=======
+   for( int i = 0; i < MaxTriggerKeys; i++ )
+>>>>>>> omni_engine
       mTriggers[i] = false;
  
    mAimToDestination = true;
@@ -456,19 +460,43 @@ DefineConsoleMethod( AIClient, setMoveDestination, void, (Point3F v), , "ai.setM
 /**
  * Returns the point the AI is aiming at
  */
+<<<<<<< HEAD
 DefineConsoleMethod( AIClient, getAimLocation, Point3F, (),, "ai.getAimLocation();" ) 
 {
    AIClient *ai = static_cast<AIClient *>( object );
    return ai->getAimLocation();
+=======
+DefineConsoleMethod( AIClient, getAimLocation, const char *, (),, "ai.getAimLocation();" ) 
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   Point3F aimPoint = ai->getAimLocation();
+
+   char *returnBuffer = Con::getReturnBuffer( 256 );
+   dSprintf( returnBuffer, 256, "%f %f %f", aimPoint.x, aimPoint.y, aimPoint.z );
+
+   return returnBuffer;
+>>>>>>> omni_engine
 }
 
 /**
  * Returns the point the AI is set to move to
  */
+<<<<<<< HEAD
 DefineConsoleMethod( AIClient, getMoveDestination, Point3F, (),, "ai.getMoveDestination();" ) 
 {
    AIClient *ai = static_cast<AIClient *>( object );
    return ai->getMoveDestination();
+=======
+DefineConsoleMethod( AIClient, getMoveDestination, const char *, (),, "ai.getMoveDestination();" ) 
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   Point3F movePoint = ai->getMoveDestination();
+
+   char *returnBuffer = Con::getReturnBuffer( 256 );
+   dSprintf( returnBuffer, 256, "%f %f %f", movePoint.x, movePoint.y, movePoint.z );
+
+   return returnBuffer;
+>>>>>>> omni_engine
 }
 
 /**
@@ -517,10 +545,22 @@ DefineConsoleMethod( AIClient, move, void, (),, "ai.move();" )
 /**
  * Gets the AI's location in the world
  */
+<<<<<<< HEAD
 DefineConsoleMethod( AIClient, getLocation, Point3F, (),, "ai.getLocation();" ) 
 {
    AIClient *ai = static_cast<AIClient *>( object );
    return ai->getLocation();
+=======
+DefineConsoleMethod( AIClient, getLocation, const char *, (),, "ai.getLocation();" ) 
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   Point3F locPoint = ai->getLocation();
+
+   char *returnBuffer = Con::getReturnBuffer( 256 );
+   dSprintf( returnBuffer, 256, "%f %f %f", locPoint.x, locPoint.y, locPoint.z );
+
+   return returnBuffer;
+>>>>>>> omni_engine
 }
 
 /**
@@ -547,7 +587,11 @@ DefineConsoleFunction( aiAddPlayer, S32, (const char * name, const char * ns), (
    aiPlayer->onConnect_callback( name );
 
    // Now execute the onAdd command and feed it the namespace
+<<<<<<< HEAD
    if(dStrcmp( ns,"" ) != 0 )
+=======
+   if( ns != "" )
+>>>>>>> omni_engine
       aiPlayer->onAdd( ns );
    else
       aiPlayer->onAdd( "AIClient" );
@@ -572,3 +616,254 @@ DefineConsoleMethod( AIClient, moveForward, void, (),, "ai.moveForward();" )
    
    ai->setMoveDestination( location );
 } // *** /TEST FXN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_aiAddPlayer(char * x__name, char * x__ns)
+{
+const char* name = (const char*)x__name;
+const char* ns = (const char*)x__ns;
+{
+      AIClient *aiPlayer = new AIClient();
+   aiPlayer->registerObject();
+   aiPlayer->setGhostFrom(false);
+   aiPlayer->setGhostTo(false);
+   aiPlayer->setSendingEvents(false);
+   aiPlayer->setTranslatesStrings(true);
+   aiPlayer->setEstablished();
+   
+      SimGroup *g = Sim::getClientGroup();
+   g->addObject( aiPlayer );
+         aiPlayer->onConnect_callback( name );
+      if( ns != "" )
+      aiPlayer->onAdd( ns );
+   else
+      aiPlayer->onAdd( "AIClient" );
+  return (S32)( aiPlayer->getId());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_getAimLocation(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   Point3F aimPoint = ai->getAimLocation();
+   char *returnBuffer = Con::getReturnBuffer( 256 );
+   dSprintf( returnBuffer, 256, "%f %f %f", aimPoint.x, aimPoint.y, aimPoint.z );
+   {wle_returnObject =returnBuffer;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_getLocation(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   Point3F locPoint = ai->getLocation();
+   char *returnBuffer = Con::getReturnBuffer( 256 );
+   dSprintf( returnBuffer, 256, "%f %f %f", locPoint.x, locPoint.y, locPoint.z );
+   {wle_returnObject =returnBuffer;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_getMoveDestination(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   Point3F movePoint = ai->getMoveDestination();
+   char *returnBuffer = Con::getReturnBuffer( 256 );
+   dSprintf( returnBuffer, 256, "%f %f %f", movePoint.x, movePoint.y, movePoint.z );
+   {wle_returnObject =returnBuffer;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_AIClient_getTargetObject(char * x__object)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+  return (S32)( ai->getTargetObject());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_missionCycleCleanup(char * x__object)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   AIClient *ai = static_cast<AIClient*>( object );
+   ai->missionCycleCleanup();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_move(char * x__object)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   ai->setMoveMode( AIClient::ModeMove );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_moveForward(char * x__object)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   
+   AIClient *ai = static_cast<AIClient *>( object );
+   ShapeBase *player = dynamic_cast<ShapeBase*>(ai->getControlObject());
+   Point3F location;
+   MatrixF const &myTransform = player->getTransform();
+   myTransform.getColumn( 3, &location );
+   location.y += 100.0f;
+   
+   ai->setMoveDestination( location );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_setAimLocation(char * x__object, char * x__v)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F v = Point3F();
+sscanf(x__v,"%f %f %f",&v.x,&v.y,&v.z);
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   ai->setAimLocation( v );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_setMoveDestination(char * x__object, char * x__v)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F v = Point3F();
+sscanf(x__v,"%f %f %f",&v.x,&v.y,&v.z);
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   ai->setMoveDestination( v );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_setMoveSpeed(char * x__object, F32 speed)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   ai->setMoveSpeed( speed );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_setTargetObject(char * x__object, char * x__objName)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* objName = (const char*)x__objName;
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   
+      ShapeBase *targetObject;
+   if( Sim::findObject( objName, targetObject ) )
+      ai->setTargetObject( targetObject );
+   else
+      ai->setTargetObject( NULL );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_AIClient_stop(char * x__object)
+{
+AIClient* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   AIClient *ai = static_cast<AIClient *>( object );
+   ai->setMoveMode( AIClient::ModeStop );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

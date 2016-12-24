@@ -40,7 +40,9 @@ function EPainter_TerrainMaterialUpdateCallback( %mat, %matIndex )
 
    // Update the material and the UI.
    ETerrainEditor.updateMaterial( %matIndex, %mat.getInternalName() );
-   EPainter.setup( %matIndex );
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   TerrainPainter.setup( %matIndex );
+//Copyright Winterleaf Entertainment L.L.C. 2013
 }
 
 function EPainter_TerrainMaterialAddCallback( %mat, %matIndex )
@@ -51,7 +53,9 @@ function EPainter_TerrainMaterialAddCallback( %mat, %matIndex )
 
    // Add it and update the UI.
    ETerrainEditor.addMaterial( %mat.getInternalName() );
-   EPainter.setup( %matIndex );
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   TerrainPainter.setup( %matIndex );
+//Copyright Winterleaf Entertainment L.L.C. 2013
 }
 
 function TerrainEditor::setPaintMaterial( %this, %matIndex, %terrainMat )
@@ -79,7 +83,9 @@ function TerrainEditor::setup( %this )
    %this.switchAction( %action );
 }
 
-function EPainter::updateLayers( %this, %matIndex )
+//Copyright Winterleaf Entertainment L.L.C. 2013
+function TerrainPainter::updateLayers( %this, %matIndex )
+//Copyright Winterleaf Entertainment L.L.C. 2013
 {
    // Default to whatever was selected before.
    if ( %matIndex $= "" )
@@ -134,7 +140,9 @@ function EPainter::updateLayers( %this, %matIndex )
             VertSizing = "bottom";
             position = ( %listwidth - 20 ) SPC "26";
             Extent = "17 17";
-            command = "EPainter.showMaterialDeleteDlg( " @ %matInternalName @ " );";
+//Copyright Winterleaf Entertainment L.L.C. 2013
+            command = "TerrainPainter.showMaterialDeleteDlg( " @ %matInternalName @ " );";
+//Copyright Winterleaf Entertainment L.L.C. 2013
          };
       };
 
@@ -187,14 +195,18 @@ function EPainter::updateLayers( %this, %matIndex )
    %ctrl.performClick();
 }
 
-function EPainter::showMaterialDeleteDlg( %this, %matInternalName )
+//Copyright Winterleaf Entertainment L.L.C. 2013
+function TerrainPainter::showMaterialDeleteDlg( %this, %matInternalName )
+//Copyright Winterleaf Entertainment L.L.C. 2013
 {
    MessageBoxYesNo( "Confirmation",
       "Really remove material '" @ %matInternalName @ "' from the terrain?",
       %this @ ".removeMaterial( " @ %matInternalName @ " );", "" );
 }
 
-function EPainter::removeMaterial( %this, %matInternalName )
+//Copyright Winterleaf Entertainment L.L.C. 2013
+function TerrainPainter::removeMaterial( %this, %matInternalName )
+//Copyright Winterleaf Entertainment L.L.C. 2013
 {
    %selIndex = ETerrainEditor.paintIndex - 1;
 
@@ -209,7 +221,9 @@ function EPainter::removeMaterial( %this, %matInternalName )
    %this.updateLayers( %selIndex );
 }
 
-function EPainter::setup( %this, %matIndex )
+//Copyright Winterleaf Entertainment L.L.C. 2013
+function TerrainPainter::setup( %this, %matIndex )
+//Copyright Winterleaf Entertainment L.L.C. 2013
 {
    // Update the layer listing.
    %this.updateLayers( %matIndex );
@@ -267,7 +281,9 @@ function TerrainEditor::onActiveTerrainChange(%this, %newTerrain)
 {
    // Need to refresh the terrain painter.
    if ( EditorGui.currentEditor.getId() == TerrainPainterPlugin.getId() )
-      EPainter.setup(ETerrainEditor.paintIndex);
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      TerrainPainter.setup(ETerrainEditor.paintIndex);
+//Copyright Winterleaf Entertainment L.L.C. 2013	  
 }
 
 function TerrainEditor::getActionDescription( %this, %action )
@@ -348,10 +364,21 @@ function TerrainEditor::onSmoothHeightmap( %this )
    %action.addToManager( Editor.getUndoManager() );
 }
 
+function TerrainEditor::onSolderEdges( %this )
+{
+ // # Work with all terrains on the loaded level.
+ %action = new TerrainSolderEdgesAction();
+ %action.solder();
+ %action.addToManager( Editor.getUndoManager() );
+ ETerrainEditor.isDirty = true;
+}
+
 function TerrainEditor::onMaterialUndo( %this )
 {
    // Update the gui to reflect the current materials.
-   EPainter.updateLayers();
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+   TerrainPainter.updateLayers();
+//Copyright Winterleaf Entertainment L.L.C. 2013   
 }
 
 //------------------------------------------------------------------------------

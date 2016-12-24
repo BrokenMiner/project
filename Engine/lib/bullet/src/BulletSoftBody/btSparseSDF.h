@@ -78,6 +78,7 @@ struct	btSparseSdf
 	//
 
 	//
+<<<<<<< HEAD
 	void					Initialize(int hashsize=2383, int clampCells = 256*1024)
 	{
 		//avoid a crash due to running out of memory, so clamp the maximum number of cells allocated
@@ -85,6 +86,12 @@ struct	btSparseSdf
 		m_clampCells = clampCells;
 		cells.resize(hashsize,0);
 		Reset();
+=======
+	void					Initialize(int hashsize=2383)
+	{
+		cells.resize(hashsize,0);
+		Reset();		
+>>>>>>> omni_engine
 	}
 	//
 	void					Reset()

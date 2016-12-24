@@ -77,6 +77,7 @@ $HDRPostFX::colorCorrectionRamp = "core/scripts/client/postFx/null_color_ramp.pn
 singleton ShaderData( HDR_BrightPassShader )
 {
    DXVertexShaderFile 	= "shaders/common/postFx/postFxV.hlsl";
+<<<<<<< HEAD
    DXPixelShaderFile 	= "shaders/common/postFx/hdr/brightPassFilterP.hlsl";   
    OGLVertexShaderFile  = "shaders/common/postFx/gl/postFxV.glsl";
    OGLPixelShaderFile   = "shaders/common/postFx/hdr/gl/brightPassFilterP.glsl";
@@ -84,6 +85,9 @@ singleton ShaderData( HDR_BrightPassShader )
    samplerNames[0] = "$inputTex";
    samplerNames[1] = "$luminanceTex";
    
+=======
+   DXPixelShaderFile 	= "shaders/common/postFx/hdr/brightPassFilterP.hlsl";
+>>>>>>> omni_engine
    pixVersion = 3.0;
 };
 

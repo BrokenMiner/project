@@ -167,10 +167,19 @@ GuiInspectorField* GuiInspectorGroup::constructField( S32 fieldType )
 
 
       GuiInspectorDatablockField *dbFieldClass = new GuiInspectorDatablockField( typeClassName );
+<<<<<<< HEAD
 
       // return our new datablock field with correct datablock type enumeration info
       return dbFieldClass;
 }
+=======
+      if( dbFieldClass != NULL )
+      {
+         // return our new datablock field with correct datablock type enumeration info
+         return dbFieldClass;
+      }
+   }
+>>>>>>> omni_engine
 
    // Nope, not a datablock. So maybe it has a valid inspector field override we can use?
    if(!cbt->getInspectorFieldType())
@@ -228,7 +237,11 @@ void GuiInspectorGroup::clearFields()
 bool GuiInspectorGroup::inspectGroup()
 {
    // We can't inspect a group without a target!
+<<<<<<< HEAD
    if( !mParent || !mParent->getNumInspectObjects() )
+=======
+   if( !mParent->getNumInspectObjects() )
+>>>>>>> omni_engine
       return false;
 
    // to prevent crazy resizing, we'll just freeze our stack for a sec..
@@ -249,6 +262,7 @@ bool GuiInspectorGroup::inspectGroup()
    GuiStackControl *pArrayStack = NULL;
    GuiRolloutCtrl *pArrayRollout = NULL;
    bool bGrabItems = false;
+   bool bReadOnly = false;
 
    AbstractClassRep* commonAncestorClass = findCommonAncestorClass();
    AbstractClassRep::FieldList& fieldList = commonAncestorClass->mFieldList;
@@ -284,6 +298,11 @@ bool GuiInspectorGroup::inspectGroup()
       {
          if( bNoGroup == true && bGrabItems == true )
             continue;
+
+		 if( field->flag.test( AbstractClassRep::FIELD_ReadOnly ) )
+			 bReadOnly = true;
+		 else
+			 bReadOnly = false;
 
          if ( field->type == AbstractClassRep::StartArrayFieldType )
          {
@@ -373,6 +392,7 @@ bool GuiInspectorGroup::inspectGroup()
                   fieldGui = new GuiInspectorField();
                
                fieldGui->init( mParent, this );
+
                StringTableEntry caption = field->pFieldname;
                fieldGui->setInspectorField( field, caption, intToStr );
                
@@ -383,6 +403,9 @@ bool GuiInspectorGroup::inspectGroup()
                      field->pFieldname, i );
                   #endif
 
+				  // Readonly check
+				  if( bReadOnly )
+					  fieldGui->setActive(false);
                   mChildren.push_back( fieldGui );
                   pStack->addObject( fieldGui );
                }
@@ -448,6 +471,9 @@ bool GuiInspectorGroup::inspectGroup()
                
                if ( fieldGui->registerObject() )
                {
+				  // Readonly check
+				  if( bReadOnly )
+					  fieldGui->setActive(false);
                   mChildren.push_back( fieldGui );
                   stack->addObject( fieldGui );
                }
@@ -484,6 +510,10 @@ bool GuiInspectorGroup::inspectGroup()
                Platform::outputDebugString( "[GuiInspectorGroup] Adding field '%s'",
                   field->pFieldname );
                #endif
+
+			   // Readonly check
+			   if( bReadOnly )
+				   fieldGui->setActive(false);
 
                mChildren.push_back( fieldGui );
                mStack->addObject( fieldGui );

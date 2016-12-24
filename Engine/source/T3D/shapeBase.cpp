@@ -40,6 +40,7 @@
 #include "scene/sceneRenderState.h"
 #include "scene/sceneObjectLightingPlugin.h"
 #include "T3D/fx/explosion.h"
+#include "T3D/fx/particleEmitter.h"
 #include "T3D/fx/cameraFXMgr.h"
 #include "environment/waterBlock.h"
 #include "T3D/debris.h"
@@ -49,6 +50,7 @@
 #include "math/mMatrix.h"
 #include "math/mTransform.h"
 #include "math/mRandom.h"
+#include "math/mathIO.h"
 #include "platform/profiler.h"
 #include "gfx/gfxCubemap.h"
 #include "gfx/gfxDrawUtil.h"
@@ -167,12 +169,19 @@ ShapeBaseData::ShapeBaseData()
    density( 1.0f ),
    maxEnergy( 0.0f ),
    maxDamage( 1.0f ),
+<<<<<<< HEAD
    destroyedLevel( 1.0f ),
    disabledLevel( 1.0f ),
+=======
+   disabledLevel( 1.0f ),
+   destroyedLevel( 1.0f ),
+>>>>>>> omni_engine
    repairRate( 0.0033f ),
    eyeNode( -1 ),
    earNode( -1 ),
    cameraNode( -1 ),
+   damageSequence( -1 ),
+   hulkSequence( -1 ),
    cameraMaxDist( 0.0f ),
    cameraMinDist( 0.2f ),
    cameraDefaultFov( 75.0f ),
@@ -180,6 +189,7 @@ ShapeBaseData::ShapeBaseData()
    cameraMaxFov( 120.f ),
    cameraCanBank( false ),
    mountedImagesBank( false ),
+<<<<<<< HEAD
    debrisDetail( -1 ),
    damageSequence( -1 ),
    hulkSequence( -1 ),
@@ -191,6 +201,26 @@ ShapeBaseData::ShapeBaseData()
    computeCRC( false ),
    inheritEnergyFromMount( false ),
    mCRC( 0 )
+=======
+   isInvincible( false ),
+   renderWhenDestroyed( true ),
+   debris( NULL ),
+   debrisID( 0 ),
+   debrisShapeName( StringTable->insert("") ),
+   explosion( NULL ),
+   explosionID( 0 ),
+   underwaterExplosion( NULL ),
+   underwaterExplosionID( 0 ),
+   firstPersonOnly( false ),
+   useEyePoint( false ),
+   cubeDescId( 0 ),
+   reflectorDesc( NULL ),
+   observeThroughObject( false ),
+   computeCRC( false ),
+   inheritEnergyFromMount( false ),
+   mCRC( 0 ),
+   debrisDetail( -1 )
+>>>>>>> omni_engine
 {      
    dMemset( mountPointNode, -1, sizeof( S32 ) * SceneObject::NumMountPoints );
 }
@@ -706,7 +736,11 @@ void ShapeBaseData::packData(BitStream* stream)
 
    if( stream->writeFlag( debris != NULL ) )
    {
+<<<<<<< HEAD
       stream->writeRangedU32(packed? SimObjectId((uintptr_t)debris):
+=======
+      stream->writeRangedU32(packed? SimObjectId(debris):
+>>>>>>> omni_engine
                              debris->getId(),DataBlockObjectIdFirst,DataBlockObjectIdLast);
    }
 
@@ -877,6 +911,7 @@ IMPLEMENT_CALLBACK( ShapeBase, validateCameraFov, F32, (F32 fov), (fov),
    "@see ShapeBaseData\n\n");
 
 ShapeBase::ShapeBase()
+<<<<<<< HEAD
  : mDataBlock( NULL ),
    mIsAiControlled( false ),
    mControllingObject( NULL ),
@@ -898,12 +933,27 @@ ShapeBase::ShapeBase()
    mWhiteOut( 0.0f ),
    mFlipFadeVal( false ),
    mTimeoutList( NULL ),
+=======
+ : mDrag( 0.0f ),
+   mBuoyancy( 0.0f ),
+   mWaterCoverage( 0.0f ),
+   mLiquidHeight( 0.0f ),
+   mControllingObject( NULL ),
+   mGravityMod( 1.0f ),
+   mAppliedForce( Point3F::Zero ),
+   mTimeoutList( NULL ),
+   mDataBlock( NULL ),
+   mShapeInstance( NULL ),
+   mEnergy( 0.0f ),
+   mRechargeRate( 0.0f ),
+>>>>>>> omni_engine
    mDamage( 0.0f ),
    mRepairRate( 0.0f ),
    mRepairReserve( 0.0f ),
    mDamageState( Enabled ),
    mDamageThread( NULL ),
    mHulkThread( NULL ),
+<<<<<<< HEAD
    damageDir( 0.0f, 0.0f, 1.0f ),
    mCloaked( false ),
    mCloakLevel( 0.0f ),
@@ -917,6 +967,33 @@ ShapeBase::ShapeBase()
    mIsControlled( false ),
    mLastRenderFrame( 0 ),
    mLastRenderDistance( 0.0f )
+=======
+   mLastRenderFrame( 0 ),
+   mLastRenderDistance( 0.0f ),
+   mCloaked( false ),
+   mCloakLevel( 0.0f ),
+   mDamageFlash( 0.0f ),
+   mWhiteOut( 0.0f ),
+   mIsControlled( false ),
+   mConvexList( new Convex ),
+   mCameraFov( 90.0f ),
+   mFadeOut( true ),
+   mFading( false ),
+   mFadeVal( 1.0f ),
+   mFadeTime( 1.0f ),
+   mFadeElapsedTime( 0.0f ),
+   mFadeDelay( 0.0f ),
+   mFlipFadeVal( false ),
+   damageDir( 0.0f, 0.0f, 1.0f ),
+   mShapeBaseMount( NULL ),
+   mMass( 1.0f ),
+   mOneOverMass( 1.0f ),
+   mMoveMotion( false ),
+   mIsAiControlled( false ),
+   //Winterleaf
+   mVisibleDistance(0)
+   //Winterleaf
+>>>>>>> omni_engine
 {
    mTypeMask |= ShapeBaseObjectType | LightObjectType;   
 
@@ -939,6 +1016,8 @@ ShapeBase::ShapeBase()
 
    for (i = 0; i < MaxTriggerKeys; i++)
       mTrigger[i] = false;
+
+   mWeaponCamShake = NULL;
 }
 
 
@@ -1014,6 +1093,25 @@ const char *ShapeBase::_getFieldSkin( void *object, const char *data )
 }
 
 //----------------------------------------------------------------------------
+//Winterleaf
+void ShapeBase::setVisibleDistance(S32 dist)
+{
+	mVisibleDistance=dist;
+}
+S32 ShapeBase::getVisibleDistance()
+{
+	if (mVisibleDistance==0)
+	{
+		if (getSceneManager() != NULL)
+			return getSceneManager()->getVisibleDistance_Ghost();
+		else
+			return 0;
+	}
+	else
+	return mVisibleDistance;
+}
+//Winterleaf
+
 
 bool ShapeBase::onAdd()
 {
@@ -1060,7 +1158,19 @@ void ShapeBase::onRemove()
 
    if ( isClientObject() )   
    {
+<<<<<<< HEAD
       mCubeReflector.unregisterReflector();
+=======
+      mCubeReflector.unregisterReflector();      
+
+      if ( mWeaponCamShake )
+      {
+         if ( mWeaponCamShake->isAdded )
+            gCamFXMgr.removeFX( mWeaponCamShake );
+
+         SAFE_DELETE( mWeaponCamShake );
+      }
+>>>>>>> omni_engine
    }
 }
 
@@ -1191,13 +1301,21 @@ void ShapeBase::onDeleteNotify( SimObject *obj )
    Parent::onDeleteNotify( obj );      
 }
 
+<<<<<<< HEAD
 void ShapeBase::onImpact(SceneObject* obj, const VectorF& vec)
+=======
+void ShapeBase::onImpact(SceneObject* obj, VectorF vec)
+>>>>>>> omni_engine
 {
    if (!isGhost())
       mDataBlock->onImpact_callback( this, obj, vec, vec.len() );
 }
 
+<<<<<<< HEAD
 void ShapeBase::onImpact(const VectorF& vec)
+=======
+void ShapeBase::onImpact(VectorF vec)
+>>>>>>> omni_engine
 {
    if (!isGhost())
       mDataBlock->onImpact_callback( this, NULL, vec, vec.len() );
@@ -1227,7 +1345,13 @@ void ShapeBase::processTick(const Move* move)
    }
 
    // Repair management
+<<<<<<< HEAD
    if (mDataBlock->isInvincible == false)
+=======
+   //Modification by Vince Gee
+   //if (mDataBlock->isInvincible == false)
+   if ((mDataBlock->isInvincible == false) && (mDamageState==Enabled))
+>>>>>>> omni_engine
    {
       F32 store = mDamage;
       mDamage -= mRepairRate;
@@ -1494,8 +1618,20 @@ void ShapeBase::onCameraScopeQuery(NetConnection *cr, CameraScopeQuery * query)
    eyeTransform.getColumn(1, &query->orientation);
 
    // Get the visible distance.
+<<<<<<< HEAD
 	if (getSceneManager() != NULL)
 		query->visibleDistance = getSceneManager()->getVisibleDistance();
+=======
+   if (mVisibleDistance==0)
+		{
+		if (getSceneManager() != NULL)
+			query->visibleDistance = getSceneManager()->getVisibleDistance_Ghost();
+		}
+	else
+		{
+		query->visibleDistance = mVisibleDistance;
+		}
+>>>>>>> omni_engine
 
    Parent::onCameraScopeQuery( cr, query );
 }
@@ -2045,6 +2181,7 @@ void ShapeBase::getCameraParameters(F32 *min,F32* max,Point3F* off,MatrixF* rot)
    rot->identity();
 }
 
+
 //----------------------------------------------------------------------------
 F32 ShapeBase::getDamageFlash() const
 {
@@ -2147,7 +2284,11 @@ void ShapeBase::updateAudioState(Sound& st)
    {
       if ( isGhost() ) 
       {
+<<<<<<< HEAD
          if ( Sim::findObject( SimObjectId((uintptr_t)st.profile), st.profile ) )
+=======
+         if ( Sim::findObject( SimObjectId( st.profile ), st.profile ) )
+>>>>>>> omni_engine
          {
             st.sound = SFX->createSource( st.profile, &getTransform() );
             if ( st.sound )
@@ -2442,9 +2583,35 @@ TSShape const* ShapeBase::getShape()
 
 void ShapeBase::prepRenderImage( SceneRenderState *state )
 {
+<<<<<<< HEAD
    _prepRenderImage( state, true, true );
 }
 
+=======
+//WLE - Vince
+//Lod preloading
+   GameConnection* connection = GameConnection::getConnectionToServer();
+   if (connection && !connection->didFirstRender)
+	   ShapeBase::PreLoadAllLOD(state);
+//End Lod 
+   _prepRenderImage( state, true, true );
+}
+
+//WLE - Vince
+//Lod preloading
+void ShapeBase::PreLoadAllLOD(SceneRenderState *state)
+{
+	for (S32 i = mShapeInstance->getSmallestVisibleDL(); i >= 0; i-- )
+	{
+	mShapeInstance->setCurrentDetail( i );
+	mShapeInstance->animate();
+	prepBatchRender( state, -1 );
+	calcClassRenderData();
+	}
+}
+//End Lod preloading
+
+>>>>>>> omni_engine
 void ShapeBase::_prepRenderImage(   SceneRenderState *state, 
                                     bool renderSelf, 
                                     bool renderMountedImages )
@@ -3218,9 +3385,46 @@ void ShapeBase::unpackUpdate(NetConnection *con, BitStream *stream)
                {
                   if ( imageData->lightType == ShapeBaseImageData::WeaponFireLight )                     
                      image.lightStart = Sim::getCurrentTime();                     
+<<<<<<< HEAD
                }
                
                updateImageState(i,0);
+=======
+                  
+                  // HACK: Only works properly if you are in control
+                  // of the one and only shapeBase object in the scene
+                  // which fires an image that uses camera shake.
+                  if ( imageData->shakeCamera )
+                  {
+                     if ( !mWeaponCamShake )
+                     {
+                        mWeaponCamShake = new CameraShake();
+                        mWeaponCamShake->remoteControlled = true;
+                     }
+
+                     mWeaponCamShake->init();
+                     mWeaponCamShake->setFrequency( imageData->camShakeFreq );
+                     mWeaponCamShake->setAmplitude( imageData->camShakeAmp );  
+                     
+                     if ( !mWeaponCamShake->isAdded )
+                     {
+                        gCamFXMgr.addFX( mWeaponCamShake );
+                        mWeaponCamShake->isAdded = true;
+                     }
+                  }
+               }
+               
+               updateImageState(i,0);
+
+               if ( !image.triggerDown && !image.altTriggerDown )
+               {
+                  if ( mWeaponCamShake && mWeaponCamShake->isAdded )
+                  {
+                     gCamFXMgr.removeFX( mWeaponCamShake );
+                     mWeaponCamShake->isAdded = false;
+                  }
+               }
+>>>>>>> omni_engine
             }
             else
             {               
@@ -4235,7 +4439,11 @@ DefineEngineMethod( ShapeBase, getEyeTransform, TransformF, (),,
    return mat;
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( ShapeBase, getLookAtPoint, const char*, ( F32 distance, S32 typeMask ), ( 2000, 0xFFFFFFFF ),
+=======
+DefineEngineMethod( ShapeBase, getLookAtPoint, const char*, ( F32 distance, U32 typeMask ), ( 2000, 0xFFFFFFFF ),
+>>>>>>> omni_engine
    "@brief Get the world position this object is looking at.\n\n"
 
    "Casts a ray from the eye and returns information about what the ray hits.\n"
@@ -4972,3 +5180,1426 @@ DefineEngineMethod( ShapeBase, getModelFile, const char *, (),,
 	const char *fieldName = StringTable->insert( String("shapeFile") );
    return datablock->getDataField( fieldName, NULL );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_applyDamage(char * x__object, F32 amount)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->applyDamage( amount );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_applyImpulse(char * x__object, char * x__pos, char * x__vec)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+Point3F vec = Point3F();
+sscanf(x__vec,"%f %f %f",&vec.x,&vec.y,&vec.z);
+bool wle_returnObject;
+{
+   object->applyImpulse( pos, vec );
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_applyRepair(char * x__object, F32 amount)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->applyRepair( amount );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_blowUp(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->blowUp();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_canCloak(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_changeMaterial(char * x__object, char * x__mapTo, char * x__oldMat, char * x__newMat)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* mapTo = (const char*)x__mapTo;
+Material* oldMat; Sim::findObject(x__oldMat, oldMat ); 
+Material* newMat; Sim::findObject(x__newMat, newMat ); 
+{
+      if( !newMat )
+   {
+      Con::errorf("ShapeBase::changeMaterial failed: New material does not exist!");
+      return;
+   }
+      ShapeBase *serverObj = object;
+   ShapeBase *clientObj = dynamic_cast< ShapeBase* > ( object->getClientObject() );
+      S32 matIndex = serverObj->getShape()->materialList->getMaterialNameList().find_next(String(mapTo));
+   if (matIndex < 0)
+   {
+      Con::errorf("ShapeBase::changeMaterial failed: Invalid mapTo name '%s'", mapTo);
+      return;
+   }
+      if( oldMat )
+      oldMat->mMapTo = String("unmapped_mat");
+   newMat->mMapTo = mapTo;
+      MATMGR->mapMaterial( mapTo, newMat->getName() );
+            delete serverObj->getShape()->materialList->mMatInstList[matIndex];
+   serverObj->getShape()->materialList->mMatInstList[matIndex] = newMat->createMatInstance();
+   if (clientObj)
+   {
+      delete clientObj->getShape()->materialList->mMatInstList[matIndex];
+      clientObj->getShape()->materialList->mMatInstList[matIndex] = newMat->createMatInstance();
+   }
+      const GFXVertexFormat *flags = getGFXVertexFormat<GFXVertexPNTTB>();
+   FeatureSet features = MATMGR->getDefaultFeatures();
+   serverObj->getShape()->materialList->getMaterialInst(matIndex)->init( features, flags );
+   if (clientObj)
+      clientObj->getShapeInstance()->mMaterialList->getMaterialInst(matIndex)->init( features, flags );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_destroyThread(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxScriptThreads) {
+      if (object->destroyThread(slot))
+         {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_dumpMeshVisibility(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->dumpMeshVisibility();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getAIRepairPoint(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F wle_returnObject;
+{
+   {wle_returnObject =object->getAIRepairPoint();
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getCameraFov(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+   if (object->isServerObject())
+     return (F32)( object->getCameraFov());
+  return (F32)( 0.0);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getControllingClient(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   if (GameConnection* con = object->getControllingClient())
+     return (S32)( con->getId());
+  return (S32)( 0);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getControllingObject(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   if (ShapeBase* con = object->getControllingObject())
+     return (S32)( con->getId());
+  return (S32)( 0);
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getDamageFlash(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getDamageFlash());
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getDamageLevel(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getDamageLevel());
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getDamagePercent(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getDamageValue());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getDamageState(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getDamageStateName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getDefaultCameraFov(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+   if (object->isServerObject())
+     return (F32)( object->getDefaultCameraFov());
+  return (F32)( 0.0);
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getEnergyLevel(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getEnergyLevel());
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getEnergyPercent(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getEnergyValue());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getEyePoint(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F wle_returnObject;
+{
+   MatrixF mat;
+   object->getEyeTransform(&mat);
+   {wle_returnObject =mat.getPosition();
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getEyeTransform(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+TransformF wle_returnObject;
+{
+   MatrixF mat;
+   object->getEyeTransform(&mat);
+   {wle_returnObject =mat;
+dSprintf(retval,1024,"%f %f %f %f %f %f %f ",wle_returnObject.mPosition.x,wle_returnObject.mPosition.y,wle_returnObject.mPosition.z,wle_returnObject.mOrientation.axis.x,wle_returnObject.mOrientation.axis.y,wle_returnObject.mOrientation.axis.z,wle_returnObject.mOrientation.angle);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getEyeVector(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+VectorF wle_returnObject;
+{
+   MatrixF mat;
+   object->getEyeTransform(&mat);
+   {wle_returnObject =mat.getForwardVector();
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getImageAltTrigger(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->getImageAltTriggerState(slot);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getImageAmmo(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->getImageAmmoState(slot);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getImageGenericTrigger(char * x__object, S32 slot, S32 trigger)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages && trigger >= 0 && trigger < ShapeBaseImageData::MaxGenericTriggers)
+      {wle_returnObject =object->getImageGenericTriggerState(slot, trigger);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getImageLoaded(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->getImageLoadedState(slot);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getImageScriptAnimPrefix(char * x__object, S32 slot,  char* retval)
+{
+dSprintf(retval,16384,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->getImageScriptAnimPrefix(slot).getString();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getImageSkinTag(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+     return (S32)( object->getImageSkinTag(slot).getIndex());
+  return (S32)( -1);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getImageState(char * x__object, S32 slot,  char* retval)
+{
+dSprintf(retval,16384,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->getImageState(slot);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   {wle_returnObject ="Error";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getImageTarget(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->getImageTargetState(slot);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getImageTrigger(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->getImageTriggerState(slot);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getLookAtPoint(char * x__object, F32 distance, U32 typeMask,  char* retval)
+{
+dSprintf(retval,16384,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+const char* wle_returnObject;
+{
+   MatrixF mat;
+   object->getEyeTransform( &mat );
+   
+      
+   VectorF eyeVector;
+   mat.getColumn( 1, &eyeVector );
+   
+      
+   VectorF eyePos;
+   mat.getColumn( 3, &eyePos );
+   
+      
+   eyeVector *= distance;
+   
+      
+   VectorF start = eyePos;
+   VectorF end = eyePos + eyeVector;
+   
+   RayInfo ri;
+   if( !gServerContainer.castRay( start, end, typeMask, &ri ) || !ri.object )
+      {wle_returnObject ="";    
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+         
+   enum { BUFFER_SIZE = 256 };
+   char* buffer = Con::getReturnBuffer( BUFFER_SIZE );
+   if( ri.material )
+      dSprintf( buffer, BUFFER_SIZE, "%u %f %f %f %u",
+         ri.object->getId(),
+         ri.point.x,
+         ri.point.y,
+         ri.point.z,
+         ri.material->getMaterial()->getId() );
+   else
+      dSprintf( buffer, BUFFER_SIZE, "%u %f %f %f",
+         ri.object->getId(),
+         ri.point.x,
+         ri.point.y,
+         ri.point.z );
+   {wle_returnObject =buffer;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getMaxDamage(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{    
+  return (F32)( object->getMaxDamage());    
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getModelFile(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+	GameBaseData * datablock = object->getDataBlock();
+	if( !datablock )
+		{wle_returnObject =String::EmptyString;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+	const char *fieldName = StringTable->insert( String("shapeFile") );
+   {wle_returnObject =datablock->getDataField( fieldName, NULL );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getMountedImage(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      if (ShapeBaseImageData* data = object->getMountedImage(slot))
+        return (S32)( data->getId());
+  return (S32)( 0);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getMountSlot(char * x__object, char * x__image)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+ShapeBaseImageData* image; Sim::findObject(x__image, image ); 
+{
+  return (S32)( image ? object->getMountSlot(image) : -1);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getMuzzlePoint(char * x__object, S32 slot,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F wle_returnObject;
+{
+   Point3F pos(0, 0, 0);
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      object->getMuzzlePoint(slot, &pos);
+   {wle_returnObject =pos;
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getMuzzleVector(char * x__object, S32 slot,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+VectorF wle_returnObject;
+{
+   VectorF vec(0, 1, 0);
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      object->getMuzzleVector(slot, &vec);
+   {wle_returnObject =vec;
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getPendingImage(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      if (ShapeBaseImageData* data = object->getPendingImage(slot))
+        return (S32)( data->getId());
+  return (S32)( 0);
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getRechargeRate(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getRechargeRate());
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getRepairRate(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getRepairRate());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getShapeName(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getShapeName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getSkinName(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getSkinName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getSlotTransform(char * x__object, S32 slot,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+TransformF wle_returnObject;
+{
+   MatrixF xf(true);
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      object->getMountTransform( slot, MatrixF::Identity, &xf );
+   {wle_returnObject =xf;
+dSprintf(retval,1024,"%f %f %f %f %f %f %f ",wle_returnObject.mPosition.x,wle_returnObject.mPosition.y,wle_returnObject.mPosition.z,wle_returnObject.mOrientation.axis.x,wle_returnObject.mOrientation.axis.y,wle_returnObject.mOrientation.axis.z,wle_returnObject.mOrientation.angle);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_getTargetCount(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	ShapeBase *obj = dynamic_cast< ShapeBase* > ( object );
+	if(obj)
+	{
+				if ((ShapeBase*)obj->getClientObject())
+			obj = (ShapeBase*)obj->getClientObject();
+		return obj->getShapeInstance()->getTargetCount();
+	}
+	return -1;
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getTargetName(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	ShapeBase *obj = dynamic_cast< ShapeBase* > ( object );
+	if(obj)
+	{
+				if ((ShapeBase*)obj->getClientObject())
+			obj = (ShapeBase*)obj->getClientObject();
+		{wle_returnObject =obj->getShapeInstance()->getTargetName(index);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+	}
+	{wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_getVelocity(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+VectorF wle_returnObject;
+{
+   {wle_returnObject =object->getVelocity();
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnShapeBase_getWhiteOut(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getWhiteOut());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_hasImageState(char * x__object, S32 slot, char * x__state)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+const char* state = (const char*)x__state;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->hasImageState(slot, state);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_isCloaked(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->getCloakedState();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_isDestroyed(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isDestroyed();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_isDisabled(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->getDamageState() != ShapeBase::Enabled;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_isEnabled(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->getDamageState() == ShapeBase::Enabled;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_isHidden(char * x__object)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isHidden();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_isImageFiring(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->isImageFiring(slot);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_isImageMounted(char * x__object, char * x__image)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+ShapeBaseImageData* image; Sim::findObject(x__image, image ); 
+bool wle_returnObject;
+{
+   {wle_returnObject =(image && object->isImageMounted(image));
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_mountImage(char * x__object, char * x__image, S32 slot, bool loaded, char * x__skinTag)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+ShapeBaseImageData* image; Sim::findObject(x__image, image ); 
+
+const char* skinTag = (const char*)x__skinTag;
+bool wle_returnObject;
+{
+   if (image && slot >= 0 && slot < ShapeBase::MaxMountedImages) {
+      NetStringHandle team;
+      if (skinTag[0] == StringTagPrefixByte)
+         team = NetStringHandle(U32(dAtoi(skinTag+1)));
+      {wle_returnObject =object->mountImage( image, slot, loaded, team );
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_pauseThread(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxScriptThreads) {
+      if (object->pauseThread(slot))
+         {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_playAudio(char * x__object, S32 slot, char * x__track)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+SFXTrack* track; Sim::findObject(x__track, track ); 
+bool wle_returnObject;
+{
+   if (track && slot >= 0 && slot < ShapeBase::MaxSoundThreads) {
+      object->playAudio(slot,track);
+      {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_playThread(char * x__object, S32 slot, char * x__name)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+const char* name = (const char*)x__name;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxScriptThreads) {
+      if (!dStrEqual(name, "")) {
+         if (object->getShape()) {
+            S32 seq = object->getShape()->findSequence(name);
+            if (seq != -1 && object->setThreadSequence(slot,seq))
+               {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+         }
+      }
+      else
+         if (object->playThread(slot))
+            {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setAllMeshesHidden(char * x__object, bool hide)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setAllMeshesHidden( hide );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setCameraFov(char * x__object, F32 fov)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if (object->isServerObject())
+      object->setCameraFov( fov );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setCloaked(char * x__object, bool cloak)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if (object->isServerObject())
+      object->setCloakedState( cloak );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setDamageFlash(char * x__object, F32 level)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if (object->isServerObject())
+      object->setDamageFlash( level );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setDamageLevel(char * x__object, F32 level)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setDamageLevel( level );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setDamageState(char * x__object, char * x__state)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* state = (const char*)x__state;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->setDamageState( state );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setDamageVector(char * x__object, char * x__vec)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F vec = Point3F();
+sscanf(x__vec,"%f %f %f",&vec.x,&vec.y,&vec.z);
+{
+   vec.normalize();
+   object->setDamageDir( vec );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setEnergyLevel(char * x__object, F32 level)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setEnergyLevel( level );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setHidden(char * x__object, bool show)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setHidden( show );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setImageAltTrigger(char * x__object, S32 slot, bool state)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages) {
+      object->setImageAltTriggerState(slot,state);
+      {wle_returnObject =object->getImageAltTriggerState(slot);
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setImageAmmo(char * x__object, S32 slot, bool state)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages) {
+      object->setImageAmmoState(slot,state);
+      {wle_returnObject =state;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setImageGenericTrigger(char * x__object, S32 slot, S32 trigger, bool state)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages && trigger >= 0 && trigger < ShapeBaseImageData::MaxGenericTriggers) {
+      object->setImageGenericTriggerState(slot,trigger,state);
+     return (S32)( object->getImageGenericTriggerState(slot,trigger));
+   }
+  return (S32)( -1);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setImageLoaded(char * x__object, S32 slot, bool state)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages) {
+      object->setImageLoadedState(slot, state);
+      {wle_returnObject =state;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setImageScriptAnimPrefix(char * x__object, S32 slot, char * x__prefix)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+const char* prefix = (const char*)x__prefix;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages) {
+      NetStringHandle prefixHandle;
+      if (prefix[0] == StringTagPrefixByte)
+         prefixHandle = NetStringHandle(U32(dAtoi(prefix+1)));
+      object->setImageScriptAnimPrefix(slot, prefixHandle);
+   }
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setImageTarget(char * x__object, S32 slot, bool state)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages) {
+      object->setImageTargetState(slot,state);
+      {wle_returnObject =state;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setImageTrigger(char * x__object, S32 slot, bool state)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages) {
+      object->setImageTriggerState(slot,state);
+      {wle_returnObject =object->getImageTriggerState(slot);
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setMeshHidden(char * x__object, char * x__name, bool hide)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+
+{
+   object->setMeshHidden( name, hide );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setRechargeRate(char * x__object, F32 rate)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setRechargeRate( rate );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setRepairRate(char * x__object, F32 rate)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if(rate < 0)
+      rate = 0;
+   object->setRepairRate( rate );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setShapeName(char * x__object, char * x__name)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+{
+   object->setShapeName( name );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setSkinName(char * x__object, char * x__name)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+{
+   object->setSkinName( name );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setThreadDir(char * x__object, S32 slot, bool fwd)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxScriptThreads) {
+      if (object->setThreadDir(slot,fwd))
+         {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setThreadPosition(char * x__object, S32 slot, F32 pos)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxScriptThreads) {
+      if (object->setThreadPosition(slot,pos))
+         {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setThreadTimeScale(char * x__object, S32 slot, F32 scale)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxScriptThreads) {
+      if (object->setThreadTimeScale(slot,scale))
+         {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_setVelocity(char * x__object, char * x__vel)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+Point3F vel = Point3F();
+sscanf(x__vel,"%f %f %f",&vel.x,&vel.y,&vel.z);
+bool wle_returnObject;
+{
+   object->setVelocity( vel );
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_setWhiteOut(char * x__object, F32 level)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if (object->isServerObject())
+      object->setWhiteOut( level );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBase_startFade(char * x__object, S32 time, S32 delay, bool fadeOut)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->startFade( (F32)time / (F32)1000.0, delay / 1000.0, fadeOut );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_stopAudio(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxSoundThreads) {
+      object->stopAudio(slot);
+      {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_stopThread(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxScriptThreads) {
+      if (object->stopThread(slot))
+         {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBase_unmountImage(char * x__object, S32 slot)
+{
+ShapeBase* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (slot >= 0 && slot < ShapeBase::MaxMountedImages)
+      {wle_returnObject =object->unmountImage(slot);
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnShapeBaseData_checkDeployPos(char * x__object, char * x__txfm)
+{
+ShapeBaseData* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+TransformF txfm = TransformF();
+sscanf( x__txfm,"%f %f %f %f %f %f %f", &txfm.mPosition.x, &txfm.mPosition.y, &txfm.mPosition.z, &txfm.mOrientation.axis.x, &txfm.mOrientation.axis.y, &txfm.mOrientation.axis.z, &txfm.mOrientation.angle);
+bool wle_returnObject;
+{
+   if (bool(object->mShape) == false)
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   MatrixF mat = txfm.getMatrix();
+   Box3F objBox = object->mShape->bounds;
+   Point3F boxCenter = (objBox.minExtents + objBox.maxExtents) * 0.5f;
+   objBox.minExtents = boxCenter + (objBox.minExtents - boxCenter) * 0.9f;
+   objBox.maxExtents = boxCenter + (objBox.maxExtents - boxCenter) * 0.9f;
+   Box3F wBox = objBox;
+   mat.mul(wBox);
+   EarlyOutPolyList polyList;
+   polyList.mNormal.set(0,0,0);
+   polyList.mPlaneList.clear();
+   polyList.mPlaneList.setSize(6);
+   polyList.mPlaneList[0].set(objBox.minExtents,VectorF(-1,0,0));
+   polyList.mPlaneList[1].set(objBox.maxExtents,VectorF(0,1,0));
+   polyList.mPlaneList[2].set(objBox.maxExtents,VectorF(1,0,0));
+   polyList.mPlaneList[3].set(objBox.minExtents,VectorF(0,-1,0));
+   polyList.mPlaneList[4].set(objBox.minExtents,VectorF(0,0,-1));
+   polyList.mPlaneList[5].set(objBox.maxExtents,VectorF(0,0,1));
+   for (U32 i = 0; i < 6; i++)
+   {
+      PlaneF temp;
+      mTransformPlane(mat, Point3F(1, 1, 1), polyList.mPlaneList[i], &temp);
+      polyList.mPlaneList[i] = temp;
+   }
+   if (gServerContainer.buildPolyList(PLC_Collision, wBox, StaticShapeObjectType, &polyList))
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnShapeBaseData_getDeployTransform(char * x__object, char * x__pos, char * x__normal,  char* retval)
+{
+dSprintf(retval,1024,"");
+ShapeBaseData* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+Point3F normal = Point3F();
+sscanf(x__normal,"%f %f %f",&normal.x,&normal.y,&normal.z);
+TransformF wle_returnObject;
+{
+   normal.normalize();
+   VectorF xAxis;
+   if( mFabs(normal.z) > mFabs(normal.x) && mFabs(normal.z) > mFabs(normal.y))
+      mCross( VectorF( 0, 1, 0 ), normal, &xAxis );
+   else
+      mCross( VectorF( 0, 0, 1 ), normal, &xAxis );
+   VectorF yAxis;
+   mCross( normal, xAxis, &yAxis );
+   MatrixF testMat(true);
+   testMat.setColumn( 0, xAxis );
+   testMat.setColumn( 1, yAxis );
+   testMat.setColumn( 2, normal );
+   testMat.setPosition( pos );
+   {wle_returnObject =testMat;
+dSprintf(retval,1024,"%f %f %f %f %f %f %f ",wle_returnObject.mPosition.x,wle_returnObject.mPosition.y,wle_returnObject.mPosition.z,wle_returnObject.mOrientation.axis.x,wle_returnObject.mOrientation.axis.y,wle_returnObject.mOrientation.axis.z,wle_returnObject.mOrientation.angle);
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -53,11 +53,28 @@ class GuiHealthBarHud : public GuiControl
 
    F32      mValue;
 
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   /// Copy information
+   ColorF mDamageFillColorCopy;
+   ColorF mFrameColorCopy;
+   ColorF mHealthBarFillColorCopy;
+
+   void applyProfileSettings();
+
+   void copyProfileSettings();
+
+   void resetProfileSettings();
+
+   // @Copyright end
+
 public:
    GuiHealthBarHud();
 
    void onRender( Point2I, const RectI &);
    static void initPersistFields();
+   void onStaticModified( const char *slotName, const char *newValue );    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    DECLARE_CONOBJECT( GuiHealthBarHud );
    DECLARE_CATEGORY( "Gui Game" );
    DECLARE_DESCRIPTION( "A basic health bar. Shows the damage value of the current\n"
@@ -127,8 +144,90 @@ void GuiHealthBarHud::initPersistFields()
    endGroup("Misc");
 
    Parent::initPersistFields();
+<<<<<<< HEAD
 }
 
+=======
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor" );
+
+   removeField( "controlFillColor" );
+
+   removeField( "backgroundColor" );
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   removeField( "contextFillColor" );
+
+   // @Copyright end
+}
+
+//-----------------------------------------------------------------------------
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiHealthBarHud::copyProfileSettings()
+{
+	if(!mProfileSettingsCopied)
+	{
+		mDamageFillColorCopy = mDamageFillColor;
+		mFrameColorCopy = mFrameColor;
+		mHealthBarFillColorCopy = mFillColor;
+		
+		Parent::copyProfileSettings();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiHealthBarHud::resetProfileSettings()
+{
+	mDamageFillColor = mDamageFillColorCopy;
+	mFrameColor = mFrameColorCopy;
+	mFillColor = mHealthBarFillColorCopy;
+	
+	Parent::resetProfileSettings();
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiHealthBarHud::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   //Set the alpha value
+   if(mDamageFillColor)
+	   mDamageFillColor.alpha = mDamageFillColorCopy.alpha *mRenderAlpha;
+   if(mFrameColor)
+	   mFrameColor.alpha = mFrameColorCopy.alpha * mRenderAlpha;
+   if(mFillColor)
+	   mFillColor.alpha = mHealthBarFillColorCopy.alpha * mRenderAlpha;
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiHealthBarHud::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "damageFillColor" ) || !dStricmp( slotName, "frameColor" ) || !dStricmp( slotName, "fillColor" ))
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+	
+		if( !dStricmp( slotName, "damageFillColor" ) )
+			mDamageFillColorCopy = color;
+		else if( !dStricmp( slotName, "frameColor" ) )
+			mFrameColorCopy = color;
+		else
+			mHealthBarFillColorCopy = color;
+	}
+}
+// @Copyright end
+>>>>>>> omni_engine
 
 //-----------------------------------------------------------------------------
 /**

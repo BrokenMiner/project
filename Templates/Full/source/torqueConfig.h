@@ -55,7 +55,7 @@
 /// The improved SimDictionary uses C++11 and is designed for games where
 /// there are over 10000 simobjects active normally. To enable the new
 /// SimDictionary just uncomment the line below.
-//#define USE_NEW_SIMDICTIONARY
+#define USE_NEW_SIMDICTIONARY
 
 /// Define me if you want to disable the virtual mount system.
 //#define TORQUE_DISABLE_VIRTUAL_MOUNT_SYSTEM

@@ -106,6 +106,20 @@ class SceneObject : public NetObject, private SceneContainer::Link, public Proce
       friend class SceneCullingState; // _getZoneRefHead
       friend class SceneObjectLink; // mSceneObjectLinks
 
+	  //WLE - Vince - Added a callback so scripts can be notified on each tick of a object.
+      DECLARE_CALLBACK( void, onTickClientBefore, ( ) );
+	  DECLARE_CALLBACK( void, onTickClientAfter, ( ) );
+
+	  DECLARE_CALLBACK( void, onTickServerBefore, ( ) );
+	  DECLARE_CALLBACK( void, onTickServerAfter, ( ) );
+
+	  DECLARE_CALLBACK( void, onTickCounter, (const char* counterName ) );
+      
+	  virtual void processTickNotifyBefore();
+	  virtual void processTickNotifyAfter();
+	  virtual void counterNotify(const char* countername);
+      //End
+
       enum 
       {
          /// Maximum number of zones that an object can concurrently be assigned to.
@@ -748,6 +762,9 @@ class SceneObject : public NetObject, private SceneContainer::Link, public Proce
 
       DECLARE_CONOBJECT( SceneObject );
 
+      DECLARE_CALLBACK( void, onEditorRender, (const char * editor, const char * selected, const char * expanded) );
+
+
    private:
 
       SceneObject( const SceneObject& ); ///< @deprecated disallowed
@@ -769,6 +786,7 @@ class SceneObject : public NetObject, private SceneContainer::Link, public Proce
       static bool _setFieldRotation( void *object, const char *index, const char *data );
       static bool _setFieldScale( void *object, const char *index, const char *data );
       static bool _setMountPID( void* object, const char* index, const char* data );
+<<<<<<< HEAD
       static bool _setAccuEnabled( void *object, const char *index, const char *data );
 
       /// @}
@@ -777,6 +795,30 @@ class SceneObject : public NetObject, private SceneContainer::Link, public Proce
    // Note: This was placed in SceneObject to both ShapeBase and TSStatic could support it.
    public:
       GFXTextureObject* mAccuTex;
+=======
+
+      /// @}
+//Walkable Shapes
+   /// mAttachedToObj is how attachable classes identify themselves to objects that are
+   /// attached. Player classes need this notification so they won't warp their position
+   /// while attached. This value does not need networked. The attachable class is
+   /// responsible for setting it on the server and clients.
+   protected:
+      SceneObject *mAttachedToObj;
+   public:
+      SceneObject *getAttachedToObj() { return mAttachedToObj; }
+      void setAttachedToObj(SceneObject *obj) { mAttachedToObj = obj; }
+
+      // Fills the position and rotation for an attached object relative to the object that
+      // it's attached to.
+      virtual void getRelativeOrientation(SceneObject *attachedObj, Point3F &relPos, Point3F &relRot);
+
+      // Flags that an attached object needs a relative position/rotation update. This reduces 
+      // backstepping on a local control object by only updating when it is out of synch with
+      // the server.
+      virtual void flagAttachedUpdate(SceneObject *attachedObj, bool doUpdate) {}
+//Walkable Shapes
+>>>>>>> omni_engine
 };
 
 #endif  // _SCENEOBJECT_H_

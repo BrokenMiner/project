@@ -25,9 +25,17 @@
 
 #include "console/consoleTypes.h"
 #include "console/console.h"
+<<<<<<< HEAD
 #include "gui/containers/guiScrollCtrl.h"
 #include "gui/core/guiDefaultControlRender.h"
 #include "gfx/gfxDrawUtil.h"
+=======
+#include "core/strings/stringUnit.h"
+#include "gui/containers/guiScrollCtrl.h"
+#include "gui/core/guiDefaultControlRender.h"
+#include "gfx/gfxDrawUtil.h"
+#include "gui/controls/guiTableControl.h"
+>>>>>>> omni_engine
 #include "console/engineAPI.h"
 
 IMPLEMENT_CONOBJECT(GuiTextListCtrl);
@@ -51,6 +59,7 @@ ConsoleDocClass( GuiTextListCtrl,
    "@ingroup GuiControls\n"
 );
 
+<<<<<<< HEAD
 
 IMPLEMENT_CALLBACK( GuiTextListCtrl, onSelect, void, (S32 cellid, const char* text),( cellid , text ),
    "@brief Called whenever an item in the list is selected.\n\n"
@@ -67,6 +76,9 @@ IMPLEMENT_CALLBACK( GuiTextListCtrl, onSelect, void, (S32 cellid, const char* te
 );
 
 IMPLEMENT_CALLBACK( GuiTextListCtrl, onDeleteKey, void, ( S32 id ),( id ),
+=======
+IMPLEMENT_CALLBACK( GuiTextListCtrl, onDeleteKey, void, ( const char* id ),( id ),
+>>>>>>> omni_engine
    "@brief Called when the delete key has been pressed.\n\n"
    "@param id Id of the selected item in the list\n"
    "@tsexample\n"
@@ -172,7 +184,13 @@ bool GuiTextListCtrl::cellSelected(Point2I cell)
 
 void GuiTextListCtrl::onCellSelected(Point2I cell)
 {
+<<<<<<< HEAD
    onSelect_callback(mList[cell.y].id, mList[cell.y].text);
+=======
+	if( !dStricmp(getParent()->getClassName(), "GuiTableControl" ) )
+		((GuiTableControl*)getParent())->onSelect_callback(Con::getIntArg(mList[cell.y].id), mList[cell.y].text);
+   onSelect_callback(Con::getIntArg(mList[cell.y].id), mList[cell.y].text);
+>>>>>>> omni_engine
    execConsoleCallback();
 }
 
@@ -214,7 +232,11 @@ void GuiTextListCtrl::onRenderCell(Point2I offset, Point2I cell, bool selected, 
          {
             saveClipRect = GFX->getClipRect();
 
+<<<<<<< HEAD
             RectI clipRect(pos, Point2I(mColumnOffsets[index+1] - mColumnOffsets[index] - 4, mCellSize.y));
+=======
+            RectI clipRect(pos, Point2I(mColumnOffsets[index+1] - mColumnOffsets[index] - 10, mCellSize.y));
+>>>>>>> omni_engine
             if(clipRect.intersect(saveClipRect))
             {
                clipped = true;
@@ -331,6 +353,16 @@ S32 GuiTextListCtrl::findEntryByText(const char *text)
       if(!dStricmp(mList[i].text, text))
          return i;
    return -1;
+}
+
+S32 GuiTextListCtrl::findEntryByColumnText( S32 columnId, const char *text)
+{
+	for(U32 i = 0; i < mList.size(); i++ )
+	{
+		if( !dStricmp( text, StringUnit::getUnit( mList[i].text, columnId, "\t\n" )))
+			return i;
+	}
+	return -1;
 }
 
 bool GuiTextListCtrl::isEntryActive(U32 id)
@@ -497,7 +529,11 @@ bool GuiTextListCtrl::onKeyDown( const GuiEvent &event )
       break;
    case KEY_DELETE:
       if ( mSelectedCell.y >= 0 && mSelectedCell.y < mList.size() )
+<<<<<<< HEAD
       onDeleteKey_callback( mList[mSelectedCell.y].id );
+=======
+      onDeleteKey_callback(Con::getIntArg( mList[mSelectedCell.y].id ) );
+>>>>>>> omni_engine
       break;
    default:
    return( Parent::onKeyDown( event ) );
@@ -813,6 +849,11 @@ DefineEngineMethod( GuiTextListCtrl, findTextIndex, S32, (const char* needle),,
    return( object->findEntryByText(needle) );
 }
 
+DefineEngineMethod( GuiTextListCtrl, findColumnTextIndex, S32, (S32 columnId, const char* columnText),,"")
+{
+	return object->findEntryByColumnText( columnId, columnText );
+}
+
 DefineEngineMethod( GuiTextListCtrl, setRowActive, void, (S32 rowNum, bool active),,
    "@brief Mark a specified row as active/not.\n\n"
    "@param rowNum Row number to change the active state.\n"
@@ -844,3 +885,317 @@ DefineEngineMethod( GuiTextListCtrl, isRowActive, bool, (S32 rowNum),,
 {
    return( object->isEntryActive( U32( rowNum ) ) );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_addRow(char * x__object, S32 id, char * x__text, S32 index)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+
+const char* text = (const char*)x__text;
+
+{
+   S32 ret = object->mList.size();
+   if(index == -1)
+      object->addEntry(id, text);
+   else
+      object->insertEntry(id, text, index);
+  return (S32)( ret);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_clear(char * x__object)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->clear();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_clearSelection(char * x__object)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setSelectedCell(Point2I(-1, -1));
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_findColumnTextIndex(char * x__object, S32 columnId, char * x__columnText)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+
+const char* columnText = (const char*)x__columnText;
+{
+	return object->findEntryByColumnText( columnId, columnText );
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_findTextIndex(char * x__object, char * x__needle)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+const char* needle = (const char*)x__needle;
+{
+  return (S32)(( object->findEntryByText(needle) ));
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_getRowId(char * x__object, S32 index)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   if(index >= object->getNumEntries())
+     return (S32)( -1);
+  return (S32)( object->mList[index].id);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_getRowNumById(char * x__object, S32 id)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   S32 index = object->findEntryById(id);
+   if(index < 0)
+     return (S32)( -1);
+  return (S32)( index);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_getRowText(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   if(index < 0 || index >= object->mList.size())
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   {wle_returnObject =object->mList[index].text;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_getRowTextById(char * x__object, S32 id,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   S32 index = object->findEntryById(id);
+   if(index < 0)
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   {wle_returnObject =object->mList[index].text;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_getSelectedId(char * x__object)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getSelectedId());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_getSelectedRow(char * x__object)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getSelectedRow());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_isRowActive(char * x__object, S32 rowNum)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =( object->isEntryActive( U32( rowNum ) ) );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_removeRow(char * x__object, S32 index)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->removeEntryByIndex(index);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_removeRowById(char * x__object, S32 id)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->removeEntry(id);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextListCtrl_rowCount(char * x__object)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getNumEntries());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_scrollVisible(char * x__object, S32 rowNum)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->scrollCellVisible(Point2I(0, rowNum));
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_setRowActive(char * x__object, S32 rowNum, bool active)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setEntryActive( U32( rowNum ), active );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_setRowById(char * x__object, S32 id, char * x__text)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+const char* text = (const char*)x__text;
+{
+   object->setEntry(id, text);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_setSelectedById(char * x__object, S32 id)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   S32 index = object->findEntryById(id);
+   if(index < 0)
+      return ;
+   object->setSelectedCell(Point2I(0, index));
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_setSelectedRow(char * x__object, S32 rowNum)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setSelectedCell( Point2I( 0, rowNum ) );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_sort(char * x__object, S32 columnId, bool increasing)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+     object->sort( columnId, increasing );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextListCtrl_sortNumerical(char * x__object, S32 columnID, bool increasing)
+{
+GuiTextListCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+     object->sortNumerical( columnID, increasing );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

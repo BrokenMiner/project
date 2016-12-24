@@ -45,9 +45,15 @@
 #include "materials/materialManager.h"
 #endif
 
+<<<<<<< HEAD
 // Uncomment to optimize function calls at the expense of potential invalid package lookups
 //#define COMPILER_OPTIMIZE_FUNCTION_CALLS
 
+=======
+#include "OMNI/Omni.h"
+// Uncomment to optimize function calls at the expense of potential invalid package lookups
+//#define COMPILER_OPTIMIZE_FUNCTION_CALLS
+>>>>>>> omni_engine
 using namespace Compiler;
 
 enum EvalConstants {
@@ -87,7 +93,11 @@ struct IterStackRecord
    struct StringPos
    {
       /// The raw string data on the string stack.
+<<<<<<< HEAD
       StringStackPtr mString;
+=======
+      const char* mString;
+>>>>>>> omni_engine
       
       /// Current parsing position.
       U32 mIndex;
@@ -105,11 +115,15 @@ IterStackRecord iterStack[ MaxStackSize ];
 F64 floatStack[MaxStackSize];
 S64 intStack[MaxStackSize];
 
+<<<<<<< HEAD
 
 
 
 StringStack STR;
 ConsoleValueStack CSTK;
+=======
+StringStack STR;
+>>>>>>> omni_engine
 
 U32 _FLT = 0;     ///< Stack pointer for floatStack.
 U32 _UINT = 0;    ///< Stack pointer for intStack.
@@ -208,7 +222,17 @@ namespace Con
       dSprintf(ret, 32, "%d", arg);
       return ret;
    }
+<<<<<<< HEAD
 
+=======
+   char *getuIntArg(U32 arg)
+   {
+      char *ret = STR.getArgBuffer(32);
+      dSprintf(ret, 32, "%u", arg);
+      return ret;
+   }
+   
+>>>>>>> omni_engine
    char *getStringArg( const char *arg )
    {
       U32 len = dStrlen( arg ) + 1;
@@ -433,6 +457,7 @@ static void setFieldComponent( SimObject* object, StringTableEntry field, const 
    }
 }
 
+<<<<<<< HEAD
 ConsoleValueRef CodeBlock::exec(U32 ip, const char *functionName, Namespace *thisNamespace, U32 argc, ConsoleValueRef *argv, bool noCalls, StringTableEntry packageName, S32 setFrame)
 {
 
@@ -445,6 +470,19 @@ ConsoleValueRef CodeBlock::exec(U32 ip, const char *functionName, Namespace *thi
 
    static char traceBuffer[1024];
    S32 i;
+=======
+static char buffer[8000] ;
+
+
+const char *CodeBlock::exec(U32 ip, const char *functionName, Namespace *thisNamespace, U32 argc, const char **argv, bool noCalls, StringTableEntry packageName, S32 setFrame)
+{
+#ifdef TORQUE_DEBUG
+   U32 stackStart = STR.mStartStackSize;
+#endif
+
+   static char traceBuffer[1024];
+   U32 i;
+>>>>>>> omni_engine
    
    U32 iterDepth = 0;
 
@@ -452,7 +490,11 @@ ConsoleValueRef CodeBlock::exec(U32 ip, const char *functionName, Namespace *thi
    F64 *curFloatTable;
    char *curStringTable;
    S32 curStringTableLen = 0; //clint to ensure we dont overwrite it
+<<<<<<< HEAD
    STR.clearFunctionOffset(); // ensures arg buffer offset is back to 0
+=======
+   STR.clearFunctionOffset();
+>>>>>>> omni_engine
    StringTableEntry thisFunctionName = NULL;
    bool popFrame = false;
    if(argv)
@@ -460,7 +502,11 @@ ConsoleValueRef CodeBlock::exec(U32 ip, const char *functionName, Namespace *thi
       // assume this points into a function decl:
       U32 fnArgc = code[ip + 2 + 6];
       thisFunctionName = CodeToSTE(code, ip);
+<<<<<<< HEAD
       S32 wantedArgc = getMin(argc-1, fnArgc); // argv[0] is func name
+=======
+      argc = getMin(argc-1, fnArgc); // argv[0] is func name
+>>>>>>> omni_engine
       if(gEvalState.traceOn)
       {
          traceBuffer[0] = 0;
@@ -481,10 +527,17 @@ ConsoleValueRef CodeBlock::exec(U32 ip, const char *functionName, Namespace *thi
             dSprintf(traceBuffer + dStrlen(traceBuffer), sizeof(traceBuffer) - dStrlen(traceBuffer),
                "%s(", thisFunctionName);
          }
+<<<<<<< HEAD
          for(i = 0; i < wantedArgc; i++)
          {
             dStrcat(traceBuffer, argv[i+1]);
             if(i != wantedArgc - 1)
+=======
+         for(i = 0; i < argc; i++)
+         {
+            dStrcat(traceBuffer, argv[i+1]);
+            if(i != argc - 1)
+>>>>>>> omni_engine
                dStrcat(traceBuffer, ", ");
          }
          dStrcat(traceBuffer, ")");
@@ -492,6 +545,7 @@ ConsoleValueRef CodeBlock::exec(U32 ip, const char *functionName, Namespace *thi
       }
       gEvalState.pushFrame(thisFunctionName, thisNamespace);
       popFrame = true;
+<<<<<<< HEAD
 
       for(i = 0; i < wantedArgc; i++)
       {
@@ -519,6 +573,14 @@ ConsoleValueRef CodeBlock::exec(U32 ip, const char *functionName, Namespace *thi
          }
       }
 
+=======
+      for(i = 0; i < argc; i++)
+      {
+         StringTableEntry var = CodeToSTE(code, ip + (2 + 6 + 1) + (i * 2));
+         gEvalState.setCurVarNameCreate(var);
+         gEvalState.setStringVariable(argv[i+1]);
+      }
+>>>>>>> omni_engine
       ip = ip + (fnArgc * 2) + (2 + 6 + 1);
       curFloatTable = functionFloats;
       curStringTable = functionStrings;
@@ -587,7 +649,11 @@ ConsoleValueRef CodeBlock::exec(U32 ip, const char *functionName, Namespace *thi
    char nsDocBlockClass[nsDocLength];
 
    U32 callArgc;
+<<<<<<< HEAD
    ConsoleValueRef *callArgv;
+=======
+   const char **callArgv;
+>>>>>>> omni_engine
 
    static char curFieldArray[256];
    static char prevFieldArray[256];
@@ -676,8 +742,13 @@ breakContinue:
             objectCreationStack[ objectCreationStackIndex++ ].failJump = failJump;
 
             // Get the constructor information off the stack.
+<<<<<<< HEAD
             CSTK.getArgcArgv(NULL, &callArgc, &callArgv);
             const char *objectName = callArgv[ 2 ];
+=======
+            STR.getArgcArgv(NULL, &callArgc, &callArgv);
+            const char* objectName = callArgv[ 2 ];
+>>>>>>> omni_engine
 
             // Con::printf("Creating object...");
 
@@ -721,12 +792,17 @@ breakContinue:
                   break;
                }
 
+<<<<<<< HEAD
                SimObject *obj = Sim::findObject( (const char*)objectName );
+=======
+               SimObject *obj = Sim::findObject( objectName );
+>>>>>>> omni_engine
                if (obj /*&& !obj->isLocalName()*/)
                {
                   if ( isSingleton )
                   {
                      // Make sure we're not trying to change types
+<<<<<<< HEAD
                      if ( dStricmp( obj->getClassName(), (const char*)callArgv[1] ) != 0 )
                      {
                         Con::errorf(ConsoleLogEntry::General, "%s: Cannot re-declare object [%s] with a different class [%s] - was [%s].",
@@ -734,6 +810,14 @@ breakContinue:
                         ip = failJump;
                         STR.popFrame();
                         CSTK.popFrame();
+=======
+                     if ( dStricmp( obj->getClassName(), callArgv[1] ) != 0 )
+                     {
+                        Con::errorf(ConsoleLogEntry::General, "%s: Cannot re-declare object [%s] with a different class [%s] - was [%s].",
+                           getFileLine(ip), objectName, callArgv[1], obj->getClassName());
+                        ip = failJump;
+                        STR.popFrame();
+>>>>>>> omni_engine
                         break;
                      }
 
@@ -751,6 +835,7 @@ breakContinue:
                         // string stack and may get stomped if deleteObject triggers
                         // script execution.
                         
+<<<<<<< HEAD
                         ConsoleValueRef savedArgv[ StringStack::MaxArgs ];
                         for (int i=0; i<callArgc; i++) {
                            savedArgv[i] = callArgv[i];
@@ -774,6 +859,15 @@ breakContinue:
                         for (int i=0; i<callArgc; i++) {
                            callArgv[i] = savedArgv[i];
                         }
+=======
+                        const char* savedArgv[ StringStack::MaxArgs ];
+                        dMemcpy( savedArgv, callArgv, sizeof( savedArgv[ 0 ] ) * callArgc );
+                        
+                        obj->deleteObject();
+                        obj = NULL;
+
+                        dMemcpy( callArgv, savedArgv, sizeof( callArgv[ 0 ] ) * callArgc );
+>>>>>>> omni_engine
                      }
                      else if( dStricmp( redefineBehavior, "renameNew" ) == 0 )
                      {
@@ -827,12 +921,20 @@ breakContinue:
             if(!currentNewObject)
             {
                // Well, looks like we have to create a new object.
+<<<<<<< HEAD
                ConsoleObject *object = ConsoleObject::create((const char*)callArgv[1]);
+=======
+               ConsoleObject *object = ConsoleObject::create(callArgv[1]);
+>>>>>>> omni_engine
 
                // Deal with failure!
                if(!object)
                {
+<<<<<<< HEAD
                   Con::errorf(ConsoleLogEntry::General, "%s: Unable to instantiate non-conobject class %s.", getFileLine(ip), (const char*)callArgv[1]);
+=======
+                  Con::errorf(ConsoleLogEntry::General, "%s: Unable to instantiate non-conobject class %s.", getFileLine(ip), callArgv[1]);
+>>>>>>> omni_engine
                   ip = failJump;
                   break;
                }
@@ -848,7 +950,11 @@ breakContinue:
                   else
                   {
                      // They tried to make a non-datablock with a datablock keyword!
+<<<<<<< HEAD
                      Con::errorf(ConsoleLogEntry::General, "%s: Unable to instantiate non-datablock class %s.", getFileLine(ip), (const char*)callArgv[1]);
+=======
+                     Con::errorf(ConsoleLogEntry::General, "%s: Unable to instantiate non-datablock class %s.", getFileLine(ip), callArgv[1]);
+>>>>>>> omni_engine
                      // Clean up...
                      delete object;
                      ip = failJump;
@@ -862,7 +968,11 @@ breakContinue:
                // Deal with the case of a non-SimObject.
                if(!currentNewObject)
                {
+<<<<<<< HEAD
                   Con::errorf(ConsoleLogEntry::General, "%s: Unable to instantiate non-SimObject class %s.", getFileLine(ip), (const char*)callArgv[1]);
+=======
+                  Con::errorf(ConsoleLogEntry::General, "%s: Unable to instantiate non-SimObject class %s.", getFileLine(ip), callArgv[1]);
+>>>>>>> omni_engine
                   delete object;
                   ip = failJump;
                   break;
@@ -889,7 +999,11 @@ breakContinue:
                   else
                   {
                      if ( Con::gObjectCopyFailures == -1 )
+<<<<<<< HEAD
                         Con::errorf(ConsoleLogEntry::General, "%s: Unable to find parent object %s for %s.", getFileLine(ip), objParent, (const char*)callArgv[1]);
+=======
+                        Con::errorf(ConsoleLogEntry::General, "%s: Unable to find parent object %s for %s.", getFileLine(ip), objParent, callArgv[1]);
+>>>>>>> omni_engine
                      else
                         ++Con::gObjectCopyFailures;
 
@@ -923,6 +1037,7 @@ breakContinue:
                   delete currentNewObject;
                   currentNewObject = NULL;
                   ip = failJump;
+<<<<<<< HEAD
 
                   // Prevent stack value corruption
                   CSTK.popFrame();
@@ -936,6 +1051,11 @@ breakContinue:
                STR.popFrame();
                // --
 
+=======
+                  break;
+               }
+
+>>>>>>> omni_engine
                // If it's not a datablock, allow people to modify bits of it.
                if(!isDataBlock)
                {
@@ -974,7 +1094,11 @@ breakContinue:
                if(msg)
                {
                   SimObjectId id = Message::getNextMessageID();
+<<<<<<< HEAD
                   if(id != 0xffffffff)
+=======
+                  if(id != 0xFFFFFFFFFFFFFFFF)
+>>>>>>> omni_engine
                      ret = currentNewObject->registerObject(id);
                   else
                      Con::errorf("%s: No more object IDs available for messages", getFileLine(ip));
@@ -1187,6 +1311,7 @@ breakContinue:
                   -- iterDepth;
                }
                
+<<<<<<< HEAD
             }
 
             returnValue.value = CSTK.pushFLT(floatStack[_FLT]);
@@ -1208,6 +1333,12 @@ breakContinue:
 
             returnValue.value = CSTK.pushUINT(intStack[_UINT]);
             _UINT--;
+=======
+               const char* returnValue = STR.getStringValue();
+               STR.rewind();
+               STR.setStringValue( returnValue ); // Not nice but works.
+            }
+>>>>>>> omni_engine
                
             goto execFinished;
             
@@ -1350,7 +1481,11 @@ breakContinue:
             var = CodeToSTE(code, ip);
             ip += 2;
 
+<<<<<<< HEAD
             // See OP_SETCURVAR
+=======
+			// See OP_SETCURVAR
+>>>>>>> omni_engine
             prevField = NULL;
             prevObject = NULL;
             curObject = NULL;
@@ -1688,17 +1823,41 @@ breakContinue:
             ns = Namespace::find(fnNamespace);
             nsEntry = ns->lookup(fnName);
             if(!nsEntry)
+<<<<<<< HEAD
             {
+=======
+				{
+				///WLE Vince
+				if (Winterleaf_EngineCallback::mWLE_GlobalFunction)
+					{
+					ip += 5;
+					STR.getArgcArgv(fnName, &callArgc, &callArgv);
+					buffer[0]=0;
+					Winterleaf_EngineCallback::mWLE_GlobalFunction(callArgc,callArgv,buffer);
+					STR.popFrame();
+					STR.setStringValue(buffer);
+					break;
+					}
+				else
+					{
+>>>>>>> omni_engine
                ip+= 5;
                Con::warnf(ConsoleLogEntry::General,
                   "%s: Unable to find function %s%s%s",
                   getFileLine(ip-7), fnNamespace ? fnNamespace : "",
                   fnNamespace ? "::" : "", fnName);
                STR.popFrame();
+<<<<<<< HEAD
                CSTK.popFrame();
                break;
             }
             
+=======
+               break;
+
+					}
+            }
+>>>>>>> omni_engine
 #ifdef COMPILER_OPTIMIZE_FUNCTION_CALLS
             // Now fall through to OP_CALLFUNC...
             // Now, rewrite our code a bit (ie, avoid future lookups) and fall
@@ -1731,7 +1890,11 @@ breakContinue:
             U32 callType = code[ip+4];
 
             ip += 5;
+<<<<<<< HEAD
             CSTK.getArgcArgv(fnName, &callArgc, &callArgv);
+=======
+            STR.getArgcArgv(fnName, &callArgc, &callArgv);
+>>>>>>> omni_engine
 
             const char *componentReturnValue = "";
 
@@ -1755,16 +1918,25 @@ breakContinue:
             else if(callType == FuncCallExprNode::MethodCall)
             {
                saveObject = gEvalState.thisObject;
+<<<<<<< HEAD
                gEvalState.thisObject = Sim::findObject((const char*)callArgv[1]);
+=======
+               gEvalState.thisObject = Sim::findObject(callArgv[1]);
+>>>>>>> omni_engine
                if(!gEvalState.thisObject)
                {
                   // Go back to the previous saved object.
                   gEvalState.thisObject = saveObject;
 
+<<<<<<< HEAD
                   Con::warnf(ConsoleLogEntry::General,"%s: Unable to find object: '%s' attempting to call function '%s'", getFileLine(ip-4), (const char*)callArgv[1], fnName);
                   STR.popFrame();
                   CSTK.popFrame();
                   STR.setStringValue("");
+=======
+                  Con::warnf(ConsoleLogEntry::General,"%s: Unable to find object: '%s' attempting to call function '%s'", getFileLine(ip-4), callArgv[1], fnName);
+                  STR.popFrame();
+>>>>>>> omni_engine
                   break;
                }
                
@@ -1807,8 +1979,55 @@ breakContinue:
                nsUsage = nsEntry->mUsage;
                routingId = 0;
             }
+<<<<<<< HEAD
             if(!nsEntry || noCalls)
             {
+=======
+			//WLE Vince
+			bool call_cSharp = false;
+
+			if (
+				Winterleaf_EngineCallback::mWLE_IsFunction && 
+				gEvalState.thisObject && 
+				!gEvalState.thisObject->isDeleted() && 
+				Winterleaf_EngineCallback::mWLE_IsFunction(gEvalState.thisObject->getId(), gEvalState.thisObject->getmWLE_OMNI_ARRAY_POSTION(), StringTable->insert(callArgv[0]))
+				)
+				call_cSharp = true;
+
+			if (!nsEntry || call_cSharp || noCalls)
+			{
+				bool didcall = false;
+				//WLE Vince
+				if (call_cSharp)
+				{
+					if (Winterleaf_EngineCallback::mWLE_EngineCallBack)
+					{
+						if (gEvalState.thisObject && (((int)gEvalState.thisObject->getId()) >= 0))
+						{
+							buffer[0] = 0;
+							Winterleaf_EngineCallback::mWLE_EngineCallBack(gEvalState.thisObject->getId(),
+								gEvalState.thisObject->getmWLE_OMNI_ARRAY_POSTION(),
+								callArgc,
+								callArgv,
+								buffer);
+							didcall = true;
+							STR.popFrame();
+							STR.setStringValue(buffer);
+						}
+						else
+						{
+							buffer[0] = 0;
+							Winterleaf_EngineCallback::mWLE_GlobalFunction(callArgc, callArgv, buffer);
+							didcall = true;
+							STR.popFrame();
+							STR.setStringValue(buffer);
+						}
+					}
+				}
+
+				if (!didcall)
+				{
+>>>>>>> omni_engine
                if(!noCalls && !( routingId == MethodOnComponent ) )
                {
                   Con::warnf(ConsoleLogEntry::General,"%s: Unknown command %s.", getFileLine(ip-6), fnName);
@@ -1827,6 +2046,7 @@ breakContinue:
                else
                   STR.setStringValue( "" );
 
+<<<<<<< HEAD
                break;
             }
             if(nsEntry->mType == Namespace::Entry::ConsoleFunctionType)
@@ -1858,6 +2078,20 @@ breakContinue:
                // This will clear everything including returnValue
                CSTK.popFrame();
                //STR.clearFunctionOffset();
+=======
+				}
+				break;
+			}
+
+            if(nsEntry->mType == Namespace::Entry::ConsoleFunctionType)
+            {
+               const char *ret = "";
+               if(nsEntry->mFunctionOffset)
+                  ret = nsEntry->mCode->exec(nsEntry->mFunctionOffset, fnName, nsEntry->mNamespace, callArgc, callArgv, false, nsEntry->mPackage);
+               
+               STR.popFrame();
+               STR.setStringValue(ret);
+>>>>>>> omni_engine
             }
             else
             {
@@ -1888,11 +2122,18 @@ breakContinue:
                      {
                         const char *ret = nsEntry->cb.mStringCallbackFunc(gEvalState.thisObject, callArgc, callArgv);
                         STR.popFrame();
+<<<<<<< HEAD
                         CSTK.popFrame();
                         if(ret != STR.getStringValue())
                            STR.setStringValue(ret);
                         //else
                         //   STR.setLen(dStrlen(ret));
+=======
+                        if(ret != STR.getStringValue())
+                           STR.setStringValue(ret);
+                        else
+                           STR.setLen(dStrlen(ret));
+>>>>>>> omni_engine
                         break;
                      }
                      case Namespace::Entry::IntCallbackType:
@@ -2090,7 +2331,11 @@ breakContinue:
             
             if( iter.mIsStringIter )
             {
+<<<<<<< HEAD
                iter.mData.mStr.mString = STR.getStringValuePtr();
+=======
+               iter.mData.mStr.mString = STR.getStringValue();
+>>>>>>> omni_engine
                iter.mData.mStr.mIndex = 0;
             }
             else
@@ -2128,7 +2373,11 @@ breakContinue:
             
             if( iter.mIsStringIter )
             {
+<<<<<<< HEAD
                const char* str = StringStackPtrRef(iter.mData.mStr.mString).getPtr(&STR);
+=======
+               const char* str = iter.mData.mStr.mString;
+>>>>>>> omni_engine
                               
                U32 startIndex = iter.mData.mStr.mIndex;
                U32 endIndex = startIndex;
@@ -2236,7 +2485,19 @@ execFinished:
          Con::printf("%s", traceBuffer);
       }
    }
+<<<<<<< HEAD
 
+=======
+   else
+   {
+      delete[] globalStrings;
+      globalStringsMaxLen = 0;
+
+      delete[] globalFloats;
+      globalStrings = NULL;
+      globalFloats = NULL;
+   }
+>>>>>>> omni_engine
    smCurrentCodeBlock = saveCodeBlock;
    if(saveCodeBlock && saveCodeBlock->name)
    {
@@ -2246,12 +2507,20 @@ execFinished:
 
    decRefCount();
 
+<<<<<<< HEAD
 #ifdef TORQUE_VALIDATE_STACK
    AssertFatal(!(STR.mStartStackSize > stackStart), "String stack not popped enough in script exec");
    AssertFatal(!(STR.mStartStackSize < stackStart), "String stack popped too much in script exec");
 #endif
 
    return returnValue;
+=======
+#ifdef TORQUE_DEBUG
+   AssertFatal(!(STR.mStartStackSize > stackStart), "String stack not popped enough in script exec");
+   AssertFatal(!(STR.mStartStackSize < stackStart), "String stack popped too much in script exec");
+#endif
+   return STR.getStringValue();
+>>>>>>> omni_engine
 }
 
 //------------------------------------------------------------

@@ -127,5 +127,9 @@ void GuiInspectorCustomField::setValue( const char* newValue )
 
 void GuiInspectorCustomField::_executeSelectedCallback()
 {
+<<<<<<< HEAD
    Con::executef( mInspector, "onFieldSelected", mCaption, ConsoleBaseType::getType(TypeCaseString)->getTypeName(), mDoc );
+=======
+   mInspector->onFieldSelected_callback(mCaption, ConsoleBaseType::getType(TypeCaseString)->getTypeName(), mDoc);
+>>>>>>> omni_engine
 }

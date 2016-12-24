@@ -73,7 +73,11 @@ public:
    /// The cubemap to use when the texture type is
    /// set to Material::Cube.
    /// @see mTexType
+<<<<<<< HEAD
    GFXCubemapHandle mCubeMap;
+=======
+   GFXCubemap *mCubeMap;
+>>>>>>> omni_engine
 
    U32 mNumTex;
 

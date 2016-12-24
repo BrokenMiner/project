@@ -201,7 +201,9 @@
          canSave = "1";
          canSaveDynamicFields = "0";
       };
-      new GuiCheckBoxCtrl(MeshMissionBounds) {
+
+      new GuiCheckBoxCtrl(MeshMissionBounds) 
+      {
          text = " Fit NavMesh to mission area";
          groupNum = "-1";
          buttonType = "ToggleButton";
@@ -221,6 +223,7 @@
          canSave = "1";
          canSaveDynamicFields = "0";
       };
+      
       new GuiCheckBoxCtrl(MeshTerrainBounds) {
          text = " Include terrain";
          groupNum = "-1";
@@ -238,6 +241,7 @@
          tooltip = "Consider terrain when calculating NavMesh bounds.";
          hovertime = "1000";
          isContainer = "0";
+         internalName = "MeshMissionBounds";
          canSave = "1";
          canSaveDynamicFields = "0";
       };
@@ -300,6 +304,8 @@ function MissionBoundsExtents(%group)
    foreach(%obj in %group)
    {
       %cls = %obj.getClassName();
+      %wbox = "0 0 0 0 0 0";
+      // Get world box - might have to recurse into nested SimGroups.
       if(%cls $= "SimGroup" || %cls $= "SimSet" || %cls $= "Path")
       {
          // Need to recursively check grouped objects.
@@ -310,8 +316,11 @@ function MissionBoundsExtents(%group)
          // Skip objects that are too big and shouldn't really be considered
          // part of the scene, or are global bounds and we therefore can't get
          // any sensible information out of them.
-         if(%cls $= "LevelInfo")
+         // Skip LevelInfos. Need a way to detect other non-SceneObjects.
+         // Also skip GroundPlanes. They're too big.
+         if(%cls $= "LevelInfo" || %cls $= "GroundPlane" || %cls $= "GroundCover")
             continue;
+
          if(!MeshTerrainBounds.isStateOn() && %cls $= "TerrainBlock")
             continue;
 
@@ -352,7 +361,7 @@ function CreateNewNavMeshDlg::create(%this)
 
    %mesh = 0;
 
-   if(MeshMissionBounds.isStateOn())
+   if(%this-->MeshMissionBounds.isStateOn())
    {
       if(!isObject(MissionGroup))
       {

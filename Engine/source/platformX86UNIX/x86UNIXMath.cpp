@@ -70,7 +70,11 @@ ConsoleFunction( MathInit, void, 1, 10, "(detect|C|FPU|MMX|3DNOW|SSE|...)")
          properties |= CPU_PROP_SSE;
          continue;
       }
+<<<<<<< HEAD
       Con::printf("Error: MathInit(): ignoring unknown math extension '%s'", (const char*)argv[0]);
+=======
+      Con::printf("Error: MathInit(): ignoring unknown math extension '%s'", *argv);
+>>>>>>> omni_engine
    }
    Math::init(properties);
 }
@@ -130,6 +134,7 @@ F32 Platform::getRandom()
    return sgPlatRandom.randF();
 }
 
+<<<<<<< HEAD
 
 #if defined(i386) || defined(__x86_64__)
 
@@ -144,10 +149,16 @@ void Platform::setMathControlState(U32 state)
 {
    U16 cw = state;
    asm("fldcw %0" : : "m" (cw));
+=======
+U32 Platform::getMathControlState()
+{
+   return 0;
+>>>>>>> omni_engine
 }
 
 void Platform::setMathControlStateKnown()
 {
+<<<<<<< HEAD
    U16 cw = 0x27F;
    asm("fldcw %0" : : "m" (cw));
 }
@@ -157,10 +168,14 @@ void Platform::setMathControlStateKnown()
 U32 Platform::getMathControlState()
 {
    return 0;
+=======
+   
+>>>>>>> omni_engine
 }
 
 void Platform::setMathControlState(U32 state)
 {
+<<<<<<< HEAD
 }
 
 void Platform::setMathControlStateKnown()
@@ -169,3 +184,7 @@ void Platform::setMathControlStateKnown()
 
 #endif
 
+=======
+   
+}
+>>>>>>> omni_engine

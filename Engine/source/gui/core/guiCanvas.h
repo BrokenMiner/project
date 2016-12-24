@@ -37,6 +37,12 @@
 #include "windowManager/platformWindowMgr.h"
 #include "gfx/gfxFence.h"
 
+#ifdef TORQUE_DEMO_PURCHASE
+#ifndef _PURCHASESCREEN_H_
+#include "demo/purchase/purchaseScreen.h"
+#endif
+#endif
+
 /// A canvas on which rendering occurs.
 ///
 ///
@@ -102,10 +108,19 @@ protected:
    bool        mClampTorqueCursor;
    bool        mAlwaysHandleMouseButtons;
 
+<<<<<<< HEAD
    bool        mDisplayWindow;
 
    /// @}
 
+=======
+   /// @}
+
+   /// Popup Shown or not
+
+   bool mPopupShown;    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+
+>>>>>>> omni_engine
    /// @name Mouse Input
    /// @{
 
@@ -184,6 +199,7 @@ protected:
    
    void checkLockMouseMove( const GuiEvent& event );
 
+<<<<<<< HEAD
    GuiControl *mMenuBarCtrl;
 
 public:
@@ -191,6 +207,50 @@ public:
    DECLARE_CATEGORY( "Gui Core" );
    
    GuiCanvas();
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	
+	String mOverrideMode;
+	Point2I OverridePosition;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+public:
+	void onWindowClose();
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	void setOverridePosition(Point2I value)
+		{
+			OverridePosition = value;
+		}
+	Point2I getOverridePosition()
+		{
+			return OverridePosition;
+		}
+
+	void setOverrideMode(const char * value)
+	{
+		mOverrideMode = String(StringTable->insert (value));
+	}
+
+	const char* getOverrideMode()
+	{
+		return StringTable->insert(mOverrideMode.c_str());
+	}
+//Copyright Winterleaf Entertainment L.L.C. 2013	
+   DECLARE_CONOBJECT(GuiCanvas);
+   DECLARE_CATEGORY( "Gui Core" );
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   DECLARE_CALLBACK( void, onResize, (const char* width, const char* height) );
+   DECLARE_CALLBACK( void, onCreateMenu, () );
+   DECLARE_CALLBACK( void, onDestroyMenu, () );
+   DECLARE_CALLBACK( void, onLoseFocus, () );
+   DECLARE_CALLBACK( void, onGainFocus, () );
+   DECLARE_CALLBACK( void, onWindowClose, () );
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+   
+   GuiCanvas();
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	bool mIsPopUp;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+>>>>>>> omni_engine
    virtual ~GuiCanvas();
 
    virtual bool onAdd();
@@ -325,11 +385,26 @@ public:
 
    /// Returns true if the cursor is being rendered.
    virtual bool isCursorShown();
+<<<<<<< HEAD
 
    void cursorClick(S32 buttonId, bool isDown);
 
    void cursorNudge(F32 x, F32 y);
    /// @}
+=======
+   /// @}
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   /// Retruns true if the popup is shown on the screen..
+   virtual bool isPopupShown() { return mPopupShown; }
+
+   ///Set if popup is shown on the screen.
+   virtual void setPopupShown(bool shown) { mPopupShown = shown; }
+
+   // @Copyright end
+>>>>>>> omni_engine
 
    ///used by the tooltip resource
    Point2I getCursorExtent() { return mDefaultCursor->getExtent(); }
@@ -436,6 +511,21 @@ public:
 
 private:
    static const U32 MAX_GAMEPADS = 4; ///< The maximum number of supported gamepads
+
+#ifdef TORQUE_DEMO_PURCHASE
+private:
+   PurchaseScreen* mPurchaseScreen;
+   U32             mLastPurchaseHideTime;
+
+public:
+   void showPurchaseScreen(bool show, bool startBlocker, const char* location, bool doExit);
+   void updatePurchaseScreen(const char* value);
+#endif
+
+#ifdef TORQUE_DEMO_TIMEOUT
+private:
+   void checkTimeOut();
+#endif
 };
 
 #endif

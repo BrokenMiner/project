@@ -40,6 +40,11 @@
 // Forward ref used by platform code
 class PlatformThreadData;
 
+#ifdef TORQUE_64
+typedef U64 ThreadIdent;
+#else
+typedef U32 ThreadIdent;
+#endif 
 
 // Typedefs
 typedef void (*ThreadRunFunction)(void *data);
@@ -110,7 +115,11 @@ public:
    bool isAlive();
 
    /// Returns the platform specific thread id for this thread.
+<<<<<<< HEAD
    U32 getId();
+=======
+   ThreadIdent getId();
+>>>>>>> omni_engine
 };
 
 
@@ -152,18 +161,30 @@ public:
    static bool isMainThread();
 
    /// Returns true if threadId is the same as the calling thread's id.
+<<<<<<< HEAD
    static bool isCurrentThread(U32 threadId);
+=======
+   static bool isCurrentThread(ThreadIdent threadId);
+>>>>>>> omni_engine
 
    /// Returns true if the 2 thread ids represent the same thread. Some thread
    /// APIs return an opaque object as a thread id, so the == operator cannot
    /// reliably compare thread ids.
    // this comparator is needed by pthreads and ThreadManager.
+<<<<<<< HEAD
    static bool compare(U32 threadId_1, U32 threadId_2);
+=======
+   static bool compare(ThreadIdent threadId_1, ThreadIdent threadId_2);
+>>>>>>> omni_engine
       
    /// Returns the platform specific thread id of the calling thread. Some 
    /// platforms do not guarantee that this ID stays the same over the life of 
    /// the thread, so use ThreadManager::compare() to compare thread ids.
+<<<<<<< HEAD
    static U32 getCurrentThreadId();
+=======
+   static ThreadIdent getCurrentThreadId();
+>>>>>>> omni_engine
 
    /// Returns the platform specific thread id ot the main thread.
    static U32 getMainThreadId() { return smMainThreadId.get(); }
@@ -236,9 +257,15 @@ inline bool ThreadManager::isMainThread()
    return compare( ThreadManager::getCurrentThreadId(), smMainThreadId.get() );
 }
 
+<<<<<<< HEAD
 inline bool ThreadManager::isCurrentThread(U32 threadId)
 {
    U32 current = getCurrentThreadId();
+=======
+inline bool ThreadManager::isCurrentThread(ThreadIdent threadId)
+{
+   ThreadIdent current = getCurrentThreadId();
+>>>>>>> omni_engine
    return compare(current, threadId);
 }
 

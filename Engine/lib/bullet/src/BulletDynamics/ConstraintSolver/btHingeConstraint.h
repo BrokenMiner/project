@@ -28,8 +28,13 @@ subject to the following restrictions:
 class btRigidBody;
 
 #ifdef BT_USE_DOUBLE_PRECISION
+<<<<<<< HEAD
 #define btHingeConstraintData	btHingeConstraintDoubleData2 //rename to 2 for backwards compatibility, so we can still load the 'btHingeConstraintDoubleData' version
 #define btHingeConstraintDataName	"btHingeConstraintDoubleData2" 
+=======
+#define btHingeConstraintData	btHingeConstraintDoubleData
+#define btHingeConstraintDataName	"btHingeConstraintDoubleData"
+>>>>>>> omni_engine
 #else
 #define btHingeConstraintData	btHingeConstraintFloatData
 #define btHingeConstraintDataName	"btHingeConstraintFloatData"
@@ -302,10 +307,14 @@ public:
 
 };
 
+<<<<<<< HEAD
 
 //only for backward compatibility
 #ifdef BT_BACKWARDS_COMPATIBLE_SERIALIZATION
 ///this structure is not used, except for loading pre-2.82 .bullet files
+=======
+///do not change those serialization structures, it requires an updated sBulletDNAstr/sBulletDNAstr64
+>>>>>>> omni_engine
 struct	btHingeConstraintDoubleData
 {
 	btTypedConstraintData	m_typeConstraintData;
@@ -324,9 +333,13 @@ struct	btHingeConstraintDoubleData
 	float	m_relaxationFactor;
 
 };
+<<<<<<< HEAD
 #endif //BT_BACKWARDS_COMPATIBLE_SERIALIZATION
 
 
+=======
+///do not change those serialization structures, it requires an updated sBulletDNAstr/sBulletDNAstr64
+>>>>>>> omni_engine
 struct	btHingeConstraintFloatData
 {
 	btTypedConstraintData	m_typeConstraintData;

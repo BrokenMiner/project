@@ -34,9 +34,11 @@ function initializeNavEditor()
    echo(" % - Initializing Navigation Editor");
 
    // Execute all relevant scripts and GUIs.
-   exec("./navEditor.cs");
+   exec("./NavEditor.cs");
    exec("./NavEditorGui.gui");
    exec("./NavEditorToolbar.gui");
+   exec("./NavEditorGui.cs");
+   exec("./NavEditorAboutDlg.gui");
    exec("./NavEditorConsoleDlg.gui");
    exec("./CreateNewNavMeshDlg.gui");
 
@@ -95,6 +97,8 @@ function NavEditorPlugin::onWorldEditorStartup(%this)
    // Add items to World Editor Creator
    EWCreatorWindow.beginGroup("Navigation");
 
+      EWCreatorWindow.registerMissionObject("NavMesh", "Navigation mesh");
+      EWCreatorWindow.registerMissionObject("NavPath", "Path");
       EWCreatorWindow.registerMissionObject("CoverPoint", "Cover point");
 
    EWCreatorWindow.endGroup();
@@ -132,7 +136,8 @@ function NavEditorPlugin::onActivated(%this)
       new SimSet(ServerNavMeshSet);
    if(ServerNavMeshSet.getCount() == 0)
 	  MessageBoxYesNo("No NavMesh", "There is no NavMesh in this level. Would you like to create one?" SPC
-	                                "If not, please use the Nav Editor to create a new NavMesh.",
+	                                "If not, please use the Nav Editor to create a new NavMesh." SPC
+	                                "If not, please use the World Editor to create a new NavMesh.",
 	                                "Canvas.pushDialog(CreateNewNavMeshDlg);");
    NavTreeView.open(ServerNavMeshSet, true);
 
@@ -149,6 +154,7 @@ function NavEditorPlugin::onActivated(%this)
    GlobalGizmoProfile.alignment = "Object";
 
    // Set the status until some other editing mode adds useful information.
+   // Set the status bar here until all tool have been hooked up
    EditorGuiStatusBar.setInfo("Navigation editor.");
    EditorGuiStatusBar.setSelection("");
 
@@ -242,6 +248,8 @@ function NavEditorPlugin::readSettings(%this)
    {
       NavEditorGui.backgroundBuild = true;
    }
+   NavEditorGui.spawnClass     = EditorSettings.value("SpawnClass");
+   NavEditorGui.spawnDatablock = EditorSettings.value("SpawnDatablock");
 
    EditorSettings.endGroup();  
 }
@@ -258,6 +266,9 @@ function NavEditorPlugin::writeSettings(%this)
    EditorSettings.setValue("BackgroundBuild",   NavEditorGui.backgroundBuild);
    EditorSettings.setValue("SaveIntermediates", NavEditorGui.saveIntermediates);
    EditorSettings.setValue("PlaySoundWhenDone", NavEditorGui.playSoundWhenDone);
+   
+   EditorSettings.setValue("SpawnClass",     NavEditorGui.spawnClass);
+   EditorSettings.setValue("SpawnDatablock", NavEditorGui.spawnDatablock);
 
    EditorSettings.endGroup();
 }
@@ -271,4 +282,21 @@ function ESettingsWindowPopup::onSelect(%this)
 {
    EditorSettings.setValue(%this.editorSettingsValue, %this.getText());
    eval(%this.editorSettingsRead);
+}
+
+//-----------------------------------------------------------------------------
+// Demo
+//-----------------------------------------------------------------------------
+
+function OnWalkaboutDemoLimit()
+{
+   MessageBoxOK("Walkabout demo",
+      "This demo only allows two NavMeshes to be created. Sorry!");
+}
+
+function OnWalkaboutDemoSave()
+{
+   MessageBoxOK("Walkabout demo",
+      "This demo doesn't allow you to save NavMeshes. Sorry!" SPC
+      "The rest of your mission will still be saved.");
 }

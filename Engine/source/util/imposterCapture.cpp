@@ -230,7 +230,11 @@ void ImposterCapture::_renderToTexture( GFXTexHandle texHandle, GBitmap *outBitm
    PROFILE_SCOPE( ImposterCapture_RenderToTexture );
 
    mRenderTarget->attachTexture( GFXTextureTarget::Color0, texHandle );
+   // ATTENTION! From Torque
    mRenderTarget->attachTexture( GFXTextureTarget::DepthStencil, mDepthBuffer );
+   /////////////
+   // mRenderTarget->attachTexture( GFXTextureTarget::DepthStencil, GFXTextureTarget::sDefaultDepthStencil );
+   // ATTENTION! From OMNI
    GFX->setActiveRenderTarget( mRenderTarget );
 
    GFX->clear( GFXClearZBuffer | GFXClearStencil | GFXClearTarget, color, 1.0f, 0 );

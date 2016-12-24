@@ -164,7 +164,11 @@ public:
 	void onEditorDisable();
 	void inspectPostApply();
    void onStaticModified(const char* slotName, const char*newValue = NULL);
+<<<<<<< HEAD
    void writeFields(Stream &stream, U32 tabStop);
+=======
+   void writeFields(Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput = false);
+>>>>>>> omni_engine
    bool writeField( StringTableEntry fieldname, const char *value );
    
 	// NetObject

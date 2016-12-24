@@ -98,7 +98,11 @@ void DeferredRTLightingFeatHLSL::processPix( Vector<ShaderComponent*> &component
    uvScene->setName( "uvScene" );
    LangElement *uvSceneDecl = new DecOp( uvScene );
 
+<<<<<<< HEAD
    String rtParamName = String::ToString( "rtParams%s", "lightInfoBuffer" );
+=======
+   String rtParamName = String::ToString( "rtParams%d", mLastTexIndex );
+>>>>>>> omni_engine
    Var *rtParams = (Var*) LangElement::find( rtParamName );
    if( !rtParams )
    {
@@ -225,10 +229,17 @@ void DeferredBumpFeatHLSL::processVert(   Vector<ShaderComponent*> &componentLis
       // We need the view to tangent space transform in the pixel shader.
       getOutViewToTangent( componentList, meta, fd );
 
+<<<<<<< HEAD
       const bool useTexAnim = fd.features[MFT_TexAnim];
       // Make sure there are texcoords
       if( !fd.features[MFT_Parallax] && !fd.features[MFT_DiffuseMap] )
       {
+=======
+      // Make sure there are texcoords
+      if( !fd.features[MFT_Parallax] && !fd.features[MFT_DiffuseMap] )
+      {
+         const bool useTexAnim = fd.features[MFT_TexAnim];
+>>>>>>> omni_engine
 
          getOutTexCoord(   "texCoord", 
                            "float2", 
@@ -236,12 +247,21 @@ void DeferredBumpFeatHLSL::processVert(   Vector<ShaderComponent*> &componentLis
                            useTexAnim, 
                            meta, 
                            componentList );
+<<<<<<< HEAD
       }
 
       if ( fd.features.hasFeature( MFT_DetailNormalMap ) )
             addOutDetailTexCoord( componentList, 
                                   meta,
                                   useTexAnim );
+=======
+
+         if ( fd.features.hasFeature( MFT_DetailNormalMap ) )
+            addOutDetailTexCoord( componentList, 
+                                  meta,
+                                  useTexAnim );
+      }
+>>>>>>> omni_engine
 
       output = meta;
    }
@@ -330,6 +350,7 @@ void DeferredBumpFeatHLSL::processPix( Vector<ShaderComponent*> &componentList,
       output = meta;
       return;
    }
+   //Sahara
    else if (fd.features[MFT_AccuMap]) 
    {
       Var *bumpSample = (Var *)LangElement::find( "bumpSample" );
@@ -380,7 +401,12 @@ void DeferredBumpFeatHLSL::processPix( Vector<ShaderComponent*> &componentList,
 
          return;
       }
+<<<<<<< HEAD
    } 
+=======
+   }
+   //Sahara   
+>>>>>>> omni_engine
    else if (   fd.materialFeatures[MFT_NormalsOut] || 
                fd.features[MFT_ForwardShading] || 
                !fd.features[MFT_RTLighting] )
@@ -448,21 +474,36 @@ void DeferredBumpFeatHLSL::setTexData( Material::StageData &stageDat,
       Parent::setTexData( stageDat, fd, passData, texIndex );
       return;
    }
+<<<<<<< HEAD
 
    if (  !fd.features[MFT_PrePassConditioner] && fd.features[MFT_AccuMap] )
    {
       passData.mTexType[ texIndex ] = Material::Bump;
       passData.mSamplerNames[ texIndex ] = "bumpMap";
+=======
+   //Sahara
+   if (  !fd.features[MFT_PrePassConditioner] && fd.features[MFT_AccuMap] )
+   {
+      passData.mTexType[ texIndex ] = Material::Bump;
+>>>>>>> omni_engine
       passData.mTexSlot[ texIndex++ ].texObject = stageDat.getTex( MFT_NormalMap );
 
       if (  fd.features.hasFeature( MFT_DetailNormalMap ) )
       {
          passData.mTexType[ texIndex ] = Material::DetailBump;
+<<<<<<< HEAD
          passData.mSamplerNames[texIndex] = "detailBumpMap";
          passData.mTexSlot[ texIndex++ ].texObject = stageDat.getTex( MFT_DetailNormalMap );
       }
    }
    else if (  !fd.features[MFT_Parallax] && !fd.features[MFT_SpecularMap] &&
+=======
+         passData.mTexSlot[ texIndex++ ].texObject = stageDat.getTex( MFT_DetailNormalMap );
+      }
+   }
+      //Sahara
+    else if (  !fd.features[MFT_Parallax] && !fd.features[MFT_SpecularMap] &&
+>>>>>>> omni_engine
          ( fd.features[MFT_PrePassConditioner] ||
            fd.features[MFT_PixSpecular] ) )
    {
@@ -544,7 +585,11 @@ void DeferredPixelSpecularHLSL::processPix(  Vector<ShaderComponent*> &component
 
    AssertFatal( lightInfoSamp && d_specular && d_NL_Att,
       "DeferredPixelSpecularHLSL::processPix - Something hosed the deferred features!" );
+<<<<<<< HEAD
 
+=======
+   //Sahara
+>>>>>>> omni_engine
    if (fd.features[ MFT_AccuMap ]) {
       // change specularity where the accu texture is applied
       Var *accuPlc = (Var*) LangElement::find( "plc" );
@@ -553,7 +598,11 @@ void DeferredPixelSpecularHLSL::processPix(  Vector<ShaderComponent*> &component
          //d_specular = clamp(lerp( d_specular, accuSpecular * d_specular, plc.a), 0, 1)
          meta->addStatement( new GenOp( "   @ = clamp( lerp( @, @ * @, @.a), 0, 1);\r\n", d_specular, d_specular, accuSpecular, d_specular, accuPlc ) );
    }
+<<<<<<< HEAD
 	  
+=======
+   //Sahara
+>>>>>>> omni_engine
    // (a^m)^n = a^(m*n)
    meta->addStatement( new GenOp( "   @ = pow( abs(@), max((@ / AL_ConstantSpecularPower),1.0f)) * @;\r\n", 
       specDecl, d_specular, specPow, specStrength ) );
@@ -605,8 +654,12 @@ void DeferredMinnaertHLSL::setTexData( Material::StageData &stageDat,
       NamedTexTarget *texTarget = NamedTexTarget::find(RenderPrePassMgr::BufferName);
       if ( texTarget )
       {
+<<<<<<< HEAD
          passData.mTexType[texIndex] = Material::TexTarget;
          passData.mSamplerNames[texIndex] = "prepassBuffer";
+=======
+         passData.mTexType[ texIndex ] = Material::TexTarget;
+>>>>>>> omni_engine
          passData.mTexSlot[ texIndex++ ].texTarget = texTarget;
       }
    }
@@ -684,7 +737,11 @@ void DeferredMinnaertHLSL::processPix( Vector<ShaderComponent*> &componentList,
 
    meta->addStatement( new GenOp( avar( "   float4 normalDepth = %s(@, @);\r\n", unconditionPrePassMethod.c_str() ), prepassBuffer, uvScene ) );
    meta->addStatement( new GenOp( "   float vDotN = dot(normalDepth.xyz, @);\r\n", wsViewVec ) );
+<<<<<<< HEAD
    meta->addStatement( new GenOp( "   float Minnaert = pow( @, @) * pow(vDotN, 1.0 - @);\r\n", d_NL_Att, minnaertConstant, minnaertConstant ) );
+=======
+   meta->addStatement( new GenOp( "   float Minnaert = pow( abs( @ ), @) * pow( abs( vDotN ), 1.0 - @);\r\n", d_NL_Att, minnaertConstant, minnaertConstant ) );
+>>>>>>> omni_engine
    meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "float4(Minnaert, Minnaert, Minnaert, 1.0)" ), Material::Mul ) ) );
 
    output = meta;

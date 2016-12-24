@@ -39,6 +39,9 @@
 #include "core/util/delegate.h"
 #endif
 
+#ifndef DISABLE_CULLING
+#include "gui/core/guiCanvas.h"
+#endif
 
 class SceneObject;
 class RenderPassManager;
@@ -62,7 +65,30 @@ class SceneRenderState
       typedef Delegate< BaseMatInstance*( BaseMatInstance* ) > MatDelegate;
 
    protected:
+<<<<<<< HEAD
 
+=======
+#ifndef DISABLE_CULLING
+	    //Four side planes to be created
+	  PlaneF plTop;		//Top of view Frustum
+	  PlaneF plBottom;	//Bottom of view Frustum
+	  PlaneF plRight;	//Right side of view Frustum
+	  PlaneF plLeft;	//Left side of view Frustum
+	  PlaneF plNear;	//Near clipping plane
+	  PlaneF plFar;		//Far clipping plane
+	  SimObjectPtr<GameBase> cameraObject;
+	  F32 fOV ;
+	  F32 yAdd;
+	  F32 div;
+	  F32 xAdd;
+	  Point3F pPos, pView;
+      MatrixF mTrans;
+	  F32 posf;
+	  SimObjectPtr<GameConnection> connection;
+	  SimObjectPtr<GuiCanvas> mCanvas;
+	  
+#endif
+>>>>>>> omni_engine
       /// SceneManager being rendered in this state.
       SceneManager* mSceneManager;
 

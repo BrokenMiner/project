@@ -317,6 +317,9 @@ void NetInterface::handleConnectRequest(const NetAddress *address, BitStream *st
       delete co;
       return;
    }
+   //WLE Gee
+   conn->mWLE_OVERRIDE_PROXY_CLASSTYPE = Con::getVariable("$Pref::Server::Net::ClientGameConnectionModelClass");
+   //WLE Gee
    conn->registerObject();
    conn->setNetAddress(address);
    conn->setNetworkConnection(true);
@@ -652,4 +655,70 @@ DefineConsoleFunction( allowConnections, void, ( bool allow ), , "allowConnectio
 }
 
 ConsoleFunctionGroupEnd(NetInterface);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_allowConnections(bool allow)
+{
+{
+   GNet->setAllowsConnections(allow);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

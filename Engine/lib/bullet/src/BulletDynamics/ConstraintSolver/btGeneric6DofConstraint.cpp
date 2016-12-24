@@ -781,6 +781,7 @@ int btGeneric6DofConstraint::get_limit_motor_info2(
     if (powered || limit)
     {   // if the joint is powered, or has joint limits, add in the extra row
         btScalar *J1 = rotational ? info->m_J1angularAxis : info->m_J1linearAxis;
+<<<<<<< HEAD
         btScalar *J2 = rotational ? info->m_J2angularAxis : info->m_J2linearAxis;
         J1[srow+0] = ax1[0];
         J1[srow+1] = ax1[1];
@@ -791,6 +792,19 @@ int btGeneric6DofConstraint::get_limit_motor_info2(
         J2[srow+2] = -ax1[2];
 
 		if((!rotational))
+=======
+        btScalar *J2 = rotational ? info->m_J2angularAxis : 0;
+        J1[srow+0] = ax1[0];
+        J1[srow+1] = ax1[1];
+        J1[srow+2] = ax1[2];
+        if(rotational)
+        {
+            J2[srow+0] = -ax1[0];
+            J2[srow+1] = -ax1[1];
+            J2[srow+2] = -ax1[2];
+        }
+        if((!rotational))
+>>>>>>> omni_engine
         {
 			if (m_useOffsetForConstraintFrame)
 			{

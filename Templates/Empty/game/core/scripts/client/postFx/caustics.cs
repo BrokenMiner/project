@@ -38,6 +38,7 @@ singleton ShaderData( PFX_CausticsShader )
    DXVertexShaderFile 	= "shaders/common/postFx/postFxV.hlsl";
    DXPixelShaderFile 	= "shaders/common/postFx/caustics/causticsP.hlsl";
          
+<<<<<<< HEAD
    OGLVertexShaderFile  = "shaders/common/postFx/gl//postFxV.glsl";
    OGLPixelShaderFile   = "shaders/common/postFx/caustics/gl/causticsP.glsl";
       
@@ -45,6 +46,11 @@ singleton ShaderData( PFX_CausticsShader )
    samplerNames[1] = "$causticsTex0";
    samplerNames[2] = "$causticsTex1";
    
+=======
+   //OGLVertexShaderFile  = "shaders/common/postFx/gl//postFxV.glsl";
+   //OGLPixelShaderFile   = "shaders/common/postFx/gl/passthruP.glsl";
+      
+>>>>>>> omni_engine
    pixVersion = 3.0;
 };
 

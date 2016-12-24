@@ -292,9 +292,15 @@ struct StringStack
       return ret;
    }
 
+<<<<<<< HEAD
    void pushFrame()
    {
       //Con::printf("StringStack pushFrame [frame=%i, start=%i]", mNumFrames, mStartStackSize);
+=======
+   
+   void pushFrame()
+   {
+>>>>>>> omni_engine
       mFrameOffsets[mNumFrames++] = mStartStackSize;
       mStartOffsets[mStartStackSize++] = mStart;
       mStart += ReturnBufferSpace;

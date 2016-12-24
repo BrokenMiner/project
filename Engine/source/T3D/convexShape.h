@@ -159,7 +159,11 @@ public:
    virtual void inspectPostApply();
    virtual bool onAdd();
    virtual void onRemove();
+<<<<<<< HEAD
    virtual void writeFields(Stream &stream, U32 tabStop);
+=======
+   virtual void writeFields(Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput = false);
+>>>>>>> omni_engine
    virtual bool writeField( StringTableEntry fieldname, const char *value );
 
    // NetObject
@@ -175,7 +179,11 @@ public:
    virtual bool castRay( const Point3F &start, const Point3F &end, RayInfo *info );
    virtual bool collideBox( const Point3F &start, const Point3F &end, RayInfo *info );
 
+<<<<<<< HEAD
 
+=======
+   void setMaterial(const String &materialName);
+>>>>>>> omni_engine
    void updateBounds( bool recenter );
    void recenter();
 

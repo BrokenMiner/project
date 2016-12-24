@@ -139,6 +139,9 @@ class SceneCullingState
       SceneManager* getSceneManager() const { return mSceneManager; }
 
       /// Return the root frustum which is used to set up scene visibility.
+      const Frustum& getFrustum() const { return getCameraState().getFrustum(); }
+
+      /// Return the root frustum which is used to set up scene visibility.
       const Frustum& getCullingFrustum() const { return mCullingFrustum; }
 
       /// Return the root frustum which is used to set up scene visibility.

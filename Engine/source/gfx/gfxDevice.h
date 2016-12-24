@@ -247,12 +247,16 @@ public:
    enum GFXDeviceRenderStyles
    {
       RS_Standard          = 0,
+<<<<<<< HEAD
       RS_StereoSideBySide  = (1<<0),     // Render into current Render Target side-by-side
    };
 
    enum GFXDeviceLimits
    {
       NumStereoPorts = 2
+=======
+      RS_StereoSideBySide  = (1<<0),
+>>>>>>> omni_engine
    };
 
 private:
@@ -285,6 +289,7 @@ protected:
    Point2F mCurrentProjectionOffset;
 
    /// Eye offset used when using a stereo rendering style
+<<<<<<< HEAD
    Point3F mStereoEyeOffset[NumStereoPorts];
 
    MatrixF mStereoEyeTransforms[NumStereoPorts];
@@ -298,6 +303,9 @@ protected:
 
    /// Destination targets for stereo rendering
    GFXTextureTarget* mStereoTargets[NumStereoPorts];
+=======
+   Point3F mStereoEyeOffset;
+>>>>>>> omni_engine
 
    /// This will allow querying to see if a device is initialized and ready to
    /// have operations performed on it.
@@ -343,6 +351,7 @@ public:
    void setCurrentProjectionOffset(const Point2F& offset) { mCurrentProjectionOffset = offset; }
 
    /// Get the current eye offset used during stereo rendering
+<<<<<<< HEAD
    const Point3F* getStereoEyeOffsets() { return mStereoEyeOffset; }
 
    const MatrixF* getStereoEyeTransforms() { return mStereoEyeTransforms; }
@@ -387,6 +396,12 @@ public:
          setViewport(mStereoViewports[eyeId]);
       }
    }
+=======
+   const Point3F& getStereoEyeOffset() { return mStereoEyeOffset; }
+
+   /// Set the current eye offset used during stereo rendering
+   void setStereoEyeOffset(const Point3F& offset) { mStereoEyeOffset = offset; }
+>>>>>>> omni_engine
 
    GFXCardProfiler* getCardProfiler() const { return mCardProfiler; }
 
@@ -782,8 +797,13 @@ public:
    /// Returns the number of simultaneous render targets supported by the device.
    virtual U32 getNumRenderTargets() const = 0;
 
+<<<<<<< HEAD
    virtual void setShader( GFXShader *shader, bool force = false ) {}
    virtual void disableShaders( bool force = false ) {} // TODO Remove when T3D 4.0
+=======
+   virtual void setShader( GFXShader *shader ) {}
+   virtual void disableShaders() {}
+>>>>>>> omni_engine
 
    /// Set the buffer! (Actual set happens on the next draw call, just like textures, state blocks, etc)
    void setShaderConstBuffer(GFXShaderConstBuffer* buffer);
@@ -901,8 +921,13 @@ public:
    /// because of the state caching stuff.
    /// @{
    void setLight(U32 stage, GFXLightInfo* light);
+<<<<<<< HEAD
    void setLightMaterial(const GFXLightMaterial& mat);
    void setGlobalAmbientColor(const ColorF& color);
+=======
+   void setLightMaterial(GFXLightMaterial mat);
+   void setGlobalAmbientColor(ColorF color);
+>>>>>>> omni_engine
 
    /// @}
    

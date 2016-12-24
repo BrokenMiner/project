@@ -54,7 +54,11 @@ bool dFileDelete(const char * name)
    TempAlloc< TCHAR > buf( dStrlen( name ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( name, buf, buf.size );
+=======
+   convertUTF8toUTF16( name, buf, buf.size );
+>>>>>>> omni_engine
 #else
    dStrcpy( buf, name );
 #endif
@@ -74,8 +78,13 @@ bool dFileRename(const char *oldName, const char *newName)
    TempAlloc< TCHAR > newf( dStrlen( newName ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( oldName, oldf, oldf.size );
    convertUTF8toUTF16N( newName, newf, newf.size );
+=======
+   convertUTF8toUTF16( oldName, oldf, oldf.size );
+   convertUTF8toUTF16( newName, newf, newf.size );
+>>>>>>> omni_engine
 #else
    dStrcpy(oldf, oldName);
    dStrcpy(newf, newName);
@@ -93,7 +102,11 @@ bool dFileTouch(const char * name)
    TempAlloc< TCHAR > buf( dStrlen( name ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( name, buf, buf.size );
+=======
+   convertUTF8toUTF16( name, buf, buf.size );
+>>>>>>> omni_engine
 #else
    dStrcpy( buf, name );
 #endif
@@ -119,8 +132,13 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
    TempAlloc< TCHAR > to( dStrlen( toName ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( fromName, from, from.size );
    convertUTF8toUTF16N( toName, to, to.size );
+=======
+   convertUTF8toUTF16( fromName, from, from.size );
+   convertUTF8toUTF16( toName, to, to.size );
+>>>>>>> omni_engine
 #else
    dStrcpy( from, fromName );
    dStrcpy( to, toName );
@@ -187,8 +205,13 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
          backslash(toFile);
          
 #ifdef UNICODE
+<<<<<<< HEAD
          convertUTF8toUTF16N( tempBuf, wtempBuf, wtempBuf.size );
          convertUTF8toUTF16N( tempBuf1, wtempBuf1, wtempBuf1.size );
+=======
+         convertUTF8toUTF16( tempBuf, wtempBuf, wtempBuf.size );
+         convertUTF8toUTF16( tempBuf1, wtempBuf1, wtempBuf1.size );
+>>>>>>> omni_engine
          WCHAR* f = wtempBuf1;
          WCHAR* t = wtempBuf;
 #else
@@ -256,7 +279,11 @@ File::FileStatus File::open(const char *filename, const AccessMode openMode)
    TempAlloc< TCHAR > fname( dStrlen( filename ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( filename, fname, fname.size );
+=======
+   convertUTF8toUTF16( filename, fname, fname.size );
+>>>>>>> omni_engine
 #else
    dStrcpy(fname, filename);
 #endif
@@ -586,7 +613,11 @@ static bool recurseDumpPath(const char *path, const char *pattern, Vector<Platfo
 
 #ifdef UNICODE
    TempAlloc< WCHAR > searchBuf( buf.size );
+<<<<<<< HEAD
    convertUTF8toUTF16N( buf, searchBuf, searchBuf.size );
+=======
+   convertUTF8toUTF16( buf, searchBuf, searchBuf.size );
+>>>>>>> omni_engine
    WCHAR* search = searchBuf;
 #else
    char *search = buf;
@@ -601,7 +632,11 @@ static bool recurseDumpPath(const char *path, const char *pattern, Vector<Platfo
    do
    {
 #ifdef UNICODE
+<<<<<<< HEAD
       convertUTF16toUTF8N( findData.cFileName, buf, buf.size );
+=======
+      convertUTF16toUTF8( findData.cFileName, buf, buf.size );
+>>>>>>> omni_engine
       char* fnbuf = buf;
 #else
       char *fnbuf = findData.cFileName;
@@ -665,7 +700,11 @@ bool Platform::getFileTimes(const char *filePath, FileTime *createTime, FileTime
    TempAlloc< TCHAR > fp( dStrlen( filePath ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( filePath, fp, fp.size );
+=======
+   convertUTF8toUTF16( filePath, fp, fp.size );
+>>>>>>> omni_engine
 #else
    dStrcpy( fp, filePath );
 #endif
@@ -697,7 +736,11 @@ bool Platform::createPath(const char *file)
 
 #ifdef UNICODE
    TempAlloc< WCHAR > fileBuf( pathbuf.size );
+<<<<<<< HEAD
    convertUTF8toUTF16N( file, fileBuf, fileBuf.size );
+=======
+   convertUTF8toUTF16( file, fileBuf, fileBuf.size );
+>>>>>>> omni_engine
    const WCHAR* fileName = fileBuf;
    const WCHAR* dir;
 #else
@@ -802,7 +845,11 @@ StringTableEntry Platform::getCurrentDirectory()
    forwardslash( buf );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    char* utf8 = createUTF8string( buf );
+=======
+   char* utf8 = convertUTF16toUTF8( buf );
+>>>>>>> omni_engine
    StringTableEntry result = StringTable->insert( utf8 );
    SAFE_DELETE_ARRAY( utf8 );
    return result;
@@ -820,7 +867,11 @@ bool Platform::setCurrentDirectory(StringTableEntry newDir)
    TempAlloc< TCHAR > buf( dStrlen( newDir ) + 2 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( newDir, buf, buf.size - 1 );
+=======
+   convertUTF8toUTF16( newDir, buf, buf.size - 1 );
+>>>>>>> omni_engine
 #else
    dStrcpy( buf, newDir );
 #endif
@@ -847,8 +898,13 @@ static void getExecutableInfo( StringTableEntry* path, StringTableEntry* exe )
          if( delimiter )
             *delimiter = '\0';
 
+<<<<<<< HEAD
          char* pathBuf = createUTF8string( cen_buf );
          char* exeBuf = createUTF8string( delimiter + 1 );
+=======
+         char* pathBuf = convertUTF16toUTF8( cen_buf );
+         char* exeBuf = convertUTF16toUTF8( delimiter + 1 );
+>>>>>>> omni_engine
 
          pathEntry = StringTable->insert( pathBuf );
          exeEntry = StringTable->insert( exeBuf );
@@ -935,7 +991,11 @@ bool Platform::isFile(const char *pFilePath)
    TempAlloc< TCHAR > buf( dStrlen( pFilePath ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( pFilePath, buf, buf.size );
+=======
+   convertUTF8toUTF16( pFilePath, buf, buf.size );
+>>>>>>> omni_engine
 #else
    dStrcpy( buf, pFilePath );
 #endif
@@ -974,7 +1034,11 @@ S32 Platform::getFileSize(const char *pFilePath)
    TempAlloc< TCHAR > buf( dStrlen( pFilePath ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( pFilePath, buf, buf.size );
+=======
+   convertUTF8toUTF16( pFilePath, buf, buf.size );
+>>>>>>> omni_engine
 #else
    dStrcpy( buf, pFilePath );
 #endif
@@ -998,7 +1062,11 @@ S32 Platform::getFileSize(const char *pFilePath)
       return -1;
 
    // must be a real file then
+<<<<<<< HEAD
    return ((findData.nFileSizeHigh * (MAXDWORD+1)) + findData.nFileSizeLow);
+=======
+   return findData.nFileSizeLow;
+>>>>>>> omni_engine
 }
 
 
@@ -1011,7 +1079,11 @@ bool Platform::isDirectory(const char *pDirPath)
    TempAlloc< TCHAR > buf( dStrlen( pDirPath ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( pDirPath, buf, buf.size );
+=======
+   convertUTF8toUTF16( pDirPath, buf, buf.size );
+>>>>>>> omni_engine
 #else
    dStrcpy( buf, pDirPath );
 #endif
@@ -1057,8 +1129,13 @@ bool Platform::isSubDirectory(const char *pParent, const char *pDir)
    TempAlloc< TCHAR > dir( dStrlen( pDir ) + 1 );
 
 #ifdef UNICODE
+<<<<<<< HEAD
    convertUTF8toUTF16N( fileName, file, file.size );
    convertUTF8toUTF16N( pDir, dir, dir.size );
+=======
+   convertUTF8toUTF16( fileName, file, file.size );
+   convertUTF8toUTF16( pDir, dir, dir.size );
+>>>>>>> omni_engine
 #else
    dStrcpy( file, fileName );
    dStrcpy( dir, pDir );
@@ -1213,10 +1290,17 @@ void Platform::getVolumeInformationList( Vector<VolumeInformation>& out_rVolumeI
 
 #ifdef UNICODE
             char buf[ sizeof( lpszFileSystem ) / sizeof( lpszFileSystem[ 0 ] ) * 3 + 1 ];
+<<<<<<< HEAD
             convertUTF16toUTF8( lpszFileSystem, buf );
             info.FileSystem = StringTable->insert( buf );
 
             convertUTF16toUTF8( lpszVolumeName, buf );
+=======
+            convertUTF16toUTF8( lpszFileSystem, buf, sizeof( buf ) / sizeof( buf[ 0 ] ) );
+            info.FileSystem = StringTable->insert( buf );
+
+            convertUTF16toUTF8( lpszVolumeName, buf, sizeof( buf ) / sizeof( buf[ 0 ] ) );
+>>>>>>> omni_engine
             info.Name = StringTable->insert( buf );
 #else
             info.FileSystem = StringTable->insert( lpszFileSystem );
@@ -1251,7 +1335,11 @@ bool Platform::hasSubDirectory(const char *pPath)
 
 #ifdef UNICODE
    WCHAR buf[ 1024 ];
+<<<<<<< HEAD
    convertUTF8toUTF16( searchBuf, buf );
+=======
+   convertUTF8toUTF16( searchBuf, buf, sizeof( buf ) / sizeof( buf[ 0 ] ) );
+>>>>>>> omni_engine
    WCHAR* search = buf;
 #else
    char* search = searchBuf;
@@ -1276,7 +1364,11 @@ bool Platform::hasSubDirectory(const char *pPath)
 
 #ifdef UNICODE
          char fileName[ 1024 ];
+<<<<<<< HEAD
          convertUTF16toUTF8( findData.cFileName, fileName );
+=======
+         convertUTF16toUTF8( findData.cFileName, fileName, sizeof( fileName ) / sizeof( fileName[ 0 ] ) );
+>>>>>>> omni_engine
 #else
          char* fileName = findData.cFileName;
 #endif
@@ -1306,10 +1398,15 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
    // Compose our search string - Format : ([path]/[subpath]/*)
    //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
    dsize_t trLen = basePath ? dStrlen(basePath) : 0;
    dsize_t subtrLen = subPath ? dStrlen(subPath) : 0;
    char trail = trLen > 0 ? basePath[ trLen - 1 ] : '\0';
    char subTrail = subtrLen > 0 ? subPath[ subtrLen - 1 ] : '\0';
+=======
+   char trail = basePath[ dStrlen(basePath) - 1 ];
+   char subTrail = subPath ? subPath[ dStrlen(subPath) - 1 ] : '\0';
+>>>>>>> omni_engine
 
    if( trail == '/' )
    {
@@ -1337,7 +1434,11 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
 
 #ifdef UNICODE
    TempAlloc< WCHAR > searchStr( dStrlen( search ) + 1 );
+<<<<<<< HEAD
    convertUTF8toUTF16N( search, searchStr, searchStr.size );
+=======
+   convertUTF8toUTF16( search, searchStr, searchStr.size );
+>>>>>>> omni_engine
 #else
    char* searchStr = search;
 #endif
@@ -1399,7 +1500,11 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
             continue;
 
 #ifdef UNICODE
+<<<<<<< HEAD
          convertUTF16toUTF8N( findData.cFileName, fileName, fileName.size );
+=======
+         convertUTF16toUTF8( findData.cFileName, fileName, fileName.size );
+>>>>>>> omni_engine
 #else
          char* fileName = findData.cFileName;
 #endif
@@ -1411,9 +1516,15 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
          if( ( subPath  && ( dStrncmp( subPath, "", 1 ) != 0 ) ))
          {
             if( subTrail == '/' )
+<<<<<<< HEAD
                dSprintf(search, search.size, "%s%s", subPath, fileName.ptr);
             else
                dSprintf(search, search.size, "%s/%s", subPath, fileName.ptr);
+=======
+               dSprintf(search, search.size, "%s%s", subPath, fileName);
+            else
+               dSprintf(search, search.size, "%s/%s", subPath, fileName);
+>>>>>>> omni_engine
             char* child = search;
 
             if( currentDepth < recurseDepth || recurseDepth == -1 )
@@ -1427,7 +1538,11 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
                child = fileName;
             else
             {
+<<<<<<< HEAD
                dSprintf(search, search.size, "/%s", fileName.ptr);
+=======
+               dSprintf(search, search.size, "/%s", fileName);
+>>>>>>> omni_engine
                child = search;
             }
 
@@ -1474,7 +1589,11 @@ StringTableEntry osGetTemporaryDirectory()
 #ifdef UNICODE
    TempAlloc< char > dirBuffer( len * 3 + 1 );
    char* dir = dirBuffer;
+<<<<<<< HEAD
    convertUTF16toUTF8N( buffer, dir, dirBuffer.size );
+=======
+   convertUTF16toUTF8( buffer, dir, dirBuffer.size );
+>>>>>>> omni_engine
 #else
    char* dir = buf;
 #endif

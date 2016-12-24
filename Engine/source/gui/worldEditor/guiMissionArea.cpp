@@ -52,6 +52,9 @@ namespace {
 
 IMPLEMENT_CONOBJECT(GuiMissionAreaCtrl);
 
+IMPLEMENT_CALLBACK( GuiMissionAreaCtrl, onMissionAreaModified, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiMissionAreaCtrl, onUndo, void, (), (), "" );
+
 ConsoleDocClass( GuiMissionAreaCtrl,
    "@brief Visual representation of Mission Area Editor.\n\n"
    "@internal"
@@ -96,6 +99,10 @@ void GuiMissionAreaCtrl::initPersistFields()
    addField( "cameraColor",         TypeColorI,    Offset(mCameraColor, GuiMissionAreaCtrl));
 
    Parent::initPersistFields();
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
 }
 
 //------------------------------------------------------------------------------
@@ -184,7 +191,11 @@ void GuiMissionAreaCtrl::onMouseUp(const GuiEvent & event)
    if(mSavedDrag)
    {
       // Let the script get a chance at it.
+<<<<<<< HEAD
       Con::executef( this, "onMissionAreaModified" );
+=======
+      onMissionAreaModified_callback();
+>>>>>>> omni_engine
    }
    mSavedDrag = false;
 }
@@ -290,12 +301,16 @@ void GuiMissionAreaCtrl::onMouseEnter(const GuiEvent &)
 {
    mLastHitMode = Handle_None;
    //setCursor(DefaultCursor);
+
+   // fade control
+   fadeControl();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 void GuiMissionAreaCtrl::onMouseLeave(const GuiEvent &)
 {
    mLastHitMode = Handle_None;
    //setCursor(DefaultCursor);
+   smCapturedControl = this;     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 //------------------------------------------------------------------------------
@@ -356,6 +371,9 @@ GBitmap * GuiMissionAreaCtrl::createTerrainBitmap()
       return NULL;
 
    GBitmap * bitmap = new GBitmap(mTerrainBlock->getBlockSize(), mTerrainBlock->getBlockSize(), false, GFXFormatR8G8B8 );
+
+   if(!bitmap)
+      return NULL;
 
    // get the min/max
    F32 min, max;
@@ -432,7 +450,11 @@ void GuiMissionAreaCtrl::drawHandles(RectI & box)
    F32 by = box.point.y + fillOffset, ty = box.point.y + box.extent.y + fillOffset;
    F32 cy = (ty + by) * 0.5f;
 
+<<<<<<< HEAD
    GFX->getDrawUtil()->clearBitmapModulation();
+=======
+   //GFX->getDrawUtil()->clearBitmapModulation();        // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    drawHandle(Point2F(lx, ty));
    drawHandle(Point2F(lx, cy));
    drawHandle(Point2F(lx, by));
@@ -603,11 +625,19 @@ void GuiMissionAreaCtrl::onRender(Point2I offset, const RectI & updateRect)
       rect.extent.x > rect.extent.y ? rect.extent.x = rect.extent.y : rect.extent.y = rect.extent.x;
 
    GFXDrawUtil *drawer = GFX->getDrawUtil();
+<<<<<<< HEAD
    drawer->clearBitmapModulation();
    drawer->drawBitmapStretch(mTextureObject, rect, GFXBitmapFlip_Y, GFXTextureFilterLinear, false);
 
    GFX->setStateBlock(mSolidStateBlock);
    drawer->clearBitmapModulation();
+=======
+   //drawer->clearBitmapModulation();        // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   drawer->drawBitmapStretch(mTextureObject, rect, GFXBitmapFlip_Y, GFXTextureFilterLinear, false);
+
+   GFX->setStateBlock(mSolidStateBlock);
+   //drawer->clearBitmapModulation();        // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
    // draw the reference axis
    PrimBuild::begin( GFXLineList, 4 );
@@ -713,5 +743,90 @@ void GuiMissionAreaUndoAction::undo()
    mArea = area;
 
    // Let the script get a chance at it.
+<<<<<<< HEAD
    Con::executef( mMissionAreaEditor, "onUndo" );
 }
+=======
+   mMissionAreaEditor->onUndo_callback();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMissionAreaCtrl_setMissionArea(char * x__object, char * x__area)
+{
+GuiMissionAreaCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+MissionArea* area; Sim::findObject(x__area, area ); 
+{
+   object->setMissionArea( area );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiMissionAreaCtrl_updateTerrain(char * x__object)
+{
+GuiMissionAreaCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->updateTerrain();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

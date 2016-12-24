@@ -28,7 +28,11 @@ subject to the following restrictions:
 #include <float.h>
 
 /* SVN $Revision$ on $Date$ from http://bullet.googlecode.com*/
+<<<<<<< HEAD
 #define BT_BULLET_VERSION 282
+=======
+#define BT_BULLET_VERSION 281
+>>>>>>> omni_engine
 
 inline int	btGetVersion()
 {
@@ -163,8 +167,12 @@ inline int	btGetVersion()
 
 #if (defined (__APPLE__) && (!defined (BT_USE_DOUBLE_PRECISION)))
     #if defined (__i386__) || defined (__x86_64__)
+<<<<<<< HEAD
 		#define BT_USE_SIMD_VECTOR3
 		#define BT_USE_SSE
+=======
+        #define BT_USE_SSE
+>>>>>>> omni_engine
 		//BT_USE_SSE_IN_API is enabled on Mac OSX by default, because memory is automatically aligned on 16-byte boundaries
 		//if apps run into issues, we will disable the next line
 		#define BT_USE_SSE_IN_API
@@ -180,11 +188,18 @@ inline int	btGetVersion()
                 #include <emmintrin.h>
             #endif
         #endif //BT_USE_SSE
+<<<<<<< HEAD
     #elif defined( __ARM_NEON__ )
         #ifdef __clang__
             #define BT_USE_NEON 1
 			#define BT_USE_SIMD_VECTOR3
 		
+=======
+    #elif defined( __armv7__ )
+        #ifdef __clang__
+            #define BT_USE_NEON 1
+
+>>>>>>> omni_engine
             #if defined BT_USE_NEON && defined (__clang__)
                 #include <arm_neon.h>
             #endif//BT_USE_NEON
@@ -213,7 +228,12 @@ inline int	btGetVersion()
 	}
 	#else//defined (__i386__) || defined (__x86_64__)
 		#define btAssert assert
+<<<<<<< HEAD
 	#endif//defined (__i386__) || defined (__x86_64__)
+=======
+	#end//defined (__i386__) || defined (__x86_64__)
+	#endif
+>>>>>>> omni_engine
 	#else//defined(DEBUG) || defined (_DEBUG)
 		#define btAssert(x)
 	#endif//defined(DEBUG) || defined (_DEBUG)
@@ -272,8 +292,12 @@ typedef float btScalar;
 typedef __m128 btSimdFloat4;
 #endif//BT_USE_SSE
 
+<<<<<<< HEAD
 #if defined (BT_USE_SSE)
 //#if defined BT_USE_SSE_IN_API && defined (BT_USE_SSE)
+=======
+#if defined BT_USE_SSE_IN_API && defined (BT_USE_SSE)
+>>>>>>> omni_engine
 #ifdef _WIN32
 
 #ifndef BT_NAN
@@ -322,6 +346,7 @@ inline __m128 operator * (const __m128 A, const __m128 B)
 #define BT_INFINITY INFINITY
 #define BT_NAN NAN
 #endif//_WIN32
+<<<<<<< HEAD
 #else
 
 #ifdef BT_USE_NEON
@@ -340,6 +365,9 @@ inline __m128 operator * (const __m128 A, const __m128 B)
 #endif//BT_USE_NEON
 
 #endif //BT_USE_SSE
+=======
+#endif //BT_USE_SSE_IN_API
+>>>>>>> omni_engine
 
 #ifdef BT_USE_NEON
 #include <arm_neon.h>
@@ -431,15 +459,25 @@ SIMD_FORCE_INLINE btScalar btFmod(btScalar x,btScalar y) { return fmodf(x,y); }
 	
 #endif
 
+<<<<<<< HEAD
 #define SIMD_PI           btScalar(3.1415926535897932384626433832795029)
 #define SIMD_2_PI         btScalar(2.0) * SIMD_PI
 #define SIMD_HALF_PI      (SIMD_PI * btScalar(0.5))
+=======
+#define SIMD_2_PI         btScalar(6.283185307179586232)
+#define SIMD_PI           (SIMD_2_PI * btScalar(0.5))
+#define SIMD_HALF_PI      (SIMD_2_PI * btScalar(0.25))
+>>>>>>> omni_engine
 #define SIMD_RADS_PER_DEG (SIMD_2_PI / btScalar(360.0))
 #define SIMD_DEGS_PER_RAD  (btScalar(360.0) / SIMD_2_PI)
 #define SIMDSQRT12 btScalar(0.7071067811865475244008443621048490)
 
 #define btRecipSqrt(x) ((btScalar)(btScalar(1.0)/btSqrt(btScalar(x))))		/* reciprocal square root */
+<<<<<<< HEAD
 #define btRecip(x) (btScalar(1.0)/btScalar(x))
+=======
+
+>>>>>>> omni_engine
 
 #ifdef BT_USE_DOUBLE_PRECISION
 #define SIMD_EPSILON      DBL_EPSILON

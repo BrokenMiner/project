@@ -88,8 +88,13 @@ void ShaderGenPrinterGLSL::printPixelShaderOutputStruct( Stream& stream, const M
 
 void ShaderGenPrinterGLSL::printPixelShaderCloser( Stream& stream )
 {
+<<<<<<< HEAD
     const char *closer = "   \r\n}\r\n";
     stream.write( dStrlen(closer), closer );
+=======
+   const char *closer = "   OUT_FragColor0 = col;\r\n}\r\n";
+   stream.write( dStrlen(closer), closer );
+>>>>>>> omni_engine
 }
 
 void ShaderGenPrinterGLSL::printLine(Stream& stream, const String& line)

@@ -23,6 +23,7 @@
 #include "core/strings/stringFunctions.h"
 #include "core/util/str.h"
 #include "gfx/gfxDevice.h"
+
 #include "langElement.h"
 
 //**************************************************************************
@@ -98,6 +99,8 @@ Var::Var()
    connector = false;
    sampler = false;
    mapsToSampler = false;
+   texCoordNum = 0;
+   constSortPos = cspUninit;
    arraySize = 1;
 }
 

@@ -263,6 +263,8 @@ void MaterialList::clearMatInstList()
       if (mMatInstList[i])
       {
          BaseMatInstance* current = mMatInstList[i];
+         delete current;
+         mMatInstList[i] = NULL;
 
          // ok, since ts material lists can remap difference indexes to the same object 
          // we need to make sure that we don't delete the same memory twice.  walk the 

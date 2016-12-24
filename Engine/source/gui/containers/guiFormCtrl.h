@@ -77,7 +77,11 @@ private:
    RectI mMinimizeButton;
    RectI mMaximizeButton;
 
+<<<<<<< HEAD
    bool mMouseOver;
+=======
+   //bool mMouseOver;      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    bool mDepressed;
    
    static bool _setHasMenu( void *object, const char *index, const char *data );

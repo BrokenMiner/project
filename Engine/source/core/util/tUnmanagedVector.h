@@ -45,7 +45,11 @@ class UnmanagedVector
       UnmanagedVector()
          : mCount( 0 ), mArray( NULL ) {}
       UnmanagedVector( T* array, U32 count )
+<<<<<<< HEAD
          : mCount( count ), mArray( array ) {}
+=======
+         : mArray( array ), mCount( count ) {}
+>>>>>>> omni_engine
 
       U32 size() const { return mCount; }
       bool empty() const { return ( mCount == 0 ); }
@@ -80,12 +84,20 @@ class UnmanagedVector
          return mArray[ mCount - 1 ];
       }
 
+<<<<<<< HEAD
       const T& operator []( U32 index ) const
+=======
+      const T& operator []( U64 index ) const
+>>>>>>> omni_engine
       {
          AssertFatal( index <= size(), "UnmanagedVector::operator[] - Index out of range" );
          return mArray[ index ];
       }
+<<<<<<< HEAD
       T& operator []( U32 index )
+=======
+      T& operator []( U64 index )
+>>>>>>> omni_engine
       {
          AssertFatal( index <= size(), "UnmanagedVector::operator[] - Index out of range" );
          return mArray[ index ];

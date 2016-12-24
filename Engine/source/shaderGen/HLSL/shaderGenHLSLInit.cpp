@@ -32,7 +32,12 @@
 #include "shaderGen/HLSL/paraboloidHLSL.h"
 #include "materials/materialFeatureTypes.h"
 #include "core/module.h"
+<<<<<<< HEAD
 #include "shaderGen/HLSL/accuFeatureHLSL.h"
+=======
+#include "shaderGen/accuFeature.h"
+
+>>>>>>> omni_engine
 
 static ShaderGen::ShaderGenInitDelegate sInitDelegate;
 

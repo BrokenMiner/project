@@ -206,10 +206,15 @@ void GuiProgressBitmapCtrl::onRender(Point2I offset, const RectI &updateRect)
 		mDim = getHeight();
 	else
 		mDim = getWidth();
+<<<<<<< HEAD
 
    GFXDrawUtil* drawUtil = GFX->getDrawUtil();
 	
 	drawUtil->clearBitmapModulation();
+=======
+	
+	//GFX->getDrawUtil()->clearBitmapModulation();       // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
 	if(mNumberOfBitmaps == 1)
 	{
@@ -220,14 +225,22 @@ void GuiProgressBitmapCtrl::onRender(Point2I offset, const RectI &updateRect)
 			//drawing stretch bitmap
 			RectI progressRect = ctrlRect;
 			progressRect.extent.x = width;
+<<<<<<< HEAD
 			drawUtil->drawBitmapStretchSR(mProfile->mTextureObject, progressRect, mProfile->mBitmapArrayRects[0]);
+=======
+			GFX->getDrawUtil()->drawBitmapStretchSR(mProfile->mTextureObject, progressRect, mProfile->mBitmapArrayRects[0]);
+>>>>>>> omni_engine
 		}
 	}
 	else if(mNumberOfBitmaps >= 3)
 	{
 		//drawing left-end bitmap
 		RectI progressRectLeft(ctrlRect.point.x, ctrlRect.point.y, mDim, mDim);
+<<<<<<< HEAD
 		drawUtil->drawBitmapStretchSR(mProfile->mTextureObject, progressRectLeft, mProfile->mBitmapArrayRects[0]);
+=======
+		GFX->getDrawUtil()->drawBitmapStretchSR(mProfile->mTextureObject, progressRectLeft, mProfile->mBitmapArrayRects[0]);
+>>>>>>> omni_engine
 
 		//draw the progress with image
 		S32 width = (S32)((F32)(getWidth()) * mProgress);
@@ -239,11 +252,19 @@ void GuiProgressBitmapCtrl::onRender(Point2I offset, const RectI &updateRect)
 			progressRect.extent.x = (width - mDim - mDim);
 			if (progressRect.extent.x < 0)
 				progressRect.extent.x = 0;
+<<<<<<< HEAD
 			drawUtil->drawBitmapStretchSR(mProfile->mTextureObject, progressRect, mProfile->mBitmapArrayRects[1]);
 		
 			//drawing right-end bitmap
 			RectI progressRectRight(progressRect.point.x + progressRect.extent.x, ctrlRect.point.y, mDim, mDim );
 			drawUtil->drawBitmapStretchSR(mProfile->mTextureObject, progressRectRight, mProfile->mBitmapArrayRects[2]);
+=======
+			GFX->getDrawUtil()->drawBitmapStretchSR(mProfile->mTextureObject, progressRect, mProfile->mBitmapArrayRects[1]);
+		
+			//drawing right-end bitmap
+			RectI progressRectRight(progressRect.point.x + progressRect.extent.x, ctrlRect.point.y, mDim, mDim );
+			GFX->getDrawUtil()->drawBitmapStretchSR(mProfile->mTextureObject, progressRectRight, mProfile->mBitmapArrayRects[2]);
+>>>>>>> omni_engine
 		}
 	}
 	else
@@ -251,7 +272,11 @@ void GuiProgressBitmapCtrl::onRender(Point2I offset, const RectI &updateRect)
 
 	//if there's a border, draw it
    if (mProfile->mBorder)
+<<<<<<< HEAD
       drawUtil->drawRect(ctrlRect, mProfile->mBorderColor);
+=======
+      GFX->getDrawUtil()->drawRect(ctrlRect, mProfile->mBorderColor);
+>>>>>>> omni_engine
 
    Parent::onRender( offset, updateRect );
 
@@ -287,3 +312,74 @@ DefineEngineMethod( GuiProgressBitmapCtrl, setBitmap, void, ( const char* filena
 {
    object->setBitmap( filename );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiProgressBitmapCtrl_setBitmap(char * x__object, char * x__filename)
+{
+GuiProgressBitmapCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* filename = (const char*)x__filename;
+{
+   object->setBitmap( filename );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

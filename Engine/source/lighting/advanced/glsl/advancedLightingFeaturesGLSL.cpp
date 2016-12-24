@@ -225,10 +225,17 @@ void DeferredBumpFeatGLSL::processVert(   Vector<ShaderComponent*> &componentLis
       // We need the view to tangent space transform in the pixel shader.
       getOutViewToTangent( componentList, meta, fd );
 
+<<<<<<< HEAD
       const bool useTexAnim = fd.features[MFT_TexAnim];
       // Make sure there are texcoords
       if( !fd.features[MFT_Parallax] && !fd.features[MFT_DiffuseMap] )
       {
+=======
+      // Make sure there are texcoords
+      if( !fd.features[MFT_Parallax] && !fd.features[MFT_DiffuseMap] )
+      {
+         const bool useTexAnim = fd.features[MFT_TexAnim];
+>>>>>>> omni_engine
 
          getOutTexCoord(   "texCoord", 
                            "vec2", 
@@ -236,12 +243,21 @@ void DeferredBumpFeatGLSL::processVert(   Vector<ShaderComponent*> &componentLis
                            useTexAnim, 
                            meta, 
                            componentList );
+<<<<<<< HEAD
       }
 
       if ( fd.features.hasFeature( MFT_DetailNormalMap ) )
             addOutDetailTexCoord( componentList, 
                                   meta,
                                   useTexAnim );
+=======
+
+         if ( fd.features.hasFeature( MFT_DetailNormalMap ) )
+            addOutDetailTexCoord( componentList, 
+                                  meta,
+                                  useTexAnim );
+      }
+>>>>>>> omni_engine
 
       output = meta;
    }
@@ -450,6 +466,7 @@ void DeferredBumpFeatGLSL::setTexData( Material::StageData &stageDat,
       return;
    }
 
+<<<<<<< HEAD
    if (!fd.features[MFT_PrePassConditioner] && fd.features[MFT_AccuMap])
    {
       passData.mTexType[texIndex] = Material::Bump;
@@ -464,6 +481,9 @@ void DeferredBumpFeatGLSL::setTexData( Material::StageData &stageDat,
       }
    }
    else if (!fd.features[MFT_Parallax] && !fd.features[MFT_SpecularMap] &&
+=======
+   if (  !fd.features[MFT_Parallax] && !fd.features[MFT_SpecularMap] &&
+>>>>>>> omni_engine
          ( fd.features[MFT_PrePassConditioner] ||
            fd.features[MFT_PixSpecular] ) )
    {
@@ -605,8 +625,12 @@ void DeferredMinnaertGLSL::setTexData( Material::StageData &stageDat,
       NamedTexTarget *texTarget = NamedTexTarget::find(RenderPrePassMgr::BufferName);
       if ( texTarget )
       {
+<<<<<<< HEAD
          passData.mTexType[texIndex] = Material::TexTarget;
          passData.mSamplerNames[texIndex] = "prepassBuffer";
+=======
+         passData.mTexType[ texIndex ] = Material::TexTarget;
+>>>>>>> omni_engine
          passData.mTexSlot[ texIndex++ ].texTarget = texTarget;
       }
    }

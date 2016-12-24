@@ -40,7 +40,10 @@
    HoverNodeColor = "255 255 255 255";
 
    new GuiWindowCollapseCtrl(MeshRoadEditorTreeWindow) {
-      internalName = "";
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      internalName = "MeshRoadEditorTreeWindow";
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       canSaveDynamicFields = "0";
       Enabled = "1";
       isContainer = "1";
@@ -142,7 +145,11 @@
       };
    };
    new GuiWindowCollapseCtrl(MeshRoadEditorOptionsWindow) {
-      internalName = "Window";
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      //internalName = "Window";
+      internalName = "MeshRoadEditorOptionsWindow";
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       canSaveDynamicFields = "0";
       Enabled = "1";
       isContainer = "1";

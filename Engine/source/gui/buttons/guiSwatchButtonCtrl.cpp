@@ -76,6 +76,23 @@ void GuiSwatchButtonCtrl::initPersistFields()
    addField( "gridBitmap", TypeString, Offset( mGridBitmap, GuiSwatchButtonCtrl ), "The bitmap used for the transparent grid" );
    
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor");
+
+   removeField("backgroundColor" );
+
+   removeField("controlFillColor");
+
+   removeField("contextFillColor");
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   // @Copyright end
 }
 
 bool GuiSwatchButtonCtrl::onWake()
@@ -89,6 +106,43 @@ bool GuiSwatchButtonCtrl::onWake()
    return true;
 }
 
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiSwatchButtonCtrl::copyProfileSettings()
+{
+   if(mSwatchColor && !mProfileSettingsCopied)
+   {
+      mSwatchColorCopy = mSwatchColor;
+      Parent::copyProfileSettings();
+   }
+}
+
+void GuiSwatchButtonCtrl::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+   if(mSwatchColor)
+      mSwatchColor.alpha = mSwatchColorCopy.alpha * mRenderAlpha;
+}
+
+void GuiSwatchButtonCtrl::resetProfileSettings()
+{
+   mSwatchColor = mSwatchColorCopy;
+   Parent::resetProfileSettings();
+}
+
+void GuiSwatchButtonCtrl::onStaticModified( const char *slotName, const char *newValue )
+{
+   if( !dStricmp( slotName, "color" ) )
+   {
+      ColorF color(1, 0, 0, 1);
+      dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+   
+      mSwatchColorCopy = color;
+   }
+}
+// @Copyright end
+
 void GuiSwatchButtonCtrl::onRender( Point2I offset, const RectI &updateRect )
 {
    bool highlight = mMouseOver;
@@ -101,7 +155,11 @@ void GuiSwatchButtonCtrl::onRender( Point2I offset, const RectI &updateRect )
       renderRect.inset( 1, 1 );      
 
    GFXDrawUtil *drawer = GFX->getDrawUtil();
+<<<<<<< HEAD
    drawer->clearBitmapModulation();
+=======
+   //drawer->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
    // Draw background transparency grid texture...
    if ( mGrid.isValid() )
@@ -125,3 +183,75 @@ DefineEngineMethod( GuiSwatchButtonCtrl, setColor, void, ( const char* newColor 
    object->setField( "color", newColor );
    object->execAltConsoleCallback();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiSwatchButtonCtrl_setColor(char * x__object, char * x__newColor)
+{
+GuiSwatchButtonCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* newColor = (const char*)x__newColor;
+{
+   object->setField( "color", newColor );
+   object->execAltConsoleCallback();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

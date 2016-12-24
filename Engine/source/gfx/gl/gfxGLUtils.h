@@ -25,6 +25,7 @@
 
 #include "core/util/preprocessorHelpers.h"
 #include "gfx/gl/gfxGLEnumTranslate.h"
+<<<<<<< HEAD
 #include "gfx/gl/gfxGLStateCache.h"
 
 inline U32 getMaxMipmaps(U32 width, U32 height, U32 depth)
@@ -34,6 +35,14 @@ inline U32 getMaxMipmaps(U32 width, U32 height, U32 depth)
 
 inline GLenum minificationFilter(U32 minFilter, U32 mipFilter, U32 /*mipLevels*/)
 {
+=======
+
+static inline GLenum minificationFilter(U32 minFilter, U32 mipFilter, U32 mipLevels)
+{
+   if(mipLevels == 1)
+      return GFXGLTextureFilter[minFilter];
+
+>>>>>>> omni_engine
    // the compiler should interpret this as array lookups
    switch( minFilter ) 
    {
@@ -101,7 +110,11 @@ inline U32 getCompressedSurfaceSize(GFXFormat format,U32 width, U32 height, U32 
 class GFXGLPreserveInteger
 {
 public:
+<<<<<<< HEAD
    typedef void(STDCALL *BindFn)(GLenum, GLuint);
+=======
+   typedef void(*BindFn)(GLenum, GLuint);
+>>>>>>> omni_engine
 
    /// Preserve the integer.
    /// @param binding The binding which should be set on destruction.
@@ -112,12 +125,16 @@ public:
       mBinding(binding), mPreserved(0), mBinder(binder)
    {
       AssertFatal(mBinder, "GFXGLPreserveInteger - Need a valid binder function");
+<<<<<<< HEAD
       mPreserved = GFXGL->getOpenglCache()->getCacheBinded(mBinding);
 #if defined(TORQUE_DEBUG) && defined(TORQUE_DEBUG_GFX)
       GLint bindedOnOpenglDriver;
       glGetIntegerv(getBinding, &bindedOnOpenglDriver);
       AssertFatal( mPreserved == bindedOnOpenglDriver, "GFXGLPreserveInteger - GFXGLDevice/OpenGL mismatch on cache binded resource.");
 #endif
+=======
+      glGetIntegerv(getBinding, &mPreserved);
+>>>>>>> omni_engine
    }
    
    /// Restores the integer.
@@ -132,6 +149,7 @@ private:
    BindFn mBinder;
 };
 
+<<<<<<< HEAD
 class GFXGLPreserveTexture
 {
 public:
@@ -253,5 +271,26 @@ GFXGLPreserveInteger TORQUE_CONCAT(preserve2_, __LINE__) (GL_DRAW_FRAMEBUFFER, G
 #else
     #define CHECK_FRAMEBUFFER_STATUS()
 #endif //TORQUE_DEBUG
+=======
+/// Helper macro to preserve the current VBO binding.
+#define PRESERVE_VERTEX_BUFFER() \
+GFXGLPreserveInteger TORQUE_CONCAT(preserve_, __LINE__) (GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, glBindBuffer)
+
+/// Helper macro to preserve the current element array binding.
+#define PRESERVE_INDEX_BUFFER() \
+GFXGLPreserveInteger TORQUE_CONCAT(preserve_, __LINE__) (GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, glBindBuffer)
+
+/// Helper macro to preserve the current 2D texture binding.
+#define PRESERVE_2D_TEXTURE() \
+GFXGLPreserveInteger TORQUE_CONCAT(preserve_, __LINE__) (GL_TEXTURE_2D, GL_TEXTURE_BINDING_2D, glBindTexture)
+
+/// Helper macro to preserve the current 3D texture binding.
+#define PRESERVE_3D_TEXTURE() \
+GFXGLPreserveInteger TORQUE_CONCAT(preserve_, __LINE__) (GL_TEXTURE_3D, GL_TEXTURE_BINDING_3D, glBindTexture)
+
+#define PRESERVE_FRAMEBUFFER() \
+GFXGLPreserveInteger TORQUE_CONCAT(preserve_, __LINE__) (GL_READ_FRAMEBUFFER_EXT, GL_READ_FRAMEBUFFER_BINDING_EXT, glBindFramebufferEXT);\
+GFXGLPreserveInteger TORQUE_CONCAT(preserve2_, __LINE__) (GL_DRAW_FRAMEBUFFER_EXT, GL_DRAW_FRAMEBUFFER_BINDING_EXT, glBindFramebufferEXT)
+>>>>>>> omni_engine
 
 #endif

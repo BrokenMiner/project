@@ -414,6 +414,7 @@ struct	btTypedConstraintData
 	int		m_isEnabled;
 	
 };
+<<<<<<< HEAD
 #endif //BACKWARDS_COMPATIBLE
 
 struct	btTypedConstraintDoubleData
@@ -443,6 +444,12 @@ struct	btTypedConstraintDoubleData
 SIMD_FORCE_INLINE	int	btTypedConstraint::calculateSerializeBufferSize() const
 {
 	return sizeof(btTypedConstraintData2);
+=======
+
+SIMD_FORCE_INLINE	int	btTypedConstraint::calculateSerializeBufferSize() const
+{
+	return sizeof(btTypedConstraintData);
+>>>>>>> omni_engine
 }
 
 

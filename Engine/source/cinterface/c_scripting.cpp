@@ -76,10 +76,16 @@ extern "C" {
       if (!entry)
          return "";
 
+<<<<<<< HEAD
       static const char* exportArgv[1] = { "consoleExportXML" };
       static StringStackConsoleWrapper exportCmd(1, exportArgv);
 
       return entry->cb.mStringCallbackFunc(NULL, exportCmd.argc, exportCmd.argv);      
+=======
+      const char* argv[] = {"consoleExportXML", 0};
+
+      return entry->cb.mStringCallbackFunc(NULL, 1, argv);      
+>>>>>>> omni_engine
    }
 
    MarshalNativeEntry* script_get_namespace_entry(const char* nameSpace, const char* name)
@@ -216,8 +222,12 @@ extern "C" {
             return "";
       }
 
+<<<<<<< HEAD
       StringStackConsoleWrapper args(argc, argv);
       return entry->cb.mStringCallbackFunc(o, args.count(), args);
+=======
+      return entry->cb.mStringCallbackFunc(o, argc, argv);      
+>>>>>>> omni_engine
    }
 
    bool script_call_namespace_entry_bool(Namespace::Entry* entry, S32 argc, const char** argv)
@@ -235,8 +245,12 @@ extern "C" {
             return false;
       }
 
+<<<<<<< HEAD
       StringStackConsoleWrapper args(argc, argv);
       return entry->cb.mBoolCallbackFunc(o, args.count(), args);
+=======
+      return entry->cb.mBoolCallbackFunc(o, argc, argv);      
+>>>>>>> omni_engine
    }
 
    S32 script_call_namespace_entry_int(Namespace::Entry* entry, S32 argc, const char** argv)
@@ -254,8 +268,12 @@ extern "C" {
             return 0;
       }
 
+<<<<<<< HEAD
       StringStackConsoleWrapper args(argc, argv);
       return entry->cb.mIntCallbackFunc(o, args.count(), args);
+=======
+      return entry->cb.mIntCallbackFunc(o, argc, argv);      
+>>>>>>> omni_engine
    }
 
    F32 script_call_namespace_entry_float(Namespace::Entry* entry, S32 argc, const char** argv)
@@ -273,8 +291,12 @@ extern "C" {
             return 0.0f;
       }
 
+<<<<<<< HEAD
       StringStackConsoleWrapper args(argc, argv);
       return entry->cb.mFloatCallbackFunc(o, args.count(), args);
+=======
+      return entry->cb.mFloatCallbackFunc(o, argc, argv);      
+>>>>>>> omni_engine
    }
 
 
@@ -293,8 +315,12 @@ extern "C" {
             return;
       }
 
+<<<<<<< HEAD
       StringStackConsoleWrapper args(argc, argv);
       entry->cb.mVoidCallbackFunc(o, args.count(), args);
+=======
+      entry->cb.mVoidCallbackFunc(o, argc, argv);      
+>>>>>>> omni_engine
    }
 
    S32 script_simobject_get_id(SimObject* so)
@@ -424,3 +450,86 @@ ConsoleFunction(TestFunction2Args, const char *, 3, 3, "testFunction(arg1, arg2)
 {
    return "Return Value";
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn__TestFunction2Args(char * x__a1, char * x__a2,  char* retval)
+{
+dSprintf(retval,16384,"");
+const char* a1 = (const char*)x__a1;
+const char* a2 = (const char*)x__a2;
+const char * wle_returnObject;
+{
+S32 argc = 3;
+std::vector<const char*> arguments;
+arguments.push_back("");
+arguments.push_back(a1);
+arguments.push_back(a2);
+{
+   {wle_returnObject =" Value";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

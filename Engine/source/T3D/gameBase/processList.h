@@ -30,6 +30,7 @@
 #include "core/util/tSignal.h"
 #endif
 
+#include <unordered_map>
 //----------------------------------------------------------------------------
 
 #define TickMs      32
@@ -39,6 +40,31 @@
 
 class GameConnection;
 struct Move;
+
+#ifdef ENABLE_SIMOBJECT_TICK_EVENTS
+class CountersDetail
+{
+public:
+	U32 mInterval;
+	U32 mCounter;
+	bool mSuspend;
+CountersDetail (U32 i,U32 c)
+{
+	mInterval = i;
+	mCounter = c;
+	mSuspend=false;
+}
+CountersDetail ()
+{
+mInterval =0;
+mCounter = 0;
+mSuspend=false;
+}
+};
+
+
+typedef std::unordered_map<std::string ,CountersDetail> TypeCounters;
+#endif
 
 
 class ProcessObject
@@ -96,6 +122,10 @@ public:
    /// @param  move   Move event corresponding to this tick, or NULL.
    virtual void processTick( const Move *move ) {}
 
+   //WLE - Vince
+   virtual void processTickNotifyBefore() {}
+   virtual void processTickNotifyAfter() {}
+
    /// Interpolates between tick events.  This takes place on the CLIENT ONLY.
    ///
    /// @param   delta   Time since last call to interpolate
@@ -127,10 +157,43 @@ public:
    U32 mProcessTag;                       // Tag used during sort
    U32 mOrderGUID;                        // UID for keeping order synced (e.g., across network or runs of sim)
    Link mProcessLink;                     // Ordered process queue
+<<<<<<< HEAD
 
    bool mProcessTick;
 
    bool mIsGameBase;
+=======
+   bool mProcessTick;
+   bool mIsGameBase;
+
+#ifdef ENABLE_SIMOBJECT_TICK_EVENTS
+   bool isTickingScriptNotifyBefore(){return mProcessTickScriptNotifyBefore;};
+   bool isTickingScriptNotifyAfter(){return mProcessTickScriptNotifyAfter;};
+
+
+   bool mProcessTickScriptNotifyBefore;
+   bool mProcessTickScriptNotifyAfter;
+   bool mProcessTickClient;
+   bool mProcessTickServer;
+
+   bool mCountersProcess;
+
+   private:
+   TypeCounters mCounters;
+   public:
+
+   bool counterAdd(const char* countername,U32 interval);
+   bool counterRemove(const char* countername);
+   U32  counterGetInterval(const char* countername);
+   void counterReset(const char* countername);
+   bool counterHas(const char* countername);
+   void countersClear();
+   void countersIncrement();
+   void counterSuspend(const char* countername,bool suspend);
+   
+   virtual void counterNotify(const char* countername){};
+#endif
+>>>>>>> omni_engine
 };
 
 //----------------------------------------------------------------------------

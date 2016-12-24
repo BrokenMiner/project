@@ -150,7 +150,11 @@ class SimSet: public SimObject
       S32        size() const  { return objectList.size(); }
       iterator   begin() { return objectList.begin(); }
       iterator   end()   { return objectList.end(); }
+<<<<<<< HEAD
       value operator[] (S32 index) { return objectList[U32(index)]; }
+=======
+      value operator[] (S64 index) { return objectList[U64(index)]; }
+>>>>>>> omni_engine
 
       iterator find( iterator first, iterator last, SimObject *obj)
       { return ::find(first, last, obj); }
@@ -214,7 +218,11 @@ class SimSet: public SimObject
       
       /// @}
 
+<<<<<<< HEAD
       void callOnChildren( const String &method, S32 argc, ConsoleValueRef argv[], bool executeOnChildGroups = true );
+=======
+      void callOnChildren( const String &method, S32 argc, const char *argv[], bool executeOnChildGroups = true );
+>>>>>>> omni_engine
 
       /// Return the number of objects in this set as well as all sets that are contained
       /// in this set and its children.
@@ -434,7 +442,11 @@ class SimGroup: public SimSet
       virtual SimObject* findObject(const char* name);
       virtual void onRemove();
 
+<<<<<<< HEAD
       virtual bool processArguments( S32 argc, ConsoleValueRef *argv );
+=======
+      virtual bool processArguments( S32 argc, const char** argv );
+>>>>>>> omni_engine
 
       DECLARE_CONOBJECT( SimGroup );
 };

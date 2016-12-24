@@ -123,14 +123,20 @@ class btConeShapeX : public btConeShape
 ///btConeShapeZ implements a Cone shape, around the Z axis
 class btConeShapeZ : public btConeShape
 {
+<<<<<<< HEAD
 public:
 	btConeShapeZ(btScalar radius,btScalar height);
+=======
+	public:
+		btConeShapeZ(btScalar radius,btScalar height);
+>>>>>>> omni_engine
 
 	virtual btVector3	getAnisotropicRollingFrictionDirection() const
 	{
 		return btVector3 (0,0,1);
 	}
 
+<<<<<<< HEAD
 	//debugging
 	virtual const char*	getName()const
 	{
@@ -167,5 +173,8 @@ SIMD_FORCE_INLINE	const char*	btConeShape::serialize(void* dataBuffer, btSeriali
 	return "btConeShapeData";
 }
 
+=======
+};
+>>>>>>> omni_engine
 #endif //BT_CONE_MINKOWSKI_H
 

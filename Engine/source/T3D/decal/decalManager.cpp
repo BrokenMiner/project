@@ -1235,6 +1235,7 @@ void DecalManager::prepRenderImage( SceneRenderState* state )
          currentBatch = &batches.last();
          currentBatch->startDecal = i;
          currentBatch->decalCount = 1;
+<<<<<<< HEAD
 
          // Shrink and warning: preventing a potential crash.
          currentBatch->iCount =
@@ -1259,6 +1260,10 @@ void DecalManager::prepRenderImage( SceneRenderState* state )
          }
 #endif
 
+=======
+         currentBatch->iCount = decal->mIndxCount;
+         currentBatch->vCount = decal->mVertCount;
+>>>>>>> omni_engine
          currentBatch->mat = mat;
          currentBatch->matInst = decal->mDataBlock->getMaterialInstance();
          currentBatch->priority = decal->getRenderPriority();         
@@ -1321,14 +1326,19 @@ void DecalManager::prepRenderImage( SceneRenderState* state )
       {
          DecalInstance *dinst = mDecalQueue[j];
 
+<<<<<<< HEAD
          const U32 indxCount =
              (dinst->mIndxCount > currentBatch.iCount) ?
              currentBatch.iCount : dinst->mIndxCount;
          for ( U32 k = 0; k < indxCount; k++ )
+=======
+         for ( U32 k = 0; k < dinst->mIndxCount; k++ )
+>>>>>>> omni_engine
          {
             *( pbPtr + ioffset + k ) = dinst->mIndices[k] + voffset;            
          }
 
+<<<<<<< HEAD
          ioffset += indxCount;
 
          const U32 vertCount =
@@ -1336,6 +1346,12 @@ void DecalManager::prepRenderImage( SceneRenderState* state )
              currentBatch.vCount : dinst->mVertCount;
          dMemcpy( vpPtr + voffset, dinst->mVerts, sizeof( DecalVertex ) * vertCount );
          voffset += vertCount;
+=======
+         ioffset += dinst->mIndxCount;
+
+         dMemcpy( vpPtr + voffset, dinst->mVerts, sizeof( DecalVertex ) * dinst->mVertCount );
+         voffset += dinst->mVertCount;
+>>>>>>> omni_engine
 
          // Ugly hack for ProjectedShadow!
          if ( (dinst->mFlags & CustomDecal) && dinst->mCustomTex != NULL )
@@ -1385,10 +1401,15 @@ void DecalManager::prepRenderImage( SceneRenderState* state )
       pb->lock( &pbPtr );
 
       // Memcpy from system to video memory.
+<<<<<<< HEAD
       const U32 vpCount = sizeof( DecalVertex ) * currentBatch.vCount;
       dMemcpy( vpPtr, vertData, vpCount );
       const U32 pbCount = sizeof( U16 ) * currentBatch.iCount;
       dMemcpy( pbPtr, indexData, pbCount );
+=======
+      dMemcpy( vpPtr, vertData, sizeof( DecalVertex ) * currentBatch.vCount );
+      dMemcpy( pbPtr, indexData, sizeof( U16 ) * currentBatch.iCount );
+>>>>>>> omni_engine
 
       pb->unlock();
       vb->unlock();
@@ -1744,3 +1765,144 @@ DefineEngineFunction( decalManagerRemoveDecal, bool, ( S32 decalID ),,
    gDecalManager->removeDecal(inst);
    return true;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_decalManagerAddDecal(char * x__position, char * x__normal, F32 rot, F32 scale, char * x__decalData, bool isImmortal)
+{
+Point3F position = Point3F();
+sscanf(x__position,"%f %f %f",&position.x,&position.y,&position.z);
+Point3F normal = Point3F();
+sscanf(x__normal,"%f %f %f",&normal.x,&normal.y,&normal.z);
+
+DecalData* decalData; Sim::findObject(x__decalData, decalData ); 
+{
+   if( !decalData )
+   {
+      Con::errorf( "decalManagerAddDecal - Invalid Decal DataBlock" );
+     return (S32)( -1);
+   }
+   U8 flags = 0;
+   if( isImmortal )
+      flags |= PermanentDecal;
+   DecalInstance* inst = gDecalManager->addDecal( position, normal, rot, decalData, scale, -1, flags );
+   if( !inst )
+   {
+      Con::errorf( "decalManagerAddDecal - Unable to create decal instance." );
+     return (S32)( -1);
+   }
+      inst->mId = gDecalManager->mDecalInstanceVec.size();
+   gDecalManager->mDecalInstanceVec.push_back( inst );
+  return (S32)( inst->mId);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_decalManagerClear()
+{
+{
+   gDecalManager->clearData();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_decalManagerDirty()
+{
+bool wle_returnObject;
+{
+   {wle_returnObject =gDecalManager->isDirty();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_decalManagerLoad(char * x__fileName)
+{
+const char* fileName = (const char*)x__fileName;
+bool wle_returnObject;
+{
+   {wle_returnObject =gDecalManager->loadDecals( fileName );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_decalManagerRemoveDecal(S32 decalID)
+{
+bool wle_returnObject;
+{
+   DecalInstance *inst = gDecalManager->getDecal( decalID );
+   if( !inst )
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   gDecalManager->removeDecal(inst);
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_decalManagerSave(char * x__decalSaveFile)
+{
+String decalSaveFile = String( x__decalSaveFile);
+{
+   
+   if( decalSaveFile.isEmpty() )
+   {
+      String fileName = String::ToString( "%s.decals", Con::getVariable( "$Client::MissionFile" ) );
+      char fullName[ 4096 ];
+      Platform::makeFullPathName( fileName, fullName, sizeof( fullName ) );
+      decalSaveFile = String( fullName );
+   }
+   
+   gDecalManager->saveDecals( decalSaveFile );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

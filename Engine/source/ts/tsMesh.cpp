@@ -517,6 +517,8 @@ bool TSMesh::getFeatures( S32 frame, const MatrixF& mat, const VectorF&, ConvexF
             S32 k;
             for ( k = 0; k < cf->mEdgeList.size(); k++ ) 
             {
+               // ATTENTION! My
+               // const ConvexFeature::Edge &currentEdge = cf->mEdgeList[k];
                ConvexFeature::Edge currentEdge = cf->mEdgeList[k];
                if (currentEdge.vertex[0] == newEdge0 &&
                   currentEdge.vertex[1] == newEdge1)
@@ -2438,6 +2440,7 @@ void TSMesh::_createVBIB( TSVertexBufferHandle &vb, GFXPrimitiveBufferHandle &pb
             // Use the first index to determine which 16-bit address space we are operating in
             pInfo.startVertex = indices[draw.start] & 0xFFFF0000;
             pInfo.minIndex = 0; // minIndex are zero based index relative to startVertex. See @GFXDevice
+            //pInfo.minIndex = pInfo.startVertex;
             pInfo.numVertices = getMin((U32)0x10000, mNumVerts - pInfo.startVertex);
             break;
 
@@ -2449,6 +2452,7 @@ void TSMesh::_createVBIB( TSVertexBufferHandle &vb, GFXPrimitiveBufferHandle &pb
             // Use the first index to determine which 16-bit address space we are operating in
             pInfo.startVertex = indices[draw.start] & 0xFFFF0000;
             pInfo.minIndex = 0; // minIndex are zero based index relative to startVertex. See @GFXDevice
+            //pInfo.minIndex = pInfo.startVertex;
             pInfo.numVertices = getMin((U32)0x10000, mNumVerts - pInfo.startVertex);
             break;
 

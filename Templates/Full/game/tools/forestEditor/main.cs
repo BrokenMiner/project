@@ -135,6 +135,9 @@ function ForestEditorPlugin::onWorldEditorShutdown( %this )
 
 function ForestEditorPlugin::onActivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   ForestEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    EditorGui.bringToFront( ForestEditorGui );
    ForestEditorGui.setVisible( true );
    ForestEditorPalleteWindow.setVisible( true );
@@ -209,6 +212,11 @@ function ForestEditorPlugin::onActivated( %this )
 
 function ForestEditorPlugin::onDeactivated( %this )
 {  
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!ForestEditorPlugin.isActive)
+      return;
+   ForestEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    ForestEditorGui.setVisible( false );
    ForestEditorPalleteWindow.setVisible( false );
    ForestEditorPropertiesWindow.setVisible( false );
@@ -260,6 +268,9 @@ function ForestEditorPlugin::onSaveMission( %this, %missionFile )
          %forestObject.saveDataFile(%path @ "/" @ %missionName @ ".forest");
       }
    }
+   
+   if ( isObject( theForest ) )                     
+      theForest.saveDataFile();
       
    ForestBrushGroup.save( "art/forest/brushes.cs" );
 }

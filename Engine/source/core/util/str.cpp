@@ -346,7 +346,11 @@ class String::StringData : protected StringDataImpl
          {
             // Do this atomically to protect interned strings.
             
+<<<<<<< HEAD
             UTF16* utf16 = createUTF16string( mData );
+=======
+            UTF16* utf16 = convertUTF8toUTF16( mData );
+>>>>>>> omni_engine
             if( !dCompareAndSwap( mUTF16,( UTF16* ) NULL, utf16 ) )
                delete [] utf16;
          }
@@ -495,12 +499,23 @@ DefineConsoleFunction( dumpStringMemStats, void, (), , "()"
 void* String::StringData::operator new( size_t size, U32 len )
 {
    AssertFatal( len != 0, "String::StringData::operator new() - string must not be empty" );
+<<<<<<< HEAD
    StringData *str = static_cast<StringData*>( dMalloc( size + len * sizeof(StringChar) ) );
 
    str->mLength      = len;
 
 #ifdef TORQUE_DEBUG
    dFetchAndAdd( sgStringMemBytes, size + len * sizeof(StringChar) );
+=======
+   const size_t bs = size + len * sizeof(StringChar);
+   AssertFatal( bs <= S32_MAX, "Huge data." );
+   StringData *str = reinterpret_cast<StringData*>(dMalloc( bs ));
+
+   str->mLength = len;
+
+#ifdef TORQUE_DEBUG
+   dFetchAndAdd( sgStringMemBytes, (S32)bs );
+>>>>>>> omni_engine
    dFetchAndAdd( sgStringInstances, 1 );
 #endif
 
@@ -523,12 +538,23 @@ void String::StringData::operator delete(void *ptr)
 void* String::StringData::operator new( size_t size, U32 len, DataChunker& chunker )
 {
    AssertFatal( len != 0, "String::StringData::operator new() - string must not be empty" );
+<<<<<<< HEAD
    StringData *str = static_cast<StringData*>( chunker.alloc( size + len * sizeof(StringChar) ) );
 
    str->mLength      = len;
 
 #ifdef TORQUE_DEBUG
    dFetchAndAdd( sgStringMemBytes, size + len * sizeof(StringChar) );
+=======
+   const size_t bs = size + len * sizeof(StringChar);
+   AssertFatal( bs <= S32_MAX, "Huge data." );
+   StringData *str = reinterpret_cast<StringData*>(chunker.alloc( (S32)bs ));
+
+   str->mLength = len;
+
+#ifdef TORQUE_DEBUG
+   dFetchAndAdd( sgStringMemBytes, (S32)bs );
+>>>>>>> omni_engine
    dFetchAndAdd( sgStringInstances, 1 );
 #endif
 
@@ -567,6 +593,7 @@ String::String(const StringChar *str, SizeType len)
    PROFILE_SCOPE(String_char_len_constructor);
    if (str && *str && len!=0)
    {
+      AssertFatal(len<=dStrlen(str), "String::String: string too short");
       _string = new ( len ) StringData( str );
    }
    else
@@ -579,7 +606,11 @@ String::String(const UTF16 *str)
 
    if( str && str[ 0 ] )
    {
+<<<<<<< HEAD
       UTF8* utf8 = createUTF8string( str );
+=======
+      UTF8* utf8 = convertUTF16toUTF8( str );
+>>>>>>> omni_engine
       U32 len = dStrlen( utf8 );
       _string = new ( len ) StringData( utf8 );
       delete [] utf8;
@@ -768,7 +799,11 @@ String& String::operator=(const String &src)
 
 String& String::operator+=(const StringChar *src)
 {
+<<<<<<< HEAD
    if( src == NULL || !*src )
+=======
+   if( src == NULL && !*src )
+>>>>>>> omni_engine
       return *this;
 
    // Append the given string into a new string
@@ -1427,7 +1462,11 @@ void String::copy(StringChar* dst, const StringChar *src, U32 len)
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 #if defined(TORQUE_OS_WIN) || defined(TORQUE_OS_XBOX) || defined(TORQUE_OS_XENON)
+=======
+#if defined(TORQUE_OS_WIN32) || defined(TORQUE_OS_XBOX) || defined(TORQUE_OS_XENON)
+>>>>>>> omni_engine
 // This standard function is not defined when compiling with VC7...
 #define vsnprintf	_vsnprintf
 #endif
@@ -1438,19 +1477,31 @@ String::StrFormat::~StrFormat()
       dFree( _dynamicBuffer );
 }
 
+<<<<<<< HEAD
 S32 String::StrFormat::format( const char *format, va_list args )
+=======
+S32 String::StrFormat::format( const char *format, void *args )
+>>>>>>> omni_engine
 {
    _len=0;
    return formatAppend(format,args);
 }
 
+<<<<<<< HEAD
 S32 String::StrFormat::formatAppend( const char *format, va_list args )
+=======
+S32 String::StrFormat::formatAppend( const char *format, void *args )
+>>>>>>> omni_engine
 {
    // Format into the fixed buffer first.
    S32 startLen = _len;
    if (_dynamicBuffer == NULL)
    {
+<<<<<<< HEAD
       _len += vsnprintf(_fixedBuffer + _len, sizeof(_fixedBuffer) - _len, format, args);
+=======
+      _len += vsnprintf(_fixedBuffer + _len, sizeof(_fixedBuffer) - _len, format, *(va_list*)args);
+>>>>>>> omni_engine
       if (_len >= 0 && _len < sizeof(_fixedBuffer))
          return _len;
 
@@ -1465,7 +1516,11 @@ S32 String::StrFormat::formatAppend( const char *format, va_list args )
    // keep doubling it's size until it is.  The buffer is not reallocated
    // using reallocate() to avoid unnecessary buffer copying.
    _len += vsnprintf(_dynamicBuffer + _len, _dynamicSize - _len, format, *(va_list*)args);
+<<<<<<< HEAD
    while (_len < 0 || _len >= _dynamicSize)
+=======
+   while (_len >= _dynamicSize)
+>>>>>>> omni_engine
    {
       _len = startLen;
       _dynamicBuffer = (char*)dRealloc(_dynamicBuffer, _dynamicSize *= 2);
@@ -1539,9 +1594,15 @@ String String::ToString(const char *str, ...)
    return ret;
 }
 
+<<<<<<< HEAD
 String String::VToString(const char* str, va_list args)
 {
    StrFormat format(str,args);
+=======
+String String::VToString(const char* str, void* args)
+{
+   StrFormat format(str,&args);
+>>>>>>> omni_engine
 
    // Copy it into a string
    U32         len = format.length();
@@ -1628,3 +1689,72 @@ String String::GetTrailingNumber(const char* str, S32& number)
 
    return base.substr(0, p - base.c_str());
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_dumpStringMemStats()
+{
+{
+#ifdef TORQUE_DEBUG
+   Con::printf( "String Data: %i instances, %i bytes", sgStringInstances, sgStringMemBytes );
+#endif
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

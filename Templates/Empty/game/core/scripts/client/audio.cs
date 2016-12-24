@@ -239,6 +239,7 @@ function sfxCompareProvider( %providerA, %providerB )
       case "FMOD":
          return 1;
          
+<<<<<<< HEAD
       case "XAudio":
          if( %providerB !$= "FMOD" )
             return 1;
@@ -248,17 +249,35 @@ function sfxCompareProvider( %providerA, %providerB )
       // Prefer OpenAL over anything but FMOD.
       case "OpenAL":
          if( %providerB $= "FMOD" && %providerB !$= "XAudio")
+=======
+      // Prefer OpenAL over anything but FMOD.
+      case "OpenAL":
+         if( %providerB $= "FMOD" )
+>>>>>>> omni_engine
             return -1;
          else
             return 1;
             
+<<<<<<< HEAD
       // DSound is just about deprecated, so make that one the last fallback
       case "DirectSound":
          if( %providerB $= "FMOD" || %providerB $= "OpenAL" && %providerB !$= "XAudio")
+=======
+      // As long as the XAudio SFX provider still has issues,
+      // choose stable DSound over it.
+      case "DirectSound":
+         if( %providerB $= "FMOD" || %providerB $= "OpenAL" )
+>>>>>>> omni_engine
             return -1;
          else
             return 0;
             
+      case "XAudio":
+         if( %providerB !$= "FMOD" && %providerB !$= "OpenAL" && %providerB !$= "DirectSound" )
+            return 1;
+         else
+            return -1;
+         
       default:
          return -1;
    }

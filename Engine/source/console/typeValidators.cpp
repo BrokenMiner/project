@@ -101,7 +101,11 @@ void Point3NormalizeValidator::validateType(SimObject *object, void *typePtr)
 namespace CommonValidators
 {
    FRangeValidator PositiveFloat(0.0f, F32_MAX);
+<<<<<<< HEAD
    FRangeValidator PositiveNonZeroFloat((F32)POINT_EPSILON, F32_MAX);
+=======
+   FRangeValidator PositiveNonZeroFloat(F32( POINT_EPSILON ) , F32_MAX);
+>>>>>>> omni_engine
    FRangeValidator NormalizedFloat(0.0f, 1.0f);
    Point3NormalizeValidator NormalizedPoint3(1.0f);
 };

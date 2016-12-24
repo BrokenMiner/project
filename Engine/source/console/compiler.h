@@ -151,11 +151,16 @@ namespace Compiler
       OP_TERMINATE_REWIND_STR,  // 80
       OP_COMPARE_STR,
 
+<<<<<<< HEAD
       OP_PUSH,          // String
       OP_PUSH_UINT,     // Integer
       OP_PUSH_FLT,      // Float
       OP_PUSH_VAR,      // Variable
       OP_PUSH_FRAME,    // Frame
+=======
+      OP_PUSH,
+      OP_PUSH_FRAME,
+>>>>>>> omni_engine
 
       OP_ASSERT,
       OP_BREAK,
@@ -310,7 +315,11 @@ protected:
       U8 *data;       ///< Allocated data (size is BlockSize)
       U32 size;       ///< Bytes used in data
       CodeData *next; ///< Next block
+<<<<<<< HEAD
    } CodeData;
+=======
+   };
+>>>>>>> omni_engine
    
    /// @name Emitted code
    /// {

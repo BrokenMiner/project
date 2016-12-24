@@ -49,8 +49,13 @@
 #include "collision/concretePolyList.h"
 #include "T3D/physics/physicsPlugin.h"
 #include "T3D/physics/physicsBody.h"
+<<<<<<< HEAD
 #include "T3D/physics/physicsCollision.h"
 #include "environment/nodeListManager.h"
+=======
+#include "environment/nodeListManager.h"
+#include "console/SimXMLDocument.h"    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
 #define MIN_METERS_PER_SEGMENT 1.0f
 #define MIN_NODE_DEPTH 0.25f
@@ -203,8 +208,13 @@ void MeshRoadNodeEvent::padListToSize()
       newlist->mDepths.merge(list->mDepths);
       newlist->mNormals.merge(list->mNormals);
 
+<<<<<<< HEAD
       delete list;
       mNodeList = list = newlist;
+=======
+      mNodeList = newlist;
+      delete list;
+>>>>>>> omni_engine
    }
 
    // Pad our list end?
@@ -760,6 +770,7 @@ void MeshRoad::onStaticModified( const char* slotName, const char*newValue )
    }
 }
 
+<<<<<<< HEAD
 void MeshRoad::writeFields( Stream &stream, U32 tabStop )
 {
    Parent::writeFields( stream, tabStop );
@@ -767,15 +778,49 @@ void MeshRoad::writeFields( Stream &stream, U32 tabStop )
    // Now write all nodes
 
    stream.write(2, "\r\n");   
+=======
+void MeshRoad::writeFields( Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput  )
+{
+   Parent::writeFields( stream, tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */XMLOutput );
+
+   // Now write all nodes
+
+   if(!XmlOutput)    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      stream.write(2, "\r\n");   
+>>>>>>> omni_engine
 
    for ( U32 i = 0; i < mNodes.size(); i++ )
    {
       const MeshRoadNode &node = mNodes[i];
 
+<<<<<<< HEAD
       stream.writeTabs(tabStop);
 
       char buffer[1024];
       dMemset( buffer, 0, 1024 );
+=======
+     char buffer[1024];
+      dMemset( buffer, 0, 1024 );
+     
+     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+     //  @Copyright start
+
+     /// For XML Output
+     if(XMLOutput)
+     {
+        dSprintf( buffer, 1024, "%g %g %g %g %g %g %g %g", node.point.x, node.point.y, node.point.z, node.width, node.depth, node.normal.x, node.normal.y, node.normal.z );
+        getcurrentXML()->pushNewElement( "Node" );
+        getcurrentXML()->addData( buffer );
+        getcurrentXML()->popElement();
+        continue;
+     }
+
+     // @Copyright end
+
+     /// For Stream Output
+      stream.writeTabs(tabStop);
+           
+>>>>>>> omni_engine
       dSprintf( buffer, 1024, "Node = \"%g %g %g %g %g %g %g %g\";", node.point.x, node.point.y, node.point.z, node.width, node.depth, node.normal.x, node.normal.y, node.normal.z );      
       stream.writeLine( (const U8*)buffer );
    }
@@ -864,7 +909,11 @@ void MeshRoad::prepRenderImage( SceneRenderState* state )
 
          // We sort by the material then vertex buffer.
          ri->defaultKey = matInst->getStateHint();
+<<<<<<< HEAD
          ri->defaultKey2 = (uintptr_t)ri->vertBuff; // Not 64bit safe!
+=======
+         ri->defaultKey2 = (U32)ri->vertBuff; // Not 64bit safe!
+>>>>>>> omni_engine
 
          renderPass->addInst( ri );  
       }
@@ -1739,6 +1788,7 @@ void MeshRoad::_generateSegments()
 
    if ( PHYSICSMGR )
    {
+<<<<<<< HEAD
       ConcretePolyList polylist;
       if ( buildPolyList( PLC_Collision, &polylist, getWorldBox(), getWorldSphere() ) )
       {
@@ -1755,6 +1805,10 @@ void MeshRoad::_generateSegments()
          mPhysicsRep = PHYSICSMGR->createBody();
          mPhysicsRep->init( colShape, 0, 0, this, world );
       }
+=======
+      SAFE_DELETE( mPhysicsRep );
+      //mPhysicsRep = PHYSICSMGR->createBody();
+>>>>>>> omni_engine
    }
 }
 
@@ -2455,4 +2509,97 @@ DefineEngineMethod( MeshRoad, postApply, void, (),,
                    )
 {
    object->inspectPostApply();
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnMeshRoad_postApply(char * x__object)
+{
+MeshRoad* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->inspectPostApply();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnMeshRoad_regenerate(char * x__object)
+{
+MeshRoad* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->regenerate();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnMeshRoad_setNodeDepth(char * x__object, S32 idx, F32 meters)
+{
+MeshRoad* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setNodeDepth( idx, meters );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

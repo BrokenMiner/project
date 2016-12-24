@@ -56,6 +56,9 @@ function DatablockEditorPlugin::onWorldEditorStartup( %this )
 
 function DatablockEditorPlugin::onActivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   DatablockEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    EditorGui-->WorldEditorToolbar.setVisible(false);
    EditorGui.bringToFront( DatablockEditorPlugin );
    
@@ -87,6 +90,11 @@ function DatablockEditorPlugin::onActivated( %this )
 
 function DatablockEditorPlugin::onDeactivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!DatablockEditorPlugin.isActive)
+      return;
+   DatablockEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    DatablockEditorPlugin.writeSettings();
    
    DatablockEditorInspectorWindow.setVisible( false );

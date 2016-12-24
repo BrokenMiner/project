@@ -25,6 +25,7 @@ TODO:
 #ifndef BT_SLIDER_CONSTRAINT_H
 #define BT_SLIDER_CONSTRAINT_H
 
+<<<<<<< HEAD
 #ifdef BT_USE_DOUBLE_PRECISION
 #define btSliderConstraintData2		btSliderConstraintDoubleData
 #define btSliderConstraintDataName  "btSliderConstraintDoubleData"
@@ -32,6 +33,9 @@ TODO:
 #define btSliderConstraintData2		btSliderConstraintData 
 #define btSliderConstraintDataName	"btSliderConstraintData"
 #endif //BT_USE_DOUBLE_PRECISION
+=======
+
+>>>>>>> omni_engine
 
 #include "LinearMath/btVector3.h"
 #include "btJacobianEntry.h"
@@ -289,10 +293,14 @@ public:
 
 };
 
+<<<<<<< HEAD
 
 ///do not change those serialization structures, it requires an updated sBulletDNAstr/sBulletDNAstr64
 
 
+=======
+///do not change those serialization structures, it requires an updated sBulletDNAstr/sBulletDNAstr64
+>>>>>>> omni_engine
 struct btSliderConstraintData
 {
 	btTypedConstraintData	m_typeConstraintData;
@@ -311,6 +319,7 @@ struct btSliderConstraintData
 };
 
 
+<<<<<<< HEAD
 struct btSliderConstraintDoubleData
 {
 	btTypedConstraintDoubleData	m_typeConstraintData;
@@ -331,12 +340,18 @@ struct btSliderConstraintDoubleData
 SIMD_FORCE_INLINE		int	btSliderConstraint::calculateSerializeBufferSize() const
 {
 	return sizeof(btSliderConstraintData2);
+=======
+SIMD_FORCE_INLINE		int	btSliderConstraint::calculateSerializeBufferSize() const
+{
+	return sizeof(btSliderConstraintData);
+>>>>>>> omni_engine
 }
 
 	///fills the dataBuffer and returns the struct name (and 0 on failure)
 SIMD_FORCE_INLINE	const char*	btSliderConstraint::serialize(void* dataBuffer, btSerializer* serializer) const
 {
 
+<<<<<<< HEAD
 	btSliderConstraintData2* sliderData = (btSliderConstraintData2*) dataBuffer;
 	btTypedConstraint::serialize(&sliderData->m_typeConstraintData,serializer);
 
@@ -348,11 +363,28 @@ SIMD_FORCE_INLINE	const char*	btSliderConstraint::serialize(void* dataBuffer, bt
 
 	sliderData->m_angularUpperLimit = m_upperAngLimit;
 	sliderData->m_angularLowerLimit = m_lowerAngLimit;
+=======
+	btSliderConstraintData* sliderData = (btSliderConstraintData*) dataBuffer;
+	btTypedConstraint::serialize(&sliderData->m_typeConstraintData,serializer);
+
+	m_frameInA.serializeFloat(sliderData->m_rbAFrame);
+	m_frameInB.serializeFloat(sliderData->m_rbBFrame);
+
+	sliderData->m_linearUpperLimit = float(m_upperLinLimit);
+	sliderData->m_linearLowerLimit = float(m_lowerLinLimit);
+
+	sliderData->m_angularUpperLimit = float(m_upperAngLimit);
+	sliderData->m_angularLowerLimit = float(m_lowerAngLimit);
+>>>>>>> omni_engine
 
 	sliderData->m_useLinearReferenceFrameA = m_useLinearReferenceFrameA;
 	sliderData->m_useOffsetForConstraintFrame = m_useOffsetForConstraintFrame;
 
+<<<<<<< HEAD
 	return btSliderConstraintDataName;
+=======
+	return "btSliderConstraintData";
+>>>>>>> omni_engine
 }
 
 

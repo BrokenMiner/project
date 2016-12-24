@@ -106,10 +106,16 @@ public:
 		MenuItem *nextMenuItem; // next menu item in the linked list
 
 		bool isSubmenu;				//  This menu item has a submenu that will be displayed
+<<<<<<< HEAD
 
 		Menu* submenuParentMenu; //  For a submenu, this is the parent menu
       Menu* submenu;
       String cmd;
+=======
+		MenuItem *firstSubmenuItem;	//  The first menu item in the submenu
+
+		Menu* submenuParentMenu; //  For a submenu, this is the parent menu
+>>>>>>> omni_engine
 	};
 
 	struct Menu
@@ -133,7 +139,11 @@ public:
 	GuiSubmenuBackgroundCtrl *mSubmenuBackground; //  Background for a submenu
 	GuiMenuTextListCtrl *mSubmenuTextList;     //  Text list for a submenu
 
+<<<<<<< HEAD
    Vector<Menu*> mMenuList;
+=======
+	Menu *menuList;
+>>>>>>> omni_engine
    Menu *mouseDownMenu;
    Menu *mouseOverMenu;
 
@@ -163,6 +173,7 @@ public:
 
 	// internal menu handling functions
 	// these are used by the script manipulation functions to add/remove/change menu items
+<<<<<<< HEAD
    static Menu* sCreateMenu(const char *menuText, U32 menuId);
    void addMenu(Menu *menu, S32 pos = -1);
    void addMenu(const char *menuText, U32 menuId);
@@ -186,11 +197,33 @@ public:
    static void removeSubmenuItem(MenuItem *menuItem, MenuItem *submenuItem);
    static void clearSubmenuItems(MenuItem *menuitem);
    void onSubmenuAction(S32 selectionIndex, const RectI& bounds, Point2I cellSize);
+=======
+
+   void addMenu(const char *menuText, U32 menuId);
+	Menu *findMenu(const char *menu);  // takes either a menu text or a string id
+	MenuItem *findMenuItem(Menu *menu, const char *menuItem); // takes either a menu text or a string id
+	void removeMenu(Menu *menu);
+	void removeMenuItem(Menu *menu, MenuItem *menuItem);
+	void addMenuItem(Menu *menu, const char *text, U32 id, const char *accelerator, S32 checkGroup);
+	void clearMenuItems(Menu *menu);
+   void clearMenus();
+
+   //  Methods to deal with submenus
+   MenuItem* findSubmenuItem(Menu *menu, const char *menuItem, const char *submenuItem);
+   void addSubmenuItem(Menu *menu, MenuItem *submenu, const char *text, U32 id, const char *accelerator, S32 checkGroup);
+   void removeSubmenuItem(MenuItem *menuItem, MenuItem *submenuItem);
+   void clearSubmenuItems(MenuItem *menuitem);
+   void onSubmenuAction(S32 selectionIndex, RectI bounds, Point2I cellSize);
+>>>>>>> omni_engine
    void closeSubmenu();
    void checkSubmenuMouseMove(const GuiEvent &event);
    MenuItem *findHitMenuItem(Point2I mousePoint);
 
+<<<<<<< HEAD
    void highlightedMenuItem(S32 selectionIndex, const RectI& bounds, Point2I cellSize); //  Called whenever a menu item is highlighted by the mouse
+=======
+   void highlightedMenuItem(S32 selectionIndex, RectI bounds, Point2I cellSize); //  Called whenever a menu item is highlighted by the mouse
+>>>>>>> omni_engine
 
 	// display/mouse functions
 
@@ -211,11 +244,18 @@ public:
    
    void onAction();
    void closeMenu();
+<<<<<<< HEAD
    void buildWindowAcceleratorMap( WindowInputGenerator &inputGenerator );
    void removeWindowAcceleratorMap( WindowInputGenerator &inputGenerator );
    void acceleratorKeyPress(U32 index);
 
    virtual void menuItemSelected(Menu *menu, MenuItem *item);
+=======
+   void buildAcceleratorMap();
+   void acceleratorKeyPress(U32 index);
+
+   void menuItemSelected(Menu *menu, MenuItem *item);
+>>>>>>> omni_engine
 
    //  Added to support 'ticks'
    void processTick();
@@ -223,10 +263,17 @@ public:
    static void initPersistFields();
 
    DECLARE_CONOBJECT(GuiMenuBar);
+<<<<<<< HEAD
    DECLARE_CALLBACK( void, onMouseInMenu, ( bool hasLeftMenu ));
    DECLARE_CALLBACK( void, onMenuSelect, ( S32 menuId, const char* menuText ));
    DECLARE_CALLBACK( void, onMenuItemSelect, ( S32 menuId, const char* menuText, S32 menuItemId, const char* menuItemText  ));
    DECLARE_CALLBACK( void, onSubmenuSelect, ( S32 submenuId, const char* submenuText ));
+=======
+   DECLARE_CALLBACK( void, onMouseInMenu, (bool hasLeftMenu));
+   DECLARE_CALLBACK( void, onMenuSelect, (const char* menuId, const char* menuText));
+   DECLARE_CALLBACK( void, onMenuItemSelect, ( const char* menuId, const char* menuText, const char* menuItemId, const char* menuItemText  ));
+   DECLARE_CALLBACK( void, onSubmenuSelect, ( const char* submenuId, const char* submenuText));
+>>>>>>> omni_engine
 };
 
 #endif

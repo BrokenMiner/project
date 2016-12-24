@@ -815,10 +815,15 @@ bool SceneCullingState::isOccludedByTerrain( SceneObject* object ) const
       if( !terrain )
          continue;
 
+<<<<<<< HEAD
       MatrixF terrWorldTransform = terrain->getWorldTransform();
 
       Point3F localCamPos = getCameraState().getViewPosition();
       terrWorldTransform.mulP(localCamPos);
+=======
+      Point3F localCamPos = getCameraState().getViewPosition();
+      terrain->getWorldTransform().mulP( localCamPos );
+>>>>>>> omni_engine
       F32 height;
       terrain->getHeight( Point2F( localCamPos.x, localCamPos.y ), &height );
       bool aboveTerrain = ( height <= localCamPos.z );
@@ -839,10 +844,17 @@ bool SceneCullingState::isOccludedByTerrain( SceneObject* object ) const
       Point3F ll(rBox.maxExtents.x, rBox.minExtents.y, rBox.maxExtents.z);
       Point3F lr(rBox.maxExtents.x, rBox.maxExtents.y, rBox.maxExtents.z);
 
+<<<<<<< HEAD
       terrWorldTransform.mulP(ul);
       terrWorldTransform.mulP(ur);
       terrWorldTransform.mulP(ll);
       terrWorldTransform.mulP(lr);
+=======
+      terrain->getWorldTransform().mulP(ul);
+      terrain->getWorldTransform().mulP(ur);
+      terrain->getWorldTransform().mulP(ll);
+      terrain->getWorldTransform().mulP(lr);
+>>>>>>> omni_engine
 
       Point3F xBaseL0_s = ul - localCamPos;
       Point3F xBaseL0_e = lr - localCamPos;

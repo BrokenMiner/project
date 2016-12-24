@@ -42,7 +42,11 @@ inline void dFetchAndAdd( volatile U32& ref, U32 val )
    #if defined(TORQUE_OS_PS3)
       cellAtomicAdd32( (std::uint32_t *)&ref, val );
    #elif !defined(TORQUE_OS_MAC)
+<<<<<<< HEAD
       __sync_fetch_and_add(&ref, val );
+=======
+      __sync_fetch_and_add( ( volatile long* ) &ref, val );
+>>>>>>> omni_engine
    #else
       OSAtomicAdd32( val, (int32_t* ) &ref);
    #endif
@@ -53,7 +57,11 @@ inline void dFetchAndAdd( volatile S32& ref, S32 val )
    #if defined(TORQUE_OS_PS3)
       cellAtomicAdd32( (std::uint32_t *)&ref, val );
    #elif !defined(TORQUE_OS_MAC)
+<<<<<<< HEAD
       __sync_fetch_and_add( &ref, val );
+=======
+      __sync_fetch_and_add( ( volatile long* ) &ref, val );
+>>>>>>> omni_engine
    #else
       OSAtomicAdd32( val, (int32_t* ) &ref);
    #endif
@@ -68,7 +76,11 @@ inline bool dCompareAndSwap( volatile U32& ref, U32 oldVal, U32 newVal )
    #if defined(TORQUE_OS_PS3)
       return ( cellAtomicCompareAndSwap32( (std::uint32_t *)&ref, newVal, oldVal ) == oldVal );
    #elif !defined(TORQUE_OS_MAC)
+<<<<<<< HEAD
       return ( __sync_val_compare_and_swap( &ref, oldVal, newVal ) == oldVal );
+=======
+      return ( __sync_val_compare_and_swap( ( volatile long* ) &ref, oldVal, newVal ) == oldVal );
+>>>>>>> omni_engine
    #else
       return OSAtomicCompareAndSwap32(oldVal, newVal, (int32_t *) &ref);
    #endif
@@ -79,7 +91,11 @@ inline bool dCompareAndSwap( volatile U64& ref, U64 oldVal, U64 newVal )
    #if defined(TORQUE_OS_PS3)
       return ( cellAtomicCompareAndSwap32( (std::uint32_t *)&ref, newVal, oldVal ) == oldVal );
    #elif !defined(TORQUE_OS_MAC)
+<<<<<<< HEAD
       return ( __sync_val_compare_and_swap( &ref, oldVal, newVal ) == oldVal );
+=======
+      return ( __sync_val_compare_and_swap( ( volatile long long* ) &ref, oldVal, newVal ) == oldVal );
+>>>>>>> omni_engine
    #else
       return OSAtomicCompareAndSwap64(oldVal, newVal, (int64_t *) &ref);
    #endif

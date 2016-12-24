@@ -243,9 +243,17 @@ function metrics( %expr )
    
    if( %metricsExpr !$= "" )
    {
+<<<<<<< HEAD
       $GameCanvas.pushDialog( FrameOverlayGui, 1000 );
       TextOverlayControl.setValue( %metricsExpr );
    }
    else
       $GameCanvas.popDialog(FrameOverlayGui);
+=======
+      Canvas.pushDialog( FrameOverlayGui, 1000 );
+      TextOverlayControl.setValue( %metricsExpr );
+   }
+   else
+      Canvas.popDialog(FrameOverlayGui);
+>>>>>>> omni_engine
 }

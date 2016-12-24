@@ -269,7 +269,11 @@ void RenderMeshExample::prepRenderImage( SceneRenderState *state )
       createGeometry();
 
    // If we have no material then skip out.
+<<<<<<< HEAD
    if ( !mMaterialInst || !state)
+=======
+   if ( !mMaterialInst )
+>>>>>>> omni_engine
       return;
 
    // If we don't have a material instance after the override then 
@@ -343,7 +347,11 @@ void RenderMeshExample::prepRenderImage( SceneRenderState *state )
 
    // We sort by the material then vertex buffer
    ri->defaultKey = matInst->getStateHint();
+<<<<<<< HEAD
    ri->defaultKey2 = (uintptr_t)ri->vertBuff; // Not 64bit safe!
+=======
+   ri->defaultKey2 = (U32)ri->vertBuff; // Not 64bit safe!
+>>>>>>> omni_engine
 
    // Submit our RenderInst to the RenderPassManager
    state->getRenderPass()->addInst( ri );
@@ -353,4 +361,78 @@ DefineEngineMethod( RenderMeshExample, postApply, void, (),,
    "A utility method for forcing a network update.\n")
 {
 	object->inspectPostApply();
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRenderMeshExample_postApply(char * x__object)
+{
+RenderMeshExample* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->inspectPostApply();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

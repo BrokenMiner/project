@@ -32,8 +32,12 @@
 #include "core/util/tSingleton.h"
 #include "math/mQuat.h"
 #include "math/mPoint4.h"
+<<<<<<< HEAD
 #include "gfx/gfxDevice.h"
 #include "OVR_CAPI_0_5_0.h"
+=======
+#include "OVR.h"
+>>>>>>> omni_engine
 
 #define DEFAULT_RIFT_UNIT 0
 
@@ -45,10 +49,20 @@ public:
    // If no HMD is present simulate it being available
    static bool smSimulateHMD;
 
+<<<<<<< HEAD
    // Type of rotation events to broadcast
    static bool smGenerateAngleAxisRotationEvents;
    static bool smGenerateEulerRotationEvents;
    static bool smGeneratePositionEvents;
+=======
+   // Use the chromatic aberration correction version of the barrel
+   // distortion shader.
+   static bool smUseChromaticAberrationCorrection;
+
+   // Type of rotation events to broadcast
+   static bool smGenerateAngleAxisRotationEvents;
+   static bool smGenerateEulerRotationEvents;
+>>>>>>> omni_engine
 
    // Broadcast sensor rotation as axis
    static bool smGenerateRotationAsAxisEvents;
@@ -64,6 +78,7 @@ public:
    // should be buffered.
    static bool smGenerateWholeFrameEvents;
 
+<<<<<<< HEAD
    /// Determines desired pixel density for render target
    static F32 smDesiredPixelDensity;
 
@@ -73,15 +88,47 @@ public:
    static F32 smPositionTrackingScale;
 
 protected:
+=======
+protected:
+   class DeviceListener : public OVR::MessageHandler
+   {
+   protected:
+      OculusVRDevice* mOwner;
+
+   public:
+      DeviceListener(OculusVRDevice* owner) { mOwner = owner; }
+      virtual ~DeviceListener() { mOwner = NULL; }
+
+      virtual void OnMessage(const OVR::Message&);
+   };
+
+   // Our OVR SDK device listener class
+   DeviceListener* mListener;
+
+   // The OVR SDK device manager
+   OVR::DeviceManager* mDeviceManager;
+>>>>>>> omni_engine
 
    // Discovered HMD devices
    Vector<OculusVRHMDDevice*> mHMDDevices;
 
+<<<<<<< HEAD
    /// Is the device active
    bool mActive;
 
    /// Which HMD is the active one
    U32 mActiveDeviceId;
+=======
+   // Discovered sensor devices
+   Vector<OculusVRSensorDevice*> mSensorDevices;
+
+   /// Is the device active
+   bool mActive;
+
+   // Should the input texture into the HMD (the render target that the scene has been
+   // rendered to) be scaled according to the HMD's distortion calculation?
+   bool mScaleInputTexture;
+>>>>>>> omni_engine
 
 protected:
    void cleanUp();
@@ -90,10 +137,21 @@ protected:
    /// Input Event Manager
    void buildCodeTable();
 
+<<<<<<< HEAD
    void addHMDDevice(ovrHmd hmd);
 
    void createSimulatedHMD();
 
+=======
+   void addHMDDevice(OVR::HMDDevice* hmd);
+
+   void createSimulatedHMD();
+
+   void addSensorDevice(OVR::SensorDevice* sensor);
+
+   void createSimulatedSensor();
+
+>>>>>>> omni_engine
 public:
    OculusVRDevice();
    ~OculusVRDevice();
@@ -109,6 +167,7 @@ public:
    bool process();
 
    // IDisplayDevice
+<<<<<<< HEAD
    virtual bool providesFrameEyePose() const;
    virtual void getFrameEyePose(DisplayPose *outPose, U32 eyeId) const;
    virtual bool providesEyeOffsets() const;
@@ -124,15 +183,32 @@ public:
    // HMDs
    U32 getHMDCount() const { return mHMDDevices.size(); }
    OculusVRHMDDevice* getHMDDevice(U32 index) const;
+=======
+   virtual bool providesYFOV() const;
+   virtual F32 getYFOV() const;
+   virtual bool providesEyeOffset() const;
+   virtual const Point3F& getEyeOffset() const;
+   virtual bool providesProjectionOffset() const;
+   virtual const Point2F& getProjectionOffset() const;
+
+   // HMDs
+   U32 getHMDCount() const { return mHMDDevices.size(); }
+   const OculusVRHMDDevice* getHMDDevice(U32 index) const;
+>>>>>>> omni_engine
    F32 getHMDCurrentIPD(U32 index);
    void setHMDCurrentIPD(U32 index, F32 ipd);
 
    // Sensors
+<<<<<<< HEAD
    U32 getSensorCount() const { return mHMDDevices.size(); }
+=======
+   U32 getSensorCount() const { return mSensorDevices.size(); }
+>>>>>>> omni_engine
    const OculusVRSensorDevice* getSensorDevice(U32 index) const;
    EulerF getSensorEulerRotation(U32 index);
    VectorF getSensorAcceleration(U32 index);
    EulerF getSensorAngularVelocity(U32 index);
+<<<<<<< HEAD
    bool getSensorYawCorrection(U32 index);
    void setSensorYawCorrection(U32 index, bool state);
    bool getSensorMagnetometerCalibrated(U32 index);
@@ -153,6 +229,19 @@ public:
 
    bool _handleDeviceEvent( GFXDevice::GFXDeviceEventType evt );
 
+=======
+   VectorF getSensorMagnetometer(U32 index);
+   F32 getSensorPredictionTime(U32 index);
+   void setSensorPredictionTime(U32 index, F32 dt);
+   void setAllSensorPredictionTime(F32 dt);
+   bool getSensorGravityCorrection(U32 index);
+   void setSensorGravityCorrection(U32 index, bool state);
+   bool getSensorYawCorrection(U32 index);
+   void setSensorYawCorrection(U32 index, bool state);
+   bool getSensorMagnetometerCalibrated(U32 index);
+   void resetAllSensors();
+
+>>>>>>> omni_engine
 public:
    // For ManagedSingleton.
    static const char* getSingletonName() { return "OculusVRDevice"; }   

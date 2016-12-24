@@ -282,7 +282,11 @@ void GuiIconButtonCtrl::renderButton( Point2I &offset, const RectI& updateRect )
    if ( mTextureNormal && mIconLocation != GuiIconButtonCtrl::IconLocNone )
    {
       // Render the normal bitmap
+<<<<<<< HEAD
       drawer->clearBitmapModulation();
+=======
+      //drawer->clearBitmapModulation();  // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
       // Maintain the bitmap size or fill the button?
       if ( !mFitBitmapToButton )
@@ -437,3 +441,76 @@ DefineEngineMethod( GuiIconButtonCtrl, setBitmap, void, (const char* buttonFilen
    Platform::makeFullPathName( buttonFilename, argBuffer, 512 );
    object->setBitmap( argBuffer );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiIconButtonCtrl_setBitmap(char * x__object, char * x__buttonFilename)
+{
+GuiIconButtonCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* buttonFilename = (const char*)x__buttonFilename;
+{
+   char* argBuffer = Con::getArgBuffer( 512 );
+   Platform::makeFullPathName( buttonFilename, argBuffer, 512 );
+   object->setBitmap( argBuffer );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

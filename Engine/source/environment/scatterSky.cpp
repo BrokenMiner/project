@@ -136,7 +136,11 @@ ScatterSky::ScatterSky()
 
    mExposure = 1.0f;
    mNightInterpolant = 0;
+<<<<<<< HEAD
    mZOffset = 0.0f;
+=======
+   mZOffset = 0.0f; // Added
+>>>>>>> omni_engine
 
    mShader = NULL;
 
@@ -314,7 +318,11 @@ void ScatterSky::setElevation( F32 elevation )
 void ScatterSky::inspectPostApply()
 {
    mDirty = true;
+<<<<<<< HEAD
    setMaskBits( 0xFFFFFFFF );
+=======
+	setMaskBits( 0xFFFFFFFF );
+>>>>>>> omni_engine
 }
 
 void ScatterSky::initPersistFields()
@@ -325,6 +333,7 @@ void ScatterSky::initPersistFields()
       addField( "skyBrightness",       TypeF32,    Offset( mSkyBrightness, ScatterSky ),
          "Global brightness and intensity applied to the sky and objects in the level." );
 
+<<<<<<< HEAD
       addField( "sunSize",             TypeF32,    Offset( mSunSize, ScatterSky ),
          "Affects the size of the sun's disk." );
 
@@ -332,6 +341,15 @@ void ScatterSky::initPersistFields()
          "Controls how much the alpha component of colorize brigthens the sky. Setting to 0 returns default behavior." );
 
       addField( "colorize",            TypeColorF, Offset( mColorize, ScatterSky ),
+=======
+     addField( "sunSize",       TypeF32,    Offset( mSunSize, ScatterSky ),
+         "Affects the size of the sun's disk." );
+
+	 addField( "colorizeAmount",       TypeF32,   Offset( mColorizeAmt, ScatterSky ),
+         "Controls how much the the alpha component of colorize brigthens the sky. Setting to 0 returns default behavior." );
+
+	  addField( "colorize",            TypeColorF,    Offset( mColorize, ScatterSky ),
+>>>>>>> omni_engine
          "Tints the sky the color specified, the alpha controls the brigthness. The brightness is multipled by the value of colorizeAmt." );
 
       addField( "rayleighScattering",  TypeF32,    Offset( mRayleighScattering, ScatterSky ),
@@ -351,7 +369,11 @@ void ScatterSky::initPersistFields()
       addField( "exposure",            TypeF32,    Offset( mExposure, ScatterSky ),
          "Controls the contrast of the sky and sun during daytime." );
 
+<<<<<<< HEAD
       addField( "zOffset",             TypeF32,     Offset( mZOffset, ScatterSky ),  
+=======
+	  addField( "zoffset",            TypeF32,    Offset( mZOffset, ScatterSky ),  
+>>>>>>> omni_engine
          "Offsets the scatterSky to avoid canvas rendering. Use 5000 or greater for the initial adjustment" );  
 
    endGroup( "ScatterSky" );
@@ -477,12 +499,20 @@ U32 ScatterSky::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
       stream->write( mAmbientScale );
       stream->write( mSunScale );
       stream->write( mFogScale );
+<<<<<<< HEAD
       stream->write( mColorizeAmt );
+=======
+	  stream->write( mColorizeAmt );
+>>>>>>> omni_engine
       stream->write( mColorize );
 
       stream->write( mExposure );
 
+<<<<<<< HEAD
       stream->write( mZOffset );
+=======
+	  stream->write( mZOffset );
+>>>>>>> omni_engine
 
       stream->write( mBrightness );
 
@@ -562,7 +592,11 @@ void ScatterSky::unpackUpdate(NetConnection *con, BitStream *stream)
       stream->read( &mAmbientScale );
       stream->read( &mSunScale );
       stream->read( &mFogScale );
+<<<<<<< HEAD
       F32 colorizeAmt;
+=======
+	  F32 colorizeAmt;
+>>>>>>> omni_engine
       stream->read( &colorizeAmt );
 
       if(mColorizeAmt != colorizeAmt) {
@@ -583,7 +617,11 @@ void ScatterSky::unpackUpdate(NetConnection *con, BitStream *stream)
 
       stream->read( &mExposure );
 
+<<<<<<< HEAD
       stream->read( &mZOffset );
+=======
+	  stream->read( &mZOffset );
+>>>>>>> omni_engine
 
       stream->read( &mBrightness );
 
@@ -637,13 +675,21 @@ void ScatterSky::prepRenderImage( SceneRenderState *state )
       return;
 
    // Regular sky render instance.
+<<<<<<< HEAD
    RenderPassManager* renderPass = state->getRenderPass();
    ObjectRenderInst *ri = renderPass->allocInst<ObjectRenderInst>();
+=======
+   ObjectRenderInst *ri = state->getRenderPass()->allocInst<ObjectRenderInst>();
+>>>>>>> omni_engine
    ri->renderDelegate.bind( this, &ScatterSky::_render );
    ri->type = RenderPassManager::RIT_Sky;
    ri->defaultKey = 10;
    ri->defaultKey2 = 0;
+<<<<<<< HEAD
    renderPass->addInst(ri);
+=======
+   state->getRenderPass()->addInst( ri );
+>>>>>>> omni_engine
 
    // Debug render instance.
    /*
@@ -686,13 +732,21 @@ void ScatterSky::prepRenderImage( SceneRenderState *state )
       mMatrixSet->setSceneProjection(GFX->getProjectionMatrix());
       mMatrixSet->setWorld(GFX->getWorldMatrix());
 
+<<<<<<< HEAD
       ObjectRenderInst *ri = renderPass->allocInst<ObjectRenderInst>();
+=======
+      ObjectRenderInst *ri = state->getRenderPass()->allocInst<ObjectRenderInst>();
+>>>>>>> omni_engine
       ri->renderDelegate.bind( this, &ScatterSky::_renderMoon );
       ri->type = RenderPassManager::RIT_Sky;
       // Render after sky objects and before CloudLayer!
       ri->defaultKey = 5;
       ri->defaultKey2 = 0;
+<<<<<<< HEAD
       renderPass->addInst(ri);
+=======
+      state->getRenderPass()->addInst( ri );
+>>>>>>> omni_engine
    }
 }
 
@@ -720,7 +774,11 @@ bool ScatterSky::_initShader()
          Con::warnf( "ScatterSky::_initShader - failed to locate ScatterSkySBData!" );
       else
          mStateBlock = GFX->createStateBlock( data->getState() );
+<<<<<<< HEAD
      }
+=======
+	  }
+>>>>>>> omni_engine
 
    if ( !mStateBlock )
       return false;
@@ -951,7 +1009,11 @@ void ScatterSky::_render( ObjectRenderInst *ri, SceneRenderState *state, BaseMat
 
    Point3F camPos2 = state->getCameraPosition();
    MatrixF xfm(true);
+<<<<<<< HEAD
    xfm.setPosition(camPos2 - Point3F( 0, 0, mZOffset));
+=======
+   xfm.setPosition(camPos2 - Point3F( 0, 0, mZOffset)); // Added
+>>>>>>> omni_engine
    GFX->multWorld(xfm);
    MatrixF xform(proj);//GFX->getProjectionMatrix());
    xform *= GFX->getViewMatrix();
@@ -993,7 +1055,11 @@ void ScatterSky::_render( ObjectRenderInst *ri, SceneRenderState *state, BaseMat
       mShaderConsts->setSafe( mUseCubemapSC, 0.0f );
    }
 
+<<<<<<< HEAD
    GFX->setPrimitiveBuffer( mPrimBuffer );
+=======
+	GFX->setPrimitiveBuffer( mPrimBuffer );
+>>>>>>> omni_engine
    GFX->setVertexBuffer( mVB );
 
    GFX->drawIndexedPrimitive( GFXTriangleList, 0, 0, mVertCount, 0, mPrimCount );
@@ -1438,4 +1504,78 @@ DefineEngineMethod( ScatterSky, applyChanges, void, (),,
                   )
 {
    object->inspectPostApply();
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnScatterSky_applyChanges(char * x__object)
+{
+ScatterSky* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->inspectPostApply();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

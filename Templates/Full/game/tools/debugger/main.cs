@@ -64,5 +64,9 @@ function startDebugger()
    
    // Set up the GUI.
    DebuggerConsoleView.setActive(false);
-   $GameCanvas.pushDialog(DebuggerGui);
+   // ATTENTION! From Torque
+   //$GameCanvas.pushDialog(DebuggerGui);
+   /////////
+   Canvas.pushDialog(DebuggerGui);
+   // ATTENTION From OMNI
 }

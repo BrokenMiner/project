@@ -60,6 +60,7 @@ void FontRenderBatcher::render( F32 rot, const Point2F &offset )
       return;
 
    GFX->setStateBlock(mFontSB);
+   GFX->disableShaders();
    for(U32 i = 0; i < GFX->getNumSamplers(); i++)
       GFX->setTexture(i, NULL);
 
@@ -186,7 +187,12 @@ void FontRenderBatcher::render( F32 rot, const Point2F &offset )
 
       if(!mSheets[i]->numChars )
          continue;
+<<<<<<< HEAD
       
+=======
+
+      GFX->setupGenericShaders( GFXDevice::GSAddColorTexture );
+>>>>>>> omni_engine
       GFX->setTexture( 0, mFont->getTextureHandle(i) );
       GFX->drawPrimitive(GFXTriangleList, mSheets[i]->startVertex, mSheets[i]->numChars * 2);
    }
@@ -226,7 +232,11 @@ FontRenderBatcher::SheetMarker & FontRenderBatcher::getSheetMarker( U32 sheetID 
    // Allocate if it doesn't exist...
    if (!mSheets[sheetID])
    {
+<<<<<<< HEAD
       S32 size = sizeof( SheetMarker) + mLength * sizeof( CharMarker );
+=======
+      S64 size = sizeof( SheetMarker) + mLength * sizeof( CharMarker );
+>>>>>>> omni_engine
       mSheets[sheetID] = (SheetMarker *)mStorage.alloc(size);
       mSheets[sheetID]->numChars = 0;
       mSheets[sheetID]->startVertex = 0; // cosmetic initialization

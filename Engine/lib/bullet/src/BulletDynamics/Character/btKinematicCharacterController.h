@@ -136,7 +136,11 @@ public:
 	virtual void setVelocityForTimeInterval(const btVector3& velocity,
 				btScalar timeInterval);
 
+<<<<<<< HEAD
 	void reset ( btCollisionWorld* collisionWorld );
+=======
+	void reset ();
+>>>>>>> omni_engine
 	void warp (const btVector3& origin);
 
 	void preStep (  btCollisionWorld* collisionWorld);

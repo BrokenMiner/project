@@ -39,5 +39,9 @@ void main()
    vec4 diffuseColor = texture( diffuseMap, TEX0 );
    vec4 reflectColor = textureProj( refractMap, TEX1 );
 
+<<<<<<< HEAD
    OUT_col = diffuseColor + reflectColor * diffuseColor.a;
+=======
+   OUT_FragColor0 = diffuseColor + reflectColor * diffuseColor.a;
+>>>>>>> omni_engine
 }

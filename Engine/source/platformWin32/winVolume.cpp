@@ -731,13 +731,21 @@ String   Platform::FS::getAssetDir()
    {
       TCHAR buf[ 2048 ];
       ::GetModuleFileNameW( NULL, buf, sizeof( buf ) );
+<<<<<<< HEAD
       convertUTF16toUTF8( buf, cen_buf );
+=======
+      convertUTF16toUTF8( buf, cen_buf, sizeof( cen_buf ) );
+>>>>>>> omni_engine
    }
    else
    {
       TCHAR buf[ 2048 ];
       GetCurrentDirectoryW( sizeof( buf ) / sizeof( buf[ 0 ] ), buf );
+<<<<<<< HEAD
       convertUTF16toUTF8( buf, cen_buf );
+=======
+      convertUTF16toUTF8( buf, cen_buf, sizeof( cen_buf ) );
+>>>>>>> omni_engine
       return Path::CleanSeparators(cen_buf);
    }
 #else

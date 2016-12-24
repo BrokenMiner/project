@@ -178,8 +178,13 @@ void SetProcessorInfo(Platform::SystemInfo_struct::Processor& pInfo,
          pInfo.properties |= (properties & BIT_SSE) ? CPU_PROP_SSE : 0;
          pInfo.properties |= ( properties & BIT_SSE2 ) ? CPU_PROP_SSE2 : 0;
          pInfo.properties |= (properties & BIT_3DNOW) ? CPU_PROP_3DNOW : 0;
+<<<<<<< HEAD
        // Phenom and PhenomII support SSE3, SSE4a
        pInfo.properties |= ( properties2 & BIT_SSE3 ) ? CPU_PROP_SSE3 : 0;
+=======
+		 // Phenom and PhenomII support SSE3, SSE4a
+		 pInfo.properties |= ( properties2 & BIT_SSE3 ) ? CPU_PROP_SSE3 : 0;
+>>>>>>> omni_engine
          pInfo.properties |= ( properties2 & BIT_SSE4_1 ) ? CPU_PROP_SSE4_1 : 0;
          // switch on processor family code
          switch ((processor >> 8) & 0xf)
@@ -227,19 +232,33 @@ void SetProcessorInfo(Platform::SystemInfo_struct::Processor& pInfo,
                break;
 
                // Phenom Family
+<<<<<<< HEAD
          case 15:
+=======
+			case 15:
+>>>>>>> omni_engine
                pInfo.type = CPU_AMD_Phenom;
                pInfo.name = StringTable->insert("AMD Phenom");
                break;
 
+<<<<<<< HEAD
             // Phenom II Family
          case 16:
+=======
+			   // Phenom II Family
+			case 16:
+>>>>>>> omni_engine
                pInfo.type = CPU_AMD_PhenomII;
                pInfo.name = StringTable->insert("AMD Phenom II");
                break;
 
+<<<<<<< HEAD
             // Bulldozer Family
          case 17:
+=======
+			   // Bulldozer Family
+			case 17:
+>>>>>>> omni_engine
                pInfo.type = CPU_AMD_Bulldozer;
                pInfo.name = StringTable->insert("AMD Bulldozer");
                break;

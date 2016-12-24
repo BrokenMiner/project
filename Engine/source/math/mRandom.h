@@ -54,7 +54,11 @@ public:
 inline F32 MRandomGenerator::randF()
 {
    // default: multiply by 1/(2^31)
+<<<<<<< HEAD
    return F32(randI()) * (1.0f / S32_MAX);
+=======
+   return  F32(randI()) * (1.0f/2147483647.0f);
+>>>>>>> omni_engine
 }
 
 inline S32 MRandomGenerator::randI(S32 i, S32 n)

@@ -69,6 +69,8 @@ ConsoleDocClass( TurretShapeData,
    "@ingroup gameObjects\n"
 );
 
+IMPLEMENT_GLOBAL_CALLBACK( turretMountCallback, void, ( const char * turret, const char * player, const char * mounted ), ( turret, player, mounted ), "");
+
 IMPLEMENT_CALLBACK( TurretShapeData, onMountObject, void, ( TurretShape* turret, SceneObject* obj, S32 node ),( turret, obj, node ),
    "@brief Informs the TurretShapeData object that a player is mounting it.\n\n"
    "@param turret The TurretShape object.\n"
@@ -916,7 +918,11 @@ void TurretShape::mountObject( SceneObject *obj, S32 node, const MatrixF &xfm )
          if (conn)
          {
             // Allow the client to set up any action maps, HUD, etc.
+<<<<<<< HEAD
             Con::executef("turretMountCallback", Con::getIntArg(getId()), Con::getIntArg(obj->getId()), Con::getIntArg(true));
+=======
+            turretMountCallback_callback( Con::getIntArg(getId()), Con::getIntArg(obj->getId()), Con::getIntArg(true) );
+>>>>>>> omni_engine
          }
       }
    }
@@ -938,7 +944,11 @@ void TurretShape::unmountObject( SceneObject *obj )
          if (conn)
          {
             // Allow the client to set up any action maps, HUD, etc.
+<<<<<<< HEAD
             Con::executef("turretMountCallback", Con::getIntArg(getId()), Con::getIntArg(obj->getId()), Con::getIntArg(false));
+=======
+            turretMountCallback_callback( Con::getIntArg(getId()), Con::getIntArg(obj->getId()), Con::getIntArg(false) );
+>>>>>>> omni_engine
          }
       }
    }
@@ -1059,9 +1069,15 @@ void TurretShape::writePacketData(GameConnection *connection, BitStream *stream)
 {
    // Update client regardless of status flags.
    Parent::writePacketData(connection, stream);
+<<<<<<< HEAD
    
    stream->writeSignedFloat(mRot.x / M_2PI_F, 7);
    stream->writeSignedFloat(mRot.z / M_2PI_F, 7);
+=======
+
+   stream->write(mRot.x);
+   stream->write(mRot.z);
+>>>>>>> omni_engine
 }
 
 void TurretShape::readPacketData(GameConnection *connection, BitStream *stream)
@@ -1069,8 +1085,14 @@ void TurretShape::readPacketData(GameConnection *connection, BitStream *stream)
    Parent::readPacketData(connection, stream);
 
    Point3F rot(0.0f, 0.0f, 0.0f);
+<<<<<<< HEAD
    rot.x = stream->readSignedFloat(7) * M_2PI_F;
    rot.z = stream->readSignedFloat(7) * M_2PI_F;
+=======
+   stream->read(&rot.x);
+   stream->read(&rot.z);
+
+>>>>>>> omni_engine
    _setRotation(rot);
 
    mTurretDelta.rot = rot;
@@ -1099,8 +1121,13 @@ U32 TurretShape::packUpdate(NetConnection *connection, U32 mask, BitStream *stre
 
    if (stream->writeFlag(mask & TurretUpdateMask))
    {
+<<<<<<< HEAD
       stream->writeSignedFloat(mRot.x / M_2PI_F, 7);
       stream->writeSignedFloat(mRot.z / M_2PI_F, 7);
+=======
+      stream->write(mRot.x);
+      stream->write(mRot.z);
+>>>>>>> omni_engine
       stream->write(allowManualRotation);
       stream->write(allowManualFire);
    }
@@ -1136,8 +1163,13 @@ void TurretShape::unpackUpdate(NetConnection *connection, BitStream *stream)
    if (stream->readFlag())
    {
       Point3F rot(0.0f, 0.0f, 0.0f);
+<<<<<<< HEAD
       rot.x = stream->readSignedFloat(7) * M_2PI_F;
       rot.z = stream->readSignedFloat(7) * M_2PI_F;
+=======
+      stream->read(&rot.x);
+      stream->read(&rot.z);
+>>>>>>> omni_engine
       _setRotation(rot);
 
       // New delta for client side interpolation
@@ -1154,7 +1186,11 @@ void TurretShape::unpackUpdate(NetConnection *connection, BitStream *stream)
 void TurretShape::getWeaponMountTransform( S32 index, const MatrixF &xfm, MatrixF *outMat )
 {
    // Returns mount point to world space transform
+<<<<<<< HEAD
    if ( index >= 0 && index < ShapeBase::MaxMountedImages) {
+=======
+   if ( index >= 0 && index < SceneObject::NumMountPoints) {
+>>>>>>> omni_engine
       S32 ni = mDataBlock->weaponMountNode[index];
       if (ni != -1) {
          MatrixF mountTransform = mShapeInstance->mNodeTransforms[ni];
@@ -1179,7 +1215,11 @@ void TurretShape::getWeaponMountTransform( S32 index, const MatrixF &xfm, Matrix
 void TurretShape::getRenderWeaponMountTransform( F32 delta, S32 mountPoint, const MatrixF &xfm, MatrixF *outMat )
 {
    // Returns mount point to world space transform
+<<<<<<< HEAD
    if ( mountPoint >= 0 && mountPoint < ShapeBase::MaxMountedImages) {
+=======
+   if ( mountPoint >= 0 && mountPoint < SceneObject::NumMountPoints) {
+>>>>>>> omni_engine
       S32 ni = mDataBlock->weaponMountNode[mountPoint];
       if (ni != -1) {
          MatrixF mountTransform = mShapeInstance->mNodeTransforms[ni];
@@ -1449,3 +1489,162 @@ DefineEngineMethod( TurretShape, doRespawn, bool, (),,
 {
    return object->doRespawn();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnTurretShape_doRespawn(char * x__object)
+{
+TurretShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->doRespawn();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnTurretShape_getAllowManualFire(char * x__object)
+{
+TurretShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->getAllowManualFire();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnTurretShape_getAllowManualRotation(char * x__object)
+{
+TurretShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->getAllowManualRotation();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTurretShape_getState(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+TurretShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getStateName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTurretShape_getTurretEulerRotation(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+TurretShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F wle_returnObject;
+{
+   Point3F euler = object->getTurretRotation();
+   
+      euler.x = mRadToDeg( euler.x );
+   euler.y = mRadToDeg( euler.y );
+   euler.z = mRadToDeg( euler.z );
+   
+   {wle_returnObject =euler;
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTurretShape_setAllowManualFire(char * x__object, bool allow)
+{
+TurretShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   return object->setAllowManualFire(allow);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTurretShape_setAllowManualRotation(char * x__object, bool allow)
+{
+TurretShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   return object->setAllowManualRotation(allow);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTurretShape_setTurretEulerRotation(char * x__object, char * x__rot)
+{
+TurretShape* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F rot = Point3F();
+sscanf(x__rot,"%f %f %f",&rot.x,&rot.y,&rot.z);
+{
+   object->setTurretRotation( rot );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

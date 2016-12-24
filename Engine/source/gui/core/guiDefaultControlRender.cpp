@@ -41,6 +41,7 @@ void renderRaisedBox( const RectI &bounds, GuiControlProfile *profile )
    S32 l = bounds.point.x, r = bounds.point.x + bounds.extent.x - 1;
    S32 t = bounds.point.y, b = bounds.point.y + bounds.extent.y - 1;
 
+<<<<<<< HEAD
    GFXDrawUtil* drawUtil = GFX->getDrawUtil();
 
    drawUtil->drawRectFill( bounds, profile->mFillColor);
@@ -52,6 +53,17 @@ void renderRaisedBox( const RectI &bounds, GuiControlProfile *profile )
 
    drawUtil->drawLine(l + 1, b - 1, r - 1, b - 1, profile->mBorderColor);
    drawUtil->drawLine(r - 1, b - 2, r - 1, t + 1, profile->mBorderColor);
+=======
+   GFX->getDrawUtil()->drawRectFill( bounds, profile->mFillColor);
+   GFX->getDrawUtil()->drawLine(l, t, l, b - 1, colorWhite);
+   GFX->getDrawUtil()->drawLine(l, t, r - 1, t, colorWhite);
+
+   GFX->getDrawUtil()->drawLine(l, b, r, b, colorBlack);
+   GFX->getDrawUtil()->drawLine(r, b - 1, r, t, colorBlack);
+
+   GFX->getDrawUtil()->drawLine(l + 1, b - 1, r - 1, b - 1, profile->mBorderColor);
+   GFX->getDrawUtil()->drawLine(r - 1, b - 2, r - 1, t + 1, profile->mBorderColor);
+>>>>>>> omni_engine
 }
 
 void renderSlightlyRaisedBox( const RectI &bounds, GuiControlProfile *profile )
@@ -72,6 +84,7 @@ void renderLoweredBox( const RectI &bounds, GuiControlProfile *profile )
    S32 l = bounds.point.x, r = bounds.point.x + bounds.extent.x - 1;
    S32 t = bounds.point.y, b = bounds.point.y + bounds.extent.y - 1;
 
+<<<<<<< HEAD
    GFXDrawUtil* drawUtil = GFX->getDrawUtil();
 
    drawUtil->drawRectFill( bounds, profile->mFillColor);
@@ -84,6 +97,18 @@ void renderLoweredBox( const RectI &bounds, GuiControlProfile *profile )
 
    drawUtil->drawLine(l + 1, t + 1, r - 2, t + 1, profile->mBorderColor);
    drawUtil->drawLine(l + 1, t + 2, l + 1, b - 2, profile->mBorderColor);
+=======
+   GFX->getDrawUtil()->drawRectFill( bounds, profile->mFillColor);
+
+   GFX->getDrawUtil()->drawLine(l, b, r, b, colorWhite);
+   GFX->getDrawUtil()->drawLine(r, b - 1, r, t, colorWhite);
+
+   GFX->getDrawUtil()->drawLine(l, t, r - 1, t, colorBlack);
+   GFX->getDrawUtil()->drawLine(l, t + 1, l, b - 1, colorBlack);
+
+   GFX->getDrawUtil()->drawLine(l + 1, t + 1, r - 2, t + 1, profile->mBorderColor);
+   GFX->getDrawUtil()->drawLine(l + 1, t + 2, l + 1, b - 2, profile->mBorderColor);
+>>>>>>> omni_engine
 }
 
 void renderSlightlyLoweredBox( const RectI &bounds, GuiControlProfile *profile )
@@ -91,6 +116,7 @@ void renderSlightlyLoweredBox( const RectI &bounds, GuiControlProfile *profile )
    S32 l = bounds.point.x + 1, r = bounds.point.x + bounds.extent.x - 1;
    S32 t = bounds.point.y + 1, b = bounds.point.y + bounds.extent.y - 1;
 
+<<<<<<< HEAD
    GFXDrawUtil* drawUtil = GFX->getDrawUtil();
 
    drawUtil->drawRectFill( bounds, profile->mFillColor);
@@ -98,6 +124,13 @@ void renderSlightlyLoweredBox( const RectI &bounds, GuiControlProfile *profile )
    drawUtil->drawLine(r, t, r, b - 1, profile->mBorderColor);
    drawUtil->drawLine(l, t, l, b - 1, profile->mBorderColor);
    drawUtil->drawLine(l + 1, t, r - 1, t, profile->mBorderColor);
+=======
+   GFX->getDrawUtil()->drawRectFill( bounds, profile->mFillColor);
+   GFX->getDrawUtil()->drawLine(l, b, r, b, profile->mBorderColor);
+   GFX->getDrawUtil()->drawLine(r, t, r, b - 1, profile->mBorderColor);
+   GFX->getDrawUtil()->drawLine(l, t, l, b - 1, profile->mBorderColor);
+   GFX->getDrawUtil()->drawLine(l + 1, t, r - 1, t, profile->mBorderColor);
+>>>>>>> omni_engine
 }
 
 void renderBorder( const RectI &bounds, GuiControlProfile *profile )
@@ -149,7 +182,11 @@ void renderBorder( const RectI &bounds, GuiControlProfile *profile )
       // Taken from the 'Skinnable GUI Controls in TGE' resource by Justin DuJardin       
       if(profile->mBitmapArrayRects.size() >= 8)
       {
+<<<<<<< HEAD
          drawer->clearBitmapModulation();
+=======
+         //drawer->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
          RectI destRect;
          RectI stretchRect;
@@ -277,7 +314,11 @@ void renderSizableBitmapBordersFilled( const RectI &bounds, S32 baseMultiplier, 
 
    GFXDrawUtil *drawer = GFX->getDrawUtil();
 
+<<<<<<< HEAD
    drawer->clearBitmapModulation();
+=======
+   //drawer->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 
    if(profile->mBitmapArrayRects.size() >= (numBitmaps * baseMultiplier))
    {
@@ -378,7 +419,11 @@ void renderSizableBitmapBordersFilledIndex( const RectI &bounds, S32 startIndex,
 
    GFXDrawUtil *drawer = GFX->getDrawUtil();
 
+<<<<<<< HEAD
    drawer->clearBitmapModulation();
+=======
+   //drawer->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    if(profile->mBitmapArrayRects.size() >= (startIndex + numBitmaps))
    {
       RectI destRect;
@@ -474,7 +519,11 @@ void renderFixedBitmapBordersFilled( const RectI &bounds, S32 baseMultiplier, Gu
 
    GFXDrawUtil *drawer = GFX->getDrawUtil();
 
+<<<<<<< HEAD
    drawer->clearBitmapModulation();
+=======
+   //drawer->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    if(profile->mBitmapArrayRects.size() >= (numBitmaps * baseMultiplier))
    {
       RectI destRect;
@@ -519,7 +568,11 @@ void renderFixedBitmapBordersFilledIndex( const RectI &bounds, S32 startIndex, G
    S32 borderRight =       2 + startIndex;
 
    GFXDrawUtil *drawer = GFX->getDrawUtil();
+<<<<<<< HEAD
    drawer->clearBitmapModulation();
+=======
+   //drawer->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    if(profile->mBitmapArrayRects.size() >= (startIndex + numBitmaps))
    {
       RectI destRect;

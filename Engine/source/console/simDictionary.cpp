@@ -23,13 +23,18 @@
 #include "console/simDictionary.h"
 #include "console/simBase.h"
 
+
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 extern U32 HashPointer(StringTableEntry e);
 
 SimNameDictionary::SimNameDictionary()
 {
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    hashTable = NULL;
 #endif
    mutex = Mutex::createMutex();
@@ -37,7 +42,11 @@ SimNameDictionary::SimNameDictionary()
 
 SimNameDictionary::~SimNameDictionary()
 {
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    delete[] hashTable;
 #endif
    Mutex::destroyMutex(mutex);
@@ -45,7 +54,11 @@ SimNameDictionary::~SimNameDictionary()
 
 void SimNameDictionary::insert(SimObject* obj)
 {
+<<<<<<< HEAD
    if(!obj || !obj->objectName)
+=======
+   if(!obj->objectName)
+>>>>>>> omni_engine
       return;
 
    SimObject* checkForDup = find(obj->objectName);
@@ -54,7 +67,11 @@ void SimNameDictionary::insert(SimObject* obj)
       Con::warnf("Warning! You have a duplicate datablock name of %s. This can cause problems. You should rename one of them.", obj->objectName);
 
    Mutex::lockMutex(mutex);
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    if(!hashTable)
    {
       hashTable = new SimObject *[DefaultTableSize];
@@ -100,14 +117,22 @@ void SimNameDictionary::insert(SimObject* obj)
       hashTableSize = newHashTableSize;
    }
 #else
+<<<<<<< HEAD
    root[obj->objectName] = obj;
+=======
+   root[StringTable->insert(obj->objectName)] = obj;
+>>>>>>> omni_engine
 #endif
    Mutex::unlockMutex(mutex);
 }
 
 SimObject* SimNameDictionary::find(StringTableEntry name)
 {
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    // NULL is a valid lookup - it will always return NULL
    if(!hashTable)
       return NULL;
@@ -130,8 +155,12 @@ SimObject* SimNameDictionary::find(StringTableEntry name)
    return NULL;
 #else
   Mutex::lockMutex(mutex);
+<<<<<<< HEAD
   StringDictDef::iterator it = root.find(name);
   SimObject* f = (it == root.end() ? NULL : it->second);
+=======
+  SimObject* f = root[StringTable->insert(name)];
+>>>>>>> omni_engine
   Mutex::unlockMutex(mutex);
   return f;
 #endif
@@ -139,11 +168,19 @@ SimObject* SimNameDictionary::find(StringTableEntry name)
 
 void SimNameDictionary::remove(SimObject* obj)
 {
+<<<<<<< HEAD
    if(!obj || !obj->objectName)
       return;
 
    Mutex::lockMutex(mutex);
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+   if(!obj->objectName)
+      return;
+
+   Mutex::lockMutex(mutex);
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    SimObject **walk = &hashTable[HashPointer(obj->objectName) % hashTableSize];
    while(*walk)
    {
@@ -159,9 +196,15 @@ void SimNameDictionary::remove(SimObject* obj)
       walk = &((*walk)->nextNameObject);
    }
 #else
+<<<<<<< HEAD
    const char* name = obj->objectName;
    if (root.find(name) != root.end())
       root.erase(name);
+=======
+   const char* name = StringTable->insert(obj->objectName);
+   if (root[name])
+	   root.erase(name);
+>>>>>>> omni_engine
 #endif
    Mutex::unlockMutex(mutex);
 }	
@@ -170,7 +213,11 @@ void SimNameDictionary::remove(SimObject* obj)
 
 SimManagerNameDictionary::SimManagerNameDictionary()
 {
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    hashTable = new SimObject *[DefaultTableSize];
    hashTableSize = DefaultTableSize;
    hashEntryCount = 0;
@@ -182,7 +229,11 @@ SimManagerNameDictionary::SimManagerNameDictionary()
 
 SimManagerNameDictionary::~SimManagerNameDictionary()
 {
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    delete[] hashTable;
 #endif
    Mutex::destroyMutex(mutex);
@@ -190,11 +241,19 @@ SimManagerNameDictionary::~SimManagerNameDictionary()
 
 void SimManagerNameDictionary::insert(SimObject* obj)
 {
+<<<<<<< HEAD
    if(!obj || !obj->objectName)
       return;
 
    Mutex::lockMutex(mutex);
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+   if(!obj->objectName)
+      return;
+
+   Mutex::lockMutex(mutex);
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    S32 idx = HashPointer(obj->objectName) % hashTableSize;
    obj->nextManagerNameObject = hashTable[idx];
    hashTable[idx] = obj;
@@ -231,7 +290,11 @@ void SimManagerNameDictionary::insert(SimObject* obj)
       hashTableSize = newHashTableSize;
    }
 #else
+<<<<<<< HEAD
    root[obj->objectName] = obj;
+=======
+   root[StringTable->insert(obj->objectName)] = obj;
+>>>>>>> omni_engine
 #endif
    Mutex::unlockMutex(mutex);
 }
@@ -242,7 +305,11 @@ SimObject* SimManagerNameDictionary::find(StringTableEntry name)
 
    Mutex::lockMutex(mutex);
 
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    S32 idx = HashPointer(name) % hashTableSize;
    SimObject *walk = hashTable[idx];
    while(walk)
@@ -258,8 +325,12 @@ SimObject* SimManagerNameDictionary::find(StringTableEntry name)
 
    return NULL;
 #else
+<<<<<<< HEAD
    StringDictDef::iterator it = root.find(name);
    SimObject* f = (it == root.end() ? NULL : it->second);
+=======
+   SimObject* f = root[StringTable->insert(name)];	
+>>>>>>> omni_engine
    Mutex::unlockMutex(mutex);
    return f;
 #endif
@@ -267,10 +338,17 @@ SimObject* SimManagerNameDictionary::find(StringTableEntry name)
 
 void SimManagerNameDictionary::remove(SimObject* obj)
 {
+<<<<<<< HEAD
    if(!obj || !obj->objectName)
       return;
 
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+   if(!obj->objectName)
+      return;
+
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    Mutex::lockMutex(mutex);
 
    SimObject **walk = &hashTable[HashPointer(obj->objectName) % hashTableSize];
@@ -288,9 +366,16 @@ void SimManagerNameDictionary::remove(SimObject* obj)
       walk = &((*walk)->nextManagerNameObject);
    }
 #else
+<<<<<<< HEAD
    StringTableEntry name = obj->objectName;
    if (root.find(name) != root.end())
       root.erase(name);
+=======
+
+	const char* name = StringTable->insert(obj->objectName);
+	if (root[name])
+		root.erase(name);
+>>>>>>> omni_engine
 #endif
    Mutex::unlockMutex(mutex);
 }	
@@ -300,7 +385,11 @@ void SimManagerNameDictionary::remove(SimObject* obj)
 
 SimIdDictionary::SimIdDictionary()
 {
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    dMemset( table, 0, sizeof( table[ 0 ] ) * DefaultTableSize );
 #endif
    mutex = Mutex::createMutex();
@@ -315,11 +404,16 @@ SimIdDictionary::~SimIdDictionary()
 
 void SimIdDictionary::insert(SimObject* obj)
 {
+<<<<<<< HEAD
    if (!obj)
       return;
 
    Mutex::lockMutex(mutex);
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+   Mutex::lockMutex(mutex);
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    S32 idx = obj->getId() & TableBitMask;
    obj->nextIdObject = table[idx];
    AssertFatal( obj->nextIdObject != obj, "SimIdDictionary::insert - Creating Infinite Loop linking to self!" );
@@ -333,7 +427,11 @@ void SimIdDictionary::insert(SimObject* obj)
 SimObject* SimIdDictionary::find(S32 id)
 {
    Mutex::lockMutex(mutex);
+<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    S32 idx = id & TableBitMask;
    SimObject *walk = table[idx];
    while(walk)
@@ -349,8 +447,12 @@ SimObject* SimIdDictionary::find(S32 id)
 
    return NULL;
 #else
+<<<<<<< HEAD
    SimObjectIdDictDef::iterator it = root.find(id);
    SimObject* f = (it == root.end() ? NULL : it->second);
+=======
+   SimObject* f = root[id];
+>>>>>>> omni_engine
    Mutex::unlockMutex(mutex);
    return f;
 #endif
@@ -358,11 +460,16 @@ SimObject* SimIdDictionary::find(S32 id)
 
 void SimIdDictionary::remove(SimObject* obj)
 {
+<<<<<<< HEAD
    if (!obj)
       return;
 
    Mutex::lockMutex(mutex);
 #ifndef USE_NEW_SIMDICTIONARY
+=======
+   Mutex::lockMutex(mutex);
+#ifdef USE_CLASSIC_SIMDICTIONARY
+>>>>>>> omni_engine
    SimObject **walk = &table[obj->getId() & TableBitMask];
    while(*walk && *walk != obj)
       walk = &((*walk)->nextIdObject);

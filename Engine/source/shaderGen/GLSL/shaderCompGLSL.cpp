@@ -395,8 +395,18 @@ void VertPixelConnectorGLSL::printStructDefines( Stream &stream, bool in )
       {
          dSprintf((char*)output, sizeof(output), "#define %s_%s _%s_\r\n", connectionDir, var->name, var->connectName);
          stream.write( dStrlen((char*)output), output );
+<<<<<<< HEAD
          continue;
       }
+=======
+      }
+
+      if( deprecatedDefines.contains((char*)var->name))
+         continue;
+
+      dSprintf((char*)output, sizeof(output), "#define %s %s_%s\r\n", var->name, connectionDir, var->name);
+      stream.write( dStrlen((char*)output), output );
+>>>>>>> omni_engine
    }
 
    stream.write( dStrlen((char*)newLine), newLine );

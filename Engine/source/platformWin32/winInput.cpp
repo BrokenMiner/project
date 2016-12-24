@@ -824,8 +824,9 @@ const char* Platform::getClipboard()
 
    hGlobal = GetClipboardData(CF_TEXT);
    pGlobal = GlobalLock(hGlobal);
-	S32 cbLength = strlen((char *)pGlobal);
-   char  *returnBuf = Con::getReturnBuffer(cbLength + 1);
+   const dsize_t cbLength = strlen((char *)pGlobal);
+   AssertFatal( cbLength < U32_MAX, "Huge data." )
+   char *returnBuf = Con::getReturnBuffer((U32)cbLength + 1);
 	strcpy(returnBuf, (char *)pGlobal);
 	returnBuf[cbLength] = '\0';
    GlobalUnlock(hGlobal);
@@ -845,7 +846,8 @@ bool Platform::setClipboard(const char *text)
    if (!OpenClipboard(NULL))
 		return false;
 
-	S32 cbLength = strlen(text);
+	dsize_t cbLength = strlen(text);
+	AssertFatal( cbLength < U32_MAX, "Huge data." )
 
 	HGLOBAL hGlobal;
 	LPVOID  pGlobal;
@@ -865,3 +867,92 @@ bool Platform::setClipboard(const char *text)
 }
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getJoystickAxes(U32 deviceID,  char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+   DInputManager* mgr = dynamic_cast<DInputManager*>( Input::getManager() );
+   if ( mgr )
+      {wle_returnObject =( mgr->getJoystickAxesString( deviceID ) );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   {wle_returnObject =( "" );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_isJoystickDetected()
+{
+bool wle_returnObject;
+{
+   {wle_returnObject =( DInputDevice::joystickDetected() );
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -86,6 +86,7 @@ ReflectorDesc::ReflectorDesc()
    priority = 1.0f;
    maxRateMs = 15;
    useOcclusionQuery = true;
+   type = ReflectorDesc::CUBE;
 }
 
 ReflectorDesc::~ReflectorDesc()
@@ -95,6 +96,10 @@ ReflectorDesc::~ReflectorDesc()
 void ReflectorDesc::initPersistFields()
 {
    addGroup( "ReflectorDesc" );
+
+      addField( "type", TypeS32, Offset( type, ReflectorDesc ), 
+         "Type of reflection to generate. Temp: plane = 0, cubemap = 1"
+         "this value is interpreted as." );
 
       addField( "texSize", TypeS32, Offset( texSize, ReflectorDesc ), 
          "Size in pixels of the (square) reflection texture. For a cubemap "
@@ -135,6 +140,7 @@ void ReflectorDesc::packData( BitStream *stream )
 {
    Parent::packData( stream );
 
+   stream->write( type );
    stream->write( texSize );
    stream->write( nearDist );
    stream->write( farDist );
@@ -149,6 +155,7 @@ void ReflectorDesc::unpackData( BitStream *stream )
 {
    Parent::unpackData( stream );
 
+   stream->read( &type );
    stream->read( &texSize );
    stream->read( &nearDist );
    stream->read( &farDist );
@@ -541,10 +548,16 @@ void PlaneReflector::updateReflection( const ReflectParams &params )
    if (  texResize || 
          reflectTex.isNull() ||
          reflectTex->getFormat() != REFLECTMGR->getReflectFormat() )
+<<<<<<< HEAD
    {
       reflectTex = REFLECTMGR->allocRenderTarget( texSize );
       depthBuff = LightShadowMap::_getDepthTarget( texSize.x, texSize.y );
    }
+=======
+      reflectTex = REFLECTMGR->allocRenderTarget( texSize );
+
+   GFXTexHandle depthBuff = LightShadowMap::_getDepthTarget( texSize.x, texSize.y );
+>>>>>>> omni_engine
 
    // store current matrices
    GFXTransformSaver saver;
@@ -606,6 +619,7 @@ void PlaneReflector::updateReflection( const ReflectParams &params )
       RectI originalVP = GFX->getViewport();
 
       Point2F projOffset = GFX->getCurrentProjectionOffset();
+<<<<<<< HEAD
       const FovPort *currentFovPort = GFX->getStereoFovPort();
       MatrixF inverseEyeTransforms[2];
 
@@ -626,18 +640,42 @@ void PlaneReflector::updateReflection( const ReflectParams &params )
       GFX->setFrustum(gfxFrustum);
 
       setGFXMatrices( params.query->eyeTransforms[0] );
+=======
+      Point3F eyeOffset = GFX->getStereoEyeOffset();
+
+      // Render left half of display
+      RectI leftVP = originalVP;
+      leftVP.extent.x *= 0.5;
+      GFX->setViewport(leftVP);
+
+      MatrixF leftWorldTrans(true);
+      leftWorldTrans.setPosition(Point3F(eyeOffset.x, eyeOffset.y, eyeOffset.z));
+      MatrixF leftWorld(params.query->cameraMatrix);
+      leftWorld.mulL(leftWorldTrans);
+
+      Frustum gfxFrustum = GFX->getFrustum();
+      gfxFrustum.setProjectionOffset(Point2F(projOffset.x, projOffset.y));
+      GFX->setFrustum(gfxFrustum);
+
+      setGFXMatrices( leftWorld );
+>>>>>>> omni_engine
 
       SceneCameraState cameraStateLeft = SceneCameraState::fromGFX();
       SceneRenderState renderStateLeft( gClientSceneGraph, SPT_Reflect, cameraStateLeft );
       renderStateLeft.setSceneRenderStyle(SRS_SideBySide);
       renderStateLeft.setSceneRenderField(0);
       renderStateLeft.getMaterialDelegate().bind( REFLECTMGR, &ReflectionManager::getReflectionMaterial );
+<<<<<<< HEAD
       renderStateLeft.setDiffuseCameraTransform( params.query->eyeTransforms[0] );
+=======
+      renderStateLeft.setDiffuseCameraTransform( params.query->cameraMatrix );
+>>>>>>> omni_engine
       renderStateLeft.disableAdvancedLightingBins(true);
 
       gClientSceneGraph->renderSceneNoLights( &renderStateLeft, objTypeFlag );
 
       // Render right half of display
+<<<<<<< HEAD
       GFX->activateStereoTarget(1);
       GFX->setWorldMatrix(params.query->eyeTransforms[1]);
 
@@ -646,18 +684,40 @@ void PlaneReflector::updateReflection( const ReflectParams &params )
       GFX->setFrustum(gfxFrustum);
 
       setGFXMatrices( params.query->eyeTransforms[1] );
+=======
+      RectI rightVP = originalVP;
+      rightVP.extent.x *= 0.5;
+      rightVP.point.x += rightVP.extent.x;
+      GFX->setViewport(rightVP);
+
+      MatrixF rightWorldTrans(true);
+      rightWorldTrans.setPosition(Point3F(-eyeOffset.x, eyeOffset.y, eyeOffset.z));
+      MatrixF rightWorld(params.query->cameraMatrix);
+      rightWorld.mulL(rightWorldTrans);
+
+      gfxFrustum = GFX->getFrustum();
+      gfxFrustum.setProjectionOffset(Point2F(-projOffset.x, projOffset.y));
+      GFX->setFrustum(gfxFrustum);
+
+      setGFXMatrices( rightWorld );
+>>>>>>> omni_engine
 
       SceneCameraState cameraStateRight = SceneCameraState::fromGFX();
       SceneRenderState renderStateRight( gClientSceneGraph, SPT_Reflect, cameraStateRight );
       renderStateRight.setSceneRenderStyle(SRS_SideBySide);
       renderStateRight.setSceneRenderField(1);
       renderStateRight.getMaterialDelegate().bind( REFLECTMGR, &ReflectionManager::getReflectionMaterial );
+<<<<<<< HEAD
       renderStateRight.setDiffuseCameraTransform( params.query->eyeTransforms[1] );
+=======
+      renderStateRight.setDiffuseCameraTransform( params.query->cameraMatrix );
+>>>>>>> omni_engine
       renderStateRight.disableAdvancedLightingBins(true);
 
       gClientSceneGraph->renderSceneNoLights( &renderStateRight, objTypeFlag );
 
       // Restore previous values
+      gfxFrustum.clearProjectionOffset();
       GFX->setFrustum(gfxFrustum);
       GFX->setViewport(originalVP);
    }

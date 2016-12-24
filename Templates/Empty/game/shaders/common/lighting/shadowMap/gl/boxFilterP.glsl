@@ -45,5 +45,9 @@ void main()
       accum += texture(diffuseMap0, BaseTexCoord + float(i) * SampleOffset);
    }
    accum /= blurSamples;
+<<<<<<< HEAD
    OUT_col = accum;
+=======
+   OUT_FragColor0 = accum;
+>>>>>>> omni_engine
 }

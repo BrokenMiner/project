@@ -34,9 +34,20 @@
 #include "core/frameAllocator.h"
 #include "core/stream/fileStream.h"
 #include "core/fileObject.h"
+#include "console/SimXMLDocument.h"    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+#include "core/strings/stringUnit.h"
+#include "OMNI/Omni.h"
 
 
 IMPLEMENT_CONOBJECT( SimObject );
+
+IMPLEMENT_CALLBACK(SimObject, onDefineFieldTypes, void, (), (), "");
+IMPLEMENT_CALLBACK(SimObject, setInfo, void, (const char* info), (info), "");
+IMPLEMENT_CALLBACK(SimObject, setSelectionObjectsByCount, void, (const char* count), (count), "");
+IMPLEMENT_CALLBACK(SimObject, onClick, void, (const char* SelectedidString), (SelectedidString),"");
+IMPLEMENT_CALLBACK(SimObject, onDblClick, void, (const char* SelectedidString), (SelectedidString),"");
+IMPLEMENT_CALLBACK(SimObject, onEndDrag, void, (const char* obj), (obj), "");
+IMPLEMENT_CALLBACK(SimObject, onGuiUpdate, void, (const char* text), (text), "");
 
 // See full description in the new CHM manual
 ConsoleDocClass( SimObject,
@@ -47,7 +58,11 @@ ConsoleDocClass( SimObject,
 
 bool SimObject::smForceId = false;
 SimObjectId SimObject::smForcedId = 0;
+<<<<<<< HEAD
 
+=======
+SimXMLDocument* SimObject::mXMLDocument = NULL;
+>>>>>>> omni_engine
 
 namespace Sim
 {
@@ -58,6 +73,7 @@ namespace Sim
    extern U32 gNextObjectId;
 }
 
+static long objectcount = 0;
 
 //-----------------------------------------------------------------------------
 
@@ -88,6 +104,11 @@ SimObject::SimObject()
 
    mCopySource = NULL;
    mPersistentId = NULL;
+   mWLE_OMNI_ARRAY_POSTION=0;
+
+	mWLE_OVERRIDE_PROXY_CLASSTYPE = String(StringTable->insert(""));
+
+	objectcount++;
 }
 
 //-----------------------------------------------------------------------------
@@ -119,11 +140,28 @@ SimObject::~SimObject()
       objectName,mId));
    AssertFatal(mFlags.test(Added) == 0, "SimObject::object "
       "missing call to SimObject::onRemove");
+<<<<<<< HEAD
 }
 
 //-----------------------------------------------------------------------------
 
 bool SimObject::processArguments(S32 argc, ConsoleValueRef *argv)
+=======
+
+   objectcount--;
+}
+
+DefineEngineFunction( dumpSoCount, void, (),,"")
+{
+	Con::printf("### Object Count: %i", objectcount);
+}
+
+
+
+//-----------------------------------------------------------------------------
+
+bool SimObject::processArguments(S32 argc, const char**argv)
+>>>>>>> omni_engine
 {
    return argc == 0;
 }
@@ -157,6 +195,8 @@ void SimObject::initPersistFields()
       addProtectedField( "className", TypeString, Offset(mClassName, SimObject), &setClass, &defaultProtectedGetFn,
          "Script class of object.", AbstractClassRep::FIELD_HideInInspectors );
 
+	  
+
    endGroup( "Object" );
    
    addGroup( "Editing" );
@@ -167,6 +207,14 @@ void SimObject::initPersistFields()
       addProtectedField( "locked", TypeBool, NULL,
          &_setLocked, &_getLocked,
          "Whether the object can be edited." );
+
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+	  addProtectedField( "editable", TypeBool, NULL,  
+		  &_setEditable, &_getEditable,
+		  "Whether the object can be edited in the game." );
+     // @Copyright end
    
    endGroup( "Editing" );
    
@@ -184,6 +232,19 @@ void SimObject::initPersistFields()
          "The universally unique identifier for the object." );
    
    endGroup( "Persistence" );
+
+	addGroup( "OMNI" );
+
+	addField( "WLE_OMNI_ARRAY_POSTION",        TypeS32,    Offset( mWLE_OMNI_ARRAY_POSTION, SimObject ), "", AbstractClassRep:: FIELD_ReadOnly );
+
+	addField( "WLE_OVERRIDE_PROXY_CLASSTYPE", TypeRealString, Offset(mWLE_OVERRIDE_PROXY_CLASSTYPE,SimObject),"", AbstractClassRep:: FIELD_ReadOnly );
+
+	endGroup( "OMNI" );
+	
+
+   addGroup("Component");
+   addProtectedField( "Enabled", TypeBool, Offset(mEnabled, SimObject), &setEnabledValue, &defaultProtectedGetFn, "ENABLED FLAG");
+   endGroup("Component");
 
    Parent::initPersistFields();
 }
@@ -266,7 +327,11 @@ bool SimObject::writeField(StringTableEntry fieldname, const char* value)
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void SimObject::writeFields(Stream &stream, U32 tabStop)
+=======
+void SimObject::writeFields(Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC.*/bool XMLOutput )
+>>>>>>> omni_engine
 {
    // Write static fields.
    
@@ -297,6 +362,11 @@ void SimObject::writeFields(Stream &stream, U32 tabStop)
          if (!writeField(f->pFieldname, valCopy))
             continue;
 
+		 //NOTE:
+		 //We don't want it to write out the array position, that would just be bad...
+		 if (dStrcmp(f->pFieldname,"WLE_OMNI_ARRAY_POSTION")==0)
+			 continue;
+
          val = valCopy;
 
          U32 expandedBufferSize = ( nBufferSize  * 2 ) + dStrlen(f->pFieldname) + 32;
@@ -318,9 +388,56 @@ void SimObject::writeFields(Stream &stream, U32 tabStop)
             val = fnBuf;
          }
 
+<<<<<<< HEAD
          expandEscape((char*)expandedBuffer + dStrlen(expandedBuffer), val);
          dStrcat(expandedBuffer, "\";\r\n");
 
+=======
+		 
+
+		 if(f->elementCount == 1)
+		 {
+         // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+         //  @Copyright start
+
+			 /// For XML Output
+			 if(XMLOutput)
+			 {
+				 mXMLDocument->pushNewElement("Setting");
+				 mXMLDocument->setAttribute("name",f->pFieldname);
+				 mXMLDocument->addData(val);
+				mXMLDocument->popElement();
+				continue;
+			 }
+          // @Copyright end
+            dSprintf(expandedBuffer, expandedBufferSize, "%s = \"", f->pFieldname);
+		 }
+         else
+		 {
+         // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+         //  @Copyright start
+
+			 /// For XML Output
+			 if(XMLOutput)
+			 {
+				 mXMLDocument->pushNewElement("Setting");
+				 mXMLDocument->setAttribute("name", f->pFieldname);
+				char buffer[1024];
+				dSprintf(buffer, sizeof(buffer), "%d", j);
+				mXMLDocument->setAttribute("id",buffer);
+				mXMLDocument->addData(val);
+				mXMLDocument->popElement();
+				continue;
+			 }
+          // @Copyright end
+            dSprintf(expandedBuffer, expandedBufferSize, "%s[%d] = \"", f->pFieldname, j);
+		 }
+
+         expandEscape((char*)expandedBuffer + dStrlen(expandedBuffer), val);
+         dStrcat(expandedBuffer, "\";\r\n");
+
+		 /// For Stream Output
+>>>>>>> omni_engine
          stream.writeTabs(tabStop);
          stream.write(dStrlen(expandedBuffer),expandedBuffer);
       }
@@ -329,7 +446,12 @@ void SimObject::writeFields(Stream &stream, U32 tabStop)
    // Write dynamic fields, if enabled.
    
    if(mFieldDictionary && mCanSaveFieldDictionary)
+<<<<<<< HEAD
       mFieldDictionary->writeFields(this, stream, tabStop);
+=======
+		   mFieldDictionary->writeFields(this, stream, tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */XMLOutput);
+	
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -343,6 +465,35 @@ void SimObject::write(Stream &stream, U32 tabStop, U32 flags)
    if((flags & SelectedOnly) && !isSelected())
       return;
 
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   /// For XML Output
+   if( flags & XmlOutput )
+   {
+	   mXMLDocument->pushNewElement("Group");
+
+	   mXMLDocument->setAttribute("name", getClassName());
+	   mXMLDocument->setAttribute("fileName", getFilename());
+	   char buffer[1024];
+	   dSprintf(buffer, sizeof(buffer), "%d", getDeclarationLine());
+	   mXMLDocument->setAttribute("lineNumber", buffer);
+	   mXMLDocument->pushNewElement("Setting");
+	   mXMLDocument->setAttribute("name", "name");
+	   if(getName())
+		   mXMLDocument->addData(getName());
+	   else
+		   mXMLDocument->addData(" ");
+	   mXMLDocument->popElement();
+	   writeFields( stream, tabStop + 1, true);
+
+	   mXMLDocument->popElement();
+	   return;
+   }
+
+   // @Copyright end
+
+   /// For Stream Output
    stream.writeTabs(tabStop);
    char buffer[1024];
    dSprintf(buffer, sizeof(buffer), "new %s(%s) {\r\n", getClassName(), getName() && !(flags & NoName) ? getName() : "");
@@ -426,6 +577,30 @@ bool SimObject::save(const char *pcFileName, bool bOnlySelected, const char *pre
 }
 
 //-----------------------------------------------------------------------------
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+bool SimObject::saveToXML( const char *profileName, const char *fileName )
+{
+	mXMLDocument = new SimXMLDocument();
+	mXMLDocument->registerObject();
+	mXMLDocument->addHeader();
+	mXMLDocument->pushNewElement( profileName );
+
+	FileStream* stream;
+	write(*stream, 0, XmlOutput);
+
+	mXMLDocument->popElement(  );
+
+	char fileNameBuffer[32];
+	Con::expandScriptFilename( fileNameBuffer, sizeof(fileNameBuffer), fileName );
+	mXMLDocument->saveFile( fileNameBuffer );
+
+	return true;
+}
+// @Copyright end
+
+//-----------------------------------------------------------------------------
 
 SimPersistID* SimObject::getOrCreatePersistentId()
 {
@@ -502,7 +677,11 @@ bool SimObject::registerObject()
 {
    AssertFatal( !mFlags.test( Added ), "reigsterObject - Object already registered!");
 	mFlags.clear(Deleted | Removed);
+<<<<<<< HEAD
 
+=======
+	setmWLE_OMNI_ARRAY_POSTION(0);
+>>>>>>> omni_engine
    if(smForceId)
    {
       setId(smForcedId);
@@ -557,6 +736,10 @@ void SimObject::unregisterObject()
    Sim::gNameDictionary->remove(this);
    Sim::gIdDictionary->remove(this);
    Sim::cancelPendingEvents(this);
+
+   	if (mWLE_OMNI_ARRAY_POSTION>0)
+			if (Winterleaf_EngineCallback::mWLERegisterSimObject_Callback!=0)
+				Winterleaf_EngineCallback::mWLERegisterSimObject_Callback(mWLE_OMNI_ARRAY_POSTION,false,"","");
 }
 
 //-----------------------------------------------------------------------------
@@ -711,6 +894,9 @@ bool SimObject::isMethod( const char* methodName )
       return false;
 
    StringTableEntry stname = StringTable->insert( methodName );
+   if ( Winterleaf_EngineCallback::mWLE_IsFunction)
+	   if ( Winterleaf_EngineCallback::mWLE_IsFunction((S32)this->getId(),this->mWLE_OMNI_ARRAY_POSTION,stname) == 1)
+		   return true;
 
    if( getNamespace() )
       return ( getNamespace()->lookup( stname ) != NULL );
@@ -749,11 +935,20 @@ void SimObject::assignDynamicFieldsFrom(SimObject* parent)
 
 void SimObject::assignFieldsFrom(SimObject *parent)
 {
+
+
    // Only allow field assigns from objects of the same class or
    // a superclass.
    
    if( getClassRep()->isClass( parent->getClassRep() ) )
    {
+		//WLE
+		//We need to blank the array position when we copy so that the new object will get it's own
+		//array id.  Then we restore it when the copy is done.
+		S32 oldarrayid =	parent->mWLE_OMNI_ARRAY_POSTION;
+		parent->mWLE_OMNI_ARRAY_POSTION = 0;
+		//WLE
+
       const AbstractClassRep::FieldList &list = parent->getFieldList();
 
       // copy out all the fields:
@@ -797,6 +992,9 @@ void SimObject::assignFieldsFrom(SimObject *parent)
                Con::setData(f->type, (void *) (((const char *)this) + f->offset), j, 1, &fieldVal, f->table);
          }
       }
+		//WLE
+		parent->mWLE_OMNI_ARRAY_POSTION = oldarrayid;
+		//WLE
    }
    else
    {
@@ -1045,6 +1243,34 @@ SimObject* SimObject::clone()
 SimObject* SimObject::deepClone()
 {
    return clone();
+}
+
+void SimObject::signal(const char* fieldName, const char* args)
+{
+	const char* data = getDataField( fieldName, NULL );
+	if(data == NULL || strlen(data) == 0)
+	{
+		//Con::warnf("Invalid dynamic field index %s for object %s", fieldName, getName());	
+		return;
+	}	
+
+	char chunk[512];
+	char argsParsed[512] = "";
+	if(args != NULL)
+	{		
+		int count = StringUnit::getUnitCount(args, " \t\n");
+		for(int i = 0; i < count; i++)
+		{
+			char str[10];
+			dSprintf(str, 512, ", %%arg%d", i);
+			strcat(argsParsed, str);
+		}
+	}
+
+	dSprintf(chunk, 512, " function SimObjectFunctionChunk(%%this %s) { %s } SimObjectFunctionChunk(%d, %s); ", argsParsed, data, getId(), args);
+
+	Con::evaluate(chunk);
+
 }
 
 //=============================================================================
@@ -1407,11 +1633,18 @@ void SimObject::linkNamespaces()
    // while still having the class namespace fields matching the current
    // setup.
 
+<<<<<<< HEAD
    if (mNameSpace)
    {
       Con::warnf("SimObject::linkNamespaces -- Namespace linkage already in place %s", mNameSpace->getName());
       return;
    }
+=======
+   AssertWarn( mNameSpace == NULL, "SimObject::linkNamespaces -- Namespace linkage already in place" );
+   if( mNameSpace )
+      return;
+
+>>>>>>> omni_engine
    // Get the namespace for the C++ class.
 
    Namespace* cppNamespace = getClassRep()->getNameSpace();
@@ -1742,6 +1975,18 @@ void SimObject::setLocked( bool b )
 }
 
 //-----------------------------------------------------------------------------
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+void SimObject::setEditable( bool b )
+{
+	if( b )
+		mFlags.set( Editable );
+   else
+      mFlags.clear( Editable );
+}
+// @Copyright end
+
+//-----------------------------------------------------------------------------
 
 void SimObject::setHidden( bool b )
 {
@@ -1834,7 +2079,11 @@ void SimObject::inspectPostApply()
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 String SimObject::_getLogMessage(const char* fmt, va_list args) const
+=======
+String SimObject::_getLogMessage(const char* fmt, void* args) const
+>>>>>>> omni_engine
 {
    String objClass = "UnknownClass";
    if(getClassRep())
@@ -1995,7 +2244,11 @@ static void sEnumCallback( EngineObject* object )
       
    Con::evaluatef( "%s( %i );", sEnumCallbackFunction, simObject->getId() );
 }
+<<<<<<< HEAD
 
+=======
+#endif
+>>>>>>> omni_engine
 DefineEngineFunction( debugEnumInstances, void, ( const char* className, const char* functionName ),,
    "Call the given function for each instance of the given class.\n"
    "@param className Name of the class for which to enumerate instances.\n"
@@ -2003,11 +2256,21 @@ DefineEngineFunction( debugEnumInstances, void, ( const char* className, const c
    "@note This function is only available in debug builds and primarily meant as an aid in debugging."
    "@ingroup Console")
 {
+<<<<<<< HEAD
    sEnumCallbackFunction = functionName;
    ConsoleObject::debugEnumInstances( className, sEnumCallback );
 }
 
 #endif
+=======
+	#ifdef TORQUE_DEBUG
+   sEnumCallbackFunction = functionName;
+   ConsoleObject::debugEnumInstances( className, sEnumCallback );
+	#endif
+}
+
+
+>>>>>>> omni_engine
 
 //-----------------------------------------------------------------------------
 
@@ -2113,6 +2376,28 @@ DefineEngineMethod( SimObject, setLocked, void, ( bool value ), ( true ),
 
 //-----------------------------------------------------------------------------
 
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+DefineEngineMethod( SimObject, setEditable, void, ( bool value ), ( true ),
+   "Editable/Non-editable object in the game.\n"
+   "@param value If true, the object will be editable; if false, the object will not be editable." )
+{
+	object->setEditable( value );
+}
+
+//-----------------------------------------------------------------------------
+
+DefineEngineMethod( SimObject, isEditable, bool, ( ), ,
+   "Editable/Non-editable object in the game.\n"
+   "@return If the object is editable or not." )
+{
+	return object->isEditable( );
+}
+// @Copyright end
+
+//-----------------------------------------------------------------------------
+
 DefineEngineMethod( SimObject, setHidden, void, ( bool value ), ( true ),
    "Hide/unhide the object.\n"
    "@param value If true, the object will be hidden; if false, the object will be unhidden." )
@@ -2121,6 +2406,7 @@ DefineEngineMethod( SimObject, setHidden, void, ( bool value ), ( true ),
 }
 
 //-----------------------------------------------------------------------------
+
 
 DefineConsoleMethod( SimObject, dumpMethods, ArrayObject*, (),,
    "List the methods defined on this object.\n\n"
@@ -2406,6 +2692,8 @@ DefineConsoleMethod( SimObject, isField, bool, ( const char* fieldName ),,
    "@param fieldName The name of the field.\n"
    "@return True if the object implements the given field." )
 {
+   if (dStrcmp(fieldName,"")==0 )
+		return false;
    return object->isField( fieldName );
 }
 
@@ -2417,6 +2705,9 @@ DefineConsoleMethod( SimObject, getFieldValue, const char*, ( const char* fieldN
    "@param index Optional parameter to specify the index of an array field separately.\n"
    "@return The value of the given field or \"\" if undefined." )
 {
+   if (dStrcmp(fieldName,"")==0 )
+		return "";
+
    char fieldNameBuffer[ 1024 ];
    char arrayIndexBuffer[ 64 ];
    
@@ -2462,6 +2753,9 @@ DefineConsoleMethod( SimObject, setFieldValue, bool, ( const char* fieldName, co
    "@param index Optional argument to specify an index for an array field.\n"
    "@return True." )
 {
+   if (dStrcmp(fieldName,"")==0 )
+		return false;
+
    char fieldNameBuffer[ 1024 ];
    char arrayIndexBuffer[ 64 ];
    
@@ -2506,6 +2800,8 @@ DefineConsoleMethod( SimObject, getFieldType, const char*, ( const char* fieldNa
    "Get the console type code of the given field.\n"
    "@return The numeric type code for the underlying console type of the given field." )
 {
+	if (dStrcmp(fieldName,"")==0 )
+		return "";
    U32 typeID = object->getDataFieldType( StringTable->insert( fieldName ), NULL );
    ConsoleBaseType* type = ConsoleBaseType::getType( typeID );
 
@@ -2523,6 +2819,8 @@ DefineConsoleMethod( SimObject, setFieldType, void, ( const char* fieldName, con
    "@param type The name of the console type.\n"
    "@note This only works for dynamic fields.  Types of static fields cannot be changed." )
 {
+	if ((dStrcmp(fieldName,"")==0 )||(dStrcmp(type,"")==0 ))
+		return;
    object->setDataFieldType( type, StringTable->insert( fieldName ), NULL );
 }
 
@@ -2570,6 +2868,8 @@ DefineConsoleMethod( SimObject, isMemberOfClass, bool, ( const char* className )
    "@param className Name of a native C++ class.\n"
    "@return True if this object is an instance of the given C++ class or any of its super classes." )
 {
+	if (dStrcmp(className,"")==0)
+		return false;
    AbstractClassRep* pRep = object->getClassRep();
    while(pRep)
    {
@@ -2747,9 +3047,43 @@ DefineConsoleMethod( SimObject, getField, const char*, ( S32 index ),,
    return "";
 }
 
+<<<<<<< HEAD
 //-----------------------------------------------------------------------------
 
 #ifdef TORQUE_DEBUG
+=======
+ConsoleMethod(SimObject, signal, void, 3, 4, "evaluates strings stored in dynamic fields take a string as parameter")
+{
+	const char *fieldName = StringTable->insert( argv[2] );
+	object->signal(fieldName, argc > 3 ? argv[3] : NULL);
+}
+
+DefineConsoleMethod(SimObject, setEnabled, void, (bool enabled), , "(enabled)")
+{
+	object->setEnabled(enabled);
+}
+
+DefineConsoleMethod(SimObject, isEnabled, bool, (), , "()")
+{
+	return object->isEnabled();
+}
+
+//-----------------------------------------------------------------------------
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+DefineConsoleMethod( SimObject, saveToXML, bool, ( const char *profileName, const char *fileName ),,
+   "Retrieve the value of a static field by index.\n"
+   "@param index The index of the static field.\n"
+   "@return The value of the static field with the given index or \"\"." )
+{
+	return object->saveToXML( profileName, fileName );
+}
+// @Copyright end
+//-----------------------------------------------------------------------------
+
+
+>>>>>>> omni_engine
 
 DefineEngineMethod( SimObject, getDebugInfo, ArrayObject*, (),,
    "Return some behind-the-scenes information on the object.\n"
@@ -2789,4 +3123,1336 @@ DefineEngineMethod( SimObject, getDebugInfo, ArrayObject*, (),,
    return array;
 }
 
+<<<<<<< HEAD
 #endif
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_debugEnumInstances(char * x__className, char * x__functionName)
+{
+const char* className = (const char*)x__className;
+const char* functionName = (const char*)x__functionName;
+{
+	#ifdef TORQUE_DEBUG
+   sEnumCallbackFunction = functionName;
+   ConsoleObject::debugEnumInstances( className, sEnumCallback );
+	#endif
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_dumpSoCount()
+{
+{
+	Con::printf("### Object Count: %i", objectcount);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_assignFieldsFrom(char * x__object, char * x__fromObject)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+SimObject* fromObject; Sim::findObject(x__fromObject, fromObject ); 
+{
+   if( fromObject )
+      object->assignFieldsFrom( fromObject );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_delete(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->deleteObject();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_dumpClassHierarchy(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->dumpClassHierarchy();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_dumpMethods(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+ArrayObject* wle_returnObject;
+{
+   Namespace *ns = object->getNamespace();
+   if( !ns )
+      {wle_returnObject =0;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+      
+   ArrayObject* dictionary = new ArrayObject();
+   dictionary->registerObject();
+   
+   VectorPtr<Namespace::Entry *> vec(__FILE__, __LINE__);
+   ns->getEntryList(&vec);
+   for(Vector< Namespace::Entry* >::iterator j = vec.begin(); j != vec.end(); j++)
+   {
+      Namespace::Entry* e = *j;
+      if( e->mType < 0 )
+         continue;
+         
+      StringBuilder str;
+      
+      str.append( String::ToString( e->mMinArgs ) );
+      str.append( '\n' );
+      str.append( String::ToString( e->mMaxArgs ) );
+      str.append( '\n' );
+      str.append( e->getPrototypeString() );
+      str.append( '\n' );
+      if( e->mCode && e->mCode->fullPath )
+         str.append( e->mCode->fullPath );
+      str.append( '\n' );
+      if( e->mCode )
+         str.append( String::ToString( e->mFunctionLineNumber ) );
+      str.append( '\n' );
+      String docs = e->getDocString();
+      if( !docs.isEmpty() )
+         str.append( docs );
+      dictionary->push_back( e->mFunctionName, str.end() );
+   }
+   
+   {wle_returnObject =dictionary;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_getCanSave(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->getCanSave();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_getClassName(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   const char *ret = object->getClassName();
+   {wle_returnObject =ret ? ret : "";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_getClassNamespace(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getClassNamespace();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_getDeclarationLine(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getDeclarationLine());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_getDynamicField(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   SimFieldDictionary* fieldDictionary = object->getFieldDictionary();
+   SimFieldDictionaryIterator itr(fieldDictionary);
+   for (S32 i = 0; i < index; i++)
+   {
+      if (!(*itr))
+      {
+         Con::warnf("Invalid dynamic field index passed to SimObject::getDynamicField!");
+         {wle_returnObject =NULL;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+      }
+      ++itr;
+   }
+   static const U32 bufSize = 256;
+   char* buffer = Con::getReturnBuffer(bufSize);
+   if (*itr)
+   {
+      SimFieldDictionary::Entry* entry = *itr;
+      dSprintf(buffer, bufSize, "%s\t%s", entry->slotName, entry->value);
+      {wle_returnObject =buffer;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   }
+   Con::warnf("Invalid dynamic field index passed to SimObject::getDynamicField!");
+   {wle_returnObject =NULL;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_getDynamicFieldCount(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   S32 count = 0;
+   SimFieldDictionary* fieldDictionary = object->getFieldDictionary();
+   for (SimFieldDictionaryIterator itr(fieldDictionary); *itr; ++itr)
+      count++;
+  return (S32)( count);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_getField(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   const AbstractClassRep::FieldList &list = object->getFieldList();
+   if( ( index < 0 ) || ( index >= list.size() ) )
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   const AbstractClassRep::Field* f;
+   S32 currentField = 0;
+   for ( U32 i = 0; i < list.size() && currentField <= index; i++ )
+   {
+      f = &list[i];
+            if ( f->type >= AbstractClassRep::ARCFirstCustomField )
+         continue;
+      if(currentField == index)
+         {wle_returnObject =f->pFieldname;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+      currentField++;
+   }
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_getFieldCount(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   const AbstractClassRep::FieldList &list = object->getFieldList();
+   const AbstractClassRep::Field* f;
+   U32 numDummyEntries = 0;
+   for(S32 i = 0; i < list.size(); i++)
+   {
+      f = &list[i];
+            if ( f->type >= AbstractClassRep::ARCFirstCustomField )
+         numDummyEntries++;
+   }
+  return (S32)( list.size() - numDummyEntries);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_getFieldType(char * x__object, char * x__fieldName,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* fieldName = (const char*)x__fieldName;
+const char* wle_returnObject;
+{
+	if (dStrcmp(fieldName,"")==0 )
+		{wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   U32 typeID = object->getDataFieldType( StringTable->insert( fieldName ), NULL );
+   ConsoleBaseType* type = ConsoleBaseType::getType( typeID );
+   if( type )
+      {wle_returnObject =type->getTypeName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_getFieldValue(char * x__object, char * x__fieldName, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* fieldName = (const char*)x__fieldName;
+
+const char* wle_returnObject;
+{
+   if (dStrcmp(fieldName,"")==0 )
+		{wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   char fieldNameBuffer[ 1024 ];
+   char arrayIndexBuffer[ 64 ];
+   
+      
+   const char* arrayIndex = NULL;
+   const U32 nameLen = dStrlen( fieldName );
+   if( fieldName[ nameLen - 1 ] == ']' )
+   {
+      const char* leftBracket = dStrchr( fieldName, '[' );
+      const char* rightBracket = &fieldName[ nameLen - 1 ];
+      
+      const U32 fieldNameLen = getMin( U32( leftBracket - fieldName ), sizeof( fieldNameBuffer ) - 1 );
+      const U32 arrayIndexLen = getMin( U32( rightBracket - leftBracket - 1 ), sizeof( arrayIndexBuffer ) - 1 );
+      
+      dMemcpy( fieldNameBuffer, fieldName, fieldNameLen );
+      dMemcpy( arrayIndexBuffer, leftBracket + 1, arrayIndexLen );
+      
+      fieldNameBuffer[ fieldNameLen ] = '\0';
+      arrayIndexBuffer[ arrayIndexLen ] = '\0';
+      
+      fieldName = fieldNameBuffer;
+      arrayIndex = arrayIndexBuffer;
+   }
+   fieldName = StringTable->insert( fieldName );
+   
+   if( index != -1 )
+   {
+      dSprintf( arrayIndexBuffer, sizeof( arrayIndexBuffer ), "%i", index );
+      arrayIndex = arrayIndexBuffer;
+   }
+   
+   {wle_returnObject =object->getDataField( fieldName, arrayIndex );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_getFilename(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getFilename();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_getSuperClassNamespace(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getSuperClassNamespace();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_isEnabled(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+	{wle_returnObject =object->isEnabled();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_isExpanded(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isExpanded();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_isField(char * x__object, char * x__fieldName)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* fieldName = (const char*)x__fieldName;
+bool wle_returnObject;
+{
+   if (dStrcmp(fieldName,"")==0 )
+		{wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   {wle_returnObject =object->isField( fieldName );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_isInNamespaceHierarchy(char * x__object, char * x__name)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* name = (const char*)x__name;
+bool wle_returnObject;
+{
+   Namespace* nspace = object->getNamespace();
+      
+   while( nspace && dStricmp( nspace->mName, name ) != 0 )
+      nspace = nspace->mParent;
+      
+   {wle_returnObject =( nspace != NULL );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_isMemberOfClass(char * x__object, char * x__className)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* className = (const char*)x__className;
+bool wle_returnObject;
+{
+	if (dStrcmp(className,"")==0)
+		{wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   AbstractClassRep* pRep = object->getClassRep();
+   while(pRep)
+   {
+      if( !dStricmp(pRep->getClassName(), className ) )
+      {
+                  {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+      }
+      pRep	=	pRep->getParentClass();
+   }
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_isMethod(char * x__object, char * x__methodName)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* methodName = (const char*)x__methodName;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isMethod( methodName );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_save(char * x__object, char * x__fileName, bool selectedOnly, char * x__preAppendString)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* fileName = (const char*)x__fileName;
+
+const char* preAppendString = (const char*)x__preAppendString;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->save( fileName, selectedOnly, preAppendString );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_saveToXML(char * x__object, char * x__profileName, char * x__fileName)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* profileName = (const char*)x__profileName;
+const char* fileName = (const char*)x__fileName;
+bool wle_returnObject;
+{
+	{wle_returnObject =object->saveToXML( profileName, fileName );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_setCanSave(char * x__object, bool value)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setCanSave( value );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_setClassNamespace(char * x__object, char * x__name)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+{
+   object->setClassNamespace( name );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_setEnabled(char * x__object, bool enabled)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setEnabled(enabled);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_setFieldType(char * x__object, char * x__fieldName, char * x__type)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* fieldName = (const char*)x__fieldName;
+const char* type = (const char*)x__type;
+{
+	if ((dStrcmp(fieldName,"")==0 )||(dStrcmp(type,"")==0 ))
+		return;
+   object->setDataFieldType( type, StringTable->insert( fieldName ), NULL );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_SimObject_setFieldValue(char * x__object, char * x__fieldName, char * x__value, S32 index)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* fieldName = (const char*)x__fieldName;
+const char* value = (const char*)x__value;
+
+bool wle_returnObject;
+{
+   if (dStrcmp(fieldName,"")==0 )
+		{wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   char fieldNameBuffer[ 1024 ];
+   char arrayIndexBuffer[ 64 ];
+   
+      
+   const char* arrayIndex = NULL;
+   const U32 nameLen = dStrlen( fieldName );
+   if( fieldName[ nameLen - 1 ] == ']' )
+   {
+      const char* leftBracket = dStrchr( fieldName, '[' );
+      const char* rightBracket = &fieldName[ nameLen - 1 ];
+      
+      const U32 fieldNameLen = getMin( U32( leftBracket - fieldName ), sizeof( fieldNameBuffer ) - 1 );
+      const U32 arrayIndexLen = getMin( U32( rightBracket - leftBracket - 1 ), sizeof( arrayIndexBuffer ) - 1 );
+      
+      dMemcpy( fieldNameBuffer, fieldName, fieldNameLen );
+      dMemcpy( arrayIndexBuffer, leftBracket + 1, arrayIndexLen );
+      
+      fieldNameBuffer[ fieldNameLen ] = '\0';
+      arrayIndexBuffer[ arrayIndexLen ] = '\0';
+      
+      fieldName = fieldNameBuffer;
+      arrayIndex = arrayIndexBuffer;
+   }
+   fieldName = StringTable->insert( fieldName );
+   if( index != -1 )
+   {
+      dSprintf( arrayIndexBuffer, sizeof( arrayIndexBuffer ), "%i", index );
+      arrayIndex = arrayIndexBuffer;
+   }
+   object->setDataField( fieldName, arrayIndex, value );
+   {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_setFilename(char * x__object, char * x__fileName)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* fileName = (const char*)x__fileName;
+{
+   return object->setFilename( fileName );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_setIsExpanded(char * x__object, bool state)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setExpanded( state );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_SimObject_setSuperClassNamespace(char * x__object, char * x__name)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+{
+   object->setSuperClassNamespace( name );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_assignPersistentId(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->getOrCreatePersistentId();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_call(char * x__object, char * x__a2, char * x__a3, char * x__a4, char * x__a5, char * x__a6, char * x__a7, char * x__a8, char * x__a9, char * x__a10, char * x__a11, char * x__a12, char * x__a13, char * x__a14, char * x__a15, char * x__a16, char * x__a17, char * x__a18, char * x__a19,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* a2 = (const char*)x__a2;
+const char* a3 = (const char*)x__a3;
+const char* a4 = (const char*)x__a4;
+const char* a5 = (const char*)x__a5;
+const char* a6 = (const char*)x__a6;
+const char* a7 = (const char*)x__a7;
+const char* a8 = (const char*)x__a8;
+const char* a9 = (const char*)x__a9;
+const char* a10 = (const char*)x__a10;
+const char* a11 = (const char*)x__a11;
+const char* a12 = (const char*)x__a12;
+const char* a13 = (const char*)x__a13;
+const char* a14 = (const char*)x__a14;
+const char* a15 = (const char*)x__a15;
+const char* a16 = (const char*)x__a16;
+const char* a17 = (const char*)x__a17;
+const char* a18 = (const char*)x__a18;
+const char* a19 = (const char*)x__a19;
+const char* wle_returnObject;
+{
+S32 argc = 20;
+if ( dStrlen(a19) == 0 )
+if ( dStrlen(a18) == 0 )
+if ( dStrlen(a17) == 0 )
+if ( dStrlen(a16) == 0 )
+if ( dStrlen(a15) == 0 )
+if ( dStrlen(a14) == 0 )
+if ( dStrlen(a13) == 0 )
+if ( dStrlen(a12) == 0 )
+if ( dStrlen(a11) == 0 )
+if ( dStrlen(a10) == 0 )
+if ( dStrlen(a9) == 0 )
+if ( dStrlen(a8) == 0 )
+if ( dStrlen(a7) == 0 )
+if ( dStrlen(a6) == 0 )
+if ( dStrlen(a5) == 0 )
+if ( dStrlen(a4) == 0 )
+if ( dStrlen(a3) == 0 )
+argc=3;
+else
+argc=4;
+else
+argc=5;
+else
+argc=6;
+else
+argc=7;
+else
+argc=8;
+else
+argc=9;
+else
+argc=10;
+else
+argc=11;
+else
+argc=12;
+else
+argc=13;
+else
+argc=14;
+else
+argc=15;
+else
+argc=16;
+else
+argc=17;
+else
+argc=18;
+else
+argc=19;
+else
+argc=20;
+std::vector<const char*> arguments;
+arguments.push_back("");
+arguments.push_back("");
+arguments.push_back(a2);
+if ( argc >3 )
+arguments.push_back(a3);
+if ( argc >4 )
+arguments.push_back(a4);
+if ( argc >5 )
+arguments.push_back(a5);
+if ( argc >6 )
+arguments.push_back(a6);
+if ( argc >7 )
+arguments.push_back(a7);
+if ( argc >8 )
+arguments.push_back(a8);
+if ( argc >9 )
+arguments.push_back(a9);
+if ( argc >10 )
+arguments.push_back(a10);
+if ( argc >11 )
+arguments.push_back(a11);
+if ( argc >12 )
+arguments.push_back(a12);
+if ( argc >13 )
+arguments.push_back(a13);
+if ( argc >14 )
+arguments.push_back(a14);
+if ( argc >15 )
+arguments.push_back(a15);
+if ( argc >16 )
+arguments.push_back(a16);
+if ( argc >17 )
+arguments.push_back(a17);
+if ( argc >18 )
+arguments.push_back(a18);
+if ( argc >19 )
+arguments.push_back(a19);
+const char** argv = &arguments[0];
+{
+   argv[1] = argv[2];
+   {wle_returnObject =Con::execute( object, argc - 1, argv + 1 );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_clone(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+SimObject* wle_returnObject;
+{
+   {wle_returnObject =object->clone();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_deepClone(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+SimObject* wle_returnObject;
+{
+   {wle_returnObject =object->deepClone();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_dump(char * x__object, bool detailed)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   Con::printf( "Class: %s", object->getClassName() );
+   
+   const AbstractClassRep::FieldList &list = object->getFieldList();
+   char expandedBuffer[4096];
+   Con::printf( "Static Fields:" );
+   Vector<const AbstractClassRep::Field *> flist(__FILE__, __LINE__);
+   for(U32 i = 0; i < list.size(); i++)
+      flist.push_back(&list[i]);
+   dQsort(flist.address(),flist.size(),sizeof(AbstractClassRep::Field *),compareFields);
+   for(Vector<const AbstractClassRep::Field *>::iterator itr = flist.begin(); itr != flist.end(); itr++)
+   {
+      const AbstractClassRep::Field* f = *itr;
+            if ( f->type >= AbstractClassRep::ARCFirstCustomField )
+         continue;
+      for(U32 j = 0; S32(j) < f->elementCount; j++)
+      {
+                                    const char *val = (*f->getDataFn)( object, Con::getData(f->type, (void *) (((const char *)object) + f->offset), j, f->table, f->flag) );         
+         ConsoleBaseType* conType = ConsoleBaseType::getType( f->type );
+         const char* conTypeName = "<unknown>";
+         if( conType )
+            conTypeName = conType->getTypeClassName();
+         if( !val  )
+            continue;
+         if( f->elementCount == 1 )
+            dSprintf( expandedBuffer, sizeof( expandedBuffer ), "  %s %s = \"", conTypeName, f->pFieldname );
+         else
+            dSprintf( expandedBuffer, sizeof( expandedBuffer ), "  %s %s[ %d ] = \"", conTypeName, f->pFieldname, j );
+         expandEscape( expandedBuffer + dStrlen(expandedBuffer), val);
+         Con::printf( "%s\"", expandedBuffer );
+         
+         if( detailed && f->pFieldDocs && f->pFieldDocs[ 0 ] )
+            Con::printf( "    %s", f->pFieldDocs );
+      }
+   }
+   Con::printf( "Dynamic Fields:" );
+   if(object->getFieldDictionary())
+      object->getFieldDictionary()->printFields(object);
+   Con::printf( "Methods:" );
+   Namespace *ns = object->getNamespace();
+   VectorPtr<Namespace::Entry *> vec(__FILE__, __LINE__);
+   if(ns)
+      ns->getEntryList(&vec);
+   bool sawCBs = false;
+   for(Vector<Namespace::Entry *>::iterator j = vec.begin(); j != vec.end(); j++)
+   {
+      Namespace::Entry *e = *j;
+      if(e->mType == Namespace::Entry::ScriptCallbackType)
+         sawCBs = true;
+      if(e->mType < 0)
+         continue;
+         
+      DocString doc( e );
+      Con::printf( "  %s%s%s%s", doc.mReturnType, doc.mPadding, e->mFunctionName, doc.mPrototype.c_str() );
+      if( detailed && !doc.mDescription.isEmpty() )
+         Con::printf( "    %s", doc.mDescription.c_str() );
+   }
+   if( sawCBs )
+   {
+      Con::printf( "Callbacks:" );
+      for(Vector<Namespace::Entry *>::iterator j = vec.begin(); j != vec.end(); j++)
+      {
+         Namespace::Entry *e = *j;
+         if(e->mType != Namespace::Entry::ScriptCallbackType)
+            continue;
+         DocString doc( e );
+         Con::printf( "  %s%s%s%s", doc.mReturnType, doc.mPadding, e->cb.mCallbackName, doc.mPrototype.c_str() );
+         if( detailed && !doc.mDescription.isEmpty() )
+            Con::printf( "    %s", doc.mDescription.c_str() );
+      }
+   }
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_dumpGroupHierarchy(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->dumpGroupHierarchy();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_getDebugInfo(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+ArrayObject* wle_returnObject;
+{
+   ArrayObject* array = new ArrayObject();
+   array->registerObject();
+   
+   array->push_back( "C++|Address", String::ToString( "0x%x", object ) );
+   array->push_back( "C++|Size", String::ToString( object->getClassRep()->getSizeof() ) );
+   array->push_back( "Object|Description", object->describeSelf() );
+   array->push_back( "Object|FileName", object->getFilename() );
+   array->push_back( "Object|DeclarationLine", String::ToString( object->getDeclarationLine() ) );
+   array->push_back( "Object|CopySource", object->getCopySource() ?
+      String::ToString( "%i:%s (%s)", object->getCopySource()->getId(), object->getCopySource()->getClassName(), object->getCopySource()->getName() ) : "" );
+   array->push_back( "Flag|EditorOnly", object->isEditorOnly() ? "true" : "false" );
+   array->push_back( "Flag|NameChangeAllowed", object->isNameChangeAllowed() ? "true" : "false" );
+   array->push_back( "Flag|AutoDelete", object->isAutoDeleted() ? "true" : "false" );
+   array->push_back( "Flag|Selected", object->isSelected() ? "true" : "false" );
+   array->push_back( "Flag|Expanded", object->isExpanded() ? "true" : "false" );
+   array->push_back( "Flag|ModStaticFields", object->canModStaticFields() ? "true" : "false" );
+   array->push_back( "Flag|ModDynamicFields", object->canModDynamicFields() ? "true" : "false" );
+   array->push_back( "Flag|CanSave", object->getCanSave() ? "true" : "false" );
+   
+   #ifndef TORQUE_DISABLE_MEMORY_MANAGER
+   Memory::Info memInfo;
+   Memory::getMemoryInfo( object, memInfo );
+   
+   array->push_back( "Memory|AllocNumber", String::ToString( memInfo.mAllocNumber ) );
+   array->push_back( "Memory|AllocSize", String::ToString( memInfo.mAllocSize ) );
+   array->push_back( "Memory|AllocFile", memInfo.mFileName );
+   array->push_back( "Memory|AllocLine", String::ToString( memInfo.mLineNumber ) );
+   array->push_back( "Memory|IsGlobal", memInfo.mIsGlobal ? "true" : "false" );
+   array->push_back( "Memory|IsStatic", memInfo.mIsStatic ? "true" : "false" );
+   #endif
+   
+   {wle_returnObject =array;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_getGroup(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+SimGroup* wle_returnObject;
+{
+   {wle_returnObject =object->getGroup();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,1024,"%i",wle_returnObject->getId());
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnSimObject_getId(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getId());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_getInternalName(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getInternalName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_getName(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   const char *ret = object->getName();
+   {wle_returnObject =ret ? ret : "";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnSimObject_isChildOfGroup(char * x__object, char * x__group)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+SimGroup* group; Sim::findObject(x__group, group ); 
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isChildOfGroup( group );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnSimObject_isEditable(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+	{wle_returnObject =object->isEditable( );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnSimObject_isEditorOnly(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isEditorOnly();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnSimObject_isNameChangeAllowed(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isNameChangeAllowed();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnSimObject_isSelected(char * x__object)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isSelected();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnSimObject_schedule(char * x__object, char * x__a2, char * x__a3, char * x__a4, char * x__a5, char * x__a6, char * x__a7, char * x__a8, char * x__a9, char * x__a10, char * x__a11, char * x__a12, char * x__a13, char * x__a14, char * x__a15, char * x__a16, char * x__a17, char * x__a18, char * x__a19)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+const char* a2 = (const char*)x__a2;
+const char* a3 = (const char*)x__a3;
+const char* a4 = (const char*)x__a4;
+const char* a5 = (const char*)x__a5;
+const char* a6 = (const char*)x__a6;
+const char* a7 = (const char*)x__a7;
+const char* a8 = (const char*)x__a8;
+const char* a9 = (const char*)x__a9;
+const char* a10 = (const char*)x__a10;
+const char* a11 = (const char*)x__a11;
+const char* a12 = (const char*)x__a12;
+const char* a13 = (const char*)x__a13;
+const char* a14 = (const char*)x__a14;
+const char* a15 = (const char*)x__a15;
+const char* a16 = (const char*)x__a16;
+const char* a17 = (const char*)x__a17;
+const char* a18 = (const char*)x__a18;
+const char* a19 = (const char*)x__a19;
+{
+S32 argc = 20;
+if ( dStrlen(a19) == 0 )
+if ( dStrlen(a18) == 0 )
+if ( dStrlen(a17) == 0 )
+if ( dStrlen(a16) == 0 )
+if ( dStrlen(a15) == 0 )
+if ( dStrlen(a14) == 0 )
+if ( dStrlen(a13) == 0 )
+if ( dStrlen(a12) == 0 )
+if ( dStrlen(a11) == 0 )
+if ( dStrlen(a10) == 0 )
+if ( dStrlen(a9) == 0 )
+if ( dStrlen(a8) == 0 )
+if ( dStrlen(a7) == 0 )
+if ( dStrlen(a6) == 0 )
+if ( dStrlen(a5) == 0 )
+if ( dStrlen(a4) == 0 )
+argc=4;
+else
+argc=5;
+else
+argc=6;
+else
+argc=7;
+else
+argc=8;
+else
+argc=9;
+else
+argc=10;
+else
+argc=11;
+else
+argc=12;
+else
+argc=13;
+else
+argc=14;
+else
+argc=15;
+else
+argc=16;
+else
+argc=17;
+else
+argc=18;
+else
+argc=19;
+else
+argc=20;
+std::vector<const char*> arguments;
+arguments.push_back("");
+arguments.push_back("");
+arguments.push_back(a2);
+arguments.push_back(a3);
+if ( argc >4 )
+arguments.push_back(a4);
+if ( argc >5 )
+arguments.push_back(a5);
+if ( argc >6 )
+arguments.push_back(a6);
+if ( argc >7 )
+arguments.push_back(a7);
+if ( argc >8 )
+arguments.push_back(a8);
+if ( argc >9 )
+arguments.push_back(a9);
+if ( argc >10 )
+arguments.push_back(a10);
+if ( argc >11 )
+arguments.push_back(a11);
+if ( argc >12 )
+arguments.push_back(a12);
+if ( argc >13 )
+arguments.push_back(a13);
+if ( argc >14 )
+arguments.push_back(a14);
+if ( argc >15 )
+arguments.push_back(a15);
+if ( argc >16 )
+arguments.push_back(a16);
+if ( argc >17 )
+arguments.push_back(a17);
+if ( argc >18 )
+arguments.push_back(a18);
+if ( argc >19 )
+arguments.push_back(a19);
+const char** argv = &arguments[0];
+{
+   U32 timeDelta = U32(dAtof(argv[2]));
+   argv[2] = argv[3];
+   argv[3] = argv[1];
+   SimConsoleEvent *evt = new SimConsoleEvent(argc - 2, argv + 2, true);
+   S32 ret = Sim::postEvent(object, evt, Sim::getCurrentTime() + timeDelta);
+              return (S32)( ret);
+}
+}
+;
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_setEditable(char * x__object, bool value)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setEditable( value );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_setEditorOnly(char * x__object, bool value)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setEditorOnly( value );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_setHidden(char * x__object, bool value)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setHidden( value );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_setInternalName(char * x__object, char * x__newInternalName)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* newInternalName = (const char*)x__newInternalName;
+{
+   object->setInternalName( newInternalName );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_setIsSelected(char * x__object, bool state)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setSelected( state );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_setLocked(char * x__object, bool value)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setLocked( value );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_setName(char * x__object, char * x__newName)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* newName = (const char*)x__newName;
+{
+   object->assignName( newName );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_setNameChangeAllowed(char * x__object, bool value)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setNameChangeAllowed( value );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnSimObject_signal(char * x__object, char * x__a2, char * x__a3)
+{
+SimObject* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* a2 = (const char*)x__a2;
+const char* a3 = (const char*)x__a3;
+{
+S32 argc = 4;
+if ( dStrlen(a3) == 0 )
+argc=3;
+else
+argc=4;
+std::vector<const char*> arguments;
+arguments.push_back("");
+arguments.push_back("");
+arguments.push_back(a2);
+if ( argc >3 )
+arguments.push_back(a3);
+const char** argv = &arguments[0];
+{
+	const char *fieldName = StringTable->insert( argv[2] );
+	object->signal(fieldName, argc > 3 ? argv[3] : NULL);
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

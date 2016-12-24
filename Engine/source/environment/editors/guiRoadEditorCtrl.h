@@ -58,6 +58,12 @@ class GuiRoadEditorCtrl : public EditTSCtrl
 
       DECLARE_CONOBJECT(GuiRoadEditorCtrl);
 
+      DECLARE_CALLBACK(void, onNodeModified, (const char* nodeIdx));
+      DECLARE_CALLBACK(void, onNodeSelected, (const char* nodeIdx, const char* nodeWidth = NULL));
+      DECLARE_CALLBACK(void, paletteSync, (const char* mode));
+      DECLARE_CALLBACK(void, onRoadCreation, ());
+      DECLARE_CALLBACK(void, onRoadSelected, (const char* road));
+
       // SimObject
       bool onAdd();
       static void initPersistFields();
@@ -96,8 +102,13 @@ class GuiRoadEditorCtrl : public EditTSCtrl
       F32 getNodeWidth();
       void setNodeWidth( F32 width );
 
+<<<<<<< HEAD
 		Point3F getNodePosition();
       void setNodePosition(const Point3F& pos);
+=======
+	  Point3F getNodePosition();
+	  void setNodePosition( Point3F &pos );
+>>>>>>> omni_engine
 
       void setTextureFile( StringTableEntry file );
 	

@@ -49,11 +49,18 @@ void btConvexHullShape::setLocalScaling(const btVector3& scaling)
 	recalcLocalAabb();
 }
 
+<<<<<<< HEAD
 void btConvexHullShape::addPoint(const btVector3& point, bool recalculateLocalAabb)
 {
 	m_unscaledPoints.push_back(point);
 	if (recalculateLocalAabb)
 		recalcLocalAabb();
+=======
+void btConvexHullShape::addPoint(const btVector3& point)
+{
+	m_unscaledPoints.push_back(point);
+	recalcLocalAabb();
+>>>>>>> omni_engine
 
 }
 

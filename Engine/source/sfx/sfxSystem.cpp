@@ -855,7 +855,11 @@ void SFXSystem::_updateSources()
       if(   source->getLastStatus() == SFXStatusStopped &&
             source->getSavedStatus() != SFXStatusPlaying )
       {
+<<<<<<< HEAD
          S32 index = iter - mPlayOnceSources.begin();
+=======
+         intptr_t index = iter - mPlayOnceSources.begin();
+>>>>>>> omni_engine
 
          // Erase it from the vector first, so that onRemoveSource
          // doesn't do it during cleanup and screw up our loop here!
@@ -1267,6 +1271,7 @@ DefineEngineFunction( sfxGetAvailableDevices, const char*, (),,
       for ( S32 d=0; d < deviceInfo.size(); d++ )
       {
          const SFXDeviceInfo* info = deviceInfo[d];
+<<<<<<< HEAD
          const char *providerName = provider->getName().c_str();
          const char *infoName = info->name.c_str();
          dSprintf(ptr, len, "%s\t%s\t%s\t%i\n", providerName, infoName, info->hasHardware ? "1" : "0", info->maxBuffers);
@@ -1276,6 +1281,18 @@ DefineEngineFunction( sfxGetAvailableDevices, const char*, (),,
 
          if (len <= 0)
             return deviceList;
+=======
+         dStrcat( deviceList, provider->getName() );
+         dStrcat( deviceList, "\t" );
+         dStrcat( deviceList, info->name );
+         dStrcat( deviceList, "\t" );
+         dStrcat( deviceList, info->hasHardware ? "1" : "0" );
+         dStrcat( deviceList, "\t" );
+         dStrcat( deviceList, Con::getIntArg( info->maxBuffers ) );         
+         dStrcat( deviceList, "\n" );
+         
+         //TODO: caps
+>>>>>>> omni_engine
       }
 
       provider = provider->getNextProvider();
@@ -1443,7 +1460,11 @@ static ConsoleDocFragment _sfxCreateSource4(
    NULL,
    "SFXSound sfxCreateSource( SFXDescription description, string filename, float x, float y, float z );" );
 
+<<<<<<< HEAD
 DefineConsoleFunction( sfxCreateSource, S32, ( const char * sfxType, const char * arg0, const char * arg1, const char * arg2, const char * arg3 ), ("", "", "", ""),
+=======
+DefineConsoleFunction( sfxCreateSource, S32, ( const char * SFXType, const char * filename, const char * x, const char * y, const char * z ), ("", "", "", ""),
+>>>>>>> omni_engine
                      "( SFXTrack track | ( SFXDescription description, string filename ) [, float x, float y, float z ] ) "
                      "Creates a new paused sound source using a profile or a description "
                      "and filename.  The return value is the source which must be "
@@ -1451,6 +1472,7 @@ DefineConsoleFunction( sfxCreateSource, S32, ( const char * sfxType, const char 
                      "@hide" )
 {
    SFXDescription* description = NULL;
+<<<<<<< HEAD
    SFXTrack* track = dynamic_cast< SFXTrack* >( Sim::findObject( sfxType ) );
    if ( !track )
    {
@@ -1458,6 +1480,15 @@ DefineConsoleFunction( sfxCreateSource, S32, ( const char * sfxType, const char 
       if ( !description )
       {
          Con::printf( "Unable to locate sound track/description '%s'", sfxType );
+=======
+   SFXTrack* track = dynamic_cast< SFXTrack* >( Sim::findObject( SFXType ) );
+   if ( !track )
+   {
+      description = dynamic_cast< SFXDescription* >( Sim::findObject( SFXType ) );
+      if ( !description )
+      {
+         Con::printf( "Unable to locate sound track/description '%s'", SFXType );
+>>>>>>> omni_engine
          return 0;
       }
    }
@@ -1466,22 +1497,34 @@ DefineConsoleFunction( sfxCreateSource, S32, ( const char * sfxType, const char 
 
    if ( track )
    {
+<<<<<<< HEAD
       // In this overloaded use of the function, arg0..arg2 are x, y, and z.
       if ( dStrIsEmpty(arg0) )
+=======
+      if ( x == "" )
+>>>>>>> omni_engine
       {
          source = SFX->createSource( track );
       }
       else
       {
          MatrixF transform;
+<<<<<<< HEAD
          transform.set( EulerF(0,0,0), Point3F( dAtof(arg0), dAtof(arg1), dAtof(arg2)) );
+=======
+         transform.set( EulerF(0,0,0), Point3F( dAtof(x), dAtof(y), dAtof(z)) );
+>>>>>>> omni_engine
          source = SFX->createSource( track, &transform );
       }
    }
    else if ( description )
    {
+<<<<<<< HEAD
       // In this use, arg0 is the filename, and arg1..arg3 are x, y, and z.
       SFXProfile* tempProfile = new SFXProfile( description, StringTable->insert( arg0), true );
+=======
+      SFXProfile* tempProfile = new SFXProfile( description, StringTable->insert( filename ), true );
+>>>>>>> omni_engine
       if( !tempProfile->registerObject() )
       {
          Con::errorf( "sfxCreateSource - unable to create profile" );
@@ -1489,14 +1532,22 @@ DefineConsoleFunction( sfxCreateSource, S32, ( const char * sfxType, const char 
       }
       else
       {
+<<<<<<< HEAD
          if ( dStrIsEmpty(arg1) )
+=======
+         if ( dStrcmp(x , "")==0 )
+>>>>>>> omni_engine
          {
             source = SFX->createSource( tempProfile );
          }
          else
          {
             MatrixF transform;
+<<<<<<< HEAD
             transform.set(EulerF(0,0,0), Point3F( dAtof(arg1), dAtof(arg2), dAtof(arg3) ));
+=======
+            transform.set(EulerF(0,0,0), Point3F( dAtof(x),dAtof(y),dAtof(z) ));
+>>>>>>> omni_engine
             source = SFX->createSource( tempProfile, &transform );
          }
 
@@ -1658,12 +1709,17 @@ static ConsoleDocFragment _sPlayOnce4(
    "SFXSource sfxPlayOnce( SFXDescription description, string filename, float x, float y, float z, float fadeInTime=-1 );"
 );
 
+<<<<<<< HEAD
 DefineConsoleFunction( sfxPlayOnce, S32, ( const char * sfxType, const char * arg0, const char * arg1, const char * arg2, const char * arg3, const char* arg4 ), ("", "", "", "", "-1.0f"),
+=======
+DefineConsoleFunction( sfxPlayOnce, S32, ( const char * SFXType, const char * filename, const char * x, const char * y, const char * z, F32 fadeInTime ), ("", "", "", -1.0f),
+>>>>>>> omni_engine
    "SFXSource sfxPlayOnce( ( SFXTrack track | SFXDescription description, string filename ) [, float x, float y, float z, float fadeInTime=-1 ] ) "
    "Create a new play-once source for the given profile or description+filename and start playback of the source.\n"
    "@hide" )
 {
    SFXDescription* description = NULL;
+<<<<<<< HEAD
    SFXTrack* track = dynamic_cast< SFXTrack* >( Sim::findObject( sfxType ) );
    if( !track )
    {
@@ -1671,6 +1727,15 @@ DefineConsoleFunction( sfxPlayOnce, S32, ( const char * sfxType, const char * ar
       if( !description )
       {
          Con::errorf( "sfxPlayOnce - Unable to locate sound track/description '%s'", sfxType );
+=======
+   SFXTrack* track = dynamic_cast< SFXTrack* >( Sim::findObject( SFXType ) );
+   if( !track )
+   {
+      description = dynamic_cast< SFXDescription* >( Sim::findObject( SFXType ) );
+      if( !description )
+      {
+         Con::errorf( "sfxPlayOnce - Unable to locate sound track/description '%s'", SFXType );
+>>>>>>> omni_engine
          return 0;
       }
    }
@@ -1678,22 +1743,35 @@ DefineConsoleFunction( sfxPlayOnce, S32, ( const char * sfxType, const char * ar
    SFXSource* source = NULL;
    if( track )
    {
+<<<<<<< HEAD
       // In this overloaded use, arg0..arg2 are x, y, z, and arg3 is the fadeInTime.
       if (dStrIsEmpty(arg0))
+=======
+      if( x == "" )
+>>>>>>> omni_engine
       {
          source = SFX->playOnce( track );
       }
       else
       {
          MatrixF transform;
+<<<<<<< HEAD
          transform.set( EulerF( 0, 0, 0 ), Point3F( dAtof( arg0 ), dAtof( arg1 ),dAtof( arg2 ) ) );
          source = SFX->playOnce( track, &transform, NULL, dAtof( arg3 ) );
+=======
+         transform.set( EulerF( 0, 0, 0 ), Point3F( dAtof( x ), dAtof( y ),dAtof( z ) ) );
+         source = SFX->playOnce( track, &transform, NULL, fadeInTime );
+>>>>>>> omni_engine
       }
    }
    else if( description )
    {
+<<<<<<< HEAD
       // In this overload, arg0 is the filename, arg1..arg3 are x, y, z, and arg4 is fadeInTime.
       SFXProfile* tempProfile = new SFXProfile( description, StringTable->insert( arg0 ), true );
+=======
+      SFXProfile* tempProfile = new SFXProfile( description, StringTable->insert( filename ), true );
+>>>>>>> omni_engine
       if( !tempProfile->registerObject() )
       {
          Con::errorf( "sfxPlayOnce - unable to create profile" );
@@ -1701,13 +1779,22 @@ DefineConsoleFunction( sfxPlayOnce, S32, ( const char * sfxType, const char * ar
       }
       else
       {
+<<<<<<< HEAD
          if (dStrIsEmpty(arg1))
+=======
+         if( x == "" )
+>>>>>>> omni_engine
             source = SFX->playOnce( tempProfile );
          else
          {
             MatrixF transform;
+<<<<<<< HEAD
             transform.set( EulerF( 0, 0, 0 ), Point3F( dAtof( arg1 ), dAtof( arg2 ),dAtof( arg3 ) ) );
             source = SFX->playOnce( tempProfile, &transform, NULL, dAtof( arg4 ) );
+=======
+            transform.set( EulerF( 0, 0, 0 ), Point3F( dAtof( x ), dAtof( y ),dAtof( z ) ) );
+            source = SFX->playOnce( tempProfile, &transform, NULL, fadeInTime );
+>>>>>>> omni_engine
          }
          
          // Set profile to auto-delete when SFXSource releases its reference.
@@ -1886,3 +1973,394 @@ DefineEngineFunction( sfxDumpSourcesToString, const char*, ( bool includeGroups 
    
    return Con::getReturnBuffer( str );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_sfxCreateDevice(char * x__provider, char * x__device, bool useHardware, S32 maxBuffers)
+{
+const char* provider = (const char*)x__provider;
+const char* device = (const char*)x__device;
+
+bool wle_returnObject;
+{
+   {wle_returnObject =SFX->createDevice( provider, device, useHardware, maxBuffers, true );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_sfxCreateSource(char * x__SFXType, char * x__filename, char * x__x, char * x__y, char * x__z)
+{
+const char* SFXType = (const char*)x__SFXType;
+const char* filename = (const char*)x__filename;
+const char* x = (const char*)x__x;
+const char* y = (const char*)x__y;
+const char* z = (const char*)x__z;
+{
+   SFXDescription* description = NULL;
+   SFXTrack* track = dynamic_cast< SFXTrack* >( Sim::findObject( SFXType ) );
+   if ( !track )
+   {
+      description = dynamic_cast< SFXDescription* >( Sim::findObject( SFXType ) );
+      if ( !description )
+      {
+         Con::printf( "Unable to locate sound track/description '%s'", SFXType );
+        return (S32)( 0);
+      }
+   }
+   SFXSource* source = NULL;
+   if ( track )
+   {
+      if ( x == "" )
+      {
+         source = SFX->createSource( track );
+      }
+      else
+      {
+         MatrixF transform;
+         transform.set( EulerF(0,0,0), Point3F( dAtof(x), dAtof(y), dAtof(z)) );
+         source = SFX->createSource( track, &transform );
+      }
+   }
+   else if ( description )
+   {
+      SFXProfile* tempProfile = new SFXProfile( description, StringTable->insert( filename ), true );
+      if( !tempProfile->registerObject() )
+      {
+         Con::errorf( "sfxCreateSource - unable to create profile" );
+         delete tempProfile;
+      }
+      else
+      {
+         if ( dStrcmp(x , "")==0 )
+         {
+            source = SFX->createSource( tempProfile );
+         }
+         else
+         {
+            MatrixF transform;
+            transform.set(EulerF(0,0,0), Point3F( dAtof(x),dAtof(y),dAtof(z) ));
+            source = SFX->createSource( tempProfile, &transform );
+         }
+         tempProfile->setAutoDelete( true );
+      }
+   }
+   if ( source )
+     return (S32)( source->getId());
+  return (S32)( 0);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxDeleteDevice()
+{
+{
+   SFX->deleteDevice();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxDeleteWhenStopped(char * x__source)
+{
+SFXSource* source; Sim::findObject(x__source, source ); 
+{
+   if( source )
+      SFX->deleteWhenStopped( source );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxDumpSources(bool includeGroups)
+{
+{
+   SFX->dumpSources( NULL, !includeGroups );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxDumpSourcesToString(bool includeGroups,  char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+   StringBuilder str;
+   SFX->dumpSources( &str, !includeGroups );
+   
+   {wle_returnObject =Con::getReturnBuffer( str );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxGetAvailableDevices(char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+   char* deviceList = Con::getReturnBuffer( 2048 );
+   deviceList[0] = 0;
+   SFXProvider* provider = SFXProvider::getFirstProvider();
+   while ( provider )
+   {
+            const SFXDeviceInfoVector& deviceInfo = provider->getDeviceInfo();
+      for ( S32 d=0; d < deviceInfo.size(); d++ )
+      {
+         const SFXDeviceInfo* info = deviceInfo[d];
+         dStrcat( deviceList, provider->getName() );
+         dStrcat( deviceList, "\t" );
+         dStrcat( deviceList, info->name );
+         dStrcat( deviceList, "\t" );
+         dStrcat( deviceList, info->hasHardware ? "1" : "0" );
+         dStrcat( deviceList, "\t" );
+         dStrcat( deviceList, Con::getIntArg( info->maxBuffers ) );         
+         dStrcat( deviceList, "\n" );
+         
+               }
+      provider = provider->getNextProvider();
+   }
+   {wle_returnObject =deviceList;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxGetDeviceInfo(char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+   String deviceInfo = SFX->getDeviceInfoString();
+   if( deviceInfo.isEmpty() )
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+      
+   {wle_returnObject =Con::getReturnBuffer( deviceInfo );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_sfxGetDistanceModel()
+{
+SFXDistanceModel wle_returnObject;
+{
+   {wle_returnObject =SFX->getDistanceModel();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fn_sfxGetDopplerFactor()
+{
+{
+  return (F32)( SFX->getDopplerFactor());
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fn_sfxGetRolloffFactor()
+{
+{
+  return (F32)( SFX->getRolloffFactor());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_sfxPlay(char * x__trackName, char * x__pointOrX, char * x__y, char * x__z)
+{
+const char* trackName = (const char*)x__trackName;
+const char* pointOrX = (const char*)x__pointOrX;
+const char* y = (const char*)x__y;
+const char* z = (const char*)x__z;
+{
+   if ( dStrcmp(pointOrX , "")==0 )
+   {
+      SFXSource* source = dynamic_cast<SFXSource*>( Sim::findObject( trackName ) );
+      if ( source )
+      {
+         source->play();
+        return (S32)( source->getId());
+      }
+   }
+   SFXTrack* track = dynamic_cast<SFXTrack*>( Sim::findObject( trackName ) );
+   if ( !track )
+   {
+      Con::printf( "Unable to locate sfx track '%s'", trackName );
+     return (S32)( 0);
+   }
+   Point3F pos(0.f, 0.f, 0.f);
+   if ( pointOrX != "" && y == ""&& z == "" )
+   {
+      dSscanf( pointOrX, "%g %g %g", &pos.x, &pos.y, &pos.z );
+   }
+   else if( pointOrX != "" && y != "" && z != "" )
+      pos.set( dAtof(pointOrX), dAtof(y), dAtof(z) );
+   MatrixF transform;
+   transform.set( EulerF(0,0,0), pos );
+   SFXSource* source = SFX->playOnce( track, &transform );
+   if ( source )
+     return (S32)( source->getId());
+  return (S32)( 0);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_sfxPlayOnce(char * x__SFXType, char * x__filename, char * x__x, char * x__y, char * x__z, F32 fadeInTime)
+{
+const char* SFXType = (const char*)x__SFXType;
+const char* filename = (const char*)x__filename;
+const char* x = (const char*)x__x;
+const char* y = (const char*)x__y;
+const char* z = (const char*)x__z;
+
+{
+   SFXDescription* description = NULL;
+   SFXTrack* track = dynamic_cast< SFXTrack* >( Sim::findObject( SFXType ) );
+   if( !track )
+   {
+      description = dynamic_cast< SFXDescription* >( Sim::findObject( SFXType ) );
+      if( !description )
+      {
+         Con::errorf( "sfxPlayOnce - Unable to locate sound track/description '%s'", SFXType );
+        return (S32)( 0);
+      }
+   }
+   SFXSource* source = NULL;
+   if( track )
+   {
+      if( x == "" )
+      {
+         source = SFX->playOnce( track );
+      }
+      else
+      {
+         MatrixF transform;
+         transform.set( EulerF( 0, 0, 0 ), Point3F( dAtof( x ), dAtof( y ),dAtof( z ) ) );
+         source = SFX->playOnce( track, &transform, NULL, fadeInTime );
+      }
+   }
+   else if( description )
+   {
+      SFXProfile* tempProfile = new SFXProfile( description, StringTable->insert( filename ), true );
+      if( !tempProfile->registerObject() )
+      {
+         Con::errorf( "sfxPlayOnce - unable to create profile" );
+         delete tempProfile;
+      }
+      else
+      {
+         if( x == "" )
+            source = SFX->playOnce( tempProfile );
+         else
+         {
+            MatrixF transform;
+            transform.set( EulerF( 0, 0, 0 ), Point3F( dAtof( x ), dAtof( y ),dAtof( z ) ) );
+            source = SFX->playOnce( tempProfile, &transform, NULL, fadeInTime );
+         }
+         
+                           
+         tempProfile->setAutoDelete( true );
+         Sim::getRootGroup()->addObject( tempProfile );
+      }
+   }
+   if( !source )
+     return (S32)( 0);
+      
+  return (S32)( source->getId());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxSetDistanceModel(S32 x__model)
+{
+SFXDistanceModel model = (SFXDistanceModel)x__model;
+{
+   SFX->setDistanceModel( model );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxSetDopplerFactor(F32 value)
+{
+{
+   if( value < 0.0f )
+   {
+      Con::errorf( "sfxSetDopplerFactor - factor must be >0" );
+      return;
+   }
+   SFX->setDopplerFactor( value );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxSetRolloffFactor(F32 value)
+{
+{
+   if( value <= 0.0f )
+   {
+      Con::errorf( "sfxSetRolloffFactor - factor must be >0" );
+      return;
+   }
+   SFX->setRolloffFactor( value );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxStop(char * x__source)
+{
+SFXSource* source; Sim::findObject(x__source, source ); 
+{
+   if( source )
+      source->stop();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_sfxStopAndDelete(char * x__source)
+{
+SFXSource* source; Sim::findObject(x__source, source ); 
+{
+   if( source )
+      SFX->stopAndDeleteSource( source );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

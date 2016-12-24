@@ -66,9 +66,16 @@ bool OculusVRDevice::smEnableDevice = true;
 
 bool OculusVRDevice::smSimulateHMD = true;
 
+<<<<<<< HEAD
 bool OculusVRDevice::smGenerateAngleAxisRotationEvents = true;
 bool OculusVRDevice::smGenerateEulerRotationEvents = false;
 bool OculusVRDevice::smGeneratePositionEvents = true;
+=======
+bool OculusVRDevice::smUseChromaticAberrationCorrection = true;
+
+bool OculusVRDevice::smGenerateAngleAxisRotationEvents = true;
+bool OculusVRDevice::smGenerateEulerRotationEvents = false;
+>>>>>>> omni_engine
 
 bool OculusVRDevice::smGenerateRotationAsAxisEvents = false;
 F32 OculusVRDevice::smMaximumAxisAngle = 25.0f;
@@ -92,10 +99,22 @@ OculusVRDevice::OculusVRDevice()
    //
    mEnabled = false;
    mActive = false;
+<<<<<<< HEAD
    mActiveDeviceId = 0;
 
    buildCodeTable();
    GFXDevice::getDeviceEventSignal().notify( this, &OculusVRDevice::_handleDeviceEvent );
+=======
+
+   // We don't current support scaling of the input texture.  The graphics pipeline will
+   // need to be modified for this.
+   mScaleInputTexture = false;
+
+   mDeviceManager = NULL;
+   mListener = NULL;
+
+   buildCodeTable();
+>>>>>>> omni_engine
 }
 
 OculusVRDevice::~OculusVRDevice()
@@ -108,6 +127,10 @@ void OculusVRDevice::staticInit()
 {
    Con::addVariable("pref::OculusVR::EnableDevice", TypeBool, &smEnableDevice, 
       "@brief If true, the Oculus VR device will be enabled, if present.\n\n"
+	   "@ingroup Game");
+
+   Con::addVariable("pref::OculusVR::UseChromaticAberrationCorrection", TypeBool, &smUseChromaticAberrationCorrection, 
+      "@brief If true, Use the chromatic aberration correction version of the Oculus VR barrel distortion shader.\n\n"
 	   "@ingroup Game");
 
    Con::addVariable("OculusVR::GenerateAngleAxisRotationEvents", TypeBool, &smGenerateAngleAxisRotationEvents, 
@@ -156,26 +179,71 @@ void OculusVRDevice::buildCodeTable()
    OculusVRSensorDevice::buildCodeTable();
 }
 
+<<<<<<< HEAD
 void OculusVRDevice::addHMDDevice(ovrHmd hmd)
+=======
+void OculusVRDevice::addHMDDevice(OVR::HMDDevice* hmd)
+>>>>>>> omni_engine
 {
    if(!hmd)
       return;
 
+<<<<<<< HEAD
    OculusVRHMDDevice* hmdd = new OculusVRHMDDevice();
    hmdd->set(hmd,mHMDDevices.size());
    mHMDDevices.push_back(hmdd);
 
    Con::printf("   HMD found: %s by %s [v%d]", hmd->ProductName, hmd->Manufacturer, hmd->Type);
+=======
+   OVR::HMDInfo hmdInfo;
+   if(!hmd->GetDeviceInfo(&hmdInfo))
+      return;
+
+   OculusVRHMDDevice* hmdd = new OculusVRHMDDevice();
+   hmdd->set(hmd, hmdInfo, mScaleInputTexture);
+   mHMDDevices.push_back(hmdd);
+
+   Con::printf("   HMD found: %s by %s [v%d]", hmdInfo.ProductName, hmdInfo.Manufacturer, hmdInfo.Version);
+>>>>>>> omni_engine
 }
 
 void OculusVRDevice::createSimulatedHMD()
 {
    OculusVRHMDDevice* hmdd = new OculusVRHMDDevice();
+<<<<<<< HEAD
    ovrHmd hmd = ovrHmd_CreateDebug(ovrHmd_DK2);
    hmdd->set(hmd,mHMDDevices.size());
+=======
+   hmdd->createSimulation(OculusVRHMDDevice::ST_RIFT_PREVIEW, mScaleInputTexture);
+>>>>>>> omni_engine
    mHMDDevices.push_back(hmdd);
 
    Con::printf("   HMD simulated: %s by %s [v%d]", hmdd->getProductName(), hmdd->getManufacturer(), hmdd->getVersion());
+}
+
+void OculusVRDevice::addSensorDevice(OVR::SensorDevice* sensor)
+{
+   if(!sensor)
+      return;
+
+   OVR::SensorInfo sensorInfo;
+   if(!sensor->GetDeviceInfo(&sensorInfo))
+      return;
+
+   OculusVRSensorDevice* sensord = new OculusVRSensorDevice();
+   sensord->set(sensor, sensorInfo, mSensorDevices.size());
+   mSensorDevices.push_back(sensord);
+
+   Con::printf("   Sensor found: %s by %s [v%d] %s", sensorInfo.ProductName, sensorInfo.Manufacturer, sensorInfo.Version, sensorInfo.SerialNumber);
+}
+
+void OculusVRDevice::createSimulatedSensor()
+{
+   OculusVRSensorDevice* sensord = new OculusVRSensorDevice();
+   sensord->createSimulation(OculusVRSensorDevice::ST_RIFT_PREVIEW, mSensorDevices.size());
+   mSensorDevices.push_back(sensord);
+
+   Con::printf("   Sensor simulated: %s by %s [v%d] %s", sensord->getProductName(), sensord->getManufacturer(), sensord->getVersion(), sensord->getSerialNumber());
 }
 
 bool OculusVRDevice::enable()
@@ -185,17 +253,58 @@ bool OculusVRDevice::enable()
 
    Con::printf("Oculus VR Device Init:");
 
+<<<<<<< HEAD
    if(sOcculusEnabled && ovr_Initialize())
    {
       mEnabled = true;
 
       // Enumerate HMDs and pick the first one
       ovrHmd hmd = ovrHmd_Create(0);
+=======
+   OVR::System::Init(OVR::Log::ConfigureDefaultLog(OVR::LogMask_All));
+   if(OVR::System::IsInitialized())
+   {
+      mEnabled = true;
+
+      // Create the OVR device manager
+      mDeviceManager = OVR::DeviceManager::Create();
+      if(!mDeviceManager)
+      {
+         if(smSimulateHMD)
+         {
+            Con::printf("   Could not create a HMD device manager.  Simulating a HMD.");
+            Con::printf("   ");
+
+            createSimulatedHMD();
+            createSimulatedSensor();
+            setActive(true);
+            return true;
+         }
+         else
+         {
+            Con::printf("   Could not create a HMD device manager.");
+            Con::printf("   ");
+
+            mEnabled = false;
+            OVR::System::Destroy();
+            return false;
+         }
+      }
+
+      // Provide a message listener
+      // NOTE: Commented out as non-functional in 0.1.2
+      //mListener = new DeviceListener(this);
+      //mDeviceManager->SetMessageHandler(mListener);
+
+      // Enumerate HMDs and pick the first one
+      OVR::HMDDevice* hmd = mDeviceManager->EnumerateDevices<OVR::HMDDevice>().CreateDevice();
+>>>>>>> omni_engine
       if(hmd)
       {
          // Add the HMD to our list
          addHMDDevice(hmd);
 
+<<<<<<< HEAD
          setActive(true);
       }
       else
@@ -215,16 +324,36 @@ bool OculusVRDevice::enable()
    }
    else
    {
+=======
+         // Detect and add any sensor on the HMD
+         OVR::SensorDevice* sensor = hmd->GetSensor();
+         if(sensor)
+         {
+            addSensorDevice(sensor);
+         }
+         else
+         {
+            Con::printf("   No sensor device on HMD.");
+         }
+
+         setActive(true);
+      }
+      else
+      {
+>>>>>>> omni_engine
          if(smSimulateHMD)
          {
             Con::printf("   Could not enumerate a HMD device.  Simulating a HMD.");
             createSimulatedHMD();
+            createSimulatedSensor();
             setActive(true);
          }
          else
          {
             Con::printf("   Could not enumerate a HMD device.");
          }
+      }
+
    }
 
    Con::printf("   ");
@@ -234,15 +363,39 @@ bool OculusVRDevice::enable()
 
 void OculusVRDevice::disable()
 {
+   for(U32 i=0; i<mSensorDevices.size(); ++i)
+   {
+      delete mSensorDevices[i];
+   }
+   mSensorDevices.clear();
+
    for(U32 i=0; i<mHMDDevices.size(); ++i)
    {
       delete mHMDDevices[i];
    }
    mHMDDevices.clear();
 
+<<<<<<< HEAD
    if(mEnabled)
    {
       ovr_Shutdown();
+=======
+   if(mDeviceManager)
+   {
+      mDeviceManager->Release();
+      mDeviceManager = NULL;
+   }
+
+   if(mEnabled)
+   {
+      OVR::System::Destroy();
+   }
+
+   if(mListener)
+   {
+      delete mListener;
+      mListener = NULL;
+>>>>>>> omni_engine
    }
 
    setActive(false);
@@ -261,9 +414,15 @@ bool OculusVRDevice::process()
    F32 maxAxisRadius = mSin(mDegToRad(smMaximumAxisAngle));
 
    // Process each sensor
+<<<<<<< HEAD
    for(U32 i=0; i<mHMDDevices.size(); ++i)
    {
       mHMDDevices[i]->getSensorDevice()->process(mDeviceType, smGenerateAngleAxisRotationEvents, smGenerateEulerRotationEvents, smGenerateRotationAsAxisEvents, smGeneratePositionEvents, maxAxisRadius, smGenerateSensorRawEvents);
+=======
+   for(U32 i=0; i<mSensorDevices.size(); ++i)
+   {
+      mSensorDevices[i]->process(mDeviceType, smGenerateAngleAxisRotationEvents, smGenerateEulerRotationEvents, smGenerateRotationAsAxisEvents, maxAxisRadius, smGenerateSensorRawEvents);
+>>>>>>> omni_engine
    }
 
    return true;
@@ -271,11 +430,16 @@ bool OculusVRDevice::process()
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 bool OculusVRDevice::providesFrameEyePose() const
+=======
+bool OculusVRDevice::providesYFOV() const
+>>>>>>> omni_engine
 {
    if(!mHMDDevices.size())
       return false;
 
+<<<<<<< HEAD
    const OculusVRHMDDevice* hmd = getHMDDevice(mActiveDeviceId);
    if(!hmd)
       return false;
@@ -297,6 +461,24 @@ void OculusVRDevice::getFrameEyePose(DisplayPose *outPose, U32 eyeId) const
 
 
 bool OculusVRDevice::providesEyeOffsets() const
+=======
+   return true;
+}
+
+F32 OculusVRDevice::getYFOV() const
+{
+   if(!mHMDDevices.size())
+      return 0.0f;
+
+   const OculusVRHMDDevice* hmd = getHMDDevice(0);
+   if(!hmd)
+      return 0.0f;
+
+   return hmd->getYFOV();
+}
+
+bool OculusVRDevice::providesEyeOffset() const
+>>>>>>> omni_engine
 {
    if(!mHMDDevices.size())
       return false;
@@ -304,6 +486,7 @@ bool OculusVRDevice::providesEyeOffsets() const
    return true;
 }
 
+<<<<<<< HEAD
 void OculusVRDevice::getEyeOffsets(Point3F *dest) const
 {
    if(!mHMDDevices.size())
@@ -338,6 +521,18 @@ void OculusVRDevice::getFovPorts(FovPort *out) const
       return;
 
    return hmd->getFovPorts(out);
+=======
+const Point3F& OculusVRDevice::getEyeOffset() const
+{
+   if(!mHMDDevices.size())
+      return Point3F::Zero;
+
+   const OculusVRHMDDevice* hmd = getHMDDevice(0);
+   if(!hmd)
+      return Point3F::Zero;
+
+   return hmd->getEyeWorldOffset();
+>>>>>>> omni_engine
 }
 
 bool OculusVRDevice::providesProjectionOffset() const
@@ -345,7 +540,11 @@ bool OculusVRDevice::providesProjectionOffset() const
    if(!mHMDDevices.size())
       return false;
 
+<<<<<<< HEAD
    return false;
+=======
+   return true;
+>>>>>>> omni_engine
 }
 
 const Point2F& OculusVRDevice::getProjectionOffset() const
@@ -353,13 +552,18 @@ const Point2F& OculusVRDevice::getProjectionOffset() const
    if(!mHMDDevices.size())
       return Point2F::Zero;
 
+<<<<<<< HEAD
    const OculusVRHMDDevice* hmd = getHMDDevice(mActiveDeviceId);
+=======
+   const OculusVRHMDDevice* hmd = getHMDDevice(0);
+>>>>>>> omni_engine
    if(!hmd)
       return Point2F::Zero;
 
    return hmd->getProjectionCenterOffset();
 }
 
+<<<<<<< HEAD
 void OculusVRDevice::getStereoViewports(RectI *out) const
 {
    if(!mHMDDevices.size())
@@ -392,6 +596,11 @@ void OculusVRDevice::onStartFrame()
 //-----------------------------------------------------------------------------
 
 OculusVRHMDDevice* OculusVRDevice::getHMDDevice(U32 index) const
+=======
+//-----------------------------------------------------------------------------
+
+const OculusVRHMDDevice* OculusVRDevice::getHMDDevice(U32 index) const
+>>>>>>> omni_engine
 {
    if(index >= mHMDDevices.size())
       return NULL;
@@ -412,6 +621,7 @@ void OculusVRDevice::setHMDCurrentIPD(U32 index, F32 ipd)
    if(index >= mHMDDevices.size())
       return;
 
+<<<<<<< HEAD
    return mHMDDevices[index]->setIPD(ipd);
 }
 
@@ -424,34 +634,61 @@ void OculusVRDevice::setOptimalDisplaySize(U32 index, GuiCanvas *canvas)
 }
 
 
+=======
+   return mHMDDevices[index]->setIPD(ipd, mScaleInputTexture);
+}
+
+>>>>>>> omni_engine
 //-----------------------------------------------------------------------------
 
 const OculusVRSensorDevice* OculusVRDevice::getSensorDevice(U32 index) const
 {
+<<<<<<< HEAD
    if(index >= mHMDDevices.size())
       return NULL;
 
    return mHMDDevices[index]->getSensorDevice();
+=======
+   if(index >= mSensorDevices.size())
+      return NULL;
+
+   return mSensorDevices[index];
+>>>>>>> omni_engine
 }
 
 EulerF OculusVRDevice::getSensorEulerRotation(U32 index)
 {
+<<<<<<< HEAD
    if(index >= mHMDDevices.size())
       return Point3F::Zero;
 
    return mHMDDevices[index]->getSensorDevice()->getEulerRotation();
+=======
+   if(index >= mSensorDevices.size())
+      return Point3F::Zero;
+
+   return mSensorDevices[index]->getEulerRotation();
+>>>>>>> omni_engine
 }
 
 VectorF OculusVRDevice::getSensorAcceleration(U32 index)
 {
+<<<<<<< HEAD
    if(index >= mHMDDevices.size())
       return Point3F::Zero;
 
    return mHMDDevices[index]->getSensorDevice()->getAcceleration();
+=======
+   if(index >= mSensorDevices.size())
+      return Point3F::Zero;
+
+   return mSensorDevices[index]->getAcceleration();
+>>>>>>> omni_engine
 }
 
 EulerF OculusVRDevice::getSensorAngularVelocity(U32 index)
 {
+<<<<<<< HEAD
    if(index >= mHMDDevices.size())
       return Point3F::Zero;
 
@@ -480,11 +717,58 @@ void OculusVRDevice::setSensorYawCorrection(U32 index, bool state)
 }
 
 bool OculusVRDevice::getSensorMagnetometerCalibrated(U32 index)
+=======
+   if(index >= mSensorDevices.size())
+      return Point3F::Zero;
+
+   return mSensorDevices[index]->getAngularVelocity();
+}
+
+VectorF OculusVRDevice::getSensorMagnetometer(U32 index)
+{
+   if(index >= mSensorDevices.size())
+      return Point3F::Zero;
+
+   return mSensorDevices[index]->getMagnetometer();
+}
+
+F32 OculusVRDevice::getSensorPredictionTime(U32 index)
+{
+   const OculusVRSensorDevice* sensor = getSensorDevice(index);
+   if(!sensor || !sensor->isValid())
+      return 0.0f;
+
+   return sensor->getPredictionTime();
+}
+
+void OculusVRDevice::setSensorPredictionTime(U32 index, F32 dt)
+{
+   if(index >= mSensorDevices.size())
+      return;
+
+   OculusVRSensorDevice* sensor = mSensorDevices[index];
+   if(!sensor->isValid())
+      return;
+
+   sensor->setPredictionTime(dt);
+}
+
+void OculusVRDevice::setAllSensorPredictionTime(F32 dt)
+{
+   for(U32 i=0; i<mSensorDevices.size(); ++i)
+   {
+      mSensorDevices[i]->setPredictionTime(dt);
+   }
+}
+
+bool OculusVRDevice::getSensorGravityCorrection(U32 index)
+>>>>>>> omni_engine
 {
    const OculusVRSensorDevice* sensor = getSensorDevice(index);
    if(!sensor || !sensor->isValid())
       return false;
 
+<<<<<<< HEAD
    return sensor->getMagnetometerCalibrationAvailable();
 }
 
@@ -556,6 +840,82 @@ GameConnection* OculusVRDevice::getCurrentConnection()
       return NULL;
 
    return hmd->getCurrentConnection();
+=======
+   return sensor->getGravityCorrection();
+}
+
+void OculusVRDevice::setSensorGravityCorrection(U32 index, bool state)
+{
+   if(index >= mSensorDevices.size())
+      return;
+
+   OculusVRSensorDevice* sensor = mSensorDevices[index];
+   if(!sensor->isValid())
+      return;
+
+   sensor->setGravityCorrection(state);
+}
+
+bool OculusVRDevice::getSensorYawCorrection(U32 index)
+{
+   const OculusVRSensorDevice* sensor = getSensorDevice(index);
+   if(!sensor || !sensor->isValid())
+      return false;
+
+   return sensor->getYawCorrection();
+}
+
+void OculusVRDevice::setSensorYawCorrection(U32 index, bool state)
+{
+   if(index >= mSensorDevices.size())
+      return;
+
+   OculusVRSensorDevice* sensor = mSensorDevices[index];
+   if(!sensor->isValid())
+      return;
+
+   sensor->setYawCorrection(state);
+}
+
+bool OculusVRDevice::getSensorMagnetometerCalibrated(U32 index)
+{
+   const OculusVRSensorDevice* sensor = getSensorDevice(index);
+   if(!sensor || !sensor->isValid())
+      return false;
+
+   return sensor->getMagnetometerCalibrationAvailable();
+}
+
+void OculusVRDevice::resetAllSensors()
+{
+   // Reset each sensor
+   for(U32 i=0; i<mSensorDevices.size(); ++i)
+   {
+      mSensorDevices[i]->reset();
+   }
+}
+
+//-----------------------------------------------------------------------------
+
+void OculusVRDevice::DeviceListener::OnMessage(const OVR::Message& msg)
+{
+   switch(msg.Type)
+   {
+      case OVR::Message_DeviceAdded:
+         {
+            const OVR::MessageDeviceStatus* status = static_cast<const OVR::MessageDeviceStatus*>(&msg);
+            Con::printf("OVR: Device added of type: %d", status->Handle.GetType());
+         }
+         break;
+
+      case OVR::Message_DeviceRemoved:
+         Con::printf("OVR: Device removed of type: %d", msg.pDevice->GetType());
+         break;
+
+      default:
+         break;
+   }
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -601,16 +961,26 @@ DefineEngineFunction(setOVRHMDAsGameConnectionDisplayDevice, bool, (GameConnecti
    conn->setDisplayDevice(OCULUSVRDEV);
    return true;
 }
+<<<<<<< HEAD
 //-----------------------------------------------------------------------------
 
 DefineEngineFunction(setOptimalOVRCanvasSize, bool, (GuiCanvas* canvas),,
    "@brief Sets the first HMD to be a GameConnection's display device\n\n"
    "@param conn The GameConnection to set.\n"
    "@return True if the GameConnection display device was set.\n"
+=======
+
+//-----------------------------------------------------------------------------
+
+DefineEngineFunction(getOVRHMDCount, S32, (),,
+   "@brief Get the number of HMD devices that are currently connected.\n\n"
+   "@return The number of Oculus VR HMD devices that are currently connected.\n"
+>>>>>>> omni_engine
    "@ingroup Game")
 {
    if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
    {
+<<<<<<< HEAD
       Con::errorf("setOptimalOVRCanvasSize(): No Oculus VR Device present.");
       return false;
    }
@@ -630,14 +1000,39 @@ DefineEngineFunction(setOptimalOVRCanvasSize, bool, (GuiCanvas* canvas),,
 DefineEngineFunction(getOVRHMDCount, S32, (),,
    "@brief Get the number of HMD devices that are currently connected.\n\n"
    "@return The number of Oculus VR HMD devices that are currently connected.\n"
-   "@ingroup Game")
-{
-   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
-   {
+=======
       return 0;
    }
 
    return OCULUSVRDEV->getHMDCount();
+}
+
+DefineEngineFunction(isOVRHMDSimulated, bool, (S32 index),,
+   "@brief Determines if the requested OVR HMD is simulated or real.\n\n"
+   "@param index The HMD index.\n"
+   "@return True if the HMD is simulated.\n"
+>>>>>>> omni_engine
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+<<<<<<< HEAD
+      return 0;
+   }
+
+   return OCULUSVRDEV->getHMDCount();
+=======
+      return true;
+   }
+
+   const OculusVRHMDDevice* hmd = OCULUSVRDEV->getHMDDevice(index);
+   if(!hmd)
+   {
+      return true;
+   }
+
+   return hmd->isSimulated();
+>>>>>>> omni_engine
 }
 
 DefineEngineFunction(getOVRHMDProductName, const char*, (S32 index),,
@@ -780,6 +1175,54 @@ DefineEngineFunction(getOVRHMDResolution, Point2I, (S32 index),,
    return hmd->getResolution();
 }
 
+DefineEngineFunction(getOVRHMDDistortionCoefficients, String, (S32 index),,
+   "@brief Provides the OVR HMD distortion coefficients.\n\n"
+   "@param index The HMD index.\n"
+   "@return A four component string with the distortion coefficients.\n"
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return "0 0 0 0";
+   }
+
+   const OculusVRHMDDevice* hmd = OCULUSVRDEV->getHMDDevice(index);
+   if(!hmd)
+   {
+      return "0 0 0 0";
+   }
+
+   const Point4F& k = hmd->getKDistortion();
+   char buf[256];
+   dSprintf(buf, 256, "%g %g %g %g", k.x, k.y, k.z, k.w);
+
+   return buf;
+}
+
+DefineEngineFunction(getOVRHMDChromaticAbCorrection, String, (S32 index),,
+   "@brief Provides the OVR HMD chromatic aberration correction values.\n\n"
+   "@param index The HMD index.\n"
+   "@return A four component string with the chromatic aberration correction values.\n"
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return "1 0 1 0";
+   }
+
+   const OculusVRHMDDevice* hmd = OCULUSVRDEV->getHMDDevice(index);
+   if(!hmd)
+   {
+      return "1 0 1 0";
+   }
+
+   const Point4F& c = hmd->getChromaticAbCorrection();
+   char buf[256];
+   dSprintf(buf, 256, "%g %g %g %g", c.x, c.y, c.z, c.w);
+
+   return buf;
+}
+
 DefineEngineFunction(getOVRHMDProfileIPD, F32, (S32 index),,
    "@brief Physical distance between the user's eye centers as defined by the current profile.\n\n"
    "@param index The HMD index.\n"
@@ -826,6 +1269,91 @@ DefineEngineFunction(setOVRHMDCurrentIPD, void, (S32 index, F32 ipd),,
    }
 
    OCULUSVRDEV->setHMDCurrentIPD(index, ipd);
+}
+
+DefineEngineFunction(getOVRHMDEyeXOffsets, Point2F, (S32 index),,
+   "@brief Provides the OVR HMD eye x offsets in uv coordinates.\n\n"
+   "@param index The HMD index.\n"
+   "@return A two component string with the left and right eye x offsets.\n"
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return Point2F(0.5, 0.5);
+   }
+
+   const OculusVRHMDDevice* hmd = OCULUSVRDEV->getHMDDevice(index);
+   if(!hmd)
+   {
+      return Point2F(0.5, 0.5);
+   }
+
+   // X component is left, Y component is right
+   const Point2F& offset = hmd->getEyeUVOffset();
+   return offset;
+}
+
+DefineEngineFunction(getOVRHMDXCenterOffset, F32, (S32 index),,
+   "@brief Provides the OVR HMD calculated XCenterOffset.\n\n"
+   "@param index The HMD index.\n"
+   "@return The calculated XCenterOffset.\n"
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return 0.0f;
+   }
+
+   const OculusVRHMDDevice* hmd = OCULUSVRDEV->getHMDDevice(index);
+   if(!hmd)
+   {
+      return 0.0f;
+   }
+
+   F32 offset = hmd->getCenterOffset();
+   return offset;
+}
+
+DefineEngineFunction(getOVRHMDDistortionScale, F32, (S32 index),,
+   "@brief Provides the OVR HMD calculated distortion scale.\n\n"
+   "@param index The HMD index.\n"
+   "@return The calculated distortion scale.\n"
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return 1.0f;
+   }
+
+   const OculusVRHMDDevice* hmd = OCULUSVRDEV->getHMDDevice(index);
+   if(!hmd)
+   {
+      return 1.0f;
+   }
+
+   F32 scale = hmd->getDistortionScale();
+   return scale;
+}
+
+DefineEngineFunction(getOVRHMDYFOV, F32, (S32 index),,
+   "@brief Provides the OVR HMD calculated Y FOV.\n\n"
+   "@param index The HMD index.\n"
+   "@return The calculated Y FOV.\n"
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return 1.0f;
+   }
+
+   const OculusVRHMDDevice* hmd = OCULUSVRDEV->getHMDDevice(index);
+   if(!hmd)
+   {
+      return 1.0f;
+   }
+
+   F32 fov = hmd->getYFOV();
+   return mRadToDeg(fov);
 }
 
 //-----------------------------------------------------------------------------
@@ -887,14 +1415,219 @@ DefineEngineFunction(getOVRSensorAngVelocity, Point3F, (S32 index),,
    return Point3F(mRadToDeg(rot.x), mRadToDeg(rot.y), mRadToDeg(rot.z));
 }
 
+<<<<<<< HEAD
 DefineEngineFunction(getOVRSensorYawCorrection, bool, (S32 index),,
    "@brief Get the yaw correction state for the given sensor index.\n\n"
    "@param index The sensor index.\n"
    "@return True if yaw correction (using magnetometer calibration data) is active.\n"
+=======
+DefineEngineFunction(getOVRSensorMagnetometer, Point3F, (S32 index),,
+   "@brief Get the magnetometer reading (direction and field strength) for the given sensor index.\n\n"
+   "@param index The sensor index.\n"
+   "@return The magnetometer reading (direction and field strength) of the Oculus VR sensor, in Gauss.\n"
+>>>>>>> omni_engine
    "@ingroup Game")
 {
    if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
    {
+<<<<<<< HEAD
+      return false;
+   }
+
+   return OCULUSVRDEV->getSensorYawCorrection(index);
+}
+
+DefineEngineFunction(setOVRSensorYawCorrection, void, (S32 index, bool state),,
+   "@brief Set the yaw correction state for the given sensor index.\n\n"
+   "@param index The sensor index.\n"
+   "@param state The yaw correction state to change to.\n"
+   "@note Yaw correction cannot be enabled if the user has disabled it through "
+   "the Oculus VR control panel.\n"
+=======
+      return Point3F::Zero;
+   }
+
+   return OCULUSVRDEV->getSensorMagnetometer(index);
+}
+
+DefineEngineFunction(getOVRSensorPredictionTime, F32, (S32 index),,
+   "@brief Get the prediction time set for the given sensor index.\n\n"
+   "@param index The sensor index.\n"
+   "@return The prediction time of the Oculus VR sensor, given in seconds.\n"
+>>>>>>> omni_engine
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+<<<<<<< HEAD
+      return;
+   }
+
+   OCULUSVRDEV->setSensorYawCorrection(index, state);
+}
+
+DefineEngineFunction(getOVRSensorMagnetometerCalibrated, bool, (S32 index),,
+   "@brief Get the magnetometer calibrated data state for the given sensor index.\n\n"
+   "@param index The sensor index.\n"
+   "@return True if magnetometer calibration data is available.\n"
+=======
+      return 0;
+   }
+
+   return OCULUSVRDEV->getSensorPredictionTime(index);
+}
+
+DefineEngineFunction(setSensorPredictionTime, void, (S32 index, F32 dt),,
+   "@brief Set the prediction time set for the given sensor index.\n\n"
+   "@param index The sensor index.\n"
+   "@param dt The prediction time to set given in seconds.  Setting to 0 disables prediction.\n"
+>>>>>>> omni_engine
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+<<<<<<< HEAD
+      return false;
+   }
+
+   return OCULUSVRDEV->getSensorMagnetometerCalibrated(index);
+}
+
+DefineEngineFunction(ovrResetAllSensors, void, (),,
+   "@brief Resets all Oculus VR sensors.\n\n"
+   "This resets all sensor orientations such that their 'normal' rotation "
+   "is defined when this function is called.  This defines an HMD's forwards "
+   "and up direction, for example."
+=======
+      return;
+   }
+
+   OCULUSVRDEV->setSensorPredictionTime(index, dt);
+}
+
+DefineEngineFunction(setAllSensorPredictionTime, void, (F32 dt),,
+   "@brief Set the prediction time set for all sensors.\n\n"
+   "@param dt The prediction time to set given in seconds.  Setting to 0 disables prediction.\n"
+>>>>>>> omni_engine
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return;
+   }
+
+<<<<<<< HEAD
+   OCULUSVRDEV->resetAllSensors();
+}
+
+DefineEngineFunction(ovrIsDisplayingWarning, bool, (),,
+   "@brief returns is warning is being displayed.\n\n"
+=======
+   OCULUSVRDEV->setAllSensorPredictionTime(dt);
+}
+
+DefineEngineFunction(getOVRSensorGravityCorrection, bool, (S32 index),,
+   "@brief Get the gravity correction state for the given sensor index.\n\n"
+   "@param index The sensor index.\n"
+   "@return True if gravity correction (for pitch and roll) is active.\n"
+>>>>>>> omni_engine
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return false;
+   }
+
+<<<<<<< HEAD
+   return OCULUSVRDEV->isDiplayingWarning();
+}
+
+DefineEngineFunction(ovrDismissWarnings, void, (),,
+   "@brief dismisses warnings.\n\n"
+=======
+   return OCULUSVRDEV->getSensorGravityCorrection(index);
+}
+
+DefineEngineFunction(setOVRSensorGravityCorrection, void, (S32 index, bool state),,
+   "@brief Set the gravity correction state for the given sensor index.\n\n"
+   "@param index The sensor index.\n"
+   "@param state The gravity correction state to change to.\n"
+>>>>>>> omni_engine
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return;
+   }
+
+<<<<<<< HEAD
+   OCULUSVRDEV->dismissWarning();
+}
+
+DefineEngineFunction(ovrDumpMetrics, String, (S32 idx),(0),
+   "@brief dumps sensor metrics.\n\n"
+=======
+   OCULUSVRDEV->setSensorGravityCorrection(index, state);
+}
+
+DefineEngineFunction(getOVRSensorYawCorrection, bool, (S32 index),,
+   "@brief Get the yaw correction state for the given sensor index.\n\n"
+   "@param index The sensor index.\n"
+   "@return True if yaw correction (using magnetometer calibration data) is active.\n"
+>>>>>>> omni_engine
+   "@ingroup Game")
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+<<<<<<< HEAD
+      return "";
+   }
+
+   return OCULUSVRDEV->dumpMetrics(idx);
+}
+
+bool OculusVRDevice::_handleDeviceEvent( GFXDevice::GFXDeviceEventType evt )
+{
+   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
+   {
+      return true;
+   }
+
+   switch( evt )
+   {
+      case GFXDevice::deStartOfFrame:
+         
+         for (U32 i=0; i<OCULUSVRDEV->mHMDDevices.size(); i++)
+         {
+            OCULUSVRDEV->mHMDDevices[i]->onStartFrame();
+         }
+
+         // Fall through
+         break;
+
+      case GFXDevice::dePostFrame:
+         
+         for (U32 i=0; i<OCULUSVRDEV->mHMDDevices.size(); i++)
+         {
+            OCULUSVRDEV->mHMDDevices[i]->onEndFrame();
+         }
+
+         break;
+
+      case GFXDevice::deDestroy:
+         
+         for (U32 i=0; i<OCULUSVRDEV->mHMDDevices.size(); i++)
+         {
+            OCULUSVRDEV->mHMDDevices[i]->onDeviceDestroy();
+         }
+   
+      default:
+         break;
+   }
+
+   return true;
+}
+=======
       return false;
    }
 
@@ -945,81 +1678,4 @@ DefineEngineFunction(ovrResetAllSensors, void, (),,
 
    OCULUSVRDEV->resetAllSensors();
 }
-
-DefineEngineFunction(ovrIsDisplayingWarning, bool, (),,
-   "@brief returns is warning is being displayed.\n\n"
-   "@ingroup Game")
-{
-   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
-   {
-      return false;
-   }
-
-   return OCULUSVRDEV->isDiplayingWarning();
-}
-
-DefineEngineFunction(ovrDismissWarnings, void, (),,
-   "@brief dismisses warnings.\n\n"
-   "@ingroup Game")
-{
-   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
-   {
-      return;
-   }
-
-   OCULUSVRDEV->dismissWarning();
-}
-
-DefineEngineFunction(ovrDumpMetrics, String, (S32 idx),(0),
-   "@brief dumps sensor metrics.\n\n"
-   "@ingroup Game")
-{
-   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
-   {
-      return "";
-   }
-
-   return OCULUSVRDEV->dumpMetrics(idx);
-}
-
-bool OculusVRDevice::_handleDeviceEvent( GFXDevice::GFXDeviceEventType evt )
-{
-   if(!ManagedSingleton<OculusVRDevice>::instanceOrNull())
-   {
-      return true;
-   }
-
-   switch( evt )
-   {
-      case GFXDevice::deStartOfFrame:
-         
-         for (U32 i=0; i<OCULUSVRDEV->mHMDDevices.size(); i++)
-         {
-            OCULUSVRDEV->mHMDDevices[i]->onStartFrame();
-         }
-
-         // Fall through
-         break;
-
-      case GFXDevice::dePostFrame:
-         
-         for (U32 i=0; i<OCULUSVRDEV->mHMDDevices.size(); i++)
-         {
-            OCULUSVRDEV->mHMDDevices[i]->onEndFrame();
-         }
-
-         break;
-
-      case GFXDevice::deDestroy:
-         
-         for (U32 i=0; i<OCULUSVRDEV->mHMDDevices.size(); i++)
-         {
-            OCULUSVRDEV->mHMDDevices[i]->onDeviceDestroy();
-         }
-   
-      default:
-         break;
-   }
-
-   return true;
-}
+>>>>>>> omni_engine

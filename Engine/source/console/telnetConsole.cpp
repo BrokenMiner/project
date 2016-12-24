@@ -21,11 +21,17 @@
 //-----------------------------------------------------------------------------
 
 #include "platform/platform.h"
+<<<<<<< HEAD
 
 #include "console/simBase.h"
 #include "console/engineAPI.h"
 #include "console/telnetConsole.h"
 
+=======
+#include "console/telnetConsole.h"
+
+#include "console/engineAPI.h"
+>>>>>>> omni_engine
 #include "core/strings/stringFunctions.h"
 #include "core/util/journal/process.h"
 #include "core/module.h"
@@ -321,3 +327,74 @@ void TelnetConsole::process()
          walk = &cl->nextClient;
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_telnetSetParameters(int port, char * x__consolePass, char * x__listenPass, bool remoteEcho)
+{
+const char* consolePass = (const char*)x__consolePass;
+const char* listenPass = (const char*)x__listenPass;
+
+{
+   if (TelConsole)
+	   TelConsole->setTelnetParameters(port, consolePass, listenPass, remoteEcho);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

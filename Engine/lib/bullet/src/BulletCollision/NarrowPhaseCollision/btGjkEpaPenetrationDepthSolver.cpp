@@ -25,7 +25,11 @@ bool btGjkEpaPenetrationDepthSolver::calcPenDepth( btSimplexSolverInterface& sim
 											  const btConvexShape* pConvexA, const btConvexShape* pConvexB,
 											  const btTransform& transformA, const btTransform& transformB,
 											  btVector3& v, btVector3& wWitnessOnA, btVector3& wWitnessOnB,
+<<<<<<< HEAD
 											  class btIDebugDraw* debugDraw)
+=======
+											  class btIDebugDraw* debugDraw, btStackAlloc* stackAlloc )
+>>>>>>> omni_engine
 {
 
 	(void)debugDraw;
@@ -34,7 +38,11 @@ bool btGjkEpaPenetrationDepthSolver::calcPenDepth( btSimplexSolverInterface& sim
 
 //	const btScalar				radialmargin(btScalar(0.));
 	
+<<<<<<< HEAD
 	btVector3	guessVector(transformB.getOrigin()-transformA.getOrigin());
+=======
+	btVector3	guessVector(transformA.getOrigin()-transformB.getOrigin());
+>>>>>>> omni_engine
 	btGjkEpaSolver2::sResults	results;
 	
 

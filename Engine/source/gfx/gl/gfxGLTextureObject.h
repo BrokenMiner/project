@@ -24,8 +24,12 @@
 #define _GFXGLTEXTUREOBJECT_H
 
 #include "gfx/gfxTextureObject.h"
+<<<<<<< HEAD
 #include "gfx/gl/tGL/tGL.h"
 #include "gfx/gfxStateBlock.h"
+=======
+#include "gfx/gl/ggl/ggl.h"
+>>>>>>> omni_engine
 
 class GFXGLDevice;
 
@@ -33,10 +37,16 @@ class GFXGLTextureObject : public GFXTextureObject
 {
 public:
    GFXGLTextureObject(GFXDevice * aDevice, GFXTextureProfile *profile); 
+<<<<<<< HEAD
    ~GFXGLTextureObject();
    
    void release();
    void reInit();
+=======
+   virtual ~GFXGLTextureObject();
+   
+   void release();
+>>>>>>> omni_engine
    
    inline GLuint getHandle() const { return mHandle; }
    inline GLenum getBinding() const { return mBinding; }
@@ -47,11 +57,19 @@ public:
    /// Binds the texture to the given texture unit
    /// and applies the current sampler state because GL tracks
    /// filtering and wrapper per object, while GFX tracks per sampler.
+<<<<<<< HEAD
    void bind(U32 textureUnit);
    
    /// @return An array containing the texture data
    /// @note You are responsible for deleting the returned data! (Use delete[])
    U8* getTextureData( U32 mip = 0);
+=======
+   void bind(U32 textureUnit) const;
+   
+   /// @return An array containing the texture data
+   /// @note You are responsible for deleting the returned data! (Use delete[])
+   U8* getTextureData();
+>>>>>>> omni_engine
 
    virtual F32 getMaxUCoord() const;
    virtual F32 getMaxVCoord() const;
@@ -84,8 +102,12 @@ private:
    /// Internal GL object
    GLuint mHandle;
    GLuint mBuffer;
+<<<<<<< HEAD
    bool mNeedInitSamplerState;
    GFXSamplerStateDesc mSampler;
+=======
+
+>>>>>>> omni_engine
    GLenum mBinding;
    
    U32 mBytesPerTexel;

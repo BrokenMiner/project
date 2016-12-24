@@ -106,6 +106,18 @@ IMPLEMENT_CALLBACK( GuiTextEditCtrl, onValidate, void, (),(),
    "@see GuiControl\n\n"
 );
 
+IMPLEMENT_CALLBACK( GuiTextEditCtrl, onChangeCursorPos, void, (S32 newPosition),(),
+   "@brief Called whenever the cursor changes position.\n\n"
+   "@tsexample\n"
+   "// The control gets validated, causing the callback to occur\n"
+   "GuiTextEditCtrl::onChangeCursorPos(%this)\n"
+   "	{\n"
+   "		// Code to run when the control is validated\n"
+   "	}\n"
+   "@endtsexample\n\n"
+   "@see GuiTextCtrl\n"
+   "@see GuiControl\n\n"
+);
 GuiTextEditCtrl::GuiTextEditCtrl()
 {
    mInsertOn = true;
@@ -173,7 +185,20 @@ void GuiTextEditCtrl::initPersistFields()
       
    endGroup( "Text Input" );
 
+<<<<<<< HEAD
    Parent::initPersistFields();
+=======
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   Parent::initPersistFields();
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
+>>>>>>> omni_engine
 }
 
 bool GuiTextEditCtrl::onAdd()
@@ -192,7 +217,11 @@ bool GuiTextEditCtrl::onAdd()
       }
    }
 
+<<<<<<< HEAD
    if( mText && mText[0] )
+=======
+   if( mText[0] )
+>>>>>>> omni_engine
    {
       setText(mText);
    }
@@ -213,7 +242,11 @@ void GuiTextEditCtrl::execConsoleCallback()
 
    // Update the console variable:
    if ( mConsoleVariable[0] )
+<<<<<<< HEAD
       Con::setVariable(mConsoleVariable, mTextBuffer.getPtr8());
+=======
+      Con::setVariable( mConsoleVariable, mTextBuffer.getPtr8() );
+>>>>>>> omni_engine
 }
 
 void GuiTextEditCtrl::updateHistory( StringBuffer *inTxt, bool moveIndex )
@@ -279,7 +312,11 @@ void GuiTextEditCtrl::setText( const UTF16* txt)
 {
    if(txt && txt[0] != 0)
    {
+<<<<<<< HEAD
       UTF8* txt8 = createUTF8string( txt );
+=======
+      UTF8* txt8 = convertUTF16toUTF8( txt );
+>>>>>>> omni_engine
       Parent::setText( txt8 );
       delete[] txt8;
       mTextBuffer.set( txt );
@@ -450,6 +487,7 @@ void GuiTextEditCtrl::onMouseUp(const GuiEvent &event)
    mDragHit = false;
    mScrollDir = 0;
    mouseUnlock();
+   onChangeCursorPos();
 }
 
 void GuiTextEditCtrl::saveUndoState()
@@ -908,6 +946,7 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
 
             // Execute the console command!
             execConsoleCallback();
+			onChangeCursorPos();
             return true;
          }
 
@@ -1646,6 +1685,27 @@ S32 GuiTextEditCtrl::findNextWord()
    return mTextBuffer.length();
 }
 
+void GuiTextEditCtrl::onChangeCursorPos()
+{	
+	//VGEE 12/5/2013 Should have been a callback so it would parse.
+	onChangeCursorPos_callback(mCursorPos);
+	//if( isMethod("onChangeCursorPos"))
+		//Con::executef(this, "onChangeCursorPos", Con::getIntArg(mCursorPos));	
+}
+
+void GuiTextEditCtrl::selectText(S32 blockStart, S32 blockEnd)
+{
+	blockStart = blockStart < 0 ? 0 : blockStart;
+	blockEnd = blockEnd > mTextBuffer.length() ? mTextBuffer.length() : blockEnd;
+	mBlockStart = blockStart;
+	mBlockEnd = blockEnd;
+}
+
+DefineConsoleMethod( GuiTextEditCtrl, selectText, void, ( S32 startBlock, S32 endBlock ), , "textEditCtrl.selectText( %startBlock, %endBlock )" )
+{
+	object->selectText(startBlock, endBlock);
+}
+
 DefineEngineMethod( GuiTextEditCtrl, getText, const char*, (),,
    "@brief Acquires the current text displayed in this control.\n\n"
    "@tsexample\n"
@@ -1748,3 +1808,165 @@ DefineEngineMethod( GuiTextEditCtrl, forceValidateText, void, (),,
 {
    object->forceValidateText();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiTextEditCtrl_selectText(char * x__object, S32 startBlock, S32 endBlock)
+{
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+	object->selectText(startBlock, endBlock);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextEditCtrl_clearSelectedText(char * x__object)
+{
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->clearSelectedText();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextEditCtrl_forceValidateText(char * x__object)
+{
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->forceValidateText();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextEditCtrl_getCursorPos(char * x__object)
+{
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)(( object->getCursorPos() ));
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextEditCtrl_getText(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   if( !object->hasText() )
+      {wle_returnObject =StringTable->insert("");
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   char *retBuffer = Con::getReturnBuffer( GuiTextEditCtrl::MAX_STRING_LENGTH );
+   object->getText( retBuffer );
+   {wle_returnObject =retBuffer;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTextEditCtrl_isAllTextSelected(char * x__object)
+{
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->isAllTextSelected();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextEditCtrl_selectAllText(char * x__object)
+{
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->selectAllText();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextEditCtrl_setCursorPos(char * x__object, S32 position)
+{
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setCursorPos( position );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTextEditCtrl_setText(char * x__object, char * x__text)
+{
+GuiTextEditCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* text = (const char*)x__text;
+{
+   object->setText( text );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

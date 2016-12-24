@@ -28,6 +28,7 @@ uniform sampler2D diffuseMap;
 
 in vec2 texc0, texc1, texc2, texc3;
 
+<<<<<<< HEAD
 out vec4 OUT_col;
 
 void main()
@@ -36,4 +37,12 @@ void main()
    OUT_col += texture(diffuseMap, texc1) * kernel.y;
    OUT_col += texture(diffuseMap, texc2) * kernel.z;
    OUT_col += texture(diffuseMap, texc3) * kernel.w;
+=======
+void main()
+{
+   OUT_FragColor0 = texture(diffuseMap, texc0) * kernel.x;
+   OUT_FragColor0 += texture(diffuseMap, texc1) * kernel.y;
+   OUT_FragColor0 += texture(diffuseMap, texc2) * kernel.z;
+   OUT_FragColor0 += texture(diffuseMap, texc3) * kernel.w;
+>>>>>>> omni_engine
 }

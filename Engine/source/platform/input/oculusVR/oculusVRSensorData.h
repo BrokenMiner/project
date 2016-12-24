@@ -27,7 +27,11 @@
 #include "math/mMatrix.h"
 #include "math/mQuat.h"
 #include "math/mPoint2.h"
+<<<<<<< HEAD
 #include "OVR_CAPI_0_5_0.h"
+=======
+#include "OVR.h"
+>>>>>>> omni_engine
 
 struct OculusVRSensorData
 {
@@ -72,7 +76,14 @@ struct OculusVRSensorData
    void reset();
 
    /// Set data based on given sensor fusion
+<<<<<<< HEAD
    void setData(ovrTrackingState& data, const F32& maxAxisRadius);
+=======
+   void setData(OVR::SensorFusion& data, const F32& maxAxisRadius);
+
+   /// Simulate valid data
+   void simulateData(const F32& maxAxisRadius);
+>>>>>>> omni_engine
 
    /// Compare this data and given and return differences
    U32 compare(OculusVRSensorData* other, bool doRawCompare);

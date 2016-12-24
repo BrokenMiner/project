@@ -59,7 +59,11 @@ void DisplayErrorAlert(const char* errMsg, bool showSDLError = true);
 
 // Just like strstr, except case insensitive
 // (Found this function at http://www.codeguru.com/string/stristr.html)
+<<<<<<< HEAD
 extern const char *stristr(const char *szStringToBeSearched, const char *szSubstringToSearchFor);
+=======
+extern char *stristr(char *szStringToBeSearched, const char *szSubstringToSearchFor);
+>>>>>>> omni_engine
 
 extern "C"
 {

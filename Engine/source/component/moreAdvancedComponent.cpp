@@ -57,4 +57,8 @@ bool MoreAdvancedComponent::testDependentInterface()
       return false;
 
    return mSCInterface->isFortyTwo( 42 );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> omni_engine

@@ -123,7 +123,7 @@ uniform vec4 lightParams;
 uniform float shadowSoftness;
 
 out vec4 OUT_col;
-
+			   
 void main()               
 {   
    // Compute scene UV

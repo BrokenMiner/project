@@ -78,7 +78,11 @@ class GuiPaneControl : public GuiControl
       Point2I mThumbSize;
 
       ///
+<<<<<<< HEAD
       bool mMouseOver;
+=======
+      //bool mMouseOver;   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
       
       ///
       bool mDepressed;

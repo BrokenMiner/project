@@ -95,6 +95,17 @@ public:
 	//creation methods
    DECLARE_CONOBJECT(GuiParticleGraphCtrl);
    DECLARE_CATEGORY( "Gui Editor" );
+
+   DECLARE_CALLBACK( void, onSetSelected, ( const char* buffer ) );
+   DECLARE_CALLBACK( void, onMouseDragged, ( const char* buffer ) );
+   DECLARE_CALLBACK( void, onMouseMove, ( const char* buffer ) );
+   DECLARE_CALLBACK( void, onPlotPointSelected, ( const char* buffer ) );
+   DECLARE_CALLBACK( void, onPlotPointSelectedMouseDown, ( const char* buffer ) );   
+   DECLARE_CALLBACK( void, onPlotPointInserted, ( const char* buffer1, const char* buffer2 ) );
+   DECLARE_CALLBACK( void, onPlotPointRemoved, ( const char* buffer1, const char* buffer2, const char* buffer3 ) );
+   DECLARE_CALLBACK( void, onPlotPointAdded, ( const char* buffer1, const char* buffer2, const char* buffer3 ) ); 
+   DECLARE_CALLBACK( void, onPlotPointChangedMove, ( const char* buffer1, const char* buffer2, const char* buffer3 ) );
+   DECLARE_CALLBACK( void, onPlotPointChangedUp, ( const char* buffer1, const char* buffer2, const char* buffer3, const char* buffer4 ) );
    
    GuiParticleGraphCtrl();
    virtual ~GuiParticleGraphCtrl() { };

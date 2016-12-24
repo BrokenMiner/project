@@ -44,9 +44,15 @@ public:
    static S32 _smTypeId;
 
    SimObjectRef()
+<<<<<<< HEAD
       : mName( "" ),
         mId( 0 ),
         mObject( NULL )
+=======
+      : mId( 0 ),
+        mObject( NULL ),
+        mName( "" )
+>>>>>>> omni_engine
    {
    }
    
@@ -178,4 +184,8 @@ public:
 };
 
 
+<<<<<<< HEAD
 #endif // _SIMOBJECTREF_H_
+=======
+#endif // _SIMOBJECTREF_H_
+>>>>>>> omni_engine

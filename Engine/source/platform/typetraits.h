@@ -222,11 +222,19 @@ struct _TypeTraits< T* >
    typedef _DestructPtr Destruct;
 
    template< typename A >
+<<<<<<< HEAD
    static bool isTaggedPtr( A* ptr ) { return ( uintptr_t( ptr ) & 0x1 ); }
    template< typename A >
    static A* getTaggedPtr( A* ptr ) { return ( A* ) ( uintptr_t( ptr ) | 0x1 ); }
    template< typename A >
    static A* getUntaggedPtr( A* ptr ) { return ( A* ) ( uintptr_t( ptr ) & (~0x1) ); }
+=======
+   static bool isTaggedPtr( A* ptr ) { return ( U64( ptr ) & 0x1 ); }
+   template< typename A >
+   static A* getTaggedPtr( A* ptr ) { return ( A* ) ( U64( ptr ) | 0x1 ); }
+   template< typename A >
+   static A* getUntaggedPtr( A* ptr ) { return ( A* ) ( U64( ptr ) & 0x00000000FFFFFFFE ); }
+>>>>>>> omni_engine
 };
 
 template< typename T >

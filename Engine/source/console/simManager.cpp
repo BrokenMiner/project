@@ -364,10 +364,17 @@ SimObject* findObject(const char* name)
       {
          c = *temp++;
          if(!c)
+<<<<<<< HEAD
             return findObject(dAtoi(name));
          else if(c == '/')
          {
             obj = findObject(dAtoi(name));
+=======
+            return findObject(dAtoui(name));
+         else if(c == '/')
+         {
+            obj = findObject(dAtoui(name));
+>>>>>>> omni_engine
             if(!obj)
                return NULL;
             return obj->findObject(temp);
@@ -397,7 +404,11 @@ SimObject* findObject(SimObjectId id)
 }
 
 SimObject *spawnObject(String spawnClass, String spawnDataBlock, String spawnName,
+<<<<<<< HEAD
                        String spawnProperties, String spawnScript)
+=======
+                       String spawnProperties, String spawnScript, String modelName)
+>>>>>>> omni_engine
 {
    if (spawnClass.isEmpty())
    {
@@ -411,6 +422,9 @@ SimObject *spawnObject(String spawnClass, String spawnDataBlock, String spawnNam
 
    if (spawnDataBlock.isNotEmpty() && !spawnDataBlock.equal( "None", String::NoCase ) )
       spawnString += "datablock = " + spawnDataBlock + "; ";
+
+   if (modelName.isNotEmpty())
+	   spawnString += "WLE_OVERRIDE_PROXY_CLASSTYPE = \"" + modelName + "\"; ";
 
    if (spawnProperties.isNotEmpty())
       spawnString += spawnProperties + " ";

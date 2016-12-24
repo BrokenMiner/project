@@ -81,7 +81,11 @@ class ConsoleLogger : public SimObject
       /// // Example script constructor usage.
       /// %obj = new ConsoleLogger( objName, logFileName, [append = false] );
       /// @endcode
+<<<<<<< HEAD
       bool processArguments( S32 argc, ConsoleValueRef *argv );
+=======
+      bool processArguments( S32 argc, const char **argv );
+>>>>>>> omni_engine
 
       /// Default constructor, make sure to initalize
       ConsoleLogger();

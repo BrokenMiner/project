@@ -369,7 +369,11 @@ void	btHeightfieldTerrainShape::processAllTriangles(btTriangleCallback* callback
         getVertex(x+1,j+1,vertices[2]);
         callback->processTriangle(vertices,x,j);
         //second triangle
+<<<<<<< HEAD
       //  getVertex(x,j,vertices[0]);//already got this vertex before, thanks to Danny Chapman
+=======
+        getVertex(x,j,vertices[0]);
+>>>>>>> omni_engine
         getVertex(x+1,j+1,vertices[1]);
         getVertex(x,j+1,vertices[2]);
         callback->processTriangle(vertices,x,j);				
@@ -382,7 +386,11 @@ void	btHeightfieldTerrainShape::processAllTriangles(btTriangleCallback* callback
         callback->processTriangle(vertices,x,j);
         //second triangle
         getVertex(x+1,j,vertices[0]);
+<<<<<<< HEAD
         //getVertex(x,j+1,vertices[1]);
+=======
+        getVertex(x,j+1,vertices[1]);
+>>>>>>> omni_engine
         getVertex(x+1,j+1,vertices[2]);
         callback->processTriangle(vertices,x,j);
 			}

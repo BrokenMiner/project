@@ -1,23 +1,5 @@
 //-----------------------------------------------------------------------------
-// Copyright (c) 2014 Daniel Buckmaster
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// Copyright (c) Daniel Buckmaster 2012
 //-----------------------------------------------------------------------------
 
 // These values should align with enum PolyFlags in walkabout/nav.h
@@ -34,9 +16,11 @@ function initializeNavEditor()
    echo(" % - Initializing Navigation Editor");
 
    // Execute all relevant scripts and GUIs.
-   exec("./navEditor.cs");
+   exec("./NavEditor.cs");
    exec("./NavEditorGui.gui");
    exec("./NavEditorToolbar.gui");
+   exec("./NavEditorGui.cs");
+   exec("./NavEditorAboutDlg.gui");
    exec("./NavEditorConsoleDlg.gui");
    exec("./CreateNewNavMeshDlg.gui");
 
@@ -95,6 +79,8 @@ function NavEditorPlugin::onWorldEditorStartup(%this)
    // Add items to World Editor Creator
    EWCreatorWindow.beginGroup("Navigation");
 
+      EWCreatorWindow.registerMissionObject("NavMesh", "Navigation mesh");
+      EWCreatorWindow.registerMissionObject("NavPath", "Path");
       EWCreatorWindow.registerMissionObject("CoverPoint", "Cover point");
 
    EWCreatorWindow.endGroup();
@@ -133,6 +119,7 @@ function NavEditorPlugin::onActivated(%this)
    if(ServerNavMeshSet.getCount() == 0)
 	  MessageBoxYesNo("No NavMesh", "There is no NavMesh in this level. Would you like to create one?" SPC
 	                                "If not, please use the Nav Editor to create a new NavMesh.",
+	                                "If not, please use the World Editor to create a new NavMesh.",
 	                                "Canvas.pushDialog(CreateNewNavMeshDlg);");
    NavTreeView.open(ServerNavMeshSet, true);
 
@@ -148,7 +135,11 @@ function NavEditorPlugin::onActivated(%this)
    // Always use Object alignment.
    GlobalGizmoProfile.alignment = "Object";
 
+//<<<<<<< HEAD
    // Set the status until some other editing mode adds useful information.
+//=======
+   // Set the status bar here until all tool have been hooked up
+//>>>>>>> omni_engine
    EditorGuiStatusBar.setInfo("Navigation editor.");
    EditorGuiStatusBar.setSelection("");
 
@@ -227,6 +218,7 @@ function NavEditorPlugin::readSettings(%this)
 {
    EditorSettings.beginGroup("NavEditor", true);
 
+//<<<<<<< HEAD
    // Currently these are globals because of the way they are accessed in navMesh.cpp.
    $Nav::Editor::renderMesh       = EditorSettings.value("RenderMesh");
    $Nav::Editor::renderPortals    = EditorSettings.value("RenderPortals");
@@ -242,6 +234,10 @@ function NavEditorPlugin::readSettings(%this)
    {
       NavEditorGui.backgroundBuild = true;
    }
+//=======
+   NavEditorGui.spawnClass     = EditorSettings.value("SpawnClass");
+   NavEditorGui.spawnDatablock = EditorSettings.value("SpawnDatablock");
+//>>>>>>> omni_engine
 
    EditorSettings.endGroup();  
 }
@@ -271,4 +267,21 @@ function ESettingsWindowPopup::onSelect(%this)
 {
    EditorSettings.setValue(%this.editorSettingsValue, %this.getText());
    eval(%this.editorSettingsRead);
+}
+
+//-----------------------------------------------------------------------------
+// Demo
+//-----------------------------------------------------------------------------
+
+function OnWalkaboutDemoLimit()
+{
+   MessageBoxOK("Walkabout demo",
+      "This demo only allows two NavMeshes to be created. Sorry!");
+}
+
+function OnWalkaboutDemoSave()
+{
+   MessageBoxOK("Walkabout demo",
+      "This demo doesn't allow you to save NavMeshes. Sorry!" SPC
+      "The rest of your mission will still be saved.");
 }

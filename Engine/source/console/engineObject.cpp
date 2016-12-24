@@ -119,7 +119,11 @@ String EngineObject::describeSelf() const
 //-----------------------------------------------------------------------------
 
 #ifndef TORQUE_DISABLE_MEMORY_MANAGER
+<<<<<<< HEAD
 void* EngineObject::operator new( size_t size )
+=======
+void* EngineObject::operator new( dsize_t size )
+>>>>>>> omni_engine
 {
    AssertFatal( IEngineObjectPool::DEFAULT, "EngineObject::new - No default pool set!" );
 
@@ -140,7 +144,11 @@ void* EngineObject::operator new( size_t size )
 //-----------------------------------------------------------------------------
 
 #ifndef TORQUE_DISABLE_MEMORY_MANAGER
+<<<<<<< HEAD
 void* EngineObject::operator new( size_t size, IEngineObjectPool* pool )
+=======
+void* EngineObject::operator new( dsize_t size, IEngineObjectPool* pool )
+>>>>>>> omni_engine
 {
    AssertFatal( pool, "EngineObject::new - Got a NULL pool pointer!" );
 
@@ -169,7 +177,11 @@ void* EngineObject::operator new( size_t size, IEngineObjectPool* pool )
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void* EngineObject::operator new( size_t size TORQUE_TMM_ARGS_DECL )
+=======
+void* EngineObject::operator new( dsize_t size TORQUE_TMM_ARGS_DECL )
+>>>>>>> omni_engine
 {
    AssertFatal( IEngineObjectPool::DEFAULT, "EngineObject::new - No default pool set!" );
 
@@ -188,7 +200,11 @@ void* EngineObject::operator new( size_t size TORQUE_TMM_ARGS_DECL )
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void* EngineObject::operator new( size_t size, IEngineObjectPool* pool TORQUE_TMM_ARGS_DECL )
+=======
+void* EngineObject::operator new( dsize_t size, IEngineObjectPool* pool TORQUE_TMM_ARGS_DECL )
+>>>>>>> omni_engine
 {
    AssertFatal( pool, "EngineObject::new - Got a NULL pool pointer!" );
 
@@ -276,7 +292,11 @@ void EngineObject::debugEnumInstances( const char* className, DebugEnumInstances
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void* EngineCRuntimeObjectPool::allocateObject( U32 size TORQUE_TMM_ARGS_DECL )
+=======
+void* EngineCRuntimeObjectPool::allocateObject( dsize_t size TORQUE_TMM_ARGS_DECL )
+>>>>>>> omni_engine
 {
    #ifdef TORQUE_DISABLE_MEMORY_MANAGER
       return dMalloc( size );
@@ -363,14 +383,96 @@ DefineNewEngineMethod( EngineObject, setUserData, void, ( void* ptr ),,
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 #ifdef TORQUE_DEBUG
+=======
+
+>>>>>>> omni_engine
 
 DefineEngineFunction( debugDumpAllObjects, void, (),,
    "@brief Dumps all current EngineObject instances to the console.\n\n"
    "@note This function is only available in debug builds.\n\n"
    "@ingroup Debugging" )
 {
+<<<<<<< HEAD
    EngineObject::debugDumpInstances();
 }
 
 #endif // TORQUE_DEBUG
+=======
+
+	#ifdef TORQUE_DEBUG
+   EngineObject::debugDumpInstances();
+	#endif 
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_debugDumpAllObjects()
+{
+{
+	#ifdef TORQUE_DEBUG
+   EngineObject::debugDumpInstances();
+	#endif 
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

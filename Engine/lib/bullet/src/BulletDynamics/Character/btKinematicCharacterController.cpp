@@ -150,11 +150,15 @@ btKinematicCharacterController::btKinematicCharacterController (btPairCachingGho
 	m_jumpSpeed = 10.0; // ?
 	m_wasOnGround = false;
 	m_wasJumping = false;
+<<<<<<< HEAD
 	m_interpolateUp = true;
 	setMaxSlope(btRadians(45.0));
 	m_currentStepOffset = 0;
 	full_drop = false;
 	bounce_fix = false;
+=======
+	setMaxSlope(btRadians(45.0));
+>>>>>>> omni_engine
 }
 
 btKinematicCharacterController::~btKinematicCharacterController ()
@@ -274,10 +278,14 @@ void btKinematicCharacterController::stepUp ( btCollisionWorld* world)
 		{
 			// we moved up only a fraction of the step height
 			m_currentStepOffset = m_stepHeight * callback.m_closestHitFraction;
+<<<<<<< HEAD
 			if (m_interpolateUp == true)
 				m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
 			else
 				m_currentPosition = m_targetPosition;
+=======
+			m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
+>>>>>>> omni_engine
 		}
 		m_verticalVelocity = 0.0;
 		m_verticalOffset = 0.0;
@@ -342,8 +350,12 @@ void btKinematicCharacterController::stepForwardAndStrafe ( btCollisionWorld* co
 	{
 		if (m_normalizedDirection.dot(m_touchingNormal) > btScalar(0.0))
 		{
+<<<<<<< HEAD
 			//interferes with step movement
 			//updateTargetPositionBasedOnCollision (m_touchingNormal);
+=======
+			updateTargetPositionBasedOnCollision (m_touchingNormal);
+>>>>>>> omni_engine
 		}
 	}
 
@@ -415,8 +427,12 @@ void btKinematicCharacterController::stepForwardAndStrafe ( btCollisionWorld* co
 
 void btKinematicCharacterController::stepDown ( btCollisionWorld* collisionWorld, btScalar dt)
 {
+<<<<<<< HEAD
 	btTransform start, end, end_double;
 	bool runonce = false;
+=======
+	btTransform start, end;
+>>>>>>> omni_engine
 
 	// phase 3: down
 	/*btScalar additionalDownStep = (m_wasOnGround && !onGround()) ? m_stepHeight : 0.0;
@@ -425,6 +441,7 @@ void btKinematicCharacterController::stepDown ( btCollisionWorld* collisionWorld
 	btVector3 gravity_drop = getUpAxisDirections()[m_upAxis] * downVelocity; 
 	m_targetPosition -= (step_drop + gravity_drop);*/
 
+<<<<<<< HEAD
 	btVector3 orig_position = m_targetPosition;
 	
 	btScalar downVelocity = (m_verticalVelocity<0.f?-m_verticalVelocity:0.f) * dt;
@@ -432,10 +449,19 @@ void btKinematicCharacterController::stepDown ( btCollisionWorld* collisionWorld
 	if(downVelocity > 0.0 && downVelocity > m_fallSpeed
 		&& (m_wasOnGround || !m_wasJumping))
 		downVelocity = m_fallSpeed;
+=======
+	btScalar downVelocity = (m_verticalVelocity<0.f?-m_verticalVelocity:0.f) * dt;
+	if(downVelocity > 0.0 && downVelocity < m_stepHeight
+		&& (m_wasOnGround || !m_wasJumping))
+	{
+		downVelocity = m_stepHeight;
+	}
+>>>>>>> omni_engine
 
 	btVector3 step_drop = getUpAxisDirections()[m_upAxis] * (m_currentStepOffset + downVelocity);
 	m_targetPosition -= step_drop;
 
+<<<<<<< HEAD
 	btKinematicClosestNotMeConvexResultCallback callback (m_ghostObject, getUpAxisDirections()[m_upAxis], m_maxSlopeCosine);
         callback.m_collisionFilterGroup = getGhostObject()->getBroadphaseHandle()->m_collisionFilterGroup;
         callback.m_collisionFilterMask = getGhostObject()->getBroadphaseHandle()->m_collisionFilterMask;
@@ -522,6 +548,30 @@ void btKinematicCharacterController::stepDown ( btCollisionWorld* collisionWorld
 
 		full_drop = false;
 
+=======
+	start.setIdentity ();
+	end.setIdentity ();
+
+	start.setOrigin (m_currentPosition);
+	end.setOrigin (m_targetPosition);
+
+	btKinematicClosestNotMeConvexResultCallback callback (m_ghostObject, getUpAxisDirections()[m_upAxis], m_maxSlopeCosine);
+	callback.m_collisionFilterGroup = getGhostObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+	callback.m_collisionFilterMask = getGhostObject()->getBroadphaseHandle()->m_collisionFilterMask;
+	
+	if (m_useGhostObjectSweepTest)
+	{
+		m_ghostObject->convexSweepTest (m_convexShape, start, end, callback, collisionWorld->getDispatchInfo().m_allowedCcdPenetration);
+	} else
+	{
+		collisionWorld->convexSweepTest (m_convexShape, start, end, callback, collisionWorld->getDispatchInfo().m_allowedCcdPenetration);
+	}
+
+	if (callback.hasHit())
+	{
+		// we dropped a fraction of the height -> hit floor
+		m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
+>>>>>>> omni_engine
 		m_verticalVelocity = 0.0;
 		m_verticalOffset = 0.0;
 		m_wasJumping = false;
@@ -575,6 +625,7 @@ btScalar timeInterval
 	m_useWalkDirection = false;
 	m_walkDirection = velocity;
 	m_normalizedDirection = getNormalizedVector(m_walkDirection);
+<<<<<<< HEAD
 	m_velocityTimeInterval += timeInterval;
 }
 
@@ -593,6 +644,15 @@ void btKinematicCharacterController::reset ( btCollisionWorld* collisionWorld )
         {
                 cache->removeOverlappingPair(cache->getOverlappingPairArray()[0].m_pProxy0, cache->getOverlappingPairArray()[0].m_pProxy1, collisionWorld->getDispatcher());
         }
+=======
+	m_velocityTimeInterval = timeInterval;
+}
+
+
+
+void btKinematicCharacterController::reset ()
+{
+>>>>>>> omni_engine
 }
 
 void btKinematicCharacterController::warp (const btVector3& origin)

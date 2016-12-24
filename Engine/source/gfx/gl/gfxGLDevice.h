@@ -28,7 +28,13 @@
 #include "gfx/gfxDevice.h"
 #include "gfx/gfxInit.h"
 
+<<<<<<< HEAD
 #include "gfx/gl/tGL/tGL.h"
+=======
+#ifndef GL_GGL_H
+#include "gfx/gl/ggl/ggl.h"
+#endif
+>>>>>>> omni_engine
 
 #include "windowManager/platformWindow.h"
 #include "gfx/gfxFence.h"
@@ -59,6 +65,7 @@ public:
    virtual void deactivate() { }
    virtual GFXAdapterType getAdapterType() { return OpenGL; }
 
+<<<<<<< HEAD
    virtual void enterDebugEvent(ColorI color, const char *name);
    virtual void leaveDebugEvent();
    virtual void setDebugMarker(ColorI color, const char *name);
@@ -66,6 +73,14 @@ public:
    virtual void enumerateVideoModes();
 
    virtual U32 getTotalVideoMemory_GL_EXT();
+=======
+   virtual void enterDebugEvent(ColorI color, const char *name) { }
+   virtual void leaveDebugEvent() { }
+   virtual void setDebugMarker(ColorI color, const char *name) { }
+
+   virtual void enumerateVideoModes();
+
+>>>>>>> omni_engine
    virtual U32 getTotalVideoMemory();
 
    virtual GFXCubemap * createCubemap();
@@ -90,7 +105,12 @@ public:
    virtual F32 getPixelShaderVersion() const { return mPixelShaderVersion; }
    virtual void  setPixelShaderVersion( F32 version ) { mPixelShaderVersion = version; }
    
+<<<<<<< HEAD
    virtual void setShader(GFXShader *shader, bool force = false);
+=======
+   virtual void setShader(GFXShader* shd);
+   virtual void disableShaders(); ///< Equivalent to setShader(NULL)
+>>>>>>> omni_engine
    
    /// @attention GL cannot check if the given format supports blending or filtering!
    virtual GFXFormat selectSupportedFormat(GFXTextureProfile *profile,
@@ -135,6 +155,7 @@ public:
    
    ///
    bool supportsAnisotropic() const { return mSupportsAnisotropic; }
+<<<<<<< HEAD
 
    GFXGLStateCache* getOpenglCache() { return mOpenglStateCache; }
 
@@ -145,6 +166,9 @@ public:
 
    bool glUseMap() const { return mUseGlMap; }   
       
+=======
+   
+>>>>>>> omni_engine
 protected:   
    /// Called by GFXDevice to create a device specific stateblock
    virtual GFXStateBlockRef createStateBlockInternal(const GFXStateBlockDesc& desc);
@@ -179,12 +203,25 @@ protected:
    // NOTE: The GL device doesn't need a vertex declaration at
    // this time, but we need to return something to keep the system
    // from retrying to allocate one on every call.
+<<<<<<< HEAD
    virtual GFXVertexDecl* allocVertexDecl( const GFXVertexFormat *vertexFormat );
 
    virtual void setVertexDecl( const GFXVertexDecl *decl );
 
    virtual void setVertexStream( U32 stream, GFXVertexBuffer *buffer );
    virtual void setVertexStreamFrequency( U32 stream, U32 frequency );   
+=======
+   virtual GFXVertexDecl* allocVertexDecl( const GFXVertexFormat *vertexFormat ) 
+   {
+      static GFXVertexDecl decl;
+      return &decl; 
+   }
+
+   virtual void setVertexDecl( const GFXVertexDecl *decl ) { }
+
+   virtual void setVertexStream( U32 stream, GFXVertexBuffer *buffer );
+   virtual void setVertexStreamFrequency( U32 stream, U32 frequency );
+>>>>>>> omni_engine
 
 private:
    typedef GFXDevice Parent;
@@ -199,6 +236,7 @@ private:
 
    U32 mAdapterIndex;
    
+<<<<<<< HEAD
    StrongRefPtr<GFXGLVertexBuffer> mCurrentVB[VERTEX_STREAM_COUNT];
    U32 mCurrentVB_Divisor[VERTEX_STREAM_COUNT];
    bool mNeedUpdateVertexAttrib;
@@ -209,6 +247,10 @@ private:
    GFXShaderRef mGenericShader[GS_COUNT];
    GFXShaderConstBufferRef mGenericShaderBuffer[GS_COUNT];
    GFXShaderConstHandle *mModelViewProjSC[GS_COUNT];
+=======
+   StrongRefPtr<GFXGLVertexBuffer> mCurrentVB;
+   StrongRefPtr<GFXGLPrimitiveBuffer> mCurrentPB;
+>>>>>>> omni_engine
    
    /// Since GL does not have separate world and view matrices we need to track them
    MatrixF m_mCurrentWorld;
@@ -219,9 +261,13 @@ private:
 
    F32 mPixelShaderVersion;
    
+<<<<<<< HEAD
    bool mSupportsAnisotropic;   
 
    U32 mNumVertexStream;
+=======
+   bool mSupportsAnisotropic;
+>>>>>>> omni_engine
    
    U32 mMaxShaderTextures;
    U32 mMaxFFTextures;
@@ -249,6 +295,7 @@ private:
    GFXFence* _createPlatformSpecificFence(); ///< If our platform (e.g. OS X) supports a fence extenstion (e.g. GL_APPLE_fence) this will create one, otherwise returns NULL
    
    void setPB(GFXGLPrimitiveBuffer* pb); ///< Sets mCurrentPB
+<<<<<<< HEAD
 
    GFXGLStateCache *mOpenglStateCache;
 
@@ -258,4 +305,8 @@ private:
 };
 
 #define GFXGL static_cast<GFXGLDevice*>(GFXDevice::get())
+=======
+};
+
+>>>>>>> omni_engine
 #endif

@@ -1018,7 +1018,11 @@ void Projectile::explode( const Point3F &p, const Point3F &n, const U32 collideT
 
       // Client (impact) decal.
       if ( mDataBlock->decal )     
+<<<<<<< HEAD
          gDecalManager->addDecal(p, n, 0.0f, mDataBlock->decal);
+=======
+         gDecalManager->addDecal(p, n, mRandF(0.0f, M_2PI_F), mDataBlock->decal);
+>>>>>>> omni_engine
 
       // Client object
       updateSound();
@@ -1450,4 +1454,78 @@ DefineEngineMethod(Projectile, presimulate, void, (F32 seconds), (1.0f),
                                        "@note This function is not called if the SimObject::hidden is true.")
 {
 	object->simulate( seconds );
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnProjectile_presimulate(char * x__object, F32 seconds)
+{
+Projectile* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->simulate( seconds );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

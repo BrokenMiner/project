@@ -58,6 +58,9 @@ IMPLEMENT_CALLBACK( GuiShapeEdPreview, onThreadPosChanged, void, ( F32 pos, bool
    "Called when the position of the active thread has changed, such as during "
    "playback." );
 
+IMPLEMENT_CALLBACK( GuiShapeEdPreview, onDetailChanged, void, (), (), "" );
+IMPLEMENT_CALLBACK( GuiShapeEdPreview, onNodeSelected, void, ( const char* nodeIdx ), ( nodeIdx), "" );
+IMPLEMENT_CALLBACK( GuiShapeEdPreview, onEditNodeTransform, void, ( const char* node, const char* txfm, const char* gizmoID ), ( node, txfm, gizmoID ), "" );
 
 GuiShapeEdPreview::GuiShapeEdPreview()
 :  mOrbitDist( 5.0f ),
@@ -330,11 +333,18 @@ void GuiShapeEdPreview::setCurrentDetail(S32 dl)
 {
    if ( mModel )
    {
+<<<<<<< HEAD
       TSShape* shape = mModel->getShape();
       S32 smallest = shape->mSmallestVisibleDL;
       shape->mSmallestVisibleDL = shape->details.size() - 1;
       mModel->setCurrentDetail( dl );
       shape->mSmallestVisibleDL = smallest;
+=======
+      S32 smallest = mModel->getShape()->mSmallestVisibleDL;
+      mModel->getShape()->mSmallestVisibleDL = mModel->getShape()->details.size()-1;
+      mModel->setCurrentDetail( dl );
+      mModel->getShape()->mSmallestVisibleDL = smallest;
+>>>>>>> omni_engine
 
       // Match the camera distance to this detail if necessary
       //@todo if ( !gui->mFixedDetail )
@@ -360,6 +370,7 @@ bool GuiShapeEdPreview::setObjectModel(const char* modelName)
       mModel = new TSShapeInstance( model, true );
       AssertFatal( mModel, avar("GuiShapeEdPreview: Failed to load model %s. Please check your model name and load a valid model.", modelName ));
 
+<<<<<<< HEAD
       TSShape* shape = mModel->getShape();
 
       // Initialize camera values:
@@ -368,13 +379,25 @@ bool GuiShapeEdPreview::setObjectModel(const char* modelName)
       // Set camera move and zoom speed according to model size
       mMoveSpeed = shape->radius / sMoveScaler;
       mZoomSpeed = shape->radius / sZoomScaler;
+=======
+      // Initialize camera values:
+      mOrbitPos = mModel->getShape()->center;
+
+      // Set camera move and zoom speed according to model size
+      mMoveSpeed = mModel->getShape()->radius / sMoveScaler;
+      mZoomSpeed = mModel->getShape()->radius / sZoomScaler;
+>>>>>>> omni_engine
 
       // Reset node selection
       mHoverNode = -1;
       mSelectedNode = -1;
       mSelectedObject = -1;
       mSelectedObjDetail = 0;
+<<<<<<< HEAD
       mProjectedNodes.setSize( shape->nodes.size() );
+=======
+      mProjectedNodes.setSize( mModel->getShape()->nodes.size() );
+>>>>>>> omni_engine
 
       // Reset detail stats
       mCurrentDL = 0;
@@ -514,6 +537,8 @@ bool GuiShapeEdPreview::mountShape(const char* modelName, const char* nodeName, 
       return false;
 
    TSShapeInstance* tsi = new TSShapeInstance( model, true );
+   if ( !tsi )
+      return false;
 
    if ( slot == -1 )
    {
@@ -684,11 +709,17 @@ void GuiShapeEdPreview::refreshShape()
       mModel->initNodeTransforms();
       mModel->initMeshObjects();
 
+<<<<<<< HEAD
       TSShape* shape = mModel->getShape();
 
       mProjectedNodes.setSize( shape->nodes.size() );
 
       if ( mSelectedObject >= shape->objects.size() )
+=======
+      mProjectedNodes.setSize( mModel->getShape()->nodes.size() );
+
+      if ( mSelectedObject >= mModel->getShape()->objects.size() )
+>>>>>>> omni_engine
       {
          mSelectedObject = -1;
          mSelectedObjDetail = 0;
@@ -697,22 +728,38 @@ void GuiShapeEdPreview::refreshShape()
       // Re-compute the collision mesh stats
       mColMeshes = 0;
       mColPolys = 0;
+<<<<<<< HEAD
       for ( S32 i = 0; i < shape->details.size(); i++ )
       {
          const TSShape::Detail& det = shape->details[i];
          const String& detName = shape->getName( det.nameIndex );
+=======
+      for ( S32 i = 0; i < mModel->getShape()->details.size(); i++ )
+      {
+         const TSShape::Detail& det = mModel->getShape()->details[i];
+         const String& detName = mModel->getShape()->getName( det.nameIndex );
+>>>>>>> omni_engine
          if ( ( det.subShapeNum < 0 ) || !detName.startsWith( "collision-" ) )
             continue;
 
          mColPolys += det.polyCount;
 
          S32 od = det.objectDetailNum;
+<<<<<<< HEAD
          S32 start = shape->subShapeFirstObject[det.subShapeNum];
          S32 end   = start + shape->subShapeNumObjects[det.subShapeNum];
          for ( S32 j = start; j < end; j++ )
          {
             const TSShape::Object &obj = shape->objects[j];
             const TSMesh* mesh = ( od < obj.numMeshes ) ? shape->meshes[obj.startMeshIndex + od] : NULL;
+=======
+         S32 start = mModel->getShape()->subShapeFirstObject[det.subShapeNum];
+         S32 end   = start + mModel->getShape()->subShapeNumObjects[det.subShapeNum];
+         for ( S32 j = start; j < end; j++ )
+         {
+            const TSShape::Object &obj = mModel->getShape()->objects[j];
+            const TSMesh* mesh = ( od < obj.numMeshes ) ? mModel->getShape()->meshes[obj.startMeshIndex + od] : NULL;
+>>>>>>> omni_engine
             if ( mesh )
                mColMeshes++;
          }
@@ -922,7 +969,11 @@ void GuiShapeEdPreview::handleMouseDown(const GuiEvent& event, GizmoMode mode)
       if ( selected != mSelectedNode )
       {
          mSelectedNode = selected;
+<<<<<<< HEAD
          Con::executef( this, "onNodeSelected", Con::getIntArg( mSelectedNode ));
+=======
+         onNodeSelected_callback( Con::getIntArg( mSelectedNode ));
+>>>>>>> omni_engine
       }
    }
 
@@ -1032,7 +1083,11 @@ void GuiShapeEdPreview::handleMouseDragged(const GuiEvent& event, GizmoMode mode
             dSprintf(buffer, sizeof(buffer), "%g %g %g %g %g %g %g",
                pos.x, pos.y, pos.z, aa.axis.x, aa.axis.y, aa.axis.z, aa.angle);
 
+<<<<<<< HEAD
             Con::executef(this, "onEditNodeTransform", name, buffer, Con::getIntArg(mGizmoDragID));
+=======
+            onEditNodeTransform_callback( name, buffer, Con::getIntArg(mGizmoDragID) );
+>>>>>>> omni_engine
          }
       }
    }
@@ -1251,7 +1306,11 @@ void GuiShapeEdPreview::updateDetailLevel(const SceneRenderState* state)
    if ( mCurrentDL != currentDetail )
    {
       mCurrentDL = currentDetail;
+<<<<<<< HEAD
       Con::executef( this, "onDetailChanged");
+=======
+      onDetailChanged_callback();
+>>>>>>> omni_engine
    }
 }
 
@@ -1545,12 +1604,19 @@ void GuiShapeEdPreview::renderSunDirection() const
       GFXStateBlockDesc desc;
       desc.setZReadWrite( true, true );
 
+<<<<<<< HEAD
       GFXDrawUtil* drawUtil = GFX->getDrawUtil();
 
       drawUtil->drawArrow( desc, start, end, color );
       drawUtil->drawArrow( desc, start + up, end + up, color );
       drawUtil->drawArrow( desc, start + right, end + right, color );
       drawUtil->drawArrow( desc, start + up + right, end + up + right, color );
+=======
+      GFX->getDrawUtil()->drawArrow( desc, start, end, color );
+      GFX->getDrawUtil()->drawArrow( desc, start + up, end + up, color );
+      GFX->getDrawUtil()->drawArrow( desc, start + right, end + right, color );
+      GFX->getDrawUtil()->drawArrow( desc, start + up + right, end + up + right, color );
+>>>>>>> omni_engine
    }
 }
 
@@ -1609,7 +1675,12 @@ void GuiShapeEdPreview::renderNodes() const
 void GuiShapeEdPreview::renderNodeAxes(S32 index, const ColorF& nodeColor) const
 {
    if(mModel->mNodeTransforms.size() <= index || index < 0)
+<<<<<<< HEAD
       return;
+=======
+      return; 
+
+>>>>>>> omni_engine
    const Point3F xAxis( 1.0f,  0.15f, 0.15f );
    const Point3F yAxis( 0.15f, 1.0f,  0.15f );
    const Point3F zAxis( 0.15f, 0.15f, 1.0f  );
@@ -1635,6 +1706,7 @@ void GuiShapeEdPreview::renderNodeName(S32 index, const ColorF& textColor) const
 {
    if(index < 0 || index >= mModel->getShape()->nodes.size() || index >= mProjectedNodes.size())
       return;
+
    const TSShape::Node& node = mModel->getShape()->nodes[index];
    const String& nodeName = mModel->getShape()->getName( node.nameIndex );
 
@@ -1868,3 +1940,354 @@ DefineEngineMethod( GuiShapeEdPreview, unmountAll, void, (),,
 {
    return object->unmountAll();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_addThread(char * x__object)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->addThread();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_computeShapeBounds(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Box3F wle_returnObject;
+{
+   Box3F bounds;
+   object->computeSceneBounds(bounds);
+   {wle_returnObject =bounds;
+dSprintf(retval,1024,"%f %f %f %f %f %f ",wle_returnObject.minExtents.x,wle_returnObject.minExtents.y,wle_returnObject.minExtents.z,wle_returnObject.maxExtents.x,wle_returnObject.maxExtents.y,wle_returnObject.maxExtents.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_exportToCollada(char * x__object, char * x__path)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* path = (const char*)x__path;
+{
+   object->exportToCollada( path );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_fitToShape(char * x__object)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->fitToShape();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiShapeEdPreview_getMeshHidden(char * x__object, char * x__name)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* name = (const char*)x__name;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->getMeshHidden( name );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGuiShapeEdPreview_getMountThreadDir(char * x__object, S32 slot)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getMountThreadDir( slot ));
+};
+}
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGuiShapeEdPreview_getMountThreadPos(char * x__object, S32 slot)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->getMountThreadPos( slot ));
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_getMountThreadSequence(char * x__object, S32 slot,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getMountThreadSequence( slot );
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiShapeEdPreview_getThreadCount(char * x__object)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getThreadCount());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_getThreadSequence(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getThreadSequence();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiShapeEdPreview_mountShape(char * x__object, char * x__shapePath, char * x__nodeName, char * x__type, S32 slot)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* shapePath = (const char*)x__shapePath;
+const char* nodeName = (const char*)x__nodeName;
+const char* type = (const char*)x__type;
+
+bool wle_returnObject;
+{
+   {wle_returnObject =object->mountShape( shapePath, nodeName, type, slot );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_refreshShape(char * x__object)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->refreshShape();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_refreshThreadSequences(char * x__object)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->refreshThreadSequences();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_removeThread(char * x__object, S32 slot)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->removeThread( slot );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setAllMeshesHidden(char * x__object, bool hidden)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setAllMeshesHidden( hidden );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setMeshHidden(char * x__object, char * x__name, bool hidden)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+
+{
+   object->setMeshHidden( name, hidden );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiShapeEdPreview_setModel(char * x__object, char * x__shapePath)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* shapePath = (const char*)x__shapePath;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->setObjectModel( shapePath );
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setMountNode(char * x__object, S32 slot, char * x__nodeName)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+const char* nodeName = (const char*)x__nodeName;
+{
+   object->setMountNode( slot, nodeName );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setMountThreadDir(char * x__object, S32 slot, F32 dir)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setMountThreadDir( slot, dir );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setMountThreadPos(char * x__object, S32 slot, F32 pos)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setMountThreadPos( slot, pos );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setMountThreadSequence(char * x__object, S32 slot, char * x__name)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+const char* name = (const char*)x__name;
+{
+   object->setMountThreadSequence( slot, name );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setOrbitPos(char * x__object, char * x__pos)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+{
+   object->setOrbitPos( pos );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setThreadSequence(char * x__object, char * x__name, F32 duration, F32 pos, bool play)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* name = (const char*)x__name;
+
+
+{
+   object->setActiveThreadSequence( name, duration, pos, play );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_setTimeScale(char * x__object, F32 scale)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setTimeScale( scale );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_unmountAll(char * x__object)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   return object->unmountAll();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_unmountShape(char * x__object, S32 slot)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   return object->unmountShape( slot );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiShapeEdPreview_updateNodeTransforms(char * x__object)
+{
+GuiShapeEdPreview* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->updateNodeTransforms();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

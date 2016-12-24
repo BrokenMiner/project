@@ -27,7 +27,11 @@ subject to the following restrictions:
 class btTriangleMesh : public btTriangleIndexVertexArray
 {
 	btAlignedObjectArray<btVector3>	m_4componentVertices;
+<<<<<<< HEAD
 	btAlignedObjectArray<btScalar>	m_3componentVertices;
+=======
+	btAlignedObjectArray<float>		m_3componentVertices;
+>>>>>>> omni_engine
 
 	btAlignedObjectArray<unsigned int>		m_32bitIndices;
 	btAlignedObjectArray<unsigned short int>		m_16bitIndices;

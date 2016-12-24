@@ -76,7 +76,11 @@ inline void D3D9Assert( HRESULT hr, const char *info )
 
 // Typedefs
 #define D3DX_FUNCTION(fn_name, fn_return, fn_args) \
+<<<<<<< HEAD
    typedef fn_return (WINAPI *D3DXFNPTR##fn_name)fn_args;
+=======
+   typedef fn_return (WINAPI *D3DXFNPTR##fn_name##)##fn_args##;
+>>>>>>> omni_engine
 #include "gfx/D3D9/d3dx9Functions.h"
 #undef D3DX_FUNCTION
 
@@ -272,7 +276,12 @@ public:
 
    virtual F32  getPixelShaderVersion() const { return mPixVersion; }
    virtual void setPixelShaderVersion( F32 version ){ mPixVersion = version; }
+<<<<<<< HEAD
    virtual void setShader( GFXShader *shader, bool force = false );
+=======
+   virtual void disableShaders();
+   virtual void setShader( GFXShader *shader );
+>>>>>>> omni_engine
    virtual U32  getNumSamplers() const { return mNumSamplers; }
    virtual U32  getNumRenderTargets() const { return mNumRenderTargets; }
    // }

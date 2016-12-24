@@ -24,7 +24,11 @@ in vec2 texCoord;
 in vec4 color;
 in float fade;
 
+<<<<<<< HEAD
 out vec4 OUT_col;
+=======
+out vec4 OUT_FragColor0;
+>>>>>>> omni_engine
 
 uniform sampler2D inputTex;
 uniform vec4 ambient;
@@ -33,5 +37,9 @@ uniform vec4 ambient;
 void main()
 {   
 	float shadow = texture( inputTex, texCoord ).a * color.a;           
+<<<<<<< HEAD
     OUT_col = ( ambient * shadow ) + ( 1 - shadow );
+=======
+    OUT_FragColor0 = ( ambient * shadow ) + ( 1 - shadow );
+>>>>>>> omni_engine
 }

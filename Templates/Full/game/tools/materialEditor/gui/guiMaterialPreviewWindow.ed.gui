@@ -15,8 +15,12 @@
    hovertime = "1000";
 
    new GuiWindowCollapseCtrl(MaterialEditorPreviewWindow) {
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      AllowPopWindow = "1";
+      internalName = "MaterialEditorPreviewWindow";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       canSaveDynamicFields = "0";
-      internalName = "MatEdPreviewWindow";
+      
       Enabled = "1";
       isContainer = "1";
       Profile = "ToolsGuiWindowProfile";

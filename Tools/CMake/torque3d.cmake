@@ -63,12 +63,6 @@ mark_as_advanced(TORQUE_HIFI)
 option(TORQUE_EXTENDED_MOVE "Extended move support" OFF)
 mark_as_advanced(TORQUE_EXTENDED_MOVE)
 if(WIN32)
-	option(TORQUE_SDL "Use SDL for window and input" OFF)
-	mark_as_advanced(TORQUE_SDL)
-else()
-	set(TORQUE_SDL ON) # we need sdl to work on Linux/Mac
-endif()
-if(WIN32)
 	option(TORQUE_OPENGL "Allow OpenGL render" OFF)
 	#mark_as_advanced(TORQUE_OPENGL)
 else()
@@ -81,6 +75,24 @@ if(WIN32)
 else()
 	set(TORQUE_OPENGL ON) # we need OpenGL to render on Linux/Mac
 	option(TORQUE_DEDICATED "Torque dedicated" OFF)
+endif()
+
+#Oculus VR
+option(TORQUE_OCULUSVR "Enable OCULUSVR module" OFF)
+mark_as_advanced(TORQUE_OCULUSVR)
+if(TORQUE_OCULUSVR)
+    set(TORQUE_OCULUSVR_SDK_PATH "" CACHE PATH "OCULUSVR library path" FORCE)
+else() # hide variable
+    set(TORQUE_OCULUSVR_SDK_PATH "" CACHE INTERNAL "" FORCE) 
+endif()
+
+#Hydra
+option(TORQUE_HYDRA "Enable HYDRA module" OFF)
+mark_as_advanced(TORQUE_HYDRA)
+if(TORQUE_HYDRA)
+    set(TORQUE_HYDRA_SDK_PATH "" CACHE PATH "HYDRA library path" FORCE)
+else() # hide variable
+    set(TORQUE_HYDRA_SDK_PATH "" CACHE INTERNAL "" FORCE) 
 endif()
 
 ###############################################################################
@@ -364,6 +376,21 @@ if(TORQUE_SDL)
     set(SDL_SHARED ON CACHE INTERNAL "" FORCE)
     set(SDL_STATIC OFF CACHE INTERNAL "" FORCE)
     add_subdirectory( ${libDir}/sdl ${CMAKE_CURRENT_BINARY_DIR}/sdl2)
+
+if(TORQUE_TESTING)
+   include( "modules/module_testing.cmake" )
+endif()
+
+if(TORQUE_NAVIGATION)
+   include( "modules/module_navigation.cmake" )
+endif()
+
+if(TORQUE_OCULUSVR)
+    include( "modules/module_oculusVR.cmake" )
+endif()
+
+if(TORQUE_HYDRA)
+    include( "modules/module_hydra.cmake" )
 endif()
 
 if(TORQUE_DEDICATED)
@@ -375,6 +402,8 @@ file(GLOB modules "modules/*.cmake")
 foreach(module ${modules})
 	include(${module})
 endforeach()
+include( "modules/module_testing.cmake" )
+
 
 ###############################################################################
 # platform specific things
@@ -459,7 +488,7 @@ if(UNIX)
         addPath("${srcDir}/platformX86UNIX")
         addPath("${srcDir}/platformX86UNIX/nativeDialogs")
     endif()    
-    # linux
+    
     addPath("${srcDir}/platformX86UNIX/threads")
     addPath("${srcDir}/platformPOSIX")
 endif()
@@ -469,12 +498,12 @@ if( TORQUE_OPENGL )
     if( TORQUE_OPENGL AND NOT TORQUE_DEDICATED )
         addPath("${srcDir}/gfx/gl")
         addPath("${srcDir}/gfx/gl/tGL")        
-    addPath("${srcDir}/shaderGen/GLSL")
+    	addPath("${srcDir}/shaderGen/GLSL")
         addPath("${srcDir}/terrain/glsl")
         addPath("${srcDir}/forest/glsl")    
 
-    # glew
-    LIST(APPEND ${PROJECT_NAME}_files "${libDir}/glew/src/glew.c")
+    	# glew
+    	LIST(APPEND ${PROJECT_NAME}_files "${libDir}/glew/src/glew.c")
     endif()
     
     if(WIN32 AND NOT TORQUE_SDL)

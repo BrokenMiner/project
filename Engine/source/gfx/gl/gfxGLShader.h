@@ -25,7 +25,11 @@
 
 #include "core/util/refBase.h"
 #include "gfx/gfxShader.h"
+<<<<<<< HEAD
 #include "gfx/gl/tGL/tGL.h"
+=======
+#include "gfx/gl/ggl/ggl.h"
+>>>>>>> omni_engine
 #include "core/util/tSignal.h"
 #include "core/util/tDictionary.h"
 

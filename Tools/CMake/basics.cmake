@@ -69,8 +69,8 @@ macro(addPath dir)
              ${dir}/*.c
              ${dir}/*.cc
              ${dir}/*.h
-             #${dir}/*.asm
-             )
+             ${dir}/*.asm
+		)
     LIST(APPEND ${PROJECT_NAME}_files "${tmp_files}")
     LIST(APPEND ${PROJECT_NAME}_paths "${dir}")
     #message(STATUS "addPath ${PROJECT_NAME} : ${tmp_files}")
@@ -127,6 +127,13 @@ macro(_process_defs)
         set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY COMPILE_DEFINITIONS ${${PROJECT_NAME}_defs_})
         #message(STATUS "applying defs to project ${PROJECT_NAME}: ${${PROJECT_NAME}_defs_}")
     endif()
+    foreach(def_config ${CMAKE_CONFIGURATION_TYPES})
+        string(TOUPPER "${def_config}" def_config)
+        if(DEFINED ${PROJECT_NAME}_defs_${def_config})
+            set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY COMPILE_DEFINITIONS_${def_config} "${${PROJECT_NAME}_defs_${def_config}}")
+            #message(STATUS "applying defs to project ${PROJECT_NAME} on config ${def_config}: ${${PROJECT_NAME}_defs_${def_config}}")
+        endif()
+    endforeach()
 endmacro()
 
 ###############################################################################

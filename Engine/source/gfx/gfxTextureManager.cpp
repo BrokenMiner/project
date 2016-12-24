@@ -192,13 +192,21 @@ void GFXTextureManager::cleanupPool()
          // This texture is unreferenced, so take the time
          // now to completely remove it from the pool.
          TexturePoolMap::Iterator unref = iter;
+<<<<<<< HEAD
          ++iter;
+=======
+         iter++;
+>>>>>>> omni_engine
          unref->value = NULL;
          mTexturePool.erase( unref );
          continue;
       }
 
+<<<<<<< HEAD
       ++iter;
+=======
+      iter++;
+>>>>>>> omni_engine
    }
 }
 
@@ -267,9 +275,26 @@ GFXTextureObject *GFXTextureManager::_lookupTexture( const DDSFile *ddsFile, con
    return NULL;
 }
 
+bool IsPowerOfTwo(U32 x)
+{
+   for(U32 mask=1; mask; mask<<=1)
+   {
+      if(x==mask)
+      {
+         return true;
+	  }
+   }
+   return false;
+}
+
 GFXTextureObject *GFXTextureManager::createTexture( GBitmap *bmp, const String &resourceName, GFXTextureProfile *profile, bool deleteBmp )
 {
    AssertFatal(bmp, "GFXTextureManager::createTexture() - Got NULL bitmap!");
+
+   if( (!IsPowerOfTwo(bmp->getWidth())) || (!IsPowerOfTwo(bmp->getHeight())) )
+   {
+      Con::printf("WARNING: (%s) texture size = %dx%d", resourceName.c_str(), bmp->getWidth(), bmp->getHeight());
+   }
 
    GFXTextureObject *cacheHit = _lookupTexture( resourceName, profile );
    if( cacheHit != NULL)
@@ -1041,8 +1066,12 @@ void GFXTextureManager::_validateTexParams( const U32 width, const U32 height,
    }
 
    // inOutFormat is not modified by this method
+<<<<<<< HEAD
    GFXCardProfiler* cardProfiler = GFX->getCardProfiler();
    bool chekFmt = cardProfiler->checkFormat(testingFormat, profile, autoGenSupp);
+=======
+   bool chekFmt = GFX->getCardProfiler()->checkFormat( testingFormat, profile, autoGenSupp ); 
+>>>>>>> omni_engine
    
    if( !chekFmt )
    {
@@ -1058,16 +1087,28 @@ void GFXTextureManager::_validateTexParams( const U32 width, const U32 height,
       {
          case GFXFormatR8G8B8:
             testingFormat = GFXFormatR8G8B8X8;
+<<<<<<< HEAD
             chekFmt = cardProfiler->checkFormat(testingFormat, profile, autoGenSupp);
+=======
+            chekFmt = GFX->getCardProfiler()->checkFormat( testingFormat, profile, autoGenSupp );
+>>>>>>> omni_engine
             break;
 
          case GFXFormatA8:
             testingFormat = GFXFormatR8G8B8A8;
+<<<<<<< HEAD
             chekFmt = cardProfiler->checkFormat(testingFormat, profile, autoGenSupp);
             break;
          
          default:
             chekFmt = cardProfiler->checkFormat(testingFormat, profile, autoGenSupp);
+=======
+            chekFmt = GFX->getCardProfiler()->checkFormat( testingFormat, profile, autoGenSupp );
+            break;
+         
+         default:
+            chekFmt = GFX->getCardProfiler()->checkFormat( testingFormat, profile, autoGenSupp );
+>>>>>>> omni_engine
             break;
       }
    }
@@ -1246,3 +1287,89 @@ DefineEngineFunction( reloadTextures, void, (),,
 
    TEXMGR->reloadTextures();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_cleanupTexturePool()
+{
+{
+   if ( !GFX || !TEXMGR )
+      return;
+   TEXMGR->cleanupPool();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_flushTextureCache()
+{
+{
+   if ( !GFX || !TEXMGR )
+      return;
+   TEXMGR->zombify();
+   TEXMGR->resurrect();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_reloadTextures()
+{
+{
+   if ( !GFX || !TEXMGR )
+      return;
+   TEXMGR->reloadTextures();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

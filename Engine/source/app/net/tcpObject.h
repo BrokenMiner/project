@@ -79,7 +79,11 @@ public:
    void disconnect();
    State getState() { return mState; }
 
+<<<<<<< HEAD
    bool processArguments(S32 argc, ConsoleValueRef *argv);
+=======
+   bool processArguments(S32 argc, const char **argv);
+>>>>>>> omni_engine
    void send(const U8 *buffer, U32 bufferLen);
    void addToTable(NetSocket newTag);
    void removeFromTable();

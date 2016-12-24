@@ -57,11 +57,18 @@ struct AuthInfo;
 
 #define GameString TORQUE_APP_NAME
 
+
 const F32 MinCameraFov              = 1.f;      ///< min camera FOV
 const F32 MaxCameraFov              = 179.f;    ///< max camera FOV
 
 class GameConnection : public NetConnection
 {
+#ifdef ENABLE_DATABLOCK_CACHE
+public:
+	BitStream*    clientBitStream;
+	bool LoadDatablocksFromFile(U32 crc);
+#endif
+
 private:
    typedef NetConnection Parent;
 
@@ -89,6 +96,9 @@ private:
    F32   mCameraFov;       ///< Current camera fov (in degrees).
    F32   mCameraPos;       ///< Current camera pos (0-1).
    F32   mCameraSpeed;     ///< Camera in/out speed.
+   Point4F mCameraFrustumOffset;
+
+	
 
    IDisplayDevice* mDisplayDevice;  ///< Optional client display device that imposes rendering properties.
    /// @}
@@ -102,6 +112,8 @@ private:
    /// @}
 
 public:
+
+	bool didFirstRender;
 
    /// @name Protocol Versions
    ///
@@ -278,14 +290,24 @@ public:
    bool setControlCameraFov(F32 fov);
    bool isValidControlCameraFov(F32 fov);
    
+   bool setControlCameraFrustumOffset(Point4F offset);
+   bool getControlCameraFrustumOffset(Point4F *offset);
+
+   bool getControlCameraEarTransform(F32 dt, MatrixF* mat);
+
    // Used by editor
    bool isControlObjectRotDampedCamera();
 
    void setFirstPerson(bool firstPerson);
    
    bool hasDisplayDevice() const { return mDisplayDevice != NULL; }
+<<<<<<< HEAD
    IDisplayDevice* getDisplayDevice() const { return mDisplayDevice; }
    void setDisplayDevice(IDisplayDevice* display) { if (mDisplayDevice) mDisplayDevice->setDrawCanvas(NULL); mDisplayDevice = display; }
+=======
+   const IDisplayDevice* getDisplayDevice() const { return mDisplayDevice; }
+   void setDisplayDevice(IDisplayDevice* display) { mDisplayDevice = display; }
+>>>>>>> omni_engine
    void clearDisplayDevice() { mDisplayDevice = NULL; }
 
    void setControlSchemeParameters(bool absoluteRotation, bool addYawToAbsRot, bool addPitchToAbsRot);

@@ -358,3 +358,4 @@ singleton GuiControlProfile(GuiSimpleBorderProfile)
    border = 1;   
    category = "Editor";
 };
+ 

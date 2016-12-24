@@ -226,7 +226,11 @@ bool VehicleData::preload(bool server, String &errorStr)
    if (!server) {
       for (S32 i = 0; i < Body::MaxSounds; i++)
          if (body.sound[i])
+<<<<<<< HEAD
             Sim::findObject(SimObjectId((uintptr_t)body.sound[i]),body.sound[i]);
+=======
+            Sim::findObject(SimObjectId(body.sound[i]),body.sound[i]);
+>>>>>>> omni_engine
    }
 
    if( !dustEmitter && dustID != 0 )
@@ -275,7 +279,11 @@ void VehicleData::packData(BitStream* stream)
    stream->write(body.friction);
    for (i = 0; i < Body::MaxSounds; i++)
       if (stream->writeFlag(body.sound[i]))
+<<<<<<< HEAD
          stream->writeRangedU32(packed? SimObjectId((uintptr_t)body.sound[i]):
+=======
+         stream->writeRangedU32(packed? SimObjectId(body.sound[i]):
+>>>>>>> omni_engine
                                 body.sound[i]->getId(),DataBlockObjectIdFirst,
                                 DataBlockObjectIdLast);
 

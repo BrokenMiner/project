@@ -68,8 +68,13 @@ function onStart()
 
    if ($platform $= "macos")
       $pref::Video::displayDevice = "OpenGL";
+<<<<<<< HEAD
    //else
       //$pref::Video::displayDevice = "D3D9";
+=======
+   else
+      $pref::Video::displayDevice = "D3D9";
+>>>>>>> omni_engine
    
    // Initialise stuff.
    exec("./scripts/client/core.cs");

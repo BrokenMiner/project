@@ -109,7 +109,11 @@ void GuiGradientSwatchCtrl::onRender( Point2I offset, const RectI &updateRect )
       renderRect.inset( 1, 1 );      
 
    GFXDrawUtil *drawer = GFX->getDrawUtil();
+<<<<<<< HEAD
    drawer->clearBitmapModulation();
+=======
+   //drawer->clearBitmapModulation();		// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
 	
    // Draw background transparency grid texture...
    if ( mGrid.isValid() )
@@ -243,15 +247,37 @@ void GuiGradientCtrl::initPersistFields()
    endGroup("ColorPicker");
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor");
+
+   removeField("backgroundColor" );
+
+   removeField("controlFillColor");
+
+   removeField("contextFillColor");
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   // @Copyright end
 }
 
 bool GuiGradientCtrl::onAdd()
 {
 	Parent::onAdd();
 
+<<<<<<< HEAD
    RectI bounds = getBounds();
    S32 l = bounds.point.x + mSwatchFactor, r = bounds.point.x + bounds.extent.x - mSwatchFactor;
    S32 t = bounds.point.y, b = bounds.point.y + bounds.extent.y - mSwatchFactor;
+=======
+	S32 l = getBounds().point.x + mSwatchFactor, r = getBounds().point.x + getBounds().extent.x - mSwatchFactor;
+   S32 t = getBounds().point.y, b = getBounds().point.y + getBounds().extent.y - mSwatchFactor;
+>>>>>>> omni_engine
 	mBlendRangeBox = RectI( Point2I(l, t), Point2I(r, b) );
 	
 	setupDefaultRange();
@@ -272,6 +298,71 @@ void GuiGradientCtrl::inspectPostApply()
    // Apply any transformations set in the editor
    Parent::inspectPostApply();
 }
+
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiGradientCtrl::copyProfileSettings()
+{
+	if(!mProfileSettingsCopied)
+	{
+		mBaseColorCopy = mBaseColor;
+		mPickColorCopy = mPickColor;
+		
+		Parent::copyProfileSettings();
+	}
+}
+
+void GuiGradientCtrl::resetProfileSettings()
+{
+	mBaseColor = mBaseColorCopy;
+	mPickColor = mPickColorCopy;
+
+	colorWhite = ColorF(1.,1.,1.);
+	colorWhiteBlend = ColorF(1.,1.,1.,.75);
+	colorBlack = ColorF(.0,.0,.0);
+	colorAlpha = ColorF(0.0f, 0.0f, 0.0f, 0.0f);
+	colorAlphaW = ColorF(1.0f, 1.0f, 1.0f, 0.0f);
+	
+	Parent::resetProfileSettings();
+}
+
+void GuiGradientCtrl::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   //Set the alpha value
+   if(mBaseColor)
+	   mBaseColor.alpha = mBaseColorCopy.alpha *mRenderAlpha;
+   if(mPickColor)
+	   mPickColor.alpha = mPickColorCopy.alpha * mRenderAlpha;
+
+   Vector<ColorRange>::iterator i;
+   for( i = mColorRange.begin(); i != mColorRange.end(); i++ )
+	   i->color.alpha = mRenderAlpha;
+
+   colorWhite.alpha *= mRenderAlpha;
+   colorWhiteBlend.alpha *= mRenderAlpha;
+   colorAlpha.alpha *= mRenderAlpha;
+   colorAlphaW.alpha *= mRenderAlpha;
+   colorBlack.alpha *= mRenderAlpha;
+}
+
+void GuiGradientCtrl::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "baseColor" ) || !dStricmp( slotName, "pickColor" ) )
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+	
+		if( !dStricmp( slotName, "baseColor" ) )
+			mBaseColorCopy = color;
+		else
+			mPickColorCopy = color;
+	}
+}
+
+// @Copyright end
 
 void GuiGradientCtrl::onRender(Point2I offset, const RectI& updateRect)
 {
@@ -338,11 +429,19 @@ void GuiGradientCtrl::drawBlendRangeBox(RectI &bounds, bool vertical, Vector<Col
 	{
 		PrimBuild::begin( GFXTriangleFan, 4 );
 
+<<<<<<< HEAD
       PrimBuild::color(firstColorRange.swatch->getColor());
 		PrimBuild::vertex2i( l, t );
 		PrimBuild::vertex2i( l, b );
 
       PrimBuild::color(firstColorRange.swatch->getColor());
+=======
+		PrimBuild::color( colorRange.first().swatch->getColor() );
+		PrimBuild::vertex2i( l, t );
+		PrimBuild::vertex2i( l, b );
+
+		PrimBuild::color( colorRange.first().swatch->getColor() );
+>>>>>>> omni_engine
 		PrimBuild::vertex2i( r, b );
 		PrimBuild::vertex2i( r, t );
 
@@ -352,6 +451,7 @@ void GuiGradientCtrl::drawBlendRangeBox(RectI &bounds, bool vertical, Vector<Col
 	{
 		PrimBuild::begin( GFXTriangleFan, 4 );
 
+<<<<<<< HEAD
       PrimBuild::color(firstColorRange.swatch->getColor());
 		PrimBuild::vertex2i( l, t );
 		PrimBuild::vertex2i( l, b );
@@ -359,6 +459,15 @@ void GuiGradientCtrl::drawBlendRangeBox(RectI &bounds, bool vertical, Vector<Col
       PrimBuild::color(firstColorRange.swatch->getColor());
       PrimBuild::vertex2i(l + firstColorRange.swatch->getPosition().x, b);
       PrimBuild::vertex2i(l + firstColorRange.swatch->getPosition().x, t);
+=======
+		PrimBuild::color( colorRange.first().swatch->getColor() );
+		PrimBuild::vertex2i( l, t );
+		PrimBuild::vertex2i( l, b );
+
+		PrimBuild::color( colorRange.first().swatch->getColor() );
+		PrimBuild::vertex2i( l + colorRange.first().swatch->getPosition().x, b );
+		PrimBuild::vertex2i( l + colorRange.first().swatch->getPosition().x, t );
+>>>>>>> omni_engine
 
 		PrimBuild::end();
 
@@ -380,6 +489,7 @@ void GuiGradientCtrl::drawBlendRangeBox(RectI &bounds, bool vertical, Vector<Col
 			PrimBuild::end();
 		}
 
+<<<<<<< HEAD
       ColorRange& lastColorRange = colorRange.last();
 
 		PrimBuild::begin( GFXTriangleFan, 4 );
@@ -389,6 +499,15 @@ void GuiGradientCtrl::drawBlendRangeBox(RectI &bounds, bool vertical, Vector<Col
       PrimBuild::vertex2i(l + lastColorRange.swatch->getPosition().x, b);
 		
       PrimBuild::color(lastColorRange.swatch->getColor());
+=======
+		PrimBuild::begin( GFXTriangleFan, 4 );
+
+		PrimBuild::color( colorRange.last().swatch->getColor() );
+		PrimBuild::vertex2i( l + colorRange.last().swatch->getPosition().x, t );
+		PrimBuild::vertex2i( l + colorRange.last().swatch->getPosition().x, b );
+		
+		PrimBuild::color( colorRange.last().swatch->getColor() );
+>>>>>>> omni_engine
 		PrimBuild::vertex2i( r, b );
 		PrimBuild::vertex2i( r, t );
 
@@ -426,26 +545,39 @@ void GuiGradientCtrl::onMouseDown(const GuiEvent &event)
 	addColorRange( globalToLocalCoord(event.mousePoint), ColorF(tmp) );
    
    mMouseDown = true;
+<<<<<<< HEAD
 }
 
 void GuiGradientCtrl::onMouseUp(const GuiEvent &)
+=======
+
+   Parent::onMouseDown(event);
+}
+
+void GuiGradientCtrl::onMouseUp(const GuiEvent &event)
+>>>>>>> omni_engine
 {
    //if we released the mouse within this control, perform the action
 	if (mActive && mMouseDown ) 
       mMouseDown = false;
    
    mouseUnlock();
+
+   Parent::onMouseUp(event);
 }
 
 void GuiGradientCtrl::onMouseEnter(const GuiEvent &event)
 {
    mMouseOver = true;
+   // fade control
+   fadeControl();		// Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 void GuiGradientCtrl::onMouseLeave(const GuiEvent &)
 {
    // Reset state
    mMouseOver = false;
+   smCapturedControl = this;		// Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 void GuiGradientCtrl::setupDefaultRange()
@@ -526,7 +658,11 @@ void GuiGradientCtrl::reInitSwatches( GuiGradientCtrl::PickMode )
 	}
 }
 
+<<<<<<< HEAD
 void GuiGradientCtrl::addColorRange(Point2I pos, const ColorF& color)
+=======
+void GuiGradientCtrl::addColorRange( Point2I pos, ColorF color )
+>>>>>>> omni_engine
 {
 	if( pos.x + mSwatchFactor < mBlendRangeBox.point.x &&
 		pos.x + mSwatchFactor > mBlendRangeBox.extent.x )
@@ -635,4 +771,117 @@ DefineConsoleMethod(GuiGradientCtrl, getColor, ColorF, (S32 idx), , "Get color v
 	}
 
 	return ColorF::ONE;
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiGradientCtrl_getColor(char * x__object, S32 idx,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiGradientCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+ColorF wle_returnObject;
+{
+	if( object->getDisplayMode() == GuiGradientCtrl::pHorizColorRange )
+	{
+		if ( idx >= 0 && idx < object->mColorRange.size() )
+		{
+			{wle_returnObject =object->mColorRange[idx].swatch->getColor();
+dSprintf(retval,1024,"%f %f %f %f ",wle_returnObject.red,wle_returnObject.green,wle_returnObject.blue,wle_returnObject.alpha);
+return;
+}
+		}
+	}
+	else if( object->getDisplayMode() == GuiGradientCtrl::pHorizColorRange )
+	{
+		if ( idx >= 0 && idx < object->mAlphaRange.size() )
+		{
+			{wle_returnObject =object->mAlphaRange[idx].swatch->getColor();
+dSprintf(retval,1024,"%f %f %f %f ",wle_returnObject.red,wle_returnObject.green,wle_returnObject.blue,wle_returnObject.alpha);
+return;
+}
+		}
+	}
+	{wle_returnObject =ColorF::ONE;
+dSprintf(retval,1024,"%f %f %f %f ",wle_returnObject.red,wle_returnObject.green,wle_returnObject.blue,wle_returnObject.alpha);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiGradientCtrl_getColorCount(char * x__object)
+{
+GuiGradientCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	if( object->getDisplayMode() == GuiGradientCtrl::pHorizColorRange )
+		return object->mColorRange.size();
+	else if( object->getDisplayMode() == GuiGradientCtrl::pHorizColorRange )
+		return object->mColorRange.size();
+	
+	return 0;
+};
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

@@ -46,6 +46,7 @@ struct CameraScopeQuery
    F32 sinFov;              ///< sin(fov/2);
    F32 cosFov;              ///< cos(fov/2);
    F32 visibleDistance;     ///< Visible distance.
+   Point4F offset;			///< Frustum offset
 };
 
 struct GhostInfo;

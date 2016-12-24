@@ -40,6 +40,7 @@
 #include "materials/baseMatInstance.h"
 #include "environment/nodeListManager.h"
 #include "lighting/lightQuery.h"
+#include "console/SimXMLDocument.h"    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 
 
 extern F32 gDecalBias;
@@ -155,8 +156,13 @@ void DecalRoadNodeEvent::padListToSize()
       newlist->mPositions.merge(list->mPositions);
       newlist->mWidths.merge(list->mWidths);
 
+<<<<<<< HEAD
       delete list;
       mNodeList = list = newlist;
+=======
+      mNodeList = newlist;
+      delete list;
+>>>>>>> omni_engine
    }
 
    // Pad our list end?
@@ -438,6 +444,7 @@ SimSet* DecalRoad::getServerSet()
    return smServerDecalRoadSet;
 }
 
+<<<<<<< HEAD
 void DecalRoad::writeFields( Stream &stream, U32 tabStop )
 {
    Parent::writeFields( stream, tabStop );
@@ -445,15 +452,49 @@ void DecalRoad::writeFields( Stream &stream, U32 tabStop )
    // Now write all nodes
 
    stream.write(2, "\r\n");   
+=======
+void DecalRoad::writeFields( Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */ bool XMLOutput  )
+{
+   Parent::writeFields( stream, tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */XMLOutput );
+
+   // Now write all nodes
+
+   if(!XMLOutput)    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      stream.write(2, "\r\n");   
+>>>>>>> omni_engine
 
    for ( U32 i = 0; i < mNodes.size(); i++ )
    {
       const RoadNode &node = mNodes[i];
 
+<<<<<<< HEAD
       stream.writeTabs(tabStop);
 
       char buffer[1024];
       dMemset( buffer, 0, 1024 );
+=======
+      char buffer[1024];
+      dMemset( buffer, 0, 1024 );
+
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+     /// For XML Output
+     if(XMLOutput)
+     {
+        dSprintf( buffer, 1024, "%f %f %f %f", node.point.x, node.point.y, node.point.z, node.width );
+        getcurrentXML()->pushNewElement("Node");
+        getcurrentXML()->addData( buffer );
+        getcurrentXML()->popElement();
+        continue;
+     }
+
+     // @Copyright end
+
+     /// For Stream Output
+     stream.writeTabs(tabStop);
+
+>>>>>>> omni_engine
       dSprintf( buffer, 1024, "Node = \"%f %f %f %f\";", node.point.x, node.point.y, node.point.z, node.width );      
       stream.writeLine( (const U8*)buffer );
    }
@@ -1727,3 +1768,82 @@ DefineEngineMethod( DecalRoad, postApply, void, (),,
 {
    object->inspectPostApply();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnDecalRoad_postApply(char * x__object)
+{
+DecalRoad* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->inspectPostApply();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnDecalRoad_regenerate(char * x__object)
+{
+DecalRoad* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->regenerate();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

@@ -124,10 +124,15 @@ SET(CollisionDispatch_HDRS
 	CollisionDispatch/btCollisionCreateFunc.h
 	CollisionDispatch/btCollisionDispatcher.h
 	CollisionDispatch/btCollisionObject.h
+<<<<<<< HEAD
 	CollisionDispatch/btCollisionObjectWrapper.h
 	CollisionDispatch/btCollisionWorld.h
 	CollisionDispatch/btCompoundCollisionAlgorithm.h
 	CollisionDispatch/btCompoundCompoundCollisionAlgorithm.h
+=======
+	CollisionDispatch/btCollisionWorld.h
+	CollisionDispatch/btCompoundCollisionAlgorithm.h
+>>>>>>> omni_engine
 	CollisionDispatch/btConvexConcaveCollisionAlgorithm.h
 	CollisionDispatch/btConvexConvexAlgorithm.h
 	CollisionDispatch/btConvex2dConvex2dAlgorithm.h
@@ -260,9 +265,13 @@ IF (INSTALL_LIBS)
 			IF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
 				INSTALL(TARGETS BulletCollision DESTINATION .)
 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+<<<<<<< HEAD
 				INSTALL(TARGETS BulletCollision RUNTIME DESTINATION bin
 								LIBRARY DESTINATION lib${LIB_SUFFIX}
 								ARCHIVE DESTINATION lib${LIB_SUFFIX})
+=======
+				INSTALL(TARGETS BulletCollision DESTINATION lib${LIB_SUFFIX})
+>>>>>>> omni_engine
 				INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 DESTINATION ${INCLUDE_INSTALL_DIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE PATTERN "CMakeFiles" EXCLUDE)
 				INSTALL(FILES ../btBulletCollisionCommon.h

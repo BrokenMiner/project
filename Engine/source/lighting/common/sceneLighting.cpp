@@ -606,7 +606,11 @@ void SceneLighting::completed(bool success)
    }
 
    if(gCompleteCallback && gCompleteCallback[0])
+<<<<<<< HEAD
       Con::executef((const char*)gCompleteCallback);
+=======
+      Con::executef(gCompleteCallback);
+>>>>>>> omni_engine
 
    dFree(gCompleteCallback);
    gCompleteCallback = NULL;
@@ -1012,6 +1016,7 @@ void SceneLighting::processCache()
 	// go through and remove the best candidate first (sorted reverse)
 	while(((curCacheSize >> 10) > quota) && files.size())
 	{
+<<<<<<< HEAD
       CacheEntry& lastFile = files.last();
       curCacheSize -= lastFile.mFileObject->getSize();
 
@@ -1020,6 +1025,15 @@ void SceneLighting::processCache()
 		{
          Con::warnf("Removing lighting file '%s'.", lastFile.mFileName);
          dFileDelete(lastFile.mFileName);
+=======
+		curCacheSize -= files.last().mFileObject->getSize();
+
+		// no sneaky names
+		if(!dStrstr(files.last().mFileName, ".."))
+		{
+			Con::warnf("Removing lighting file '%s'.", files.last().mFileName);
+			dFileDelete(files.last().mFileName);
+>>>>>>> omni_engine
 		}
 
 		files.pop_back();

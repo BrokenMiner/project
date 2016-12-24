@@ -344,6 +344,7 @@ function NavMeshTestFlagButton::onClick(%this)
    NavEditorGui.updateTestFlags();
 }
 
+
 singleton GuiControlProfile(NavEditorProfile)
 {
    canKeyFocus = true;
@@ -358,3 +359,4 @@ singleton GuiControlProfile(GuiSimpleBorderProfile)
    border = 1;   
    category = "Editor";
 };
+ 

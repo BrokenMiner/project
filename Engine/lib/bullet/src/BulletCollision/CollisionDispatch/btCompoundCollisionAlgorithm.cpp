@@ -64,7 +64,11 @@ void	btCompoundCollisionAlgorithm::preallocateChildAlgorithms(const btCollisionO
 			
 			const btCollisionShape* childShape = compoundShape->getChildShape(i);
 
+<<<<<<< HEAD
 			btCollisionObjectWrapper childWrap(colObjWrap,childShape,colObjWrap->getCollisionObject(),colObjWrap->getWorldTransform(),-1,i);//wrong child trans, but unused (hopefully)
+=======
+			btCollisionObjectWrapper childWrap(colObjWrap,childShape,colObjWrap->getCollisionObject(),colObjWrap->getWorldTransform());//wrong child trans, but unused (hopefully)
+>>>>>>> omni_engine
 			m_childCollisionAlgorithms[i] = m_dispatcher->findAlgorithm(&childWrap,otherObjWrap,m_sharedManifold);
 		}
 	}
@@ -132,6 +136,7 @@ public:
 		childShape->getAabb(newChildWorldTrans,aabbMin0,aabbMax0);
 		m_otherObjWrap->getCollisionShape()->getAabb(m_otherObjWrap->getWorldTransform(),aabbMin1,aabbMax1);
 
+<<<<<<< HEAD
 		if (gCompoundChildShapePairCallback)
 		{
 			if (!gCompoundChildShapePairCallback(m_otherObjWrap->getCollisionShape(), childShape))
@@ -142,6 +147,12 @@ public:
 		{
 
 			btCollisionObjectWrapper compoundWrap(this->m_compoundColObjWrap,childShape,m_compoundColObjWrap->getCollisionObject(),newChildWorldTrans,-1,index);
+=======
+		if (TestAabbAgainstAabb2(aabbMin0,aabbMax0,aabbMin1,aabbMax1))
+		{
+
+			btCollisionObjectWrapper compoundWrap(this->m_compoundColObjWrap,childShape,m_compoundColObjWrap->getCollisionObject(),newChildWorldTrans);
+>>>>>>> omni_engine
 
 
 			//the contactpoint is still projected back using the original inverted worldtrans

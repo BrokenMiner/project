@@ -48,7 +48,13 @@
 #include "materials/materialFeatureData.h"
 #include "materials/materialFeatureTypes.h"
 #include "console/engineAPI.h"
+<<<<<<< HEAD
 #include "T3D/accumulationVolume.h"
+=======
+
+//WLE-Vince Lod Pre-Loading
+#include "T3D/gameBase/gameConnection.h"
+>>>>>>> omni_engine
 
 using namespace Torque;
 
@@ -102,7 +108,11 @@ TSStatic::TSStatic()
    mPlayAmbient      = true;
    mAmbientThread    = NULL;
 
+<<<<<<< HEAD
    mAllowPlayerStep = false;
+=======
+   mAllowPlayerStep = true;
+>>>>>>> omni_engine
 
    mConvexList = new Convex;
 
@@ -112,11 +122,19 @@ TSStatic::TSStatic()
    mMeshCulling = false;
    mUseOriginSort = false;
 
+<<<<<<< HEAD
    mUseAlphaFade     = false;
    mAlphaFadeStart   = 100.0f;
    mAlphaFadeEnd     = 150.0f;
    mInvertAlphaFade  = false;
    mAlphaFade = 1.0f;
+=======
+   mUseAlphaLod     = false;
+   mAlphaLODStart   = 100.0f;
+   mAlphaLODEnd     = 150.0f;
+   mInvertAlphaLod  = false;
+   mAlphaLOD = 1.0f;
+>>>>>>> omni_engine
    mPhysicsRep = NULL;
 
    mCollisionType = CollisionMesh;
@@ -198,12 +216,21 @@ void TSStatic::initPersistFields()
    
    endGroup("Collision");
 
+<<<<<<< HEAD
    addGroup( "AlphaFade" );  
       addField( "alphaFadeEnable",   TypeBool,   Offset(mUseAlphaFade,    TSStatic), "Turn on/off Alpha Fade" );  
       addField( "alphaFadeStart",    TypeF32,    Offset(mAlphaFadeStart,  TSStatic), "Distance of start Alpha Fade" );  
       addField( "alphaFadeEnd",      TypeF32,    Offset(mAlphaFadeEnd,    TSStatic), "Distance of end Alpha Fade" );  
       addField( "alphaFadeInverse", TypeBool,    Offset(mInvertAlphaFade, TSStatic), "Invert Alpha Fade's Start & End Distance" );  
    endGroup( "AlphaFade" );
+=======
+   addGroup( "AlphaLOD" );  
+      addField( "ALODEnable",   TypeBool,   Offset(mUseAlphaLod,    TSStatic), "Turn on/off AlphaLod" );  
+      addField( "ALODStart",    TypeF32,    Offset(mAlphaLODStart,  TSStatic), "Distance of start AlphaLOD" );  
+      addField( "ALODEnd",      TypeF32,    Offset(mAlphaLODEnd,    TSStatic), "Distance of end AlphaLOD" );  
+      addField( "ALODInverse", TypeBool,    Offset(mInvertAlphaLod, TSStatic), "Invert AlphaLOD's Start & End Distance" );  
+   endGroup( "AlphaLOD" );
+>>>>>>> omni_engine
 
    addGroup("Debug");
 
@@ -521,6 +548,22 @@ void TSStatic::prepRenderImage( SceneRenderState* state )
 {
    if( !mShapeInstance )
       return;
+	//WLE - Vince
+	//Lod preloading
+    GameConnection* connection = GameConnection::getConnectionToServer();
+	if (connection && !connection->didFirstRender)
+		{
+		TSRenderState rdata;
+		rdata.setSceneState( state );
+		rdata.setFadeOverride( 1.0f );
+		rdata.setOriginSort( mUseOriginSort );
+		for (S32 i = mShapeInstance->getSmallestVisibleDL(); i >= 0; i-- )
+			{
+			mShapeInstance->setCurrentDetail( i );
+			   
+			mShapeInstance->render( rdata );
+			}
+		}
 
    Point3F cameraOffset;
    getRenderTransform().getColumn(3,&cameraOffset);
@@ -529,6 +572,7 @@ void TSStatic::prepRenderImage( SceneRenderState* state )
    if (dist < 0.01f)
       dist = 0.01f;
 
+<<<<<<< HEAD
    if (mUseAlphaFade)
    {
       mAlphaFade = 1.0f;
@@ -555,6 +599,36 @@ void TSStatic::prepRenderImage( SceneRenderState* state )
             {
                mAlphaFade -= ((dist - mAlphaFadeStart) / (mAlphaFadeEnd - mAlphaFadeStart));
             }
+=======
+   if (mUseAlphaLod)
+   {
+      mAlphaLOD = 1.0f;
+      if ((mAlphaLODStart < mAlphaLODEnd) && mAlphaLODStart > 0.1f)
+      {
+         if (mInvertAlphaLod)
+		 {
+            if (dist <= mAlphaLODStart)
+			{
+               return;
+			}
+  
+            if (dist < mAlphaLODEnd)
+			{
+               mAlphaLOD = ((dist - mAlphaLODStart) / (mAlphaLODEnd - mAlphaLODStart));
+			}
+         }
+         else
+		 {
+            if (dist >= mAlphaLODEnd)
+			{
+               return;
+			}
+  
+            if (dist > mAlphaLODStart)
+			{
+               mAlphaLOD -= ((dist - mAlphaLODStart) / (mAlphaLODEnd - mAlphaLODStart));
+			}
+>>>>>>> omni_engine
          }
       }
    }
@@ -607,14 +681,24 @@ void TSStatic::prepRenderImage( SceneRenderState* state )
    mShapeInstance->animate();
    if(mShapeInstance)
    {
+<<<<<<< HEAD
       if (mUseAlphaFade)
       {
          mShapeInstance->setAlphaAlways(mAlphaFade);
+=======
+      if (mUseAlphaLod)
+      {
+         mShapeInstance->setAlphaAlways(mAlphaLOD);
+>>>>>>> omni_engine
          S32 s = mShapeInstance->mMeshObjects.size();
          
          for(S32 x = 0; x < s; x++)
          {
+<<<<<<< HEAD
             mShapeInstance->mMeshObjects[x].visible = mAlphaFade;
+=======
+            mShapeInstance->mMeshObjects[x].visible = mAlphaLOD;
+>>>>>>> omni_engine
          }
       }
    }
@@ -705,11 +789,19 @@ U32 TSStatic::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
 
    stream->writeFlag( mPlayAmbient );
 
+<<<<<<< HEAD
    if ( stream->writeFlag(mUseAlphaFade) )  
    {  
       stream->write(mAlphaFadeStart);  
       stream->write(mAlphaFadeEnd);  
       stream->write(mInvertAlphaFade);  
+=======
+   if ( stream->writeFlag(mUseAlphaLod) )  
+   {  
+      stream->write(mAlphaLODStart);  
+      stream->write(mAlphaLODEnd);  
+      stream->write(mInvertAlphaLod);  
+>>>>>>> omni_engine
    } 
 
    if ( mLightPlugin )
@@ -769,12 +861,21 @@ void TSStatic::unpackUpdate(NetConnection *con, BitStream *stream)
 
    mPlayAmbient = stream->readFlag();
 
+<<<<<<< HEAD
    mUseAlphaFade = stream->readFlag();  
    if (mUseAlphaFade)
    {
       stream->read(&mAlphaFadeStart);  
       stream->read(&mAlphaFadeEnd);  
       stream->read(&mInvertAlphaFade);  
+=======
+   mUseAlphaLod = stream->readFlag();  
+   if (mUseAlphaLod)
+   {
+      stream->read(&mAlphaLODStart);  
+      stream->read(&mAlphaLODEnd);  
+      stream->read(&mInvertAlphaLod);  
+>>>>>>> omni_engine
    }
 
    if ( mLightPlugin )
@@ -797,9 +898,47 @@ bool TSStatic::castRay(const Point3F &start, const Point3F &end, RayInfo* info)
 
    if ( mCollisionType == Bounds )
    {
+<<<<<<< HEAD
       F32 fst;
       if (!mObjBox.collideLine(start, end, &fst, &info->normal))
          return false;
+=======
+      F32 st, et, fst = 0.0f, fet = 1.0f;
+      F32 *bmin = &mObjBox.minExtents.x;
+      F32 *bmax = &mObjBox.maxExtents.x;
+      F32 const *si = &start.x;
+      F32 const *ei = &end.x;
+
+      for ( U32 i = 0; i < 3; i++ )
+      {
+         if (*si < *ei) 
+         {
+            if ( *si > *bmax || *ei < *bmin )
+               return false;
+            F32 di = *ei - *si;
+            st = ( *si < *bmin ) ? ( *bmin - *si ) / di : 0.0f;
+            et = ( *ei > *bmax ) ? ( *bmax - *si ) / di : 1.0f;
+         }
+         else 
+         {
+            if ( *ei > *bmax || *si < *bmin )
+               return false;
+            F32 di = *ei - *si;
+            st = ( *si > *bmax ) ? ( *bmax - *si ) / di : 0.0f;
+            et = ( *ei < *bmin ) ? ( *bmin - *si ) / di : 1.0f;
+         }
+         if ( st > fst ) fst = st;
+         if ( et < fet ) fet = et;
+         if ( fet < fst )
+            return false;
+         bmin++; bmax++;
+         si++; ei++;
+      }
+
+      info->normal = start - end;
+      info->normal.normalizeSafe();
+      getTransform().mulV( info->normal );
+>>>>>>> omni_engine
 
       info->t = fst;
       info->object = this;
@@ -1019,7 +1158,11 @@ void TSStaticPolysoupConvex::getPolyList(AbstractPolyList *list)
                list->addPoint(verts[2]);
                list->addPoint(verts[1]);
 
+<<<<<<< HEAD
    list->begin(0, (U32)idx ^ (uintptr_t)mesh);
+=======
+   list->begin(0, (U32)idx ^ (U32)mesh);
+>>>>>>> omni_engine
    list->vertex(base + 2);
    list->vertex(base + 1);
    list->vertex(base + 0);
@@ -1171,10 +1314,15 @@ DefineEngineMethod( TSStatic, changeMaterial, void, ( const char* mapTo, Materia
       return;
    }
 
+<<<<<<< HEAD
    TSMaterialList* shapeMaterialList = object->getShape()->materialList;
 
    // Check the mapTo name exists for this shape
    S32 matIndex = shapeMaterialList->getMaterialNameList().find_next(String(mapTo));
+=======
+   // Check the mapTo name exists for this shape
+   S32 matIndex = object->getShape()->materialList->getMaterialNameList().find_next(String(mapTo));
+>>>>>>> omni_engine
    if (matIndex < 0)
    {
       Con::errorf("TSShape::changeMaterial failed: Invalid mapTo name '%s'", mapTo);
@@ -1192,13 +1340,22 @@ DefineEngineMethod( TSStatic, changeMaterial, void, ( const char* mapTo, Materia
 
    // Replace instances with the new material being traded in. Lets make sure that we only
    // target the specific targets per inst, this is actually doing more than we thought
+<<<<<<< HEAD
    delete shapeMaterialList->mMatInstList[matIndex];
    shapeMaterialList->mMatInstList[matIndex] = newMat->createMatInstance();
+=======
+   delete object->getShape()->materialList->mMatInstList[matIndex];
+   object->getShape()->materialList->mMatInstList[matIndex] = newMat->createMatInstance();
+>>>>>>> omni_engine
 
    // Finish up preparing the material instances for rendering
    const GFXVertexFormat *flags = getGFXVertexFormat<GFXVertexPNTTB>();
    FeatureSet features = MATMGR->getDefaultFeatures();
+<<<<<<< HEAD
    shapeMaterialList->getMaterialInst(matIndex)->init(features, flags);
+=======
+   object->getShape()->materialList->getMaterialInst(matIndex)->init( features, flags );
+>>>>>>> omni_engine
 }
 
 DefineEngineMethod( TSStatic, getModelFile, const char *, (),,
@@ -1212,4 +1369,160 @@ DefineEngineMethod( TSStatic, getModelFile, const char *, (),,
    )
 {
 	return object->getShapeFileName();
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTSStatic_changeMaterial(char * x__object, char * x__mapTo, char * x__oldMat, char * x__newMat)
+{
+TSStatic* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* mapTo = (const char*)x__mapTo;
+Material* oldMat; Sim::findObject(x__oldMat, oldMat ); 
+Material* newMat; Sim::findObject(x__newMat, newMat ); 
+{
+      if( !newMat )
+   {
+      Con::errorf("TSShape::changeMaterial failed: New material does not exist!");
+      return;
+   }
+      S32 matIndex = object->getShape()->materialList->getMaterialNameList().find_next(String(mapTo));
+   if (matIndex < 0)
+   {
+      Con::errorf("TSShape::changeMaterial failed: Invalid mapTo name '%s'", mapTo);
+      return;
+   }
+      if( oldMat )
+      oldMat->mMapTo = String("unmapped_mat");
+   newMat->mMapTo = mapTo;
+      MATMGR->mapMaterial( mapTo, newMat->getName() );
+         delete object->getShape()->materialList->mMatInstList[matIndex];
+   object->getShape()->materialList->mMatInstList[matIndex] = newMat->createMatInstance();
+      const GFXVertexFormat *flags = getGFXVertexFormat<GFXVertexPNTTB>();
+   FeatureSet features = MATMGR->getDefaultFeatures();
+   object->getShape()->materialList->getMaterialInst(matIndex)->init( features, flags );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTSStatic_getModelFile(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+TSStatic* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+	{wle_returnObject =object->getShapeFileName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnTSStatic_getTargetCount(char * x__object)
+{
+TSStatic* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	TSStatic *obj = dynamic_cast< TSStatic* > ( object );
+	if(obj)
+	{
+				if ((TSStatic*)obj->getClientObject())
+			obj = (TSStatic*)obj->getClientObject();
+		return obj->getShapeInstance()->getTargetCount();
+	}
+	return -1;
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTSStatic_getTargetName(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+TSStatic* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	TSStatic *obj = dynamic_cast< TSStatic* > ( object );
+	if(obj)
+	{
+				if ((TSStatic*)obj->getClientObject())
+			obj = (TSStatic*)obj->getClientObject();
+		{wle_returnObject =obj->getShapeInstance()->getTargetName(index);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+	}
+	{wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

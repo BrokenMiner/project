@@ -616,7 +616,12 @@ function TerrainImportGui::import( %this )
       EWorldEditor.dropSelection( true );
 
       ETerrainEditor.isDirty = true;
+      // ATTENTION! From Torque
       EPainter.updateLayers();
+      ///////
+//Copyright Winterleaf Entertainment L.L.C. 2013      
+      TerrainPainter.updateLayers();
+//Copyright Winterleaf Entertainment L.L.C. 2013      
    }
    else
    {

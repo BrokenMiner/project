@@ -254,6 +254,10 @@ ExplosionData::ExplosionData()
    lifetimeVariance = 0;
    offset = 0.0f;
 
+   shockwave = NULL;
+   shockwaveID = 0;
+   shockwaveOnTerrain = false;
+
    shakeCamera = false;
    camShakeFreq.set( 10.0f, 10.0f, 10.0f );
    camShakeAmp.set( 1.0f, 1.0f, 1.0f );
@@ -316,6 +320,9 @@ void ExplosionData::initPersistFields()
       "@brief List of additional ParticleEmitterData objects to spawn with this "
       "explosion.\n\n"
       "@see particleEmitter" );
+
+//   addField( "shockwave", TypeShockwaveDataPtr, Offset(shockwave, ExplosionData) );
+//   addField( "shockwaveOnTerrain", TypeBool, Offset(shockwaveOnTerrain, ExplosionData) );
 
    addField( "debris", TYPEID< DebrisData >(), Offset(debrisList, ExplosionData), EC_NUM_DEBRIS_TYPES,
       "List of DebrisData objects to spawn with this explosion." );
@@ -608,7 +615,11 @@ void ExplosionData::packData(BitStream* stream)
    }
    U32 count;
    for(count = 0; count < EC_NUM_TIME_KEYS; count++)
+<<<<<<< HEAD
       if(times[count] >= 1)
+=======
+      if(times[i] >= 1)
+>>>>>>> omni_engine
          break;
    count++;
    if(count > EC_NUM_TIME_KEYS)
@@ -966,7 +977,14 @@ void Explosion::onRemove()
       mMainEmitter = NULL;
    }
 
+<<<<<<< HEAD
    removeFromScene();
+=======
+   if (getSceneManager() != NULL)
+      getSceneManager()->removeObjectFromScene(this);
+   if (getContainer() != NULL)
+      getContainer()->removeObject(this);
+>>>>>>> omni_engine
 
    Parent::onRemove();
 }
@@ -1285,4 +1303,102 @@ bool Explosion::explode()
 
    return true;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) F32  __cdecl wle_fn_calcExplosionCoverage(char * x__pos, S32 id, U32 covMask)
+{
+Point3F pos = Point3F();
+sscanf(x__pos,"%f %f %f",&pos.x,&pos.y,&pos.z);
+
+{
+   Point3F center;
+   SceneObject* sceneObject = NULL;
+   if (Sim::findObject(id, sceneObject) == false) {
+      Con::warnf(ConsoleLogEntry::General, "calcExplosionCoverage: couldn't find object: %d", id);
+     return (F32)( 1.0f);
+   }
+   if (sceneObject->isClientObject() || sceneObject->getContainer() == NULL) {
+      Con::warnf(ConsoleLogEntry::General, "calcExplosionCoverage: object is on the client, or not in the container system");
+     return (F32)( 1.0f);
+   }
+   sceneObject->getObjBox().getCenter(&center);
+   center.convolve(sceneObject->getScale());
+   sceneObject->getTransform().mulP(center);
+   RayInfo rayInfo;
+   sceneObject->disableCollision();
+   if (sceneObject->getContainer()->castRay(pos, center, covMask, &rayInfo) == true) {
+            if (sceneObject->getContainer()->castRay(pos, pos + Point3F(0.0f, 0.0f, 1.0f), covMask, &rayInfo) == false)
+      {
+         if (sceneObject->getContainer()->castRay(pos + Point3F(0.0f, 0.0f, 1.0f), center, covMask, &rayInfo) == false)
+         {
+            sceneObject->enableCollision();
+           return (F32)( 1.0f);
+         }
+      }
+      sceneObject->enableCollision();
+     return (F32)( 0.0f);
+   } else {
+      sceneObject->enableCollision();
+     return (F32)( 1.0f);
+   }
+};
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

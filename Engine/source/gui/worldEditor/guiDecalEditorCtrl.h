@@ -50,6 +50,18 @@ class GuiDecalEditorCtrl : public EditTSCtrl
 
       DECLARE_CONOBJECT(GuiDecalEditorCtrl);
 
+      DECLARE_CALLBACK( void, syncNodeDetails, () );
+      DECLARE_CALLBACK( void, rebuildInstanceTree, () );
+      DECLARE_CALLBACK( void, paletteSync, (const char * mode) );
+      DECLARE_CALLBACK( void, undoDeleteDecalDatablock, (const char * datablock) );
+      DECLARE_CALLBACK( void, redoDeleteDecalDatablock, (const char * datablock) );
+      DECLARE_CALLBACK( void, prepGizmoTransform, (const char * decalId, const char * nodeDetails) );
+      DECLARE_CALLBACK( void, completeGizmoTransform, (const char * decalId, const char * nodeDetails) );
+      DECLARE_CALLBACK( void, onSelectInstance, (const char * decalId, const char * lookupName) );
+      DECLARE_CALLBACK( void, onCreateInstance, (const char * decalId, const char * lookupName) );
+      DECLARE_CALLBACK( void, onDeleteInstance, (const char * decalId, const char * lookupName) );
+
+
       // SimObject
       bool onAdd();
       static void initPersistFields();      
@@ -129,7 +141,11 @@ public:
    DICreateUndoAction( const UTF8* actionName = "Create Decal " );
    virtual ~DICreateUndoAction();
 
+<<<<<<< HEAD
    void addDecal(const DecalInstance& decal);
+=======
+   void addDecal( DecalInstance decal );
+>>>>>>> omni_engine
 
    // UndoAction
    virtual void undo();
@@ -159,7 +175,11 @@ public:
    virtual ~DIDeleteUndoAction();
 
    ///
+<<<<<<< HEAD
    void deleteDecal(const DecalInstance& decal);
+=======
+   void deleteDecal( DecalInstance decal );
+>>>>>>> omni_engine
 
    // UndoAction
    virtual void undo();
@@ -188,7 +208,11 @@ public:
    DBDeleteUndoAction( const UTF8* actionName = "Delete Decal Datablock" );
    virtual ~DBDeleteUndoAction();
 
+<<<<<<< HEAD
    void deleteDecal(const DecalInstance& decal);
+=======
+   void deleteDecal( DecalInstance decal );
+>>>>>>> omni_engine
 
    // UndoAction
    virtual void undo();

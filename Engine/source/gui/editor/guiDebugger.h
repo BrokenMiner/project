@@ -60,8 +60,13 @@ class DbgFileView : public GuiArrayCtrl
    char mMouseOverValue[256];
    S32 findMouseOverChar(const char *text, S32 stringPosition);
    bool findMouseOverVariable();
+<<<<<<< HEAD
    S32 mMouseVarStart;
    S32 mMouseVarEnd;
+=======
+   S64 mMouseVarStart;
+   S64 mMouseVarEnd;
+>>>>>>> omni_engine
 
    //find vars
    char mFindString[256];
@@ -74,6 +79,10 @@ class DbgFileView : public GuiArrayCtrl
    
    DECLARE_CONOBJECT(DbgFileView);
    DECLARE_CATEGORY( "Gui Editor" );
+
+   DECLARE_CALLBACK( void, onRemoveBreakPoint, ( const char* line) );
+   DECLARE_CALLBACK( void, onSetBreakPoint, ( const char* line) );
+   DECLARE_CALLBACK( void, onSetWatch, ( const char* variable) );
 
    bool onWake();
 

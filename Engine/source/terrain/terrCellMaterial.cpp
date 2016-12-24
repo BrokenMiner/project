@@ -481,7 +481,11 @@ bool TerrainCellMaterial::_createPass( Vector<MaterialInfo*> *materials,
          const bool logErrors = matCount == 1;
          GFXShader::setLogging( logErrors, true );
 
+<<<<<<< HEAD
          pass->shader = SHADERGEN->getShader( featureData, getGFXVertexFormat<TerrVertex>(), NULL, mSamplerNames );
+=======
+         pass->shader = SHADERGEN->getShader( featureData, getGFXVertexFormat<TerrVertex>(), NULL );
+>>>>>>> omni_engine
       }
 
       // If we got a shader then we can continue.
@@ -520,7 +524,18 @@ bool TerrainCellMaterial::_createPass( Vector<MaterialInfo*> *materials,
    pass->oneOverTerrainSize = pass->shader->getShaderConstHandle( "$oneOverTerrainSize" );
    pass->squareSize = pass->shader->getShaderConstHandle( "$squareSize" );
 
+<<<<<<< HEAD
    pass->lightParamsConst = pass->shader->getShaderConstHandle( "$rtParamslightInfoBuffer" );
+=======
+   // NOTE: We're assuming rtParams0 here as we know its the only
+   // render target we currently get in a terrain material and the
+   // DeferredRTLightingFeatHLSL will always use 0.
+   //
+   // This could change in the future and we would need to fix
+   // the ShaderFeature API to allow us to do this right.
+   //
+   pass->lightParamsConst = pass->shader->getShaderConstHandle( "$rtParams0" );
+>>>>>>> omni_engine
 
    // Now prepare the basic stateblock.
    GFXStateBlockDesc desc;
@@ -542,7 +557,14 @@ bool TerrainCellMaterial::_createPass( Vector<MaterialInfo*> *materials,
 
    // We write to the zbuffer if this is a prepass
    // material or if the prepass is disabled.
+<<<<<<< HEAD
    desc.setZReadWrite( true,  !MATMGR->getPrePassEnabled() || 
+=======
+   // We also write the zbuffer if we're using OpenGL, because in OpenGL the prepass
+   // cannot share the same zbuffer as the backbuffer.
+   desc.setZReadWrite( true,  !MATMGR->getPrePassEnabled() || 
+                              GFX->getAdapterType() == OpenGL ||
+>>>>>>> omni_engine
                               prePassMat ||
                               reflectMat );
 

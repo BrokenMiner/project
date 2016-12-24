@@ -50,13 +50,35 @@ class GuiHealthTextHud : public GuiControl
    F32 mPulseThreshold;  
    S32 mPulseRate;  
   
+<<<<<<< HEAD
    F32 mValue;  
+=======
+   F32 mValue;
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   /// Copy information
+   ColorF mTextColorCopy;
+   ColorF mFrameColorCopy;
+   ColorF mHealthTextFillColorCopy;
+   ColorF mWarnColorCopy;
+
+   void applyProfileSettings();
+
+   void copyProfileSettings();
+
+   void resetProfileSettings();
+
+   // @Copyright end
+>>>>>>> omni_engine
   
 public:  
    GuiHealthTextHud();  
   
    void onRender(Point2I, const RectI &);  
    static void initPersistFields();  
+   void onStaticModified( const char *slotName, const char *newValue );    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    DECLARE_CONOBJECT(GuiHealthTextHud);  
    DECLARE_CATEGORY("Gui Game");  
    DECLARE_DESCRIPTION("Shows the damage or energy level of the current\n"  
@@ -137,8 +159,97 @@ void GuiHealthTextHud::initPersistFields()
    endGroup("Alert");  
   
    Parent::initPersistFields();  
+<<<<<<< HEAD
 }  
   
+=======
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor" );
+
+   removeField( "controlFillColor" );
+
+   removeField( "backgroundColor" );
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   removeField( "contextFillColor" );
+
+   // @Copyright end
+} 
+
+// ----------------------------------------------------------------------------  
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiHealthTextHud::copyProfileSettings()
+{
+	if(!mProfileSettingsCopied)
+	{
+		mTextColorCopy = mTextColor;
+		mHealthTextFillColorCopy = mFillColor;
+		mFrameColorCopy = mFrameColor;
+		mWarnColorCopy = mWarnColor;
+		
+		Parent::copyProfileSettings();
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiHealthTextHud::resetProfileSettings()
+{
+	mFrameColor = mFrameColorCopy;
+	mTextColor = mTextColorCopy;
+	mFillColor = mHealthTextFillColorCopy;
+	mWarnColor = mWarnColorCopy;
+	
+	Parent::resetProfileSettings();
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiHealthTextHud::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   //Set the alpha value
+   if(mTextColor)
+	   mTextColor.alpha = mTextColorCopy.alpha *mRenderAlpha;
+   if(mFrameColor)
+	   mFrameColor.alpha = mFrameColorCopy.alpha * mRenderAlpha;
+   if(mFillColor)
+	   mFillColor.alpha = mHealthTextFillColorCopy.alpha * mRenderAlpha;
+   if(mWarnColor)
+	   mWarnColor.alpha = mWarnColorCopy.alpha * mRenderAlpha;
+}
+
+//-----------------------------------------------------------------------------
+
+void GuiHealthTextHud::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "textColor" ) || !dStricmp( slotName, "frameColor" ) || !dStricmp( slotName, "fillColor" ) || !dStricmp( slotName, "warnColor" ))
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+	
+		if( !dStricmp( slotName, "textColor" ) )
+			mTextColorCopy = color;
+		else if( !dStricmp( slotName, "frameColor" ) )
+			mFrameColorCopy = color;
+		else if( !dStricmp( slotName, "fillColor" ) )
+			mHealthTextFillColorCopy = color;
+		else
+			mWarnColorCopy = color;
+	}
+}
+// @Copyright end
+
+>>>>>>> omni_engine
 // ----------------------------------------------------------------------------  
   
 void GuiHealthTextHud::onRender(Point2I offset, const RectI &updateRect)  
@@ -162,12 +273,19 @@ void GuiHealthTextHud::onRender(Point2I offset, const RectI &updateRect)
       else  
          mValue = 100 - (100 * control->getDamageValue());    
    }  
+<<<<<<< HEAD
 
    GFXDrawUtil* drawUtil = GFX->getDrawUtil();
   
    // If enabled draw background first  
    if (mShowFill)  
       drawUtil->drawRectFill(updateRect, mFillColor);  
+=======
+  
+   // If enabled draw background first  
+   if (mShowFill)  
+      GFX->getDrawUtil()->drawRectFill(updateRect, mFillColor);  
+>>>>>>> omni_engine
   
    // Prepare text and center it  
    S32 val = (S32)mValue;    
@@ -192,6 +310,7 @@ void GuiHealthTextHud::onRender(Point2I offset, const RectI &updateRect)
       }  
    }  
   
+<<<<<<< HEAD
    drawUtil->setBitmapModulation(tColor);    
    drawUtil->drawText(mProfile->mFont, offset, buf);    
    drawUtil->clearBitmapModulation();    
@@ -199,4 +318,13 @@ void GuiHealthTextHud::onRender(Point2I offset, const RectI &updateRect)
    // If enabled draw the border last  
    if (mShowFrame)  
       drawUtil->drawRect(updateRect, mFrameColor);  
+=======
+   GFX->getDrawUtil()->setBitmapModulation(tColor);    
+   GFX->getDrawUtil()->drawText(mProfile->mFont, offset, buf);    
+   GFX->getDrawUtil()->clearBitmapModulation();    
+  
+   // If enabled draw the border last  
+   if (mShowFrame)  
+      GFX->getDrawUtil()->drawRect(updateRect, mFrameColor);  
+>>>>>>> omni_engine
 }  

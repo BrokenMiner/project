@@ -81,7 +81,11 @@ public:
    QuatF& interpolate( const QuatF & q1, const QuatF & q2, F32 t );
    F32  angleBetween( const QuatF & q );
 
+<<<<<<< HEAD
    Point3F& mulP(const Point3F& a, Point3F* r) const;   // r = p * this
+=======
+   Point3F& mulP(const Point3F& a, Point3F* b);   // r = p * this
+>>>>>>> omni_engine
    QuatF& mul(const QuatF& a, const QuatF& b);    // This = a * b
 
    // Vectors passed in must be normalized

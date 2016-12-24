@@ -35,6 +35,11 @@
    canSaveDynamicFields = "1";
 
    new GuiWindowCollapseCtrl(ForestEditorPalleteWindow) {
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      //internalName = "PalleteWindow";
+      internalName = "ForestEditorPalleteWindow";
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       CollapseGroup = "-1";
       CollapseGroupNum = "-1";
       resizeWidth = "1";
@@ -65,6 +70,7 @@
       tooltipprofile = "ToolsGuiToolTipProfile";
       hovertime = "1000";
       internalName = "PalleteWindow";
+      
       canSaveDynamicFields = "0";
 
       new GuiTabBookCtrl(ForestEditTabBook) {
@@ -420,6 +426,11 @@
       };
    };
    new GuiWindowCollapseCtrl(ForestEditorPropertiesWindow) {
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+      //internalName = "PropertiesWindow";
+      internalName = "ForestEditorPropertiesWindow";
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       CollapseGroup = "-1";
       CollapseGroupNum = "-1";
       resizeWidth = "1";
@@ -450,6 +461,7 @@
       tooltipprofile = "ToolsGuiToolTipProfile";
       hovertime = "1000";
       internalName = "PropertiesWindow";
+      
       canSaveDynamicFields = "0";
 
       new GuiScrollCtrl() {

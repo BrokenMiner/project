@@ -22,12 +22,21 @@
 
 #include "platform/platform.h"
 #include "gfx/gl/gfxGLOcclusionQuery.h"
+<<<<<<< HEAD
 #include "gfx/gl/tGL/tGL.h"
 
 GFXGLOcclusionQuery::GFXGLOcclusionQuery(GFXDevice* device) : 
    GFXOcclusionQuery(device), mQuery(-1)
 {
    
+=======
+#include "gfx/gl/ggl/ggl.h"
+
+GFXGLOcclusionQuery::GFXGLOcclusionQuery(GFXDevice* device) : 
+   GFXOcclusionQuery(device), mQuery(0)
+{
+   glGenQueries(1, &mQuery);
+>>>>>>> omni_engine
 }
 
 GFXGLOcclusionQuery::~GFXGLOcclusionQuery()

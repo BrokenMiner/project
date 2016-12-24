@@ -100,8 +100,13 @@ class AsyncIOItem : public ThreadPool::WorkItem
          : Parent( context ),
            mStream( stream ),
            mNumElements( numElements ),
+<<<<<<< HEAD
            mOffsetInBuffer( 0 ),
            mOffsetInStream( offsetInStream ) {}
+=======
+           mOffsetInStream( offsetInStream ),
+           mOffsetInBuffer( 0 ) {}
+>>>>>>> omni_engine
 
       /// Construct a read item on "stream" that stores data into the given "buffer".
       ///
@@ -109,11 +114,19 @@ class AsyncIOItem : public ThreadPool::WorkItem
                    U32 numElements, OffsetType offsetInStream, bool takeOwnershipOfBuffer = true,
                    ThreadContext* context = 0 )
          : Parent( context ),
+<<<<<<< HEAD
            mBuffer( buffer ),
            mStream( stream ),
            mNumElements( numElements ),
            mOffsetInBuffer( offsetInBuffer ),
            mOffsetInStream( offsetInStream )
+=======
+           mStream( stream ),
+           mBuffer( buffer ),
+           mNumElements( numElements ),
+           mOffsetInStream( offsetInStream ),
+           mOffsetInBuffer( offsetInBuffer )
+>>>>>>> omni_engine
       {
          if( takeOwnershipOfBuffer )
             mBuffer.ownMemory = true;

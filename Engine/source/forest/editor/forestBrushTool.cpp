@@ -40,6 +40,10 @@
 #include "math/mRandomDeck.h"
 #include "math/mRandomSet.h"
 
+IMPLEMENT_CALLBACK(ForestBrushTool, onMouseDown, void, (), (), "");
+IMPLEMENT_CALLBACK(ForestBrushTool, onActivated, void, (), (), "");
+IMPLEMENT_CALLBACK(ForestBrushTool, onDeactivated, void, (), (), "");
+IMPLEMENT_CALLBACK(ForestBrushTool, syncBrushToolbar, void, (), (), "");
 
 bool ForestBrushTool::protectedSetSize( void *object, const char *index, const char *data )
 {
@@ -74,6 +78,7 @@ ImplementEnumType( ForestBrushMode,
    { ForestBrushTool::Paint, "Paint", "Creates Items based on the Elements you have selected.\n" },
    { ForestBrushTool::Erase, "Erase", "Erases Items of any Mesh type.\n" },
    { ForestBrushTool::EraseSelected, "EraseSelected", "Erases items of a specific type.\n"  },
+   { ForestBrushTool::DropToGround, "DropToGround", "Drops items of a specific type to the ground.n"  },
 EndImplementEnumType;
 
 
@@ -138,7 +143,11 @@ void ForestBrushTool::onRemove()
 
 void ForestBrushTool::on3DMouseDown( const Gui3DMouseEvent &evt )
 {   
+<<<<<<< HEAD
    Con::executef( this, "onMouseDown" );
+=======
+   onMouseDown_callback();
+>>>>>>> omni_engine
 
    if ( !_updateBrushPoint( evt ) || !mForest )
       return;
@@ -245,6 +254,8 @@ void ForestBrushTool::onRender2D()
       brushColor = ColorI::BLUE;
    else if ( mMode == Erase )
       brushColor = ColorI::RED;
+   else if ( mMode == DropToGround )  
+       brushColor = ColorI::WHITE;
    else if ( mMode == EraseSelected )
       brushColor.set( 150, 0, 0 );
 
@@ -263,12 +274,20 @@ void ForestBrushTool::onActivated( const Gui3DMouseEvent &lastEvent )
 {
    _updateBrushPoint( lastEvent );
 
+<<<<<<< HEAD
    Con::executef( this, "onActivated" );
+=======
+   onActivated_callback();
+>>>>>>> omni_engine
 }
 
 void ForestBrushTool::onDeactivated()
 {
+<<<<<<< HEAD
    Con::executef( this, "onDeactivated" );
+=======
+   onDeactivated_callback();
+>>>>>>> omni_engine
 }
 
 bool ForestBrushTool::updateGuiInfo()
@@ -285,6 +304,8 @@ bool ForestBrushTool::updateGuiInfo()
       text = "Forest Editor ( Paint Tool ) - This brush creates Items based on the Elements you have selected.";
    else if ( mMode == Erase )
       text = "Forest Editor ( Erase Tool ) - This brush erases Items of any Mesh type.";
+   else if ( mMode == DropToGround )  
+      text = "Forest Editor ( DropToGround Tool ) - This brush Drop To Ground Items of any Mesh type."; 
    else if ( mMode == EraseSelected )   
       text = "Forest Editor ( Erase Selected ) - This brush erases Items based on the Elements you have selected.";      
    
@@ -305,19 +326,31 @@ bool ForestBrushTool::updateGuiInfo()
 void ForestBrushTool::setSize( F32 val )
 {
    mSize = mClampF( val, 0.0f, 150.0f );
+<<<<<<< HEAD
    Con::executef( this, "syncBrushToolbar" );
+=======
+   syncBrushToolbar_callback();
+>>>>>>> omni_engine
 }
 
 void ForestBrushTool::setPressure( F32 val )
 {   
    mPressure = mClampF( val, 0.0f, 1.0f );
+<<<<<<< HEAD
    Con::executef( this, "syncBrushToolbar" );
+=======
+   syncBrushToolbar_callback();
+>>>>>>> omni_engine
 }
 
 void ForestBrushTool::setHardness( F32 val )
 {
    mHardness = mClampF( val, 0.0f, 1.0f );
+<<<<<<< HEAD
    Con::executef( this, "syncBrushToolbar" );
+=======
+   syncBrushToolbar_callback();
+>>>>>>> omni_engine
 }
 
 void ForestBrushTool::_onStroke()
@@ -334,6 +367,8 @@ void ForestBrushTool::_action( const Point3F &point )
       _paint( point );
    else if ( mMode == Erase || mMode == EraseSelected )
       _erase( point );
+   else if ( mMode == DropToGround)  
+      _DropToGround( point );
 }
 
 inline F32 mCircleArea( F32 radius )
@@ -543,6 +578,67 @@ void ForestBrushTool::_erase( const Point3F &point )
    }
 }
 
+void ForestBrushTool::_DropToGround( const Point3F &point )  
+{  
+   AssertFatal( mForest, "ForestBrushTool::_erase() - Can't erase without a Forest!" );  
+  
+   // First grab all the forest items around the point.  
+   ForestItemVector trees;  
+   if ( mForest->getData()->getItems( point.asPoint2F(), mSize, &trees ) == 0 )  
+      return;  
+     
+   if ( trees.empty() )  
+      return;  
+  
+   // Number of trees to erase depending on pressure.  
+   S32 dropCount = getMax( (S32)mCeil( (F32)trees.size() * mPressure ), 0 );  
+     
+   // Initialize an MRandomDeck with trees under the brush.  
+   MRandomDeck<ForestItem> deck(&mRandom);  
+   deck.addToPile( trees );  
+   deck.shuffle();  
+  
+   ForestItem currentTree;  
+     
+   // Draw eraseCount number of trees from MRandomDeck, adding them to our erase action.  
+   for ( U32 i = 0; i < dropCount; i++ )  
+   {  
+        deck.draw(&currentTree);  
+          
+        //GetObject Data  
+        // Get current object transform matrix  
+        MatrixF SRC_xform = currentTree.getTransform();  
+        // Get rotations from transform matrix  
+        VectorF SRC_vec;  
+        SRC_xform.getColumn(1,&SRC_vec);  
+        // Get X-vector for roll calculation  
+        Point3F SRC_xv;  
+        SRC_xform.getColumn(0,&SRC_xv);  
+        // Get Position  
+        Point3F SRC_pos;  
+        SRC_xform.getColumn(3,&SRC_pos);  
+        Point3F mountpos;  
+  
+        F32 contactZ;  
+         // Look for the ground at this position.  
+         if ( !getGroundAt( Point3F( SRC_pos.x, SRC_pos.y , SRC_pos.z ),   
+                                     &contactZ,   
+                                     NULL ) )  
+         {  
+            break;  
+         }  
+  
+  
+        contactZ-=0.5;  
+  
+        SRC_pos.z=contactZ;       
+        SRC_xform.setColumn(3,SRC_pos);  
+  
+        currentTree = mForest->getData()->updateItem( currentTree.getKey(), currentTree.getPosition(), currentTree.getData(), SRC_xform, currentTree.getScale() );     
+  
+   }  
+}
+
 bool ForestBrushTool::_updateBrushPoint( const Gui3DMouseEvent &event_ )
 {
    // Do a raycast for terrain... thats the placement center.
@@ -588,7 +684,14 @@ void ForestBrushTool::_collectElements()
    if ( !Sim::findObject( "ForestEditBrushTree", brushTree ) )
       return;
       
+<<<<<<< HEAD
    const char* objectIdList = Con::executef( brushTree, "getSelectedObjectList" );
+=======
+   //const char* objectIdList = Con::executef( brushTree, "getSelectedObjectList" );
+	//VGee, I have no idea why they bounced this through the console.
+	//Makes no sense to me.  12/5/2013
+	const char* objectIdList =StringTable->insert( brushTree->getSelectedObjectList());
+>>>>>>> omni_engine
 
    // Collect those objects in a vector and mark them as selected.
 
@@ -685,4 +788,78 @@ bool ForestBrushTool::getGroundAt( const Point3F &worldPt, F32 *zValueOut, Vecto
 DefineConsoleMethod( ForestBrushTool, collectElements, void, (), , "" )
 {
    object->collectElements();
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_ForestBrushTool_collectElements(char * x__object)
+{
+ForestBrushTool* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->collectElements();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

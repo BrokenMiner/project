@@ -94,6 +94,7 @@ function ppOptionsEnableDOF::onAction(%this)
    %toEnable = PostFXManager.getEnableResultFromControl(%this);
    PostFXManager.settingsEffectSetEnabled("DOF", %toEnable);
 }
+<<<<<<< HEAD
 
 function ppOptionsEnableVignette::onAction(%this)
 { 
@@ -101,6 +102,9 @@ function ppOptionsEnableVignette::onAction(%this)
    PostFXManager.settingsEffectSetEnabled("Vignette", %toEnable);
 }
 
+=======
+ 
+>>>>>>> omni_engine
 function ppOptionsSavePreset::onClick(%this)
 {
    //Stores the current settings into a preset file for loading and use later on 
@@ -301,7 +305,11 @@ function ppOptionsHDREffectsBlueShiftColorBaseColor::onAction(%this)
 }
 
 
+<<<<<<< HEAD
 //Light rays Brightness Slider Controls
+=======
+//Light rays Slider Controls
+>>>>>>> omni_engine
 function ppOptionsLightRaysBrightScalar::onMouseDragged(%this)
 {
    $LightRayPostFX::brightScalar = %this.value;

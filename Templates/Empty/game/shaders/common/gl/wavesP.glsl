@@ -47,11 +47,19 @@ void main()
    vec4 bumpNorm = texture(bumpMap, texOffset) * 2.0 - 1.0;
    vec4 diffuse = texture(diffMap, texOffset);
    
+<<<<<<< HEAD
    OUT_col = diffuse * (clamp(dot(outLightVec.xyz, bumpNorm.xyz), 0.0, 1.0) + ambient);
+=======
+   OUT_FragColor0 = diffuse * (clamp(dot(outLightVec.xyz, bumpNorm.xyz), 0.0, 1.0) + ambient);
+>>>>>>> omni_engine
    
    vec3 eyeVec = normalize(outEyePos - outPos);
    vec3 halfAng = normalize(eyeVec + outLightVec.xyz);
    float specular = clamp(dot(bumpNorm.xyz, halfAng), 0.0, 1.0) * outLightVec.w;
    specular = pow(specular, specularPower);
+<<<<<<< HEAD
    OUT_col += specularColor * specular;
+=======
+   OUT_FragColor0 += specularColor * specular;
+>>>>>>> omni_engine
 }

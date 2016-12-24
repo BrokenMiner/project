@@ -41,7 +41,11 @@ protected:
       S32                        mSelectedOption;  ///< Index into mOptions pointing at the selected option
       bool                       mWrapOptions;     ///< Determines if options should "wrap around" at the ends
 
+<<<<<<< HEAD
       Row() : mSelectedOption(0), mWrapOptions(false)
+=======
+      Row()
+>>>>>>> omni_engine
       {
          VECTOR_SET_ASSOCIATION( mOptions );
       }

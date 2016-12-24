@@ -122,6 +122,7 @@ void RenderBinManager::internalAddElement(RenderInst* inst)
    mElementList.increment();
    MainSortElem &elem = mElementList.last();
    elem.inst = inst;
+   elem.key = elem.key2 = 0;
 
    elem.key = inst->defaultKey;
    elem.key2 = inst->defaultKey2;
@@ -175,3 +176,80 @@ DefineEngineMethod( RenderBinManager, getBinType, const char*, (),,
 {
    return object->getRenderInstType().getName();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnRenderBinManager_getBinType(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+RenderBinManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getRenderInstType().getName();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

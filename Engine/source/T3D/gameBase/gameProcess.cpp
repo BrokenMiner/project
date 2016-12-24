@@ -34,7 +34,11 @@ ClientProcessList* ClientProcessList::smClientProcessList = NULL;
 ServerProcessList* ServerProcessList::smServerProcessList = NULL;
 static U32 gNetOrderNextId = 0;
 
+<<<<<<< HEAD
 DefineConsoleFunction( dumpProcessList, void, ( ), ,
+=======
+DefineConsoleFunction( dumpProcessList, void, ( bool allow ), ,
+>>>>>>> omni_engine
    "Dumps all ProcessObjects in ServerProcessList and ClientProcessList to the console." )
 {
    Con::printf( "client process list:" );
@@ -182,4 +186,73 @@ void ServerProcessList::advanceObjects()
 void ServerProcessList::onPreTickObject( ProcessObject *pobj )
 {
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_dumpProcessList(bool allow)
+{
+{
+   Con::printf( "client process list:" );
+   ClientProcessList::get()->dumpToConsole();
+   Con::printf( "server process list:" );
+   ServerProcessList::get()->dumpToConsole();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
 

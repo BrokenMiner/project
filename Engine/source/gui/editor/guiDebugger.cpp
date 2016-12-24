@@ -37,6 +37,11 @@ ConsoleDocClass( DbgFileView,
    "@internal"
 );
 
+IMPLEMENT_GLOBAL_CALLBACK( DbgSetCursorWatch, void, ( const char *expr), ( expr ), "");
+IMPLEMENT_CALLBACK( DbgFileView, onRemoveBreakPoint, void, ( const char* line), ( line ), "" );
+IMPLEMENT_CALLBACK( DbgFileView, onSetBreakPoint, void, ( const char* line), ( line ),  "" );
+IMPLEMENT_CALLBACK( DbgFileView, onSetWatch, void, ( const char* variable), ( variable ),  "" );
+
 static const char* itoa(S32 i)
 {
    static char buf[32];
@@ -532,10 +537,19 @@ void DbgFileView::onPreRender()
    {
       //send the query only when the var changes
       if (dStricmp(oldVar, mMouseOverVariable))
+<<<<<<< HEAD
 			Con::executef("DbgSetCursorWatch", mMouseOverVariable);
    }
 	else
 		Con::executef("DbgSetCursorWatch", "");
+=======
+      { DbgSetCursorWatch_callback( mMouseOverVariable ); }
+			
+   }
+    else
+    { DbgSetCursorWatch_callback( "" ); }
+		
+>>>>>>> omni_engine
 }
 
 void DbgFileView::onMouseDown(const GuiEvent &event)
@@ -560,9 +574,15 @@ void DbgFileView::onMouseDown(const GuiEvent &event)
          if (mFileView[cell.y].breakPosition)
          {
             if (mFileView[cell.y].breakOnLine)
+<<<<<<< HEAD
                Con::executef(this, "onRemoveBreakPoint", itoa(cell.y + 1));
             else
                Con::executef(this, "onSetBreakPoint", itoa(cell.y + 1));
+=======
+            { onRemoveBreakPoint_callback( itoa(cell.y + 1) ); }
+            else
+            { onSetBreakPoint_callback( itoa(cell.y + 1) ); }
+>>>>>>> omni_engine
          }
       }
       else
@@ -575,7 +595,11 @@ void DbgFileView::onMouseDown(const GuiEvent &event)
          //open the file view
          if (mSelectedCell.y == prevSelected.y && doubleClick && mMouseOverVariable[0])
          {
+<<<<<<< HEAD
             Con::executef(this, "onSetWatch", mMouseOverVariable);
+=======
+            onSetWatch_callback( mMouseOverVariable );
+>>>>>>> omni_engine
             mBlockStart = mMouseVarStart;
             mBlockEnd = mMouseVarEnd;
          }
@@ -704,3 +728,154 @@ void DbgFileView::onRenderCell(Point2I offset, Point2I cell, bool selected, bool
    GFX->getDrawUtil()->setBitmapModulation(mFileView[cell.y].breakOnLine ? mProfile->mFontColorHL : mProfile->mFontColor);
    GFX->getDrawUtil()->drawText(mFont, cellOffset, mFileView[cell.y].text);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_DbgFileView_clearBreakPositions(char * x__object)
+{
+DbgFileView* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->clearBreakPositions();
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_DbgFileView_findString(char * x__object, char * x__findThis)
+{
+DbgFileView* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* findThis = (const char*)x__findThis;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->findString(findThis);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_DbgFileView_getCurrentLine(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+DbgFileView* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+	S32 lineNum;
+   const char *file = object->getCurrentLine(lineNum);
+   char* ret = Con::getReturnBuffer(256);
+	dSprintf(ret, sizeof(ret), "%s\t%d", file, lineNum);
+	{wle_returnObject =ret;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_DbgFileView_open(char * x__object, char * x__filename)
+{
+DbgFileView* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+const char* filename = (const char*)x__filename;
+bool wle_returnObject;
+{
+   {wle_returnObject =object->openFile(filename);
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_DbgFileView_removeBreak(char * x__object, U32 line)
+{
+DbgFileView* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setBreakPointStatus(line, false);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_DbgFileView_setBreak(char * x__object, U32 line)
+{
+DbgFileView* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setBreakPointStatus(line, true);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_DbgFileView_setBreakPosition(char * x__object, U32 line)
+{
+DbgFileView* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setBreakPosition(line);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_DbgFileView_setCurrentLine(char * x__object, S32 line, bool selected)
+{
+DbgFileView* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->setCurrentLine(line, selected);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

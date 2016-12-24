@@ -52,7 +52,11 @@ const char *Platform::getUserDataDirectory()
 
 #ifdef UNICODE
    char path[ MAX_PATH * 3 + 1 ];
+<<<<<<< HEAD
    convertUTF16toUTF8( szBuffer, path );
+=======
+   convertUTF16toUTF8( szBuffer, path, sizeof( path ) );
+>>>>>>> omni_engine
 #else
    char* path = szBuffer;
 #endif
@@ -78,7 +82,11 @@ const char *Platform::getUserHomeDirectory()
 
 #ifdef UNICODE
    char path[ MAX_PATH * 3 + 1 ];
+<<<<<<< HEAD
    convertUTF16toUTF8( szBuffer, path );
+=======
+   convertUTF16toUTF8( szBuffer, path, sizeof( path ) );
+>>>>>>> omni_engine
 #else
    char* path = szBuffer;
 #endif

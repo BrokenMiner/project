@@ -385,8 +385,13 @@ inline PlaneF::Side PlaneF::whichSide( const OrientedBox3F& obb ) const
 
    Point3F mObbHalf = obb.getHalfExtents();
    const F32 r = mObbHalf.x * mFabs( mDot( obb.getAxis( 0 ), *this ) ) +
+<<<<<<< HEAD
                  mObbHalf.y * mFabs( mDot( obb.getAxis( 1 ), *this ) ) +
                  mObbHalf.z * mFabs( mDot( obb.getAxis( 2 ), *this ) );
+=======
+        mObbHalf.y * mFabs( mDot( obb.getAxis( 1 ), *this ) ) +
+        mObbHalf.z * mFabs( mDot( obb.getAxis( 2 ), *this ) ); 
+>>>>>>> omni_engine
 
    const F32 dist = distToPlane( obb.getCenter() );
    if( dist > r )

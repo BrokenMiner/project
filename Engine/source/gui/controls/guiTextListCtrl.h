@@ -51,24 +51,40 @@ class GuiTextListCtrl : public GuiArrayCtrl
    enum {
       InvalidId = 0xFFFFFFFF
    };
+<<<<<<< HEAD
    Vector<S32> mColumnOffsets;
 
+=======
+     public:
+   Vector<S32> mColumnOffsets;
+  
+>>>>>>> omni_engine
    bool  mFitParentWidth;
    bool  mClipColumnText;
 
    U32 getRowWidth(Entry *row);
    bool cellSelected(Point2I cell);
+<<<<<<< HEAD
    void onCellSelected(Point2I cell);
 
   public:
+=======
+   virtual void onCellSelected(Point2I cell);
+
+ 
+>>>>>>> omni_engine
    GuiTextListCtrl();
 
    DECLARE_CONOBJECT(GuiTextListCtrl);
    DECLARE_CATEGORY( "Gui Lists" );
    DECLARE_DESCRIPTION( "A control that displays text in tabular form." );
    
+<<<<<<< HEAD
    DECLARE_CALLBACK( void, onSelect, (S32 cellid, const char* text));
    DECLARE_CALLBACK( void, onDeleteKey, ( S32 id ));
+=======
+   DECLARE_CALLBACK( void, onDeleteKey, ( const char* id ));
+>>>>>>> omni_engine
 
    static void initPersistFields();
 
@@ -87,6 +103,7 @@ class GuiTextListCtrl : public GuiArrayCtrl
    void setEntryActive(U32 id, bool active);
    S32 findEntryById(U32 id);
    S32 findEntryByText(const char *text);
+   S32 findEntryByColumnText( S32 columnId, const char* text );
    bool isEntryActive(U32 id);
 
    U32 getEntryId(U32 index);

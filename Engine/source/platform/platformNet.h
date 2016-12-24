@@ -27,6 +27,14 @@
 #include "core/util/rawData.h"
 #include "core/util/journal/journaledSignal.h"
 
+
+#ifdef SocketThread
+#include "platform/threads/threadPool.h"
+#include <string>
+#include <unordered_map>
+#include "platform/threads/mutex.h"
+#endif
+
 #ifndef MAXPACKETSIZE
 #define MAXPACKETSIZE 1500
 #endif

@@ -49,11 +49,16 @@ class GuiButtonBaseCtrl : public GuiControl
       StringTableEntry mButtonText;
       StringTableEntry mButtonTextID;
       bool mDepressed;
+<<<<<<< HEAD
       bool mMouseOver;
+=======
+      //bool mMouseOver;      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
       bool mStateOn;
       S32 mButtonType;
       S32 mRadioGroup;
       bool mUseMouseEvents;
+      String mControlTexture;
       
       /// Point where left mouse button was pressed down.  Used to find when to start
       /// a mouse drag.
@@ -62,12 +67,26 @@ class GuiButtonBaseCtrl : public GuiControl
       ///
       bool mMouseDragged;
       
+      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+      //  @Copyright start
+
+	  static bool setProtectedTexture( void* object, const char* index, const char* data );
+	  
+	  static const char* getProtectedTexture( void* object, const char* data );
+
+
+      // @Copyright end
+
 	   /// @name Callbacks
 	   /// @{
 
       DECLARE_CALLBACK( void, onMouseDown, () );   
 	   DECLARE_CALLBACK( void, onMouseUp, () );
+<<<<<<< HEAD
 	   DECLARE_CALLBACK( void, onClick, () );
+=======
+	   /*DECLARE_CALLBACK( void, onClick, () );*/
+>>>>>>> omni_engine
 	   DECLARE_CALLBACK( void, onRightClick, () );
 	   DECLARE_CALLBACK( void, onDoubleClick, () );    
 	   DECLARE_CALLBACK( void, onMouseEnter, () );   

@@ -268,4 +268,78 @@ DefineEngineMethod( LightDescription, apply, void, (),,
 //ConsoleMethod( LightDescription, apply, void, 2, 2, "force an inspectPostApply for the benefit of tweaking via the console" )
 //{
 //   object->inspectPostApply();
+<<<<<<< HEAD
 //}
+=======
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnLightDescription_apply(char * x__object)
+{
+LightDescription* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+  object->inspectPostApply();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

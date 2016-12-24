@@ -44,7 +44,11 @@ Etc.
 (2.)
 Then include this file,
 
+<<<<<<< HEAD
   include "Fxaa3_11.h"
+=======
+  #include "Fxaa3_11.h"
+>>>>>>> omni_engine
 
 (3.)
 Then call the FXAA pixel shader from within your desired shader.

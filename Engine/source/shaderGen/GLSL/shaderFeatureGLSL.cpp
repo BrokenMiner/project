@@ -89,11 +89,18 @@ LangElement* ShaderFeatureGLSL::assignColor( LangElement *elem,
    {
       // create color var
       color = new Var;
+<<<<<<< HEAD
       color->setType( "vec4" );
       color->setName( getOutputTargetVarName( outputTarget ) );
       color->setStructName( "OUT" );
 
       return new GenOp( "@ = @", color, elem );
+=======
+      color->setName( getOutputTargetVarName( outputTarget ) );
+      color->setType( "vec4" );
+
+      return new GenOp( "@ = @", new DecOp(color), elem );
+>>>>>>> omni_engine
    }
 
    LangElement *assign;
@@ -986,8 +993,11 @@ void DiffuseMapFeatGLSL::setTexData(   Material::StageData &stageDat,
                                        U32 &texIndex )
 {
    GFXTextureObject *tex = stageDat.getTex( MFT_DiffuseMap );
-   passData.mSamplerNames[ texIndex ] = "diffuseMap";
-   passData.mTexSlot[ texIndex++ ].texObject = tex;
+   if ( tex )
+   {
+      passData.mSamplerNames[ texIndex ] = "diffuseMap";
+      passData.mTexSlot[ texIndex++ ].texObject = tex;
+   }
 }
 
 
@@ -1439,6 +1449,13 @@ void VertLitGLSL::processVert(   Vector<ShaderComponent*> &componentList,
          return;
       }
 
+      // Grab the connector color
+      ShaderConnector *connectComp = dynamic_cast<ShaderConnector *>( componentList[C_CONNECTOR] );
+      Var *outColor = connectComp->getElement( RT_COLOR );
+      outColor->setName( "vertColor" );
+      outColor->setStructName( "OUT" );
+      outColor->setType( "vec4" );
+
       output = new GenOp( "   @ = @;\r\n", outColor, inColor );
    }
    else
@@ -1679,7 +1696,11 @@ void ReflectCubeFeatGLSL::processVert( Vector<ShaderComponent*> &componentList,
     cubeVertPos->setType( "vec3" );
    LangElement *cubeVertPosDecl = new DecOp( cubeVertPos );
 
+<<<<<<< HEAD
    meta->addStatement( new GenOp( "   @ = tMul( @, float4(@,1)).xyz;\r\n",
+=======
+    meta->addStatement( new GenOp( "   @ = tMul(mat3( @ ), @).xyz;\r\n",
+>>>>>>> omni_engine
                        cubeVertPosDecl, cubeTrans, LangElement::find( "position" ) ) );
 
    // cube normal
@@ -1703,14 +1724,28 @@ void ReflectCubeFeatGLSL::processVert( Vector<ShaderComponent*> &componentList,
         eyePos->constSortPos = cspPass;
     }
 
+    // cube position
+    Var * cubePos = new Var;
+    cubePos->setName( "cubePos" );
+    cubePos->setType( "vec3" );
+    LangElement *cubePosDecl = new DecOp( cubePos );
+
+    meta->addStatement( new GenOp( "   @ = vec3( @[3][0], @[3][1], @[3][2] );\r\n",
+                        cubePosDecl, cubeTrans, cubeTrans, cubeTrans ) );
+
    // eye to vert
    Var * eyeToVert = new Var;
    eyeToVert->setName( "eyeToVert" );
     eyeToVert->setType( "vec3" );
    LangElement *e2vDecl = new DecOp( eyeToVert );
 
+<<<<<<< HEAD
     meta->addStatement( new GenOp( "   @ = @ - @;\r\n", 
                         e2vDecl, cubeVertPos, eyePos ) );
+=======
+    meta->addStatement( new GenOp( "   @ = @ - ( @ - @ );\r\n", 
+                        e2vDecl, cubeVertPos, eyePos, cubePos ) );
+>>>>>>> omni_engine
 
    // grab connector texcoord register
    ShaderConnector *connectComp = dynamic_cast<ShaderConnector *>( componentList[C_CONNECTOR] );
@@ -1810,7 +1845,11 @@ void ReflectCubeFeatGLSL::processPix(  Vector<ShaderComponent*> &componentList,
    else
    {
       if ( attn )
+<<<<<<< HEAD
          lerpVal = new GenOp( "vec4( saturate( @ ) ).xxxx", attn );
+=======
+         lerpVal = new GenOp( "saturate( @ ).xxxx", attn );
+>>>>>>> omni_engine
       else
          blendOp = Material::Mul;
    }
@@ -2379,7 +2418,11 @@ void GlowMaskGLSL::processPix(   Vector<ShaderComponent*> &componentList,
    // code above that doesn't contribute to the alpha mask.
    Var *color = (Var*)LangElement::find( "col" );
    if ( color )
+<<<<<<< HEAD
       output = new GenOp( "   @.rgb = vec3(0);\r\n", color );
+=======
+      output = new GenOp( "   @.rgb = 0;\r\n", color );
+>>>>>>> omni_engine
 }
 
 
@@ -2391,7 +2434,11 @@ void RenderTargetZeroGLSL::processPix( Vector<ShaderComponent*> &componentList, 
 {
    // Do not actually assign zero, but instead a number so close to zero it may as well be zero.
    // This will prevent a divide by zero causing an FP special on float render targets
+<<<<<<< HEAD
    output = new GenOp( "   @;\r\n", assignColor( new GenOp( "vec4(0.00001)" ), Material::None, NULL, mOutputTargetMask ) );
+=======
+   output = new GenOp( "   @;\r\n", assignColor( new GenOp( "0.00001" ), Material::None, NULL, mOutputTargetMask ) );
+>>>>>>> omni_engine
 }
 
 

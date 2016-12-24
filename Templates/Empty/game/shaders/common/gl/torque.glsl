@@ -139,11 +139,16 @@ mat3x3 quatToMat( vec4 quat )
 vec2 parallaxOffset( sampler2D texMap, vec2 texCoord, vec3 negViewTS, float depthScale )
 {
    float depth = texture( texMap, texCoord ).a;
+<<<<<<< HEAD
    vec2 offset = negViewTS.xy * vec2( depth * depthScale );
+=======
+   vec2 offset = negViewTS.xy * ( depth * depthScale );
+>>>>>>> omni_engine
 
    for ( int i=0; i < PARALLAX_REFINE_STEPS; i++ )
    {
       depth = ( depth + texture( texMap, texCoord + offset ).a ) * 0.5;
+<<<<<<< HEAD
       offset = negViewTS.xy * vec2( depth * depthScale );
    }
 
@@ -160,6 +165,9 @@ vec2 parallaxOffsetDxtnm(sampler2D texMap, vec2 texCoord, vec3 negViewTS, float 
    {
       depth = (depth + texture(texMap, texCoord + offset).r) * 0.5;
       offset = negViewTS.xy * vec2(depth * depthScale);
+=======
+      offset = negViewTS.xy * ( depth * depthScale );
+>>>>>>> omni_engine
    }
 
    return offset;
@@ -282,6 +290,10 @@ void fizzle(vec2 vpos, float visibility)
 /// @param condition This should be a bvec[2-4].  If any items is false, condition is considered to fail.
 /// @param color The color that should be outputted if the condition fails.
 /// @note This macro will only work in the void main() method of a pixel shader.
+<<<<<<< HEAD
 #define assert(condition, color) { if(!any(condition)) { OUT_col = color; return; } }
+=======
+#define assert(condition, color) { if(!any(condition)) { OUT_FragColor0 = color; return; } }
+>>>>>>> omni_engine
 
 #endif // _TORQUE_GLSL_

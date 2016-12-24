@@ -13,9 +13,13 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
+<<<<<<< HEAD
 #if defined (_WIN32) || defined (__i386__)
 #define BT_USE_SSE_IN_API
 #endif
+=======
+
+>>>>>>> omni_engine
 
 #include "btMultiSphereShape.h"
 #include "BulletCollision/CollisionShapes/btCollisionMargin.h"
@@ -42,7 +46,11 @@ btMultiSphereShape::btMultiSphereShape (const btVector3* positions,const btScala
 }
 
 #ifndef MIN
+<<<<<<< HEAD
 	#define MIN( _a, _b)    ((_a) < (_b) ? (_a) : (_b))
+=======
+    #define MIN( _a, _b)    ((_a) < (_b) ? (_a) : (_b))
+>>>>>>> omni_engine
 #endif
  btVector3	btMultiSphereShape::localGetSupportingVertexWithoutMargin(const btVector3& vec0)const
 {
@@ -69,10 +77,17 @@ btMultiSphereShape::btMultiSphereShape (const btVector3* positions,const btScala
 	const btScalar* rad = &m_radiArray[0];
 	int numSpheres = m_localPositionArray.size();
 
+<<<<<<< HEAD
 	for( int k = 0; k < numSpheres; k+= 128 )
 	{
 		btVector3 temp[128];
 		int inner_count = MIN( numSpheres - k, 128 );
+=======
+    for( int k = 0; k < numSpheres; k+= 128 )
+    {
+        btVector3 temp[128];
+        int inner_count = MIN( numSpheres - k, 128 );
+>>>>>>> omni_engine
         for( long i = 0; i < inner_count; i++ )
         {
             temp[i] = (*pos) +vec*m_localScaling*(*rad) - vec * getMargin();

@@ -1740,7 +1740,7 @@ function ShapeEdSeqFromMenu::onSelect( %this, %id, %text )
       %this.setText( %seqFrom );
 
       // Allow the user to browse for an external source of animation data
-      getLoadFormatFilename( %this @ ".onBrowseSelect", %this.lastPath );
+      getLoadFilename( "DSQ Files|*.dsq|COLLADA Files|*.dae|Google Earth Files|*.kmz", %this @ ".onBrowseSelect", %this.lastPath );
    }
    else
    {
@@ -2862,7 +2862,7 @@ function ShapeEdDetails::onAddMeshFromFile( %this, %path )
 {
    if ( %path $= "" )
    {
-      getLoadFormatFilename( %this @ ".onAddMeshFromFile", %this.lastPath );
+      getLoadFilename( "DTS Files|*.dts|COLLADA Files|*.dae|Google Earth Files|*.kmz", %this @ ".onAddMeshFromFile", %this.lastPath );
       return;
    }
 
@@ -3291,7 +3291,7 @@ function ShapeEdMountShapeMenu::onSelect( %this, %id, %text )
    if ( %text $= "Browse..." )
    {
       // Allow the user to browse for an external model file
-      getLoadFormatFilename( %this @ ".onBrowseSelect", %this.lastPath );
+      getLoadFilename( "DTS Files|*.dts|COLLADA Files|*.dae|Google Earth Files|*.kmz", %this @ ".onBrowseSelect", %this.lastPath );
    }
    else
    {

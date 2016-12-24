@@ -429,7 +429,11 @@ bool DInputDevice::enumerateObjects()
 
    // Calculate the needed buffer sizes and allocate them:
    mObjCount = ( mDeviceCaps.dwAxes + mDeviceCaps.dwButtons + mDeviceCaps.dwPOVs );
+<<<<<<< HEAD
    mObjBufferSize = mObjCount * sizeof( DWORD );
+=======
+   mObjBufferSize = mObjCount * sizeof( DWORD_PTR );
+>>>>>>> omni_engine
 
    mObjInstance   = new DIDEVICEOBJECTINSTANCE[mObjCount];
    mObjFormat     = new DIOBJECTDATAFORMAT[mObjCount];
@@ -588,7 +592,11 @@ const char* DInputDevice::getName()
 {
 #ifdef UNICODE
    static UTF8 buf[512];
+<<<<<<< HEAD
    convertUTF16toUTF8(mDeviceInstance.tszInstanceName, buf);
+=======
+   convertUTF16toUTF8(mDeviceInstance.tszInstanceName, buf, sizeof(buf));
+>>>>>>> omni_engine
    return (const char *)buf;
 #else
    return mDeviceInstance.tszInstanceName;
@@ -600,7 +608,11 @@ const char* DInputDevice::getProductName()
 {
 #ifdef UNICODE
    static UTF8 buf[512];
+<<<<<<< HEAD
    convertUTF16toUTF8(mDeviceInstance.tszProductName, buf);
+=======
+   convertUTF16toUTF8(mDeviceInstance.tszProductName, buf, sizeof(buf));
+>>>>>>> omni_engine
    return (const char *)buf;
 #else
    return mDeviceInstance.tszProductName;

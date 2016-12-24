@@ -288,6 +288,7 @@ function addProjectDefines()
 	else
 		echo( "addProjectDefines() - no arguments passed!" );
 }
+
 /// Has a preprocessor directive been defined?
 function isDefined( $d )
 {

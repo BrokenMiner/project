@@ -38,11 +38,15 @@ typedef union
 #ifndef __PHYSICS_COMMON_H__
 #ifndef PFX_USE_FREE_VECTORMATH
 #ifndef __BT_SKIP_UINT64_H
+<<<<<<< HEAD
 #if defined(_WIN64) && defined(_MSC_VER)
 		typedef unsigned __int64 uint64_t;
 #else
 		typedef unsigned long int uint64_t;
 #endif
+=======
+		typedef unsigned long int uint64_t;
+>>>>>>> omni_engine
 #endif //__BT_SKIP_UINT64_H
 #endif //PFX_USE_FREE_VECTORMATH
 		typedef unsigned int      uint32_t;

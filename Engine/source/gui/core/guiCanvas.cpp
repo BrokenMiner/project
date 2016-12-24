@@ -36,8 +36,14 @@
 #include "gfx/video/videoCapture.h"
 #include "lighting/lightManager.h"
 #include "core/strings/stringUnit.h"
+<<<<<<< HEAD
 #include "gui/core/guiOffscreenCanvas.h"
 
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+#include "gui/containers/guiWindowCtrl.h"
+//Copyright Winterleaf Entertainment L.L.C. 2013
+>>>>>>> omni_engine
 #ifndef TORQUE_TGB_ONLY
 #include "scene/sceneObject.h"
 #endif
@@ -50,6 +56,14 @@
 #endif
 
 IMPLEMENT_CONOBJECT(GuiCanvas);
+//Copyright Winterleaf Entertainment L.L.C. 2013
+IMPLEMENT_CALLBACK(GuiCanvas, onResize, void, (const char* width, const char* height), (width, height), "");
+IMPLEMENT_CALLBACK(GuiCanvas, onCreateMenu, void, (), (), "");
+IMPLEMENT_CALLBACK(GuiCanvas, onDestroyMenu, void, (), (), "");
+IMPLEMENT_CALLBACK(GuiCanvas, onLoseFocus, void, (), (), "");
+IMPLEMENT_CALLBACK(GuiCanvas, onGainFocus, void, (), (), "");
+IMPLEMENT_CALLBACK(GuiCanvas, onWindowClose, void, (), (), "");
+//Copyright Winterleaf Entertainment L.L.C. 2013
 
 ConsoleDocClass( GuiCanvas,
 	"@brief A canvas on which rendering occurs.\n\n"
@@ -96,11 +110,17 @@ extern InputModifiers convertModifierBits(const U32 in);
 //-----------------------------------------------------------------------------
 
 GuiCanvas::GuiCanvas(): GuiControl(),
+<<<<<<< HEAD
                         mCurUpdateRect(0, 0, 0, 0),
                         mCursorEnabled(true),
                         mForceMouseToGUI(false),
                         mAlwaysHandleMouseButtons(false),
                         mCursorChanged(0),
+=======
+                        mCursorEnabled(true),
+                        mForceMouseToGUI(false),
+                        mAlwaysHandleMouseButtons(false),
+>>>>>>> omni_engine
                         mClampTorqueCursor(true),
                         mShowCursor(true),
                         mLastCursorEnabled(false),
@@ -112,6 +132,7 @@ GuiCanvas::GuiCanvas(): GuiControl(),
                         mMouseMiddleButtonDown(false),
                         mDefaultCursor(NULL),
                         mLastCursor(NULL),
+                        mPopupShown(false),     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
                         mLastCursorPt(0,0),
                         mCursorPt(0,0),
                         mLastMouseClickCount(0),
@@ -124,11 +145,19 @@ GuiCanvas::GuiCanvas(): GuiControl(),
                         mLeftMouseLast(false),
                         mMiddleMouseLast(false),
                         mRightMouseLast(false),
+<<<<<<< HEAD
                         mMouseDownPoint(0.0f,0.0f),
                         mPlatformWindow(NULL),
                         mLastRenderMs(0),
                         mDisplayWindow(true),
                         mMenuBarCtrl(NULL)
+=======
+                        mPlatformWindow(NULL),
+                        mLastRenderMs(0),
+//Copyright Winterleaf Entertainment L.L.C. 2013						
+						mIsPopUp(false)
+//Copyright Winterleaf Entertainment L.L.C. 2013	
+>>>>>>> omni_engine
 {
    setBounds(0, 0, 640, 480);
    mAwake = true;
@@ -138,11 +167,19 @@ GuiCanvas::GuiCanvas(): GuiControl(),
 
    mFences = NULL;
    mNextFenceIdx = -1;
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	mOverrideMode=String(StringTable->insert(""));
+	OverridePosition = Point2I(0,0);
+//Copyright Winterleaf Entertainment L.L.C. 2013
 
 #ifndef _XBOX
    mNumFences = Con::getIntVariable( "$pref::Video::defaultFenceCount", 0 );
 #else
    mNumFences = 0;
+#endif
+
+#ifdef TORQUE_DEMO_PURCHASE
+   mPurchaseScreen = NULL;
 #endif
 }
 
@@ -150,6 +187,13 @@ GuiCanvas::~GuiCanvas()
 {
    SAFE_DELETE(mPlatformWindow);
    SAFE_DELETE_ARRAY( mFences );
+
+#ifdef TORQUE_DEMO_PURCHASE
+ //  if (mPurchaseScreen)
+ //  {
+ //     SAFE_DELETE(mPurchaseScreen);
+ //  }
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -231,7 +275,14 @@ bool GuiCanvas::onAdd()
 			mPlatformWindow->lockSize(true);
 		
 		// Set a minimum on the window size so people can't break us by resizing tiny.
+<<<<<<< HEAD
 		mPlatformWindow->setMinimumWindowSize(Point2I(640,480));
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013		
+		//OMNI:  Allow resizing down to 10 by 20
+		mPlatformWindow->setMinimumWindowSize(Point2I(64,32));
+//Copyright Winterleaf Entertainment L.L.C. 2013		
+>>>>>>> omni_engine
 
       // Now, we have to hook in our event callbacks so we'll get
       // appropriate events from the window.
@@ -269,20 +320,44 @@ bool GuiCanvas::onAdd()
    bool parentRet = Parent::onAdd();
 
    // Define the menu bar for this canvas (if any)
+<<<<<<< HEAD
    Con::executef(this, "onCreateMenu");
 
    Sim::findObject("PlatformGenericMenubar", mMenuBarCtrl);
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+   onCreateMenu_callback();
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+
+#ifdef TORQUE_DEMO_PURCHASE
+   mPurchaseScreen = new PurchaseScreen;
+   mPurchaseScreen->init();
+
+   mLastPurchaseHideTime = 0;
+#endif
+>>>>>>> omni_engine
 
    return parentRet;
 }
 
 void GuiCanvas::onRemove()
 {
+#ifdef TORQUE_DEMO_PURCHASE
+   if (mPurchaseScreen && mPurchaseScreen->isAwake())
+      removeObject(mPurchaseScreen);
+#endif
+
    // And the process list
    Process::remove(this, &GuiCanvas::paint);
 
    // Destroy the menu bar for this canvas (if any)
+<<<<<<< HEAD
    Con::executef(this, "onDestroyMenu");
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+   onDestroyMenu_callback();
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+>>>>>>> omni_engine
 
    Parent::onRemove();
 }
@@ -332,7 +407,13 @@ void GuiCanvas::handleResize( WindowId did, S32 width, S32 height )
 
    // Notify the scripts
    if ( isMethod( "onResize" ) )
+<<<<<<< HEAD
       Con::executef( this, "onResize", Con::getIntArg( width ), Con::getIntArg( height ) );
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+   { onResize_callback( Con::getIntArg( width ), Con::getIntArg( height ) ); }
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+>>>>>>> omni_engine
 }
 
 void GuiCanvas::handlePaintEvent(WindowId did)
@@ -359,24 +440,104 @@ void GuiCanvas::handleAppEvent( WindowId did, S32 event )
    // Notify script if we gain or lose focus.
    if(event == LoseFocus)
    {
+<<<<<<< HEAD
       if(isMethod("onLoseFocus"))
          Con::executef(this, "onLoseFocus");
+=======
+      //if(isMethod("onLoseFocus"))
+//Copyright Winterleaf Entertainment L.L.C. 2013	  
+      //{
+			onLoseFocus_callback(); 
+			if (mIsPopUp)
+			{
+				GuiWindowCtrl* content = dynamic_cast<GuiWindowCtrl*>(this->getContentControl());
+				if (content)
+				content->onLoseFocus_callback();
+			}
+		//}
+//Copyright Winterleaf Entertainment L.L.C. 2013	
+>>>>>>> omni_engine
    }
 
    if(event == GainFocus)
    {
+<<<<<<< HEAD
       if(isMethod("onGainFocus"))
          Con::executef(this, "onGainFocus");
+=======
+      //if(isMethod("onGainFocus"))
+//Copyright Winterleaf Entertainment L.L.C. 2013	  
+//      { 
+			onGainFocus_callback();
+			if (mIsPopUp)
+			{
+				GuiWindowCtrl* content = dynamic_cast<GuiWindowCtrl*>(this->getContentControl());
+				if (content)
+				content->onGainFocus_callback();
+			}
+		//}
+//Copyright Winterleaf Entertainment L.L.C. 2013	 
+>>>>>>> omni_engine
    }
 
    if(event == WindowClose || event == WindowDestroy)
    {
+<<<<<<< HEAD
 
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+		onWindowClose();
+//Copyright Winterleaf Entertainment L.L.C. 2013      
+   }
+}
+//Copyright Winterleaf Entertainment L.L.C. 2013
+class GuiCanvas_Close : public SimEvent
+	{
+	void process(SimObject* obj)
+		{
+      if (obj)
+			obj->deleteObject();
+		}
+	};
+
+void GuiCanvas::onWindowClose()
+{
+	if (mIsPopUp)
+		{
+		//Find the windowctrl in it.
+		GuiWindowCtrl* content = dynamic_cast<GuiWindowCtrl*>(this->getContentControl());
+		if (content)
+			{
+			content->mPopWindowLastExtent = content->getExtent();
+			content->mOldParentGroup->addObject(content);
+			content->setExtent(content->mOrigExtent);
+			content->setPosition(content->mOrigPosition);
+
+			content->mPopWindowShowTitle=true;
+
+			content->setVisible(true);
+			content->mIsInPopUp=false;
+			content->UpdateRendering();
+			content->mLastWindowPosition = getPlatformWindow()->getPosition();
+			content->PopUpClosed(this);
+
+			//Now the tricky part we need to close this canvas.
+			//onWindowClose_callback();
+			Sim::postEvent(this,new GuiCanvas_Close(),Sim::getCurrentTime()+2);
+			}
+		}
+	else
+		{
+>>>>>>> omni_engine
       if(isMethod("onWindowClose"))
       {
          // First see if there is a method on this window to handle 
          //  it's closure
+<<<<<<< HEAD
          Con::executef(this,"onWindowClose");
+=======
+           onWindowClose_callback();
+>>>>>>> omni_engine
       }
       else if(Con::isFunction("onWindowClose"))
       {
@@ -390,6 +551,7 @@ void GuiCanvas::handleAppEvent( WindowId did, S32 event )
       }
    }
 }
+//Copyright Winterleaf Entertainment L.L.C. 2013
 
 Point2I GuiCanvas::getWindowSize()
 {
@@ -736,6 +898,7 @@ bool GuiCanvas::processMouseEvent(InputEventInfo &inputEvent)
    //
    //    'mCursorPt' basically is an accumulation of errors and the number of bugs that have cropped up with
    //    the GUI clicking stuff where it is not supposed to are probably all to blame on this.
+<<<<<<< HEAD
 
    S32 mouseDoubleClickWidth = 12;
    S32 mouseDoubleClickHeight = 12;
@@ -752,6 +915,16 @@ bool GuiCanvas::processMouseEvent(InputEventInfo &inputEvent)
 
    //copy the modifier into the new event
    mLastEvent.modifier = inputEvent.modifier;
+=======
+   
+   // Need to query platform for specific things
+   AssertISV(mPlatformWindow, "GuiCanvas::processMouseEvent - no window present!");
+   PlatformCursorController *pController = mPlatformWindow->getCursorController();
+   AssertFatal(pController != NULL, "GuiCanvas::processInputEvent - No Platform Controller Found")
+
+      //copy the modifier into the new event
+      mLastEvent.modifier = inputEvent.modifier;
+>>>>>>> omni_engine
 
    if(inputEvent.objType == SI_AXIS && 
       (inputEvent.objInst == SI_XAXIS || inputEvent.objInst == SI_YAXIS))
@@ -783,7 +956,11 @@ bool GuiCanvas::processMouseEvent(InputEventInfo &inputEvent)
       // moving too much.
       Point2F movement = mMouseDownPoint - mCursorPt;
 
+<<<<<<< HEAD
       if ((mAbs((S32)movement.x) > mouseDoubleClickWidth) || (mAbs((S32)movement.y) > mouseDoubleClickHeight ) )
+=======
+      if ((mAbs((S32)movement.x) > pController->getDoubleClickWidth()) || (mAbs((S32)movement.y) > pController->getDoubleClickHeight() ) )
+>>>>>>> omni_engine
       {
          mLeftMouseLast   = false;
          mMiddleMouseLast = false;
@@ -835,7 +1012,11 @@ bool GuiCanvas::processMouseEvent(InputEventInfo &inputEvent)
             if (mLeftMouseLast)
             {
                //if it was within the double click time count the clicks
+<<<<<<< HEAD
                if (curTime - mLastMouseDownTime <= mouseDoubleClickTime)
+=======
+               if (curTime - mLastMouseDownTime <= pController->getDoubleClickTime())
+>>>>>>> omni_engine
                   mLastMouseClickCount++;
                else
                   mLastMouseClickCount = 1;
@@ -869,7 +1050,11 @@ bool GuiCanvas::processMouseEvent(InputEventInfo &inputEvent)
             if (mRightMouseLast)
             {
                //if it was within the double click time count the clicks
+<<<<<<< HEAD
                if (curTime - mLastMouseDownTime <= mouseDoubleClickTime)
+=======
+               if (curTime - mLastMouseDownTime <= pController->getDoubleClickTime())
+>>>>>>> omni_engine
                   mLastMouseClickCount++;
                else
                   mLastMouseClickCount = 1;
@@ -900,7 +1085,11 @@ bool GuiCanvas::processMouseEvent(InputEventInfo &inputEvent)
             if (mMiddleMouseLast)
             {
                //if it was within the double click time count the clicks
+<<<<<<< HEAD
                if (curTime - mLastMouseDownTime <= mouseDoubleClickTime)
+=======
+               if (curTime - mLastMouseDownTime <= pController->getDoubleClickTime())
+>>>>>>> omni_engine
                   mLastMouseClickCount++;
                else
                   mLastMouseClickCount = 1;
@@ -1080,6 +1269,18 @@ void GuiCanvas::rootMouseDown(const GuiEvent &event)
 {
    mPrevMouseTime = Platform::getVirtualMilliseconds();
    mMouseButtonDown = true;
+   
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   if(isPopupShown())
+   {
+	   setPopupShown(false);
+	   mMouseCapturedControl = NULL;
+	   return;
+   }
+
+   // @Copyright end
 
    //pass the event to the mouse locked control
    if (bool(mMouseCapturedControl))
@@ -1093,7 +1294,11 @@ void GuiCanvas::rootMouseDown(const GuiEvent &event)
       {
          i--;
          GuiControl *ctrl = static_cast<GuiControl *>(*i);
+<<<<<<< HEAD
          GuiControl *controlHit = ctrl->findHitControl( event.mousePoint - ctrl->getPosition() );
+=======
+         GuiControl *controlHit = ctrl->findHitControl(event.mousePoint);
+>>>>>>> omni_engine
 
          //see if the controlHit is a modeless dialog...
          if( !controlHit->getControlProfile()->mModal )
@@ -1339,13 +1544,24 @@ bool GuiCanvas::rootMouseWheelDown(const GuiEvent &event)
 
 void GuiCanvas::setContentControl(GuiControl *gui)
 {
+#ifdef TORQUE_DEMO_PURCHASE
+   if (mPurchaseScreen->isForceExit())
+      return;
+#endif
+
    // Skip out if we got passed NULL (why would that happen?)
    if(!gui)
       return;
 
    GuiControl *oldContent = getContentControl();
    if(oldContent)
+<<<<<<< HEAD
       Con::executef(oldContent, "onUnsetContent", Con::getIntArg(gui->getId()));
+=======
+//Copywrite Winterlead Entertainment L.L.C. 2013   
+   { oldContent->onUnsetContent_callback( Con::getIntArg(gui->getId())); }
+//Copywrite Winterlead Entertainment L.L.C. 2013   
+>>>>>>> omni_engine
 
    //remove all dialogs on layer 0
    U32 index = 0;
@@ -1395,7 +1611,13 @@ void GuiCanvas::setContentControl(GuiControl *gui)
    maintainSizing();
 
    // Do this last so onWake gets called first
+<<<<<<< HEAD
    Con::executef(gui, "onSetContent", Con::getIntArg(oldContent ? oldContent->getId() : 0));
+=======
+//Copywrite Winterlead Entertainment L.L.C. 2013   
+   gui->onSetContent_callback( Con::getIntArg(oldContent ? oldContent->getId() : 0) );
+//Copywrite Winterlead Entertainment L.L.C. 2013   
+>>>>>>> omni_engine
 }
 
 GuiControl *GuiCanvas::getContentControl()
@@ -1407,6 +1629,11 @@ GuiControl *GuiCanvas::getContentControl()
 
 void GuiCanvas::pushDialogControl(GuiControl *gui, S32 layer, bool center)
 {
+#ifdef TORQUE_DEMO_PURCHASE
+   if (mPurchaseScreen->isForceExit())
+      return;
+#endif
+
    if( center )
       gui->setPosition( getExtent().x / 2 - gui->getExtent().x / 2,
                         getExtent().y / 2 - gui->getExtent().y / 2 );
@@ -1619,6 +1846,7 @@ void GuiCanvas::maintainSizing()
       GuiControl *ctrl = static_cast<GuiControl*>(*i);
       Point2I ext = ctrl->getExtent();
       Point2I pos = ctrl->getPosition();
+<<<<<<< HEAD
       Point2I newExt = screenRect.extent;
       Point2I newPos = screenRect.point;
 
@@ -1640,6 +1868,12 @@ void GuiCanvas::maintainSizing()
       if(pos != newPos || ext != newExt)
       {
          ctrl->resize(newPos, newExt);
+=======
+
+      if(pos != screenRect.point || ext != screenRect.extent)
+      {
+         ctrl->resize(screenRect.point, screenRect.extent);
+>>>>>>> omni_engine
          resetUpdateRegions();
       }
    }
@@ -1657,7 +1891,11 @@ void GuiCanvas::setupFences()
       mFences = new GFXFence*[mNumFences];
 
       // Allocate the new fences
+<<<<<<< HEAD
       for( S32 i = 0; i < mNumFences; i++ )
+=======
+      for( int i = 0; i < mNumFences; i++ )
+>>>>>>> omni_engine
          mFences[i] = GFX->createFence();
    }
 
@@ -1726,7 +1964,17 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
    GFXVideoMode mode = mPlatformWindow->getVideoMode();
    if ( dStricmp( LIGHTMGR->getId(), "ADVLM" ) == 0 && mode.antialiasLevel > 0 )   
    {
+<<<<<<< HEAD
       const char *pref = Con::getVariable( "$pref::Video::mode" );
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	   String s = String("$pref::Video::") + String(this->getName()) + String("::mode");
+	   const char *pref = Con::getVariable( StringTable->insert(s.c_str()));
+
+		if (dStrcmp(pref,"")==0)
+			pref = this->getOverrideMode();
+//Copyright Winterleaf Entertainment L.L.C. 2013
+>>>>>>> omni_engine
       mode.parseFromString( pref );
       mode.antialiasLevel = 0;
       mPlatformWindow->setVideoMode(mode);
@@ -1735,7 +1983,16 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
    }
    else if ( dStricmp( LIGHTMGR->getId(), "BLM" ) == 0)
    {
+<<<<<<< HEAD
       const char *pref = Con::getVariable( "$pref::Video::mode" );
+=======
+//Copyright Winterleaf Entertainment L.L.C. 2013   
+	  String s = String("$pref::Video::") + String(this->getName()) + String("::mode");
+	  const char *pref = Con::getVariable( StringTable->insert(s.c_str()));
+	  if (dStrcmp(pref,"")==0)
+		pref = this->getOverrideMode();
+//Copyright Winterleaf Entertainment L.L.C. 2013
+>>>>>>> omni_engine
 
       U32 prefAA = dAtoi( StringUnit::getUnit(pref, 5, " ") );
       if ( prefAA != mode.antialiasLevel )
@@ -1850,8 +2107,15 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
          
          GFX->setClipRect( updateUnion );
          GFX->setStateBlock(mDefaultGuiSB);
+<<<<<<< HEAD
          
          contentCtrl->onRender(contentCtrl->getPosition(), updateUnion);
+=======
+         contentCtrl->applyProfileSettings();      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+         contentCtrl->onRender(contentCtrl->getPosition(), updateUnion);
+         if( !contentCtrl->mProfileSettingsReset)     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+            contentCtrl->resetProfileSettings();      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
       }
 
       // Fill Black if no Dialogs
@@ -1923,6 +2187,10 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
    // this situation is necessary because it needs to take the screenshot
    // before the buffers swap
 
+#ifdef TORQUE_DEMO_TIMEOUT
+   checkTimeOut();
+#endif  
+
    PROFILE_END();
 
    // Fence logic here, because this is where endScene is called.
@@ -1944,8 +2212,12 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
    PROFILE_START(GFXEndScene);
    GFX->endScene();
    PROFILE_END();
+<<<<<<< HEAD
    
    GFX->getDeviceEventSignal().trigger( GFXDevice::dePostFrame );
+=======
+
+>>>>>>> omni_engine
    swapBuffers();
 
    GuiCanvas::getGuiCanvasFrameSignal().trigger(false);
@@ -1956,6 +2228,13 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
 
    // Keep track of the last time we rendered.
    mLastRenderMs = Platform::getRealMilliseconds();
+//Copyright Winterleaf Entertainment L.L.C. 2013
+	if (OverridePosition.x!=0 && OverridePosition.y != 0)
+		{
+		getPlatformWindow()->setPosition(OverridePosition);
+		OverridePosition = Point2I(0,0);
+		}
+//Copyright Winterleaf Entertainment L.L.C. 2013	
 }
 
 GuiCanvas::GuiCanvasFrameSignal& GuiCanvas::getGuiCanvasFrameSignal()
@@ -2144,9 +2423,16 @@ ConsoleDocFragment _popDialog2(
    "void popDialog();"
 );
 
+<<<<<<< HEAD
 DefineConsoleMethod( GuiCanvas, popDialog, void, (GuiControl * gui), (NULL), "(GuiControl ctrl=NULL)"
 			  "@hide")
 {
+=======
+DefineConsoleMethod( GuiCanvas, popDialog, void, (GuiControl * gui), , "(GuiControl ctrl=NULL)"
+			  "@hide")
+{
+
+>>>>>>> omni_engine
    if (gui)
       object->popDialogControl(gui);
    else
@@ -2297,10 +2583,14 @@ DefineEngineMethod( GuiCanvas, reset, void, (),,
 }
 
 DefineEngineMethod( GuiCanvas, getCursorPos, Point2I, (),,
+<<<<<<< HEAD
 				   "@brief Get the current position of the cursor in screen-space. Note that this position"
                " might be outside the Torque window. If you want to get the position within the Canvas,"
                " call screenToClient on the result.\n\n"
                "@see Canvas::screenToClient()\n\n"
+=======
+				   "@brief Get the current position of the cursor.\n\n"
+>>>>>>> omni_engine
 				   "@param param Description\n\n"
 				   "@tsexample\n"
 				   "%cursorPos = Canvas.getCursorPos();\n"
@@ -2365,7 +2655,11 @@ DefineEngineFunction(excludeOtherInstance, bool, (const char* appIdentifer),,
 					 "@ingroup GuiCore")
 {
 	   // mac/360 can only run one instance in general.
+<<<<<<< HEAD
 #if !defined(TORQUE_OS_MAC) && !defined(TORQUE_OS_XENON) && !defined(TORQUE_DEBUG) && !defined(TORQUE_OS_LINUX)
+=======
+#if !defined(TORQUE_OS_MAC) && !defined(TORQUE_OS_XENON) && !defined(TORQUE_DEBUG)
+>>>>>>> omni_engine
    return Platform::excludeOtherInstances(appIdentifer);
 #else
    // We can just return true if we get here.
@@ -2672,6 +2966,7 @@ DefineConsoleMethod( GuiCanvas, setFocus, void, (), , "() - Claim OS input focus
       window->setFocus();
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiCanvas, setMenuBar, void, ( GuiControl* menu ),,
    "Translate a coordinate from canvas window-space to screen-space.\n"
    "@param coordinate The coordinate in window-space.\n"
@@ -2679,6 +2974,15 @@ DefineEngineMethod( GuiCanvas, setMenuBar, void, ( GuiControl* menu ),,
 {
    return object->setMenuBar( menu );
 }
+=======
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+DefineEngineMethod( GuiCanvas, setPopupShown, void, (bool shown),  , "(bool shown) - Enabled when a context menu/popup menu is shown.")
+{
+	object->setPopupShown( shown );
+}
+// @Copyright end
+>>>>>>> omni_engine
 
 DefineConsoleMethod( GuiCanvas, setVideoMode, void, 
                (U32 width, U32 height, bool fullscreen, U32 bitDepth, U32 refreshRate, U32 antialiasLevel), 
@@ -2761,7 +3065,11 @@ DefineConsoleMethod( GuiCanvas, setVideoMode, void,
    // aren't specified, just leave them at whatever they were set to.
    if (bitDepth > 0)
    {
+<<<<<<< HEAD
       vm.bitDepth = bitDepth;
+=======
+      vm.bitDepth = refreshRate;
+>>>>>>> omni_engine
    }
 
    if (refreshRate > 0)
@@ -2800,6 +3108,7 @@ ConsoleMethod( GuiCanvas, hideWindow, void, 2, 2, "" )
    object->getPlatformWindow()->setDisplayWindow(false);
 }
 
+<<<<<<< HEAD
 ConsoleMethod( GuiCanvas, cursorClick, void, 4, 4, "button, isDown" )
 {
    const S32 buttonId = dAtoi(argv[2]);
@@ -2812,3 +3121,755 @@ ConsoleMethod( GuiCanvas, cursorNudge, void, 4, 4, "x, y" )
 {
    object->cursorNudge(dAtof(argv[2]), dAtof(argv[3]));
 }
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_excludeOtherInstance(char * x__appIdentifer)
+{
+const char* appIdentifer = (const char*)x__appIdentifer;
+bool wle_returnObject;
+{
+	   
+#if !defined(TORQUE_OS_MAC) && !defined(TORQUE_OS_XENON) && !defined(TORQUE_DEBUG)
+   {wle_returnObject =Platform::excludeOtherInstances(appIdentifer);
+return (S32)(wle_returnObject);}
+#else
+      {wle_returnObject =true;
+return (S32)(wle_returnObject);}
+#endif
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiCanvas_isFullscreen(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   if (Platform::getWebDeployment())
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   if (!object->getPlatformWindow())
+      {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+   {wle_returnObject =object->getPlatformWindow()->getVideoMode().fullScreen;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiCanvas_isMaximized(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   PlatformWindow* window = object->getPlatformWindow();
+   if ( window )
+      {wle_returnObject =window->isMaximized();
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_GuiCanvas_isMinimized(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+   PlatformWindow* window = object->getPlatformWindow();
+   if ( window )
+      {wle_returnObject =window->isMinimized();
+return (S32)(wle_returnObject);}
+   {wle_returnObject =false;
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_maximizeWindow(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   PlatformWindow* window = object->getPlatformWindow();
+   if ( window )
+      window->maximize();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_minimizeWindow(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   PlatformWindow* window = object->getPlatformWindow();
+   if ( window )
+      window->minimize();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_popDialog(char * x__object, char * x__gui)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+GuiControl* gui; Sim::findObject(x__gui, gui ); 
+{
+   if (gui)
+      object->popDialogControl(gui);
+   else
+      object->popDialogControl();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_popLayer(char * x__object, S32 layer)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->popDialogControl(layer);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_pushDialog(char * x__object, char * x__ctrlName, S32 layer, bool center)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* ctrlName = (const char*)x__ctrlName;
+
+{
+   GuiControl *gui;
+   if (!	Sim::findObject(ctrlName, gui))
+   {
+      Con::printf("pushDialog(): Invalid control: %s", ctrlName);
+      return;
+   }
+   
+      object->pushDialogControl(gui, layer, center);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_restoreWindow(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   PlatformWindow* window = object->getPlatformWindow();
+   if( window )
+      window->restore();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_setCursorPos(char * x__object, char * x__pos)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I pos = Point2I();
+sscanf(x__pos,"%i %i",&pos.x,&pos.y);
+{
+   object->setCursorPos(pos);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_setFocus(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   PlatformWindow* window = object->getPlatformWindow();
+   if( window )
+      window->setFocus();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiCanvas_setVideoMode(char * x__object, U32 width, U32 height, bool fullscreen, U32 bitDepth, U32 refreshRate, U32 antialiasLevel)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+
+
+{
+   if (!object->getPlatformWindow())
+      return;
+   
+   if (Journal::IsRecording() || Journal::IsPlaying())   
+      return;
+      GFXVideoMode vm = object->getPlatformWindow()->getVideoMode();
+   bool changed = false;
+   if (width == 0 && height > 0)
+   {
+                  for(S32 i=0; i<object->getPlatformWindow()->getGFXDevice()->getVideoModeList()->size(); i++)
+      {
+         const GFXVideoMode &newVm = (*(object->getPlatformWindow()->getGFXDevice()->getVideoModeList()))[i];
+         if(newVm.resolution.y == height)
+         {
+            width = newVm.resolution.x;
+            changed = true;
+            break;
+         }
+      }
+   }
+   else if (height == 0 && width > 0)
+   {
+                  for(S32 i=0; i<object->getPlatformWindow()->getGFXDevice()->getVideoModeList()->size(); i++)
+      {
+         const GFXVideoMode &newVm = (*(object->getPlatformWindow()->getGFXDevice()->getVideoModeList()))[i];
+         if(newVm.resolution.x == width)
+         {
+            height = newVm.resolution.y;
+            changed = true;
+            break;
+         }
+      }
+   }
+   if (width == 0 || height == 0)
+   {
+                  width  = vm.resolution.x;
+      height = vm.resolution.y;
+      changed = true;
+   }
+   if (changed)
+   {
+      Con::errorf("GuiCanvas::setVideoMode(): Error - Invalid resolution of (%d, %d) - attempting (%d, %d)", width, height, width, height);
+   }
+   vm.resolution  = Point2I(width, height);
+   vm.fullScreen  = fullscreen;
+   if (Platform::getWebDeployment())
+      vm.fullScreen  = false;
+         if (bitDepth > 0)
+   {
+      vm.bitDepth = refreshRate;
+   }
+   if (refreshRate > 0)
+   {
+      vm.refreshRate = refreshRate;
+   }
+   if (antialiasLevel > 0)
+   {
+      vm.antialiasLevel = antialiasLevel;
+   }
+   object->getPlatformWindow()->setVideoMode(vm);
+      Con::setVariable( "$pref::Video::mode", vm.toString() );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_clientToScreen(char * x__object, char * x__coordinate,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I coordinate = Point2I();
+sscanf(x__coordinate,"%i %i",&coordinate.x,&coordinate.y);
+Point2I wle_returnObject;
+{
+   if( !object->getPlatformWindow() )
+      {wle_returnObject =coordinate;
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+      
+   {wle_returnObject =object->getPlatformWindow()->clientToScreen( coordinate );
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_cursorOff(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setCursorON(false);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_cursorOn(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setCursorON(true);
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiCanvas_findFirstMatchingMonitor(char * x__object, char * x__name)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+const char* name = (const char*)x__name;
+{
+  return (S32)( PlatformWindowManager::get()->findFirstMatchingMonitor(name));
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiCanvas_getContent(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	GuiControl *ctrl = object->getContentControl();
+   if(ctrl)
+     return (S32)( ctrl->getId());
+  return (S32)( -1);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_getCursorPos(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I wle_returnObject;
+{
+	{wle_returnObject =object->getCursorPos();
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_getExtent(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I wle_returnObject;
+{
+	{wle_returnObject =object->getExtent();
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_getMode(char * x__object, S32 modeId,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	if (!object->getPlatformWindow())
+      {wle_returnObject =0;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+      const Vector<GFXVideoMode>* const modeList = 
+      object->getPlatformWindow()->getGFXDevice()->getVideoModeList();
+      S32 idx = modeId;
+   if((idx < 0) || (idx >= modeList->size()))
+   {
+      Con::errorf("GuiCanvas::getResolution - You requested an out of range index of %d. Please specify an index in the range [0, %d).", idx, modeList->size());
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   }
+         GFXVideoMode vm = (*modeList)[idx];
+   char *retString = Con::getReturnBuffer(vm.toString());
+   {wle_returnObject =retString;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiCanvas_getModeCount(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	if (!object->getPlatformWindow())
+     return (S32)( 0);
+      const Vector<GFXVideoMode>* const modeList = 
+      object->getPlatformWindow()->getGFXDevice()->getVideoModeList();
+     return (S32)( modeList->size());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiCanvas_getMonitorCount(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( PlatformWindowManager::get()->getMonitorCount());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_getMonitorName(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =PlatformWindowManager::get()->getMonitorName(index);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_getMonitorRect(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+RectI wle_returnObject;
+{
+   {wle_returnObject =PlatformWindowManager::get()->getMonitorRect(index);
+dSprintf(retval,1024,"%d %d %d %d ",wle_returnObject.point.x,wle_returnObject.point.y,wle_returnObject.extent.x,wle_returnObject.extent.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiCanvas_getMouseControl(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+	GuiControl* control = object->getMouseControl();
+   if (control)
+     return (S32)( control->getId());
+   
+  return (S32)( NULL);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_getVideoMode(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+	   if (!object->getPlatformWindow())
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   GFXVideoMode vm = object->getPlatformWindow()->getVideoMode();
+   char* buf = Con::getReturnBuffer(vm.toString());
+   {wle_returnObject =buf;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_getWindowPosition(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I wle_returnObject;
+{
+   if( !object->getPlatformWindow() )
+      {wle_returnObject =Point2I( 0, 0 );
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+      
+   {wle_returnObject =object->getPlatformWindow()->getPosition();
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_hideCursor(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->showCursor(false);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_hideWindow(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+{
+   if (!object->getPlatformWindow())
+      return;
+   object->getPlatformWindow()->hide();
+   WindowManager->setDisplayWindow(false);
+   object->getPlatformWindow()->setDisplayWindow(false);
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiCanvas_isCursorOn(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+	{wle_returnObject =object->isCursorON();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiCanvas_isCursorShown(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return 0;
+bool wle_returnObject;
+{
+	{wle_returnObject =object->isCursorShown();
+return (S32)(wle_returnObject);}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_renderFront(char * x__object, bool enable)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setRenderFront(enable);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_repaint(char * x__object, S32 elapsedMS)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->repaint(elapsedMS < 0 ? 0 : elapsedMS);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_reset(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->resetUpdateRegions();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_screenToClient(char * x__object, char * x__coordinate,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I coordinate = Point2I();
+sscanf(x__coordinate,"%i %i",&coordinate.x,&coordinate.y);
+Point2I wle_returnObject;
+{
+   if( !object->getPlatformWindow() )
+      {wle_returnObject =coordinate;
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+      
+   {wle_returnObject =object->getPlatformWindow()->screenToClient( coordinate );
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_setContent(char * x__object, char * x__ctrl)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+GuiControl* ctrl; Sim::findObject(x__ctrl, ctrl ); 
+{
+	
+	        
+	if(!ctrl)
+	{
+		Con::errorf("GuiCanvas::setContent - Invalid control specified')");
+		return;
+	}
+      object->setContentControl(ctrl);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_setCursor(char * x__object, char * x__cursor)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+GuiCursor* cursor; Sim::findObject(x__cursor, cursor ); 
+{
+	if(!cursor)
+	{
+		Con::errorf("GuiCanvas::setCursor - Invalid GuiCursor name or ID");
+		return;
+	}
+	object->setCursor(cursor);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_setPopupShown(char * x__object, bool shown)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->setPopupShown( shown );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_setWindowPosition(char * x__object, char * x__position)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I position = Point2I();
+sscanf(x__position,"%i %i",&position.x,&position.y);
+{
+   if( !object->getPlatformWindow() )
+      return;
+      
+   object->getPlatformWindow()->setPosition( position );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_setWindowTitle(char * x__object, char * x__newTitle)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* newTitle = (const char*)x__newTitle;
+{
+	object->setWindowTitle(newTitle);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_showCursor(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->showCursor(true);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_showWindow(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+{
+   if (!object->getPlatformWindow())
+      return;
+   object->getPlatformWindow()->show();
+   WindowManager->setDisplayWindow(true);
+   object->getPlatformWindow()->setDisplayWindow(true);
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiCanvas_toggleFullscreen(char * x__object)
+{
+GuiCanvas* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	if (Platform::getWebDeployment())
+      return;
+   if (!object->getPlatformWindow())
+      return;
+   if (Journal::IsRecording() || Journal::IsPlaying())   
+      return;
+      GFXVideoMode origMode = object->getPlatformWindow()->getVideoMode();
+   
+      GFXDevice *device = object->getPlatformWindow()->getGFXDevice();
+      GFXVideoMode newMode = origMode;
+   newMode.fullScreen = !origMode.fullScreen;
+   
+      
+   if(newMode.fullScreen == true)
+   {
+                        
+      for(S32 i=0; i<device->getVideoModeList()->size(); i++)
+      {
+         const GFXVideoMode &newVm = (*(device->getVideoModeList()))[i];
+         if(newMode.resolution.x > newVm.resolution.x)
+            continue;
+         if(newMode.resolution.y > newVm.resolution.y)
+            continue;
+         if(newMode.bitDepth != newVm.bitDepth)
+            continue;
+                  newMode = newVm;
+         newMode.fullScreen = true;
+         break;
+      }
+   }
+      object->getPlatformWindow()->setVideoMode(newMode);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

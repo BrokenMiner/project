@@ -87,6 +87,9 @@ function ParticleEditorPlugin::onWorldEditorStartup( %this )
 
 function ParticleEditorPlugin::onActivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   ParticleEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013
    if( !ParticleEditor.isInitialized )
    {
       ParticleEditor.initEditor();
@@ -113,6 +116,11 @@ function ParticleEditorPlugin::onActivated( %this )
 
 function ParticleEditorPlugin::onDeactivated( %this )
 {   
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!ParticleEditorPlugin.isActive)
+      return;
+   ParticleEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013  
    EditorGui-->WorldEditorToolbar.setVisible( false );
    PE_Window.setVisible( false );
    

@@ -52,14 +52,99 @@ void GuiVariableInspector::loadVars( String searchStr )
    group->setCaption( "Global Variables" );
    group->mSearchString = searchStr;
 
+<<<<<<< HEAD
    group->registerObject();
    mGroups.push_back( group );
    addObject( group );
  
+=======
+   if( group != NULL )
+   {
+      group->registerObject();
+      mGroups.push_back( group );
+      addObject( group );
+   }   
+
+>>>>>>> omni_engine
    //group->inspectGroup();
 }
 
 DefineConsoleMethod( GuiVariableInspector, loadVars, void, ( const char * searchString ), , "loadVars( searchString )" )
 {
    object->loadVars( searchString );
+<<<<<<< HEAD
 }
+=======
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiVariableInspector_loadVars(char * x__object, char * x__searchString)
+{
+GuiVariableInspector* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* searchString = (const char*)x__searchString;
+{
+   object->loadVars( searchString );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

@@ -105,6 +105,23 @@ void GuiColorPickerCtrl::initPersistFields()
    endGroup("ColorPicker");
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "controlFontColor" );
+
+   removeField( "controlFillColor" );
+
+   removeField( "backgroundColor" );
+
+   removeField( "contextFontColor" );
+
+   removeField( "contextBackColor" );
+
+   removeField( "contextFillColor" );
+
+   // @Copyright end
 }
 
 //--------------------------------------------------------------------------
@@ -329,6 +346,68 @@ void GuiColorPickerCtrl::renderColorBox(RectI &bounds)
    }
 }
 
+// Copyright (C) 2013 WinterLeaf Entertainment LLC.
+//  @Copyright start
+
+void GuiColorPickerCtrl::copyProfileSettings()
+{
+	if( !mProfileSettingsCopied)
+	{
+		mPickColorCopy = mPickColor;
+		mBaseColorCopy = mBaseColor;
+
+		Parent::copyProfileSettings();
+	}
+}
+
+void GuiColorPickerCtrl::resetProfileSettings()
+{
+	mPickColor = mPickColorCopy;
+	mBaseColor = mBaseColorCopy;
+	colorWhite = ColorF(1.,1.,1.);
+	colorWhiteBlend = ColorF(1.,1.,1.,.75);
+	colorBlack = ColorF(.0,.0,.0);
+	colorAlpha = ColorF(0.0f, 0.0f, 0.0f, 0.0f);
+	colorAlphaW = ColorF(1.0f, 1.0f, 1.0f, 0.0f);
+
+	Parent::resetProfileSettings();
+}
+
+void GuiColorPickerCtrl::applyProfileSettings()
+{
+   Parent::applyProfileSettings();
+
+   // Apply alpha to the color
+   if(mPickColor)
+	   mPickColor.alpha = mPickColorCopy.alpha * mRenderAlpha;
+   if(mBaseColor)
+	   mBaseColor.alpha = mBaseColorCopy.alpha * mRenderAlpha;
+   for( S32 i = 0; i < 7; i++ )
+	   mColorRange[i].alpha = mRenderAlpha * 255;
+
+   colorAlpha.alpha *= mRenderAlpha;
+   colorAlphaW.alpha *= mRenderAlpha;
+   colorBlack.alpha *= mRenderAlpha;
+   colorWhite.alpha *= mRenderAlpha;
+   colorWhiteBlend.alpha *= mRenderAlpha;
+
+}
+
+void GuiColorPickerCtrl::onStaticModified( const char *slotName, const char *newValue )
+{
+	if( !dStricmp( slotName, "baseColor" ) || !dStricmp( slotName, "pickColor" ) )
+	{
+		ColorF color(1, 0, 0, 1);
+		dSscanf( newValue, "%f %f %f %f", &color.red, &color.green, &color.blue, &color.alpha );
+		if( !dStricmp( slotName, "baseColor" ) )
+			mBaseColorCopy = color;
+		else
+			mPickColorCopy = color;
+	}
+}
+
+// @Copyright end
+
 void GuiColorPickerCtrl::onRender(Point2I offset, const RectI& updateRect)
 {
    if (mStateBlock.isNull())
@@ -354,7 +433,13 @@ void GuiColorPickerCtrl::onRender(Point2I offset, const RectI& updateRect)
          Point2I resolution = getRoot()->getExtent();
 
          U32 buf_x = offset.x + mSelectorPos.x + 1;
+<<<<<<< HEAD
          U32 buf_y = resolution.y - ( extent.y - ( offset.y + mSelectorPos.y + 1 ) );
+=======
+         U32 buf_y = ( extent.y - ( offset.y + mSelectorPos.y + 1 ) );
+         if(GFX->getAdapterType() != OpenGL)
+            buf_y = resolution.y - buf_y;
+>>>>>>> omni_engine
 
          GFXTexHandle bb( resolution.x, 
                           resolution.y, 
@@ -454,6 +539,8 @@ void GuiColorPickerCtrl::onMouseDown(const GuiEvent &event)
       setSelectorPos(globalToLocalCoord(event.mousePoint)); 
    
    mMouseDown = true;
+
+   Parent::onMouseDown( event );
 }
 
 //--------------------------------------------------------------------------
@@ -469,6 +556,8 @@ void GuiColorPickerCtrl::onMouseDragged(const GuiEvent &event)
    if( !mActionOnMove )
       execAltConsoleCallback();
 
+   Parent::onMouseDragged( event );
+
 }
 
 //--------------------------------------------------------------------------
@@ -483,6 +572,7 @@ void GuiColorPickerCtrl::onMouseMove(const GuiEvent &event)
 void GuiColorPickerCtrl::onMouseEnter(const GuiEvent &event)
 {
    mMouseOver = true;
+<<<<<<< HEAD
 }
 
 //--------------------------------------------------------------------------
@@ -494,6 +584,24 @@ void GuiColorPickerCtrl::onMouseLeave(const GuiEvent &)
 
 //--------------------------------------------------------------------------
 void GuiColorPickerCtrl::onMouseUp(const GuiEvent &)
+=======
+
+   // fade Control
+   fadeControl();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+}
+
+//--------------------------------------------------------------------------
+void GuiColorPickerCtrl::onMouseLeave(const GuiEvent &event)
+{
+   // Reset state
+   mMouseOver = false;
+
+   smCapturedControl = this;     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+}
+
+//--------------------------------------------------------------------------
+void GuiColorPickerCtrl::onMouseUp(const GuiEvent &event)
+>>>>>>> omni_engine
 {
    //if we released the mouse within this control, perform the action
 	if (mActive && mMouseDown && (mDisplayMode != pDropperBackground)) 
@@ -506,6 +614,8 @@ void GuiColorPickerCtrl::onMouseUp(const GuiEvent &)
    }
    
    mouseUnlock();
+
+   Parent::onMouseUp( event );
 }
 
 //--------------------------------------------------------------------------
@@ -539,3 +649,98 @@ DefineConsoleMethod(GuiColorPickerCtrl, updateColor, void, (), , "Forces update 
 {
 	object->updateColor();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiColorPickerCtrl_getSelectorPos(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiColorPickerCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I wle_returnObject;
+{
+   {wle_returnObject =object->getSelectorPos();
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiColorPickerCtrl_setSelectorPos(char * x__object, char * x__newPos)
+{
+GuiColorPickerCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I newPos = Point2I();
+sscanf(x__newPos,"%i %i",&newPos.x,&newPos.y);
+{
+   object->setSelectorPos(newPos);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_GuiColorPickerCtrl_updateColor(char * x__object)
+{
+GuiColorPickerCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+	object->updateColor();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

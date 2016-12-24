@@ -28,6 +28,8 @@
 #include "gui/core/guiDefaultControlRender.h"
 #include "gfx/gfxDrawUtil.h"
 
+#include "OMNI\OMNI.h"
+
 
 IMPLEMENT_CONOBJECT( GuiTabBookCtrl );
 
@@ -51,7 +53,12 @@ ImplementEnumType( GuiTabPosition,
    "Where the control should put the tab headers for selecting individual pages.\n\n"
    "@ingroup GuiContainers" )
    { GuiTabBookCtrl::AlignTop,   "Top",      "Tab headers on top edge." },
+<<<<<<< HEAD
    { GuiTabBookCtrl::AlignBottom,"Bottom",   "Tab headers on bottom edge." }
+=======
+   { GuiTabBookCtrl::AlignBottom,"Bottom",   "Tab headers on bottom edge." },
+	{ GuiTabBookCtrl::AlignRight,"Right",   "Tab headers on right edge." }	//TabBookChanges
+>>>>>>> omni_engine
 EndImplementEnumType;
 
 IMPLEMENT_CALLBACK( GuiTabBookCtrl, onTabSelected, void, ( const String& text, U32 index ), ( text, index ),
@@ -123,6 +130,15 @@ void GuiTabBookCtrl::initPersistFields()
    endGroup( "TabBook" );
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
 }
 
 //-----------------------------------------------------------------------------
@@ -268,7 +284,13 @@ bool GuiTabBookCtrl::onWake()
    if( mHasTexture )
    {
       mBitmapBounds = mProfile->mBitmapArrayRects.address();
+<<<<<<< HEAD
       mTabHeight = mBitmapBounds[TabSelected].extent.y;
+=======
+	  if (!Winterleaf_EngineCallback::mWLE_EngineCallBack)
+		mTabHeight = mBitmapBounds[TabSelected].extent.y;
+      //mTabHeight = 24;//mBitmapBounds[TabSelected].extent.y;
+>>>>>>> omni_engine
    }
 
    calculatePageTabs();
@@ -474,6 +496,8 @@ void GuiTabBookCtrl::onRightMouseUp( const GuiEvent& event )
       if( tab )
          onTabRightClick_callback( tab->getText(), getPageNum( tab ) );
    }
+
+   Parent::onRightMouseUp( event );    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
 }
 
 //-----------------------------------------------------------------------------
@@ -490,10 +514,19 @@ void GuiTabBookCtrl::onRender(Point2I offset, const RectI &updateRect)
    GFX->getDrawUtil()->getBitmapModulation( &oldModulation );
 
    // Wipe it out
+<<<<<<< HEAD
    GFX->getDrawUtil()->clearBitmapModulation();
 
    Parent::onRender(offset, updateRect);
 
+=======
+   //GFX->getDrawUtil()->clearBitmapModulation();  // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+
+   Parent::onRender(offset, updateRect);
+
+   GFX->getDrawUtil()->setBitmapModulation( oldModulation );
+
+>>>>>>> omni_engine
    // Clip to tab area
    RectI savedClipRect = GFX->getClipRect();
    RectI clippedTabRect = tabRect;
@@ -541,14 +574,23 @@ void GuiTabBookCtrl::renderTabs( const Point2I &offset, const RectI &tabRect )
          // case trying to render causes a DX assert. Could be better if 
          // setClipRect returned a bool.
          if ( GFX->getViewport().isValidRect() )
+<<<<<<< HEAD
             renderFixedBitmapBordersFilled( tabEndRect, TabEnds + 1, mProfile );
+=======
+            //renderFixedBitmapBordersFilled( tabEndRect, TabEnds + 1, mProfile );
+				renderSizableBitmapBordersFilled( tabEndRect, TabEnds + 1, mProfile );	//TabBookChanges
+>>>>>>> omni_engine
       }
    }
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void GuiTabBookCtrl::renderTab(const RectI& tabRect, GuiTabPageCtrl *tab)
+=======
+void GuiTabBookCtrl::renderTab( RectI tabRect, GuiTabPageCtrl *tab )
+>>>>>>> omni_engine
 {
    StringTableEntry text = tab->getText();
    ColorI oldColor;
@@ -562,8 +604,13 @@ void GuiTabBookCtrl::renderTab(const RectI& tabRect, GuiTabPageCtrl *tab)
       switch( mTabPosition )
       {
       case AlignTop:
+<<<<<<< HEAD
       case AlignBottom:
          
+=======
+	  case AlignBottom:
+	  case AlignRight:	//TabBookChanges
+>>>>>>> omni_engine
          if ( mActivePage == tab )
             indexMultiplier += TabSelected;
          else if( mHoverTab == tab )
@@ -572,8 +619,13 @@ void GuiTabBookCtrl::renderTab(const RectI& tabRect, GuiTabPageCtrl *tab)
             indexMultiplier += TabNormal;
          break;
       } 
+<<<<<<< HEAD
 
       renderFixedBitmapBordersFilled( tabRect, indexMultiplier, mProfile );
+=======
+      //renderFixedBitmapBordersFilled( tabRect, indexMultiplier, mProfile );
+	  renderSizableBitmapBordersFilled( tabRect, indexMultiplier, mProfile );	//TabBookChanges
+>>>>>>> omni_engine
    }
    else
    {
@@ -592,10 +644,18 @@ void GuiTabBookCtrl::renderTab(const RectI& tabRect, GuiTabPageCtrl *tab)
 
    switch( mTabPosition )
    {
+<<<<<<< HEAD
    case AlignTop:
    case AlignBottom:
       renderJustifiedText( tabRect.point, tabRect.extent, text);
    break;
+=======
+	   case AlignTop:
+	   case AlignBottom:
+	   case AlignRight:	//TabBookChanges
+		  renderJustifiedText( tabRect.point, tabRect.extent, text);	
+		  break;
+>>>>>>> omni_engine
    }
 
    GFX->getDrawUtil()->setBitmapModulation( oldColor);
@@ -622,8 +682,18 @@ S32 GuiTabBookCtrl::calculatePageTabWidth( GuiTabPageCtrl *page )
 
    const char* text = page->getText();
 
+<<<<<<< HEAD
    if( !text || dStrlen(text) == 0 || mProfile == NULL || mProfile->mFont == NULL )
       return mMinTabWidth;
+=======
+   if( !text || dStrlen(text) == 0 || mProfile->mFont == NULL )
+   {
+	   if( mTabPosition != AlignRight )
+		   return mMinTabWidth;
+	   else
+		   return mTabHeight;
+   }
+>>>>>>> omni_engine
 
    GFont *font = mProfile->mFont;
 
@@ -667,8 +737,14 @@ void GuiTabBookCtrl::calculatePageTabs()
    for( S32 i = 0; i < mPages.size(); i++ )
    {
       // Fetch Tab Width
+<<<<<<< HEAD
       S32 tabWidth = calculatePageTabWidth( mPages[i].Page ) + ( mTabMargin * 2 );
       tabWidth = getMax( tabWidth, mMinTabWidth );
+=======
+	   //TabBookChanges
+      S32 tabWidth = calculatePageTabWidth( mPages[i].Page ) + ( mTabMargin * 2 );
+	  tabWidth = getMax( tabWidth, mMinTabWidth );
+>>>>>>> omni_engine
       TabHeaderInfo &info = mPages[i];
       switch( mTabPosition )
       {
@@ -699,11 +775,46 @@ void GuiTabBookCtrl::calculatePageTabs()
          // Adjust Y Point based on alignment
          if( mTabPosition == AlignTop )
             info.TabRect.point.y  = ( info.TabRow * mTabHeight );
+<<<<<<< HEAD
          else 
             info.TabRect.point.y  = getHeight() - ( ( 1 + info.TabRow ) * mTabHeight );
 
          currX += tabWidth;
          break;
+=======
+		 else if( mTabPosition == AlignBottom )
+            info.TabRect.point.y  = getHeight() - ( ( 1 + info.TabRow ) * mTabHeight );
+		 else
+		 {
+			 info.TabRect.point.x  = getWidth() + currX - mTabHeight;
+			 info.TabRect.point.y  = ( info.TabRow * tabWidth );
+			 info.TabRect.extent.x = mTabHeight;
+			 info.TabRect.extent.y = tabWidth;
+		 }
+
+         currX += tabWidth;
+         break;
+		 //TabBookChanges
+	  case AlignRight:
+		 
+        info.TabRow = i;
+        info.TabColumn = 0;
+
+         // Calculate Tabs Bounding Rect
+         //info.TabRect.point.x  = currX;
+         //info.TabRect.extent.x = tabWidth;
+         //info.TabRect.extent.y = mTabHeight;
+
+         // Adjust Y Point based on alignment
+		 info.TabRect.point.x  = getWidth() - mTabHeight;
+		 info.TabRect.point.y  = ( info.TabRow * tabWidth );
+		 info.TabRect.extent.x = mTabHeight;
+		 info.TabRect.extent.y = tabWidth;
+
+
+		 currX += tabWidth;
+         break;
+>>>>>>> omni_engine
       };
    }
 
@@ -740,6 +851,20 @@ void GuiTabBookCtrl::calculatePageTabs()
       mPageRect.point.y = 0;
       mPageRect.extent.x = mTabRect.extent.x;
       mPageRect.extent.y = localPoint.y - mTabRect.extent.y;
+
+      break;
+	  //TabBookChanges
+   case AlignRight:
+
+      mTabRect.extent.x = currRow * mTabHeight;
+	  mTabRect.point.x = getWidth() - mTabRect.extent.x;
+      mTabRect.point.y = 0;
+      mTabRect.extent.y = localPoint.y;
+
+      mPageRect.point.x = 0;
+      mPageRect.point.y = 0;
+	  mPageRect.extent.x = mTabRect.point.x;
+      mPageRect.extent.y = getHeight();// - mTabRect.extent.y;
 
       break;
    }
@@ -982,3 +1107,92 @@ DefineEngineMethod( GuiTabBookCtrl, getSelectedPage, S32, (),,
 {
    return object->getSelectedPageNum();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTabBookCtrl_addPage(char * x__object, char * x__title)
+{
+GuiTabBookCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* title = (const char*)x__title;
+{
+   object->addNewPage( title );
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiTabBookCtrl_getSelectedPage(char * x__object)
+{
+GuiTabBookCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getSelectedPageNum());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTabBookCtrl_selectPage(char * x__object, S32 index)
+{
+GuiTabBookCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->selectPage( index );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

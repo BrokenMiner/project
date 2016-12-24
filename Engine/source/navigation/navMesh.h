@@ -1,5 +1,9 @@
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 // Copyright (c) 2014 Daniel Buckmaster
+=======
+// Copyright (c) 2013 GarageGames, LLC
+>>>>>>> omni_engine
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -25,6 +29,7 @@
 
 #include <queue>
 
+<<<<<<< HEAD
 #include "scene/sceneObject.h"
 #include "collision/concretePolyList.h"
 #include "recastPolyList.h"
@@ -33,6 +38,13 @@
 #include "torqueRecast.h"
 #include "duDebugDrawTorque.h"
 #include "coverPoint.h"
+=======
+#include "torqueRecast.h"
+#include "scene/sceneObject.h"
+#include "recastPolyList.h"
+
+#include "duDebugDrawTorque.h"
+>>>>>>> omni_engine
 
 #include <Recast.h>
 #include <DetourNavMesh.h>
@@ -73,6 +85,7 @@ public:
    /// Instantly rebuild a specific tile.
    void buildTile(const U32 &tile);
 
+<<<<<<< HEAD
    /// Rebuild parts of the navmesh where links have changed.
    void buildLinks();
 
@@ -82,6 +95,11 @@ public:
    /// Name of the SimSet to store cover points in. (Usually a SimGroup.)
    StringTableEntry mCoverSet;
 
+=======
+   /// Data file to store this nav mesh in. (From engine executable dir.)
+   StringTableEntry mFileName;
+
+>>>>>>> omni_engine
    /// Cell width and height.
    F32 mCellSize, mCellHeight;
    /// @name Actor data
@@ -104,6 +122,7 @@ public:
    U32 mMaxPolysPerTile;
    /// @}
 
+<<<<<<< HEAD
    /// @name Water
    /// @{
    enum WaterMethod {
@@ -119,6 +138,12 @@ public:
 
    /// Return the index of the tile included by this point.
    S32 getTile(const Point3F& pos);
+=======
+   /// @}
+
+   /// Return the index of the tile included by this point.
+   S32 getTile(Point3F pos);
+>>>>>>> omni_engine
 
    /// Return the box of a given tile.
    Box3F getTileBox(U32 id);
@@ -412,6 +437,7 @@ private:
    void renderToDrawer();
 
    /// @}
+<<<<<<< HEAD
 
    /// Server-side set for all NavMesh objects.
    static SimObjectPtr<SimSet> smServerSet;
@@ -423,4 +449,8 @@ private:
 typedef NavMesh::WaterMethod NavMeshWaterMethod;
 DefineEnumType(NavMeshWaterMethod);
 
+=======
+};
+
+>>>>>>> omni_engine
 #endif

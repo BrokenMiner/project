@@ -94,7 +94,11 @@ class GuiColorPickerCtrl : public GuiControl
    
    Point2I mSelectorPos;	///< Current position of the selector
    bool mPositionChanged;	///< Current position has changed since last render?
+<<<<<<< HEAD
    bool mMouseOver;		///< Mouse is over?
+=======
+   //bool mMouseOver;		///< Mouse is over?
+>>>>>>> omni_engine
    bool mMouseDown;		///< Mouse button down?
    bool mActionOnMove;		///< Perform onAction() when position has changed?
 
@@ -107,6 +111,22 @@ class GuiColorPickerCtrl : public GuiControl
    static ColorI mColorRange[7]; ///< Color range for pHorizColorRange and pVertColorRange
    /// @}
 
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   /// Copy information
+   ColorF mPickColorCopy;
+   ColorF mBaseColorCopy;
+
+   void applyProfileSettings();
+
+   void copyProfileSettings();
+
+   void resetProfileSettings();
+
+   // @Copyright end
+
   public:   
    
    DECLARE_CONOBJECT(GuiColorPickerCtrl);
@@ -115,6 +135,7 @@ class GuiColorPickerCtrl : public GuiControl
    GuiColorPickerCtrl();
 
    static void initPersistFields();
+   void onStaticModified( const char *slotName, const char *newValue );   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
    void onRender(Point2I offset, const RectI &updateRect);
    bool mShowReticle;       ///< Show reticle on render
    /// @name Color Value Functions

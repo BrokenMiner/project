@@ -38,6 +38,7 @@
 
 duDebugDrawTorque::duDebugDrawTorque()
 {
+<<<<<<< HEAD
    mPrimType = 0;
    mQuadsMode = false;
    mVertCount = 0;
@@ -45,6 +46,11 @@ duDebugDrawTorque::duDebugDrawTorque()
    mCurrColor = 0;
    mOverrideColor = 0;
    mOverride = false;
+=======
+   mOverrideColor = 0;
+   mOverride = false;
+   mGroup = 0;
+>>>>>>> omni_engine
 }
 
 duDebugDrawTorque::~duDebugDrawTorque()

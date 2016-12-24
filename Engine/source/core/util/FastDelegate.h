@@ -47,9 +47,16 @@
 
 #ifndef FASTDELEGATE_H
 #define FASTDELEGATE_H
+<<<<<<< HEAD
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER > 1000)
+=======
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+>>>>>>> omni_engine
 
 ////////////////////////////////////////////////////////////////////////////////
 //						Configuration options
@@ -405,8 +412,13 @@ struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE + 2*sizeof(int) >
 		} u2;
 		// Check that the horrible_cast<>s will work
 		typedef S32 ERROR_CantUsehorrible_cast[sizeof(function_to_bind)==sizeof(u.s)
+<<<<<<< HEAD
 			&& sizeof(function_to_bind)==sizeof(u.ProbeFunc)
 			&& sizeof(u2.virtfunc)==sizeof(u2.s) ? 1 : -1];
+=======
+			|| sizeof(function_to_bind)==sizeof(u.ProbeFunc)
+			|| sizeof(u2.virtfunc)==sizeof(u2.s) ? 1 : -1];
+>>>>>>> omni_engine
    // Unfortunately, taking the address of a MF prevents it from being inlined, so 
    // this next line can't be completely optimised away by the compiler.
 		u2.virtfunc = &GenericVirtualClass::GetThis;

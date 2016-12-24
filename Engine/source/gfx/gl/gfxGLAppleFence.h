@@ -24,7 +24,11 @@
 #define _GFXGLAPPLEFENCE_H_
 
 #include "gfx/gfxFence.h"
+<<<<<<< HEAD
 #include "gfx/gl/tGL/tGL.h"
+=======
+#include "gfx/gl/ggl/ggl.h"
+>>>>>>> omni_engine
 
 class GFXGLAppleFence : public GFXFence
 {

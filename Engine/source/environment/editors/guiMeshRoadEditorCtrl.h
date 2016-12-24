@@ -60,6 +60,11 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
 
       DECLARE_CONOBJECT(GuiMeshRoadEditorCtrl);
 
+      DECLARE_CALLBACK(void, onNodeModified, (const char* nodeIdx));
+      DECLARE_CALLBACK(void, onNodeSelected, (const char* nodeIdx));
+      DECLARE_CALLBACK(void, paletteSync, (const char* mode));
+      DECLARE_CALLBACK(void, onRoadSelected, (const char* road ));
+
       // SimObject
       bool onAdd();
       static void initPersistFields();
@@ -99,8 +104,13 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
       F32 getNodeDepth();
       void setNodeDepth( F32 depth );
 		
+<<<<<<< HEAD
 		Point3F getNodePosition();
       void setNodePosition(const Point3F& pos);
+=======
+	  Point3F getNodePosition();
+	  void setNodePosition( Point3F &pos );
+>>>>>>> omni_engine
 
       VectorF getNodeNormal();
       void setNodeNormal( const VectorF &normal );

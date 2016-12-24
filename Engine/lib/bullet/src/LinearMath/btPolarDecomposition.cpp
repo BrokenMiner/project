@@ -60,10 +60,17 @@ unsigned int btPolarDecomposition::decompose(const btMatrix3x3& a, btMatrix3x3& 
       break;
 
     const btScalar gamma = btPow(h_norm / u_norm, 0.25f);
+<<<<<<< HEAD
     const btScalar inv_gamma = btScalar(1.0) / gamma;
 
     // Determine the delta to 'u'
     const btMatrix3x3 delta = (u * (gamma - btScalar(2.0)) + h.transpose() * inv_gamma) * btScalar(0.5);
+=======
+    const btScalar inv_gamma = 1.0 / gamma;
+
+    // Determine the delta to 'u'
+    const btMatrix3x3 delta = (u * (gamma - 2.0) + h.transpose() * inv_gamma) * 0.5;
+>>>>>>> omni_engine
 
     // Update the matrices
     u += delta;

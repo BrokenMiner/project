@@ -214,6 +214,7 @@ U32 ReturnStmtNode::compileStmt(CodeStream &codeStream, U32 ip)
       codeStream.emit(OP_RETURN_VOID);
    else
    {
+<<<<<<< HEAD
       TypeReq walkType = expr->getPreferredType();
       if (walkType == TypeReqNone) walkType = TypeReqString;
       ip = expr->compile(codeStream, ip, walkType);
@@ -230,6 +231,10 @@ U32 ReturnStmtNode::compileStmt(CodeStream &codeStream, U32 ip)
          codeStream.emit(OP_RETURN);
          break;
       }
+=======
+      ip = expr->compile(codeStream, ip, TypeReqString);
+      codeStream.emit(OP_RETURN);
+>>>>>>> omni_engine
    }
    return codeStream.tell();
 }
@@ -258,6 +263,7 @@ void IfStmtNode::propagateSwitchExpr(ExprNode *left, bool string)
 
 U32 IfStmtNode::compileStmt(CodeStream &codeStream, U32 ip)
 {
+   U32 start = ip;
    U32 endifIp, elseIp;
    addBreakLine(codeStream);
    
@@ -339,6 +345,7 @@ U32 LoopStmtNode::compileStmt(CodeStream &codeStream, U32 ip)
    addBreakLine(codeStream);
    codeStream.pushFixScope(true);
    
+   U32 start = ip;
    if(initExpr)
       ip = initExpr->compile(codeStream, ip, TypeReqNone);
 
@@ -732,6 +739,7 @@ U32 VarNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
    case TypeReqString:
       codeStream.emit(OP_LOADVAR_STR);
       break;
+<<<<<<< HEAD
    case TypeReqVar:
       codeStream.emit(OP_LOADVAR_VAR);
       break;
@@ -739,6 +747,10 @@ U32 VarNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
       break;
    default:
       break;
+=======
+   case TypeReqNone:
+      break;
+>>>>>>> omni_engine
    }
    return codeStream.tell();
 }
@@ -920,6 +932,7 @@ U32 AssignExprNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
    if(subType == TypeReqNone)
       subType = type;
    if(subType == TypeReqNone)
+<<<<<<< HEAD
    {
       // What we need to do in this case is turn it into a VarNode reference. 
       // Unfortunately other nodes such as field access (SlotAccessNode) 
@@ -934,6 +947,9 @@ U32 AssignExprNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
          subType = TypeReqString;
       }
    }
+=======
+      subType = TypeReqString;
+>>>>>>> omni_engine
    // if it's an array expr, the formula is:
    // eval expr
    // (push and pop if it's TypeReqString) OP_ADVANCE_STR
@@ -1158,6 +1174,7 @@ U32 FuncCallExprNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
    codeStream.emit(OP_PUSH_FRAME);
    for(ExprNode *walk = args; walk; walk = (ExprNode *) walk->getNext())
    {
+<<<<<<< HEAD
       TypeReq walkType = walk->getPreferredType();
       if (walkType == TypeReqNone) walkType = TypeReqString;
       ip = walk->compile(codeStream, ip, walkType);
@@ -1173,6 +1190,10 @@ U32 FuncCallExprNode::compile(CodeStream &codeStream, U32 ip, TypeReq type)
             codeStream.emit(OP_PUSH);
             break;
       }
+=======
+      ip = walk->compile(codeStream, ip, TypeReqString);
+      codeStream.emit(OP_PUSH);
+>>>>>>> omni_engine
    }
    if(callType == MethodCall || callType == ParentCall)
       codeStream.emit(OP_CALLFUNC);
@@ -1469,6 +1490,7 @@ U32 ObjectDeclNode::compileSubObject(CodeStream &codeStream, U32 ip, bool root)
    codeStream.emit(OP_PUSH);
    for(ExprNode *exprWalk = argList; exprWalk; exprWalk = (ExprNode *) exprWalk->getNext())
    {
+<<<<<<< HEAD
       TypeReq walkType = exprWalk->getPreferredType();
       if (walkType == TypeReqNone) walkType = TypeReqString;
       ip = exprWalk->compile(codeStream, ip, walkType);
@@ -1484,6 +1506,10 @@ U32 ObjectDeclNode::compileSubObject(CodeStream &codeStream, U32 ip, bool root)
             codeStream.emit(OP_PUSH);
             break;      
       }
+=======
+      ip = exprWalk->compile(codeStream, ip, TypeReqString);
+      codeStream.emit(OP_PUSH);
+>>>>>>> omni_engine
    }
    codeStream.emit(OP_CREATE_OBJECT);
    codeStream.emitSTE(parentObject);
@@ -1563,6 +1589,8 @@ U32 FunctionDeclStmtNode::compileStmt(CodeStream &codeStream, U32 ip)
    
    CodeBlock::smInFunction = false;
    
+   
+   U32 start = ip;
    codeStream.emit(OP_FUNC_DECL);
    codeStream.emitSTE(fnName);
    codeStream.emitSTE(nameSpace);

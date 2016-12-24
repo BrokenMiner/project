@@ -76,6 +76,7 @@ void	btConvexTriangleCallback::clearCache()
 }
 
 
+<<<<<<< HEAD
 void btConvexTriangleCallback::processTriangle(btVector3* triangle,int
 partId, int triangleIndex)
 {
@@ -89,6 +90,17 @@ partId, int triangleIndex)
         //printf("triangle %d",m_triangleCount++);
 
         const btCollisionObject* ob = const_cast<btCollisionObject*>(m_triBodyWrap->getCollisionObject());
+=======
+
+void btConvexTriangleCallback::processTriangle(btVector3* triangle,int partId, int triangleIndex)
+{
+ 
+	//just for debugging purposes
+	//printf("triangle %d",m_triangleCount++);
+
+
+	//aabb filter is already applied!	
+>>>>>>> omni_engine
 
 	btCollisionAlgorithmConstructionInfo ci;
 	ci.m_dispatcher1 = m_dispatcher;
@@ -116,7 +128,11 @@ partId, int triangleIndex)
 		tm.setMargin(m_collisionMarginTriangle);
 		
 		
+<<<<<<< HEAD
 		btCollisionObjectWrapper triObWrap(m_triBodyWrap,&tm,m_triBodyWrap->getCollisionObject(),m_triBodyWrap->getWorldTransform(),partId,triangleIndex);//correct transform?
+=======
+		btCollisionObjectWrapper triObWrap(m_triBodyWrap,&tm,m_triBodyWrap->getCollisionObject(),m_triBodyWrap->getWorldTransform());//correct transform?
+>>>>>>> omni_engine
 		btCollisionAlgorithm* colAlgo = ci.m_dispatcher1->findAlgorithm(m_convexBodyWrap,&triObWrap,m_manifoldPtr);
 
 		const btCollisionObjectWrapper* tmpWrap = 0;

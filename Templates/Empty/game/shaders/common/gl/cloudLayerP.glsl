@@ -21,7 +21,11 @@
 //-----------------------------------------------------------------------------
 
 #include "hlslCompat.glsl"
+<<<<<<< HEAD
 #include "torque.glsl"
+=======
+
+>>>>>>> omni_engine
 //-----------------------------------------------------------------------------
 // Structures                                                                  
 //-----------------------------------------------------------------------------
@@ -143,5 +147,9 @@ void main()
 
    cResultColor.a = mix( cResultColor.a, 0.0, 1.0 - pow(IN_worldDist,2.0) );
 
+<<<<<<< HEAD
    OUT_col = hdrEncode(cResultColor);
+=======
+   OUT_FragColor0 = cResultColor;
+>>>>>>> omni_engine
 }   

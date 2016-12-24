@@ -43,6 +43,11 @@ ConsoleDocClass( UndoScriptAction,
 				"Not intended for game development, for editors or internal use only.\n\n "
 				"@internal");
 
+IMPLEMENT_CALLBACK(UndoScriptAction, undo, void, (), (),"");
+IMPLEMENT_CALLBACK(UndoScriptAction, redo, void, (), (),"");
+IMPLEMENT_CALLBACK(UndoScriptAction, onAdd, void, (), (),"");
+IMPLEMENT_CALLBACK(UndoScriptAction, onRemove, void, (), (),"");
+
 UndoAction::UndoAction(const UTF8 *actionName)
 {
    mActionName = actionName;
@@ -157,6 +162,12 @@ DefineConsoleMethod( CompoundUndoAction, addAction, void, (const char * objName)
 //-----------------------------------------------------------------------------
 IMPLEMENT_CONOBJECT(UndoManager);
 
+IMPLEMENT_CALLBACK(UndoManager, onClear, void, (), (),"");
+IMPLEMENT_CALLBACK(UndoManager, onRemoveUndo, void, (), (),"");
+IMPLEMENT_CALLBACK(UndoManager, onUndo, void, (), (),"");
+IMPLEMENT_CALLBACK(UndoManager, onRedo, void, (), (),"");
+IMPLEMENT_CALLBACK(UndoManager, onAddUndo, void, (), (),"");
+
 ConsoleDocClass( UndoManager,
 				"@brief SimObject which adds, tracks, and deletes UndoAction objects.\n\n"
 				"Not intended for game development, for editors or internal use only.\n\n "
@@ -216,7 +227,7 @@ void UndoManager::clearAll()
    clearStack(mUndoStack);
    clearStack(mRedoStack);
    
-   Con::executef(this, "onClear");
+   onClear_callback();
 }
 
 //-----------------------------------------------------------------------------
@@ -297,7 +308,9 @@ void UndoManager::doRemove( UndoAction* action, bool noDelete )
    }
 
    if( isProperlyAdded() )
-      Con::executef(this, "onRemoveUndo");
+   { 
+      onRemoveUndo_callback(); 
+   }
 }
 
 //-----------------------------------------------------------------------------
@@ -315,11 +328,11 @@ void UndoManager::undo()
    mRedoStack.push_back(act);
    if(mRedoStack.size() > mNumLevels)
       mRedoStack.pop_front();
-   
-   Con::executef(this, "onUndo");
 
    // perform the undo, whatever it may be.
    (*act).undo();
+
+   onUndo_callback();
 }
 
 //-----------------------------------------------------------------------------
@@ -338,10 +351,10 @@ void UndoManager::redo()
    if(mUndoStack.size() > mNumLevels)
       mUndoStack.pop_front();
    
-   Con::executef(this, "onRedo");
-   
    // perform the redo, whatever it may be.
    (*react).redo();
+
+   onRedo_callback();
 }
 
 DefineConsoleMethod(UndoManager, getUndoCount, S32, (),, "")
@@ -469,7 +482,7 @@ void UndoManager::addAction(UndoAction* action)
    if(mUndoStack.size() > mNumLevels)
       mUndoStack.pop_front();
 
-   Con::executef(this, "onAddUndo");
+   onAddUndo_callback();
 }
 
 //-----------------------------------------------------------------------------
@@ -582,10 +595,322 @@ DefineConsoleMethod( UndoManager, popCompound, void, ( bool discard ), (false), 
 {
    if( !object->getCompoundStackDepth() )
    {
-	   Con::errorf( "UndoManager::popCompound - no compound on stack (%s) ",object->getName() );
+	  Con::errorf( "UndoManager::popCompound - no compound on stack (%s) ",object->getName() );
       return;
    }
    
    
    object->popCompound( discard );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_CompoundUndoAction_addAction(char * x__object, char * x__objName)
+{
+CompoundUndoAction* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* objName = (const char*)x__objName;
+{
+   UndoAction *action;
+   if ( Sim::findObject( objName, action ) )
+      object->addAction( action );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoAction_addToManager(char * x__object, char * x__undoManager)
+{
+UndoAction* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* undoManager = (const char*)x__undoManager;
+{
+   UndoManager *theMan = NULL;
+   if(undoManager != "")
+   {
+      SimObject *obj = Sim::findObject(undoManager);
+      if(obj)
+         theMan = dynamic_cast<UndoManager*> (obj);
+   }
+   object->addToManager(theMan);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoAction_redo(char * x__object)
+{
+UndoAction* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->redo();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoAction_undo(char * x__object)
+{
+UndoAction* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->undo();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_clearAll(char * x__object)
+{
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->clearAll();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_getNextRedoName(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+   const char *name = object->getNextRedoName();
+   if(!name)
+      {wle_returnObject =NULL;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   char *ret = Con::getReturnBuffer(dStrlen(name) + 1);
+   dStrcpy(ret, name);
+   {wle_returnObject =ret;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_getNextUndoName(char * x__object,  char* retval)
+{
+dSprintf(retval,16384,"");
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char * wle_returnObject;
+{
+   const char *name = object->getNextUndoName();
+   if(!name)
+      {wle_returnObject =NULL;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+   char *ret = Con::getReturnBuffer(dStrlen(name) + 1);
+   dStrcpy(ret, name);
+   {wle_returnObject =ret;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_UndoManager_getRedoAction(char * x__object, S32 index)
+{
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   UndoAction * action = object->getRedoAction(index);
+   if ( !action )
+     return (S32)( -1);
+   if ( !action->isProperlyAdded() )
+      action->registerObject();
+  return (S32)( action->getId());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_UndoManager_getRedoCount(char * x__object)
+{
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getRedoCount());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_getRedoName(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getRedoName(index);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_UndoManager_getUndoAction(char * x__object, S32 index)
+{
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+   UndoAction * action = object->getUndoAction(index);
+   if ( !action )
+     return (S32)( -1);
+   
+   if ( !action->isProperlyAdded() )
+      action->registerObject();
+  return (S32)( action->getId());
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_UndoManager_getUndoCount(char * x__object)
+{
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getUndoCount());
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_getUndoName(char * x__object, S32 index,  char* retval)
+{
+dSprintf(retval,16384,"");
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+const char* wle_returnObject;
+{
+   {wle_returnObject =object->getUndoName(index);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_popCompound(char * x__object, bool discard)
+{
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if( !object->getCompoundStackDepth() )
+   {
+      Con::errorf( "UndoManager::popCompound - no compound on stack" );
+      return;
+   }
+   
+   
+   object->popCompound( discard );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_pushCompound(char * x__object, char * x__name,  char* retval)
+{
+dSprintf(retval,16384,"");
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+String name = String( x__name);
+const char* wle_returnObject;
+{
+      
+   CompoundUndoAction* action = object->pushCompound( name );
+   if( !action )
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+      
+   if( !action->isProperlyAdded() )
+      action->registerObject();
+      
+   {wle_returnObject =action->getIdString();
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_redo(char * x__object)
+{
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->redo();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_UndoManager_undo(char * x__object)
+{
+UndoManager* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->undo();
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

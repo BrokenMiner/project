@@ -66,6 +66,10 @@ UTF16* createUTF16string( const UTF8 *unistring);
 
 UTF8*  createUTF8string( const UTF16 *unistring);
 
+UTF16* convertUTF8toUTF16( const UTF8 *unistring);
+
+UTF8*  convertUTF16toUTF8( const UTF16 *unistring);
+
 //-----------------------------------------------------------------------------
 /// Functions that convert buffers of unicode code points, into a provided buffer.
 /// - These functions are useful for working on existing buffers.
@@ -79,6 +83,7 @@ UTF8*  createUTF8string( const UTF16 *unistring);
 /// - Output is null terminated. Be sure to provide 1 extra byte, U16 or U32 for
 ///   the null terminator, or you will see truncated output.
 /// - If the provided buffer is too small, the output will be truncated.
+<<<<<<< HEAD
 U32 convertUTF8toUTF16N(const UTF8 *unistring, UTF16 *outbuffer, U32 len);
 
 U32 convertUTF16toUTF8N( const UTF16 *unistring, UTF8  *outbuffer, U32 len);
@@ -96,6 +101,11 @@ inline U32 convertUTF16toUTF8(const UTF16 *unistring, UTF8 (&outbuffer)[N])
 {
    return convertUTF16toUTF8N(unistring, outbuffer, (U32) N);
 }
+=======
+U32 convertUTF8toUTF16(const UTF8 *unistring, UTF16 *outbuffer, U32 len);
+
+U32 convertUTF16toUTF8( const UTF16 *unistring, UTF8  *outbuffer, U32 len);
+>>>>>>> omni_engine
 
 //-----------------------------------------------------------------------------
 /// Functions that converts one unicode codepoint at a time
@@ -118,6 +128,10 @@ U32    oneUTF32toUTF8( const UTF32 codepoint, UTF8 *threeByteCodeunitBuf);
 ///   the behavior is undefined.
 U32 dStrlen(const UTF16 *unistring);
 U32 dStrlen(const UTF32 *unistring);
+
+//-----------------------------------------------------------------------------
+/// Comparing unicode strings
+U32 dStrncmp(const UTF16* unistring1, const UTF16* unistring2, U32 len);
 
 //-----------------------------------------------------------------------------
 /// Scanning for characters in unicode strings

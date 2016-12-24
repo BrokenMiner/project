@@ -131,6 +131,12 @@ package Tools
       Tools::LoadResources( $Tools::resourcePath );
       
       //$Scripts::ignoreDSOs = %toggle;
+      
+      if(isWebDemo())
+      {
+         // if this is the web tool demo lets init some value storage
+         //$clicks
+      }
    }
    
    function startToolTime(%tool)
@@ -184,6 +190,39 @@ package Tools
    // Shutdown.
    function onExit()
    {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   ShapeEdPropWindow.ClosePopOut();
+   ShapeEdSelectWindow.ClosePopOut();
+   ShapeEdAdvancedWindow.ClosePopOut();
+   RoadEditorOptionsWindow.ClosePopOut();
+   RoadEditorTreeWindow.ClosePopOut();
+   RiverEditorOptionsWindow.ClosePopOut();
+   RiverEditorTreeWindow.ClosePopOut();
+   PE_Window.ClosePopOut();
+   MissionAreaEditorPropertiesWindow.ClosePopOut();
+   MissionAreaEditorTerrainWindow.ClosePopOut();
+   MeshRoadEditorOptionsWindow.ClosePopOut();
+   MeshRoadEditorTreeWindow.ClosePopOut();
+   ForestEditorPropertiesWindow.ClosePopOut();
+   ForestEditorPalleteWindow.ClosePopOut();
+   DecalPreviewWindow.ClosePopOut();
+   DecalEditorWindow.ClosePopOut();
+   DatablockEditorInspectorWindow.ClosePopOut();
+   DatablockEditorTreeWindow.ClosePopOut();
+   MaterialEditorPropertiesWindow.ClosePopOut();
+   MaterialEditorPreviewWindow.ClosePopOut();
+   TerrainPainterPreview.ClosePopOut();
+   TerrainPainter.ClosePopOut();
+   EWInspectorWindow.ClosePopOut();
+   EWTreeWindow.ClosePopOut();
+   ConsoleDlgWindow.ClosePopOut();
+   ppOptionsWindow.ClosePopOut();
+   ESettingsWindow.ClosePopOut();
+   EManageBookmarks.ClosePopOut();
+   EManageSFXParameters.ClosePopOut();
+   ESnapOptions.ClosePopOut();
+   ESelectObjectsWindow.ClosePopOut();
+//Copyright Winterleaf Entertainment L.L.C. 2013      
       if( EditorGui.isInitialized )
          EditorGui.shutdown();
       

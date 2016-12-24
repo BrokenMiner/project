@@ -112,7 +112,11 @@ function FormControlClass::onWake( %this )
 
    %parentId = %this.getParent();
    %extent = %parentID.getExtent();
+<<<<<<< HEAD
    %this.setExtent( GetWord(%extent, 0), GetWord(%extent, 1) );
+=======
+   %this.setExtent( GetWord(%extent, 0) @ " " @ GetWord(%extent, 1) );
+>>>>>>> omni_engine
 
    GuiFormClass::BuildFormMenu( %this );
 

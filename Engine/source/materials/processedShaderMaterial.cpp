@@ -55,11 +55,13 @@ void ShaderConstHandles::init( GFXShader *shader, CustomMaterial* mat /*=NULL*/ 
    mSpecularColorSC = shader->getShaderConstHandle(ShaderGenVars::specularColor);
    mSpecularPowerSC = shader->getShaderConstHandle(ShaderGenVars::specularPower);
    mSpecularStrengthSC = shader->getShaderConstHandle(ShaderGenVars::specularStrength);
+   //Sahara   
    mAccuScaleSC = shader->getShaderConstHandle("$accuScale");
    mAccuDirectionSC = shader->getShaderConstHandle("$accuDirection");
    mAccuStrengthSC = shader->getShaderConstHandle("$accuStrength");
    mAccuCoverageSC = shader->getShaderConstHandle("$accuCoverage");
    mAccuSpecularSC = shader->getShaderConstHandle("$accuSpecular");
+   //Sahara   
    mParallaxInfoSC = shader->getShaderConstHandle("$parallaxInfo");
    mFogDataSC = shader->getShaderConstHandle(ShaderGenVars::fogData);
    mFogColorSC = shader->getShaderConstHandle(ShaderGenVars::fogColor);
@@ -396,9 +398,17 @@ void ProcessedShaderMaterial::_determineFeatures(  U32 stageNum,
    // cannot do on SM 2.0 and below.
    if ( shaderVersion > 2.0f )
    {
+<<<<<<< HEAD
 
       if (  mMaterial->mParallaxScale[stageNum] > 0.0f &&
          fd.features[ MFT_NormalMap ] )
+=======
+      // Only allow parallax if we have a normal map and
+      // we're not using DXTnm compression.
+      if (  mMaterial->mParallaxScale[stageNum] > 0.0f &&
+         fd.features[ MFT_NormalMap ] &&
+         !fd.features[ MFT_IsDXTnm ] )
+>>>>>>> omni_engine
          fd.features.addFeature( MFT_Parallax );
 
       // If not parallax then allow per-pixel specular if
@@ -425,11 +435,17 @@ void ProcessedShaderMaterial::_determineFeatures(  U32 stageNum,
       if( mStages[stageNum].getTex( MFT_SpecularMap )->mHasTransparency )
          fd.features.addFeature( MFT_GlossMap );
    }
+<<<<<<< HEAD
 
    if ( mMaterial->mAccuEnabled[stageNum] )
    {
       fd.features.addFeature( MFT_AccuMap );
       mHasAccumulation = true;
+=======
+   //Sahara
+   if ( mMaterial->mAccuMapFilename[stageNum] != String::EmptyString) {
+      fd.features.addFeature( MFT_AccuMap );
+>>>>>>> omni_engine
    }
 
    // we need both diffuse and normal maps + sm3 to have an accu map
@@ -453,7 +469,11 @@ void ProcessedShaderMaterial::_determineFeatures(  U32 stageNum,
       // now remove some features that are not compatible with this
       fd.features.removeFeature( MFT_UseInstancing );
    }
+<<<<<<< HEAD
 
+=======
+   //Sahara
+>>>>>>> omni_engine
    // Without a base texture use the diffuse color
    // feature to ensure some sort of output.
    if (!fd.features[MFT_DiffuseMap])
@@ -548,6 +568,7 @@ bool ProcessedShaderMaterial::_createPasses( MaterialFeatureData &stageFeatures,
 
       passData.mNumTexReg += numTexReg;
       passData.mFeatureData.features.addFeature( *info.type );
+<<<<<<< HEAD
 
 #if defined(TORQUE_DEBUG) && defined( TORQUE_OPENGL)
       U32 oldTexNumber = texIndex;
@@ -565,6 +586,10 @@ bool ProcessedShaderMaterial::_createPasses( MaterialFeatureData &stageFeatures,
       }
 #endif
 
+=======
+      info.feature->setTexData( mStages[stageNum], stageFeatures, passData, texIndex );
+
+>>>>>>> omni_engine
       // Add pass if tex units are maxed out
       if( texIndex > GFX->getNumSamplers() )
       {
@@ -641,6 +666,7 @@ bool ProcessedShaderMaterial::_addPass( ShaderRenderPassData &rpd,
    // Copy over features
    rpd.mFeatureData.materialFeatures = fd.features;
 
+<<<<<<< HEAD
    Vector<String> samplers;
    samplers.setSize(Material::MAX_TEX_PER_PASS);
    for(int i = 0; i < Material::MAX_TEX_PER_PASS; ++i)
@@ -651,6 +677,11 @@ bool ProcessedShaderMaterial::_addPass( ShaderRenderPassData &rpd,
    // Generate shader
    GFXShader::setLogging( true, true );
    rpd.shader = SHADERGEN->getShader( rpd.mFeatureData, mVertexFormat, &mUserMacros, samplers );
+=======
+   // Generate shader
+   GFXShader::setLogging( true, true );
+   rpd.shader = SHADERGEN->getShader( rpd.mFeatureData, mVertexFormat, &mUserMacros );
+>>>>>>> omni_engine
    if( !rpd.shader )
       return false;
    rpd.shaderHandles.init( rpd.shader );   
@@ -774,7 +805,11 @@ bool ProcessedShaderMaterial::setupPass( SceneRenderState *state, const SceneDat
    }
    else
    {
+<<<<<<< HEAD
       GFX->setupGenericShaders();
+=======
+      GFX->disableShaders();
+>>>>>>> omni_engine
       GFX->setShaderConstBuffer(NULL);
    } 
 
@@ -1175,7 +1210,11 @@ void ProcessedShaderMaterial::_setShaderConstants(SceneRenderState * state, cons
          0.0f, 0.0f ); // TODO: Wrap mode flags?
       shaderConsts->setSafe(handles->mBumpAtlasTileSC, atlasTileParams);
    }
+<<<<<<< HEAD
    
+=======
+   //Sahara
+>>>>>>> omni_engine
    if( handles->mAccuScaleSC->isValid() )
       shaderConsts->set( handles->mAccuScaleSC, mMaterial->mAccuScale[stageNum] );
    if( handles->mAccuDirectionSC->isValid() )
@@ -1186,6 +1225,7 @@ void ProcessedShaderMaterial::_setShaderConstants(SceneRenderState * state, cons
       shaderConsts->set( handles->mAccuCoverageSC, mMaterial->mAccuCoverage[stageNum] );
    if( handles->mAccuSpecularSC->isValid() )
       shaderConsts->set( handles->mAccuSpecularSC, mMaterial->mAccuSpecular[stageNum] );
+   //Sahara	  
 }
 
 bool ProcessedShaderMaterial::_hasCubemap(U32 pass)

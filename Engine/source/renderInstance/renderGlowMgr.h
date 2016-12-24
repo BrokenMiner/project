@@ -83,7 +83,11 @@ protected:
    };
 
    SimObjectPtr<PostEffect> mGlowEffect;
+<<<<<<< HEAD
    RenderParticleMgr *mParticleRenderMgr;
+=======
+
+>>>>>>> omni_engine
 };
 
 

@@ -131,8 +131,6 @@ void* Win32Window::getSystemWindow(const WindowSystem system)
      return NULL;
 }
 
-GFXDevice * Win32Window::getGFXDevice()
-{
 	return mDevice;
 }
 
@@ -198,6 +196,10 @@ void Win32Window::setVideoMode( const GFXVideoMode &mode )
 							mi.rcMonitor.right - mi.rcMonitor.left,
 							mi.rcMonitor.bottom - mi.rcMonitor.top,
 							SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+           // ATTENTION From OMNI
+           // SetWindowLong( getHWND(), GWL_STYLE, WS_POPUP);
+           // SetWindowPos( getHWND(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+           //////
 	  }
 
       if(mDisplayWindow)
@@ -811,7 +813,8 @@ LRESULT PASCAL Win32Window::WindowProc( HWND hWnd, UINT message, WPARAM wParam, 
 
 			if(window->getGFXTarget())
 			{
-				Con::warnf("Win32Window::WindowProc - resetting device due to window size change.");
+				//Removed Console Spam w/ popout windows -Geev
+				//Con::warnf("Win32Window::WindowProc - resetting device due to window size change.");
 				window->getGFXTarget()->resetMode();
 			}
 		}

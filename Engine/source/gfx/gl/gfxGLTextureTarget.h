@@ -79,6 +79,9 @@ protected:
    /// @see GFXTextureManager::addEventDelegate
    void _onTextureEvent( GFXTexCallbackCode code );
    
+   /// If true our implementation should use AUX buffers
+   bool _needsAux;
+   
    /// Pointer to our internal implementation
    AutoPtr<_GFXGLTextureTargetImpl> _impl;
 

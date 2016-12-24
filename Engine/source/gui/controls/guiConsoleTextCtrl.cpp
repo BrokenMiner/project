@@ -113,10 +113,14 @@ void GuiConsoleTextCtrl::onPreRender()
 {   
    if ( mConsoleExpression.isNotEmpty() )
    {
+<<<<<<< HEAD
       Con::evaluatef( "$guiConsoleTextCtrlTemp = %s;", mConsoleExpression.c_str() );
       
       //Fixes a bug with the above not always grabbing the console text.
       mResult = Con::getVariable("$guiConsoleTextCtrlTemp");
+=======
+      mResult = Con::evaluatef( "$guiConsoleTextCtrlTemp = %s;", mConsoleExpression.c_str() );
+>>>>>>> omni_engine
       
       // Of the resulting string we will be printing,
       // Find the number of lines and length of each.      

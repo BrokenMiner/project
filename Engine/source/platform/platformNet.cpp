@@ -483,8 +483,13 @@ bool Net::openPort(S32 port, bool doBind)
 
    // we turn off VDP in non-release builds because VDP does not support broadcast packets
    // which are required for LAN queries (PC->Xbox connectivity).  The wire protocol still
+<<<<<<< HEAD
    // uses the VDP packet structure, though.
    S32 protocol = 0;
+=======
+    // uses the VDP packet structure, though.
+    intptr_t protocol = 0;
+>>>>>>> omni_engine
    bool useVDP = false;
 #ifdef TORQUE_DISABLE_PC_CONNECTIVITY
    // Xbox uses a VDP (voice/data protocol) socket for networking
@@ -539,11 +544,105 @@ void Net::closePort()
       ::closesocket(udpSocket);
 }
 
+#ifdef SocketThread
+
+typedef std::unordered_map<std::string ,Net::Error> TCPSendType;
+static TCPSendType connHistory;
+static void *mutex = 0;
+
+class TCPSend : public ThreadPool::WorkItem
+{
+public:
+    typedef ThreadPool::WorkItem Parent;
+    char addressString[256];
+    S32 bufferSz;
+    U8 *cbuffer;
+
+    NetAddress* na;
+
+    ~TCPSend()
+    {
+        delete []cbuffer;
+    }
+    TCPSend(const NetAddress *address, const U8 *buffer, S32  bufferSize)
+    {
+        na = new NetAddress();
+        cbuffer = new U8[bufferSize];
+        dMemcpy(cbuffer,buffer,bufferSize);
+        dMemcpy(na->netNum,address->netNum,4);
+        dMemcpy(na->nodeNum,address->nodeNum,6);
+        na->port = address->port;
+        Net::addressToString(address,addressString);
+        bufferSz = bufferSize;
+    };
+
+
+protected:
+    virtual void execute()
+    {
+
+        if(na->type == NetAddress::IPAddress)
+        {
+            sockaddr_in ipAddr;
+            netToIPSocketAddress(na, &ipAddr);
+            if(::sendto(udpSocket, (const char*)cbuffer, bufferSz, 0, (sockaddr *) &ipAddr, sizeof(sockaddr_in)) == SOCKET_ERROR)
+            {
+                Mutex::lockMutex(mutex);
+                connHistory[std::string(addressString)] = getLastError();
+                Mutex::unlockMutex(mutex);
+            }
+            else
+            {
+                Mutex::lockMutex(mutex);
+                connHistory[std::string(addressString)] = Net::NoError;
+                Mutex::unlockMutex(mutex);
+            }
+        }
+        else
+        {
+            SOCKADDR_IN ipAddr;
+            netToIPSocketAddress(na, &ipAddr);
+            if(::sendto(udpSocket, (const char*)cbuffer, bufferSz, 0, (PSOCKADDR) &ipAddr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
+            {
+                Mutex::lockMutex(mutex);
+                connHistory[std::string(addressString)] = getLastError();
+                Mutex::unlockMutex(mutex);
+            }
+            else
+            {
+                Mutex::lockMutex(mutex);
+                connHistory[std::string(addressString)] = Net::NoError;
+                Mutex::unlockMutex(mutex);
+            }
+        }
+
+        delete na;
+
+    }
+};
+
+#endif
+
+
 Net::Error Net::sendto(const NetAddress *address, const U8 *buffer, S32  bufferSize)
 {
    if(Journal::IsPlaying())
       return NoError;
 
+#ifdef SocketThread
+    if (mutex==0)
+        mutex = Mutex::createMutex();
+
+    Net::Error result;
+    ThreadPool* pool = &ThreadPool::NETWORKTHREADPOOL();
+    TCPSend* tcps =  new TCPSend( address, buffer, bufferSize ) ;
+    ThreadSafeRef< TCPSend > item(tcps);
+    pool->queueWorkItem( item );
+    Mutex::lockMutex(mutex);
+    result =	connHistory[std::string(tcps->addressString)] ;
+    Mutex::unlockMutex(mutex);
+    return result;
+#else
    if(address->type == NetAddress::IPAddress)
    {
       sockaddr_in ipAddr;
@@ -564,6 +663,7 @@ Net::Error Net::sendto(const NetAddress *address, const U8 *buffer, S32  bufferS
       else
          return NoError;
    }
+#endif
 }
 
 void Net::process()

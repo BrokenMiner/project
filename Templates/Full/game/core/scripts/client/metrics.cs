@@ -243,9 +243,9 @@ function metrics( %expr )
    
    if( %metricsExpr !$= "" )
    {
-      $GameCanvas.pushDialog( FrameOverlayGui, 1000 );
+      Canvas.pushDialog( FrameOverlayGui, 1000 );
       TextOverlayControl.setValue( %metricsExpr );
    }
    else
-      $GameCanvas.popDialog(FrameOverlayGui);
+      Canvas.popDialog(FrameOverlayGui);
 }

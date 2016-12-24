@@ -22,6 +22,7 @@
 
 #include "core/frameAllocator.h"
 #include "console/console.h"
+#include "console/engineAPI.h"
 
 U8*   FrameAllocator::smBuffer = NULL;
 U32   FrameAllocator::smWaterMark = 0;
@@ -29,9 +30,93 @@ U32   FrameAllocator::smHighWaterMark = 0;
 
 #ifdef TORQUE_DEBUG
 U32   FrameAllocator::smMaxFrameAllocation = 0;
+<<<<<<< HEAD
 
 ConsoleFunction(getMaxFrameAllocation, S32, 1,1, "getMaxFrameAllocation();")
 {
    return FrameAllocator::getMaxFrameAllocation();
 }
 #endif
+=======
+#endif
+
+DefineConsoleFunction( getMaxFrameAllocation, S32, (), , "getMaxFrameAllocation();" )
+{
+#ifdef TORQUE_DEBUG
+   return FrameAllocator::getMaxFrameAllocation();
+#else
+	return 0;
+#endif
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_getMaxFrameAllocation()
+{
+{
+#ifdef TORQUE_DEBUG
+  return (S32)( FrameAllocator::getMaxFrameAllocation());
+#else
+	return 0;
+#endif
+};
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

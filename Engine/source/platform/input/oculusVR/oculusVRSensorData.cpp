@@ -33,6 +33,7 @@ OculusVRSensorData::OculusVRSensorData()
 void OculusVRSensorData::reset()
 {
    mDataSet = false;
+<<<<<<< HEAD
    mStatusFlags = 0;
 }
 
@@ -46,21 +47,42 @@ void OculusVRSensorData::setData(ovrTrackingState& data, const F32& maxAxisRadiu
    mPosition = Point3F(-position.z, position.x, position.y);
    mPosition *= OculusVRDevice::smPositionTrackingScale;
 
+=======
+}
+
+void OculusVRSensorData::setData(OVR::SensorFusion& data, const F32& maxAxisRadius)
+{
+   // Sensor rotation
+   OVR::Quatf orientation;
+   if(data.GetPredictionDelta() > 0)
+   {
+      orientation = data.GetPredictedOrientation();
+   }
+   else
+   {
+      orientation = data.GetOrientation();
+   }
+>>>>>>> omni_engine
    OVR::Matrix4f orientMat(orientation);
    OculusVRUtil::convertRotation(orientMat.M, mRot);
    mRotQuat.set(mRot);
 
    // Sensor rotation in Euler format
+<<<<<<< HEAD
    OculusVRUtil::convertRotation(orientation, mRotEuler); // mRotEuler == pitch, roll, yaw FROM yaw, pitch, roll
 
    //mRotEuler = EulerF(0,0,0);
    float hmdYaw, hmdPitch, hmdRoll;
         orientation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(&hmdYaw, &hmdPitch, &hmdRoll);
+=======
+   OculusVRUtil::convertRotation(orientation, mRotEuler);
+>>>>>>> omni_engine
 
    // Sensor rotation as axis
    OculusVRUtil::calculateAxisRotation(mRot, maxAxisRadius, mRotAxis);
 
    // Sensor raw values
+<<<<<<< HEAD
    OVR::Vector3f accel = data.HeadPose.LinearAcceleration;
    OculusVRUtil::convertAcceleration(accel, mAcceleration);
 
@@ -71,6 +93,43 @@ void OculusVRSensorData::setData(ovrTrackingState& data, const F32& maxAxisRadiu
    OculusVRUtil::convertMagnetometer(mag, mMagnetometer);
 
    mStatusFlags = data.StatusFlags;
+=======
+   OVR::Vector3f accel = data.GetAcceleration();
+   OculusVRUtil::convertAcceleration(accel, mAcceleration);
+
+   OVR::Vector3f angVel = data.GetAngularVelocity();
+   OculusVRUtil::convertAngularVelocity(angVel, mAngVelocity);
+
+   OVR::Vector3f mag;
+   if(data.HasMagCalibration() && data.IsYawCorrectionEnabled())
+   {
+      mag = data.GetCalibratedMagnetometer();
+   }
+   else
+   {
+      mag = data.GetMagnetometer();
+   }
+   OculusVRUtil::convertMagnetometer(mag, mMagnetometer);
+
+   mDataSet = true;
+}
+
+void OculusVRSensorData::simulateData(const F32& maxAxisRadius)
+{
+   // Sensor rotation
+   mRot.identity();
+   mRotQuat.identity();
+   mRotEuler.zero();
+
+   // Sensor rotation as axis
+   OculusVRUtil::calculateAxisRotation(mRot, maxAxisRadius, mRotAxis);
+
+   // Sensor raw values
+   mAcceleration.zero();
+   mAngVelocity.zero();
+   mMagnetometer.zero();
+
+>>>>>>> omni_engine
    mDataSet = true;
 }
 

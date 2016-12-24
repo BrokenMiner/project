@@ -29,6 +29,7 @@
 #ifndef _BITSET_H_
    #include "core/bitSet.h"
 #endif
+<<<<<<< HEAD
 #ifndef _REFBASE_H_
    #include "core/util/refBase.h"
 #endif
@@ -37,15 +38,32 @@
 #include "core/util/str.h"
 #include "core/util/journal/journaledSignal.h"
 
+=======
+#include <stdarg.h>
+
+#include "core/util/journal/journaledSignal.h"
+
+#ifndef _MPOINT3_H_
+#include "math/mPoint3.h"
+#endif
+
+>>>>>>> omni_engine
 class SimObject;
 class Namespace;
 struct ConsoleFunctionHeader;
 
+<<<<<<< HEAD
 class EngineEnumTable;
 typedef EngineEnumTable EnumTable;
 
 typedef U32 StringStackPtr;
 
+=======
+
+class EngineEnumTable;
+typedef EngineEnumTable EnumTable;
+
+>>>>>>> omni_engine
 template< typename T > S32 TYPEID();
 
 
@@ -319,11 +337,19 @@ public:
 /// @{
 
 ///
+<<<<<<< HEAD
 typedef const char * (*StringCallback)(SimObject *obj, S32 argc, ConsoleValueRef argv[]);
 typedef S32             (*IntCallback)(SimObject *obj, S32 argc, ConsoleValueRef argv[]);
 typedef F32           (*FloatCallback)(SimObject *obj, S32 argc, ConsoleValueRef argv[]);
 typedef void           (*VoidCallback)(SimObject *obj, S32 argc, ConsoleValueRef argv[]); // We have it return a value so things don't break..
 typedef bool           (*BoolCallback)(SimObject *obj, S32 argc, ConsoleValueRef argv[]);
+=======
+typedef const char * (*StringCallback)(SimObject *obj, S32 argc, const char *argv[]);
+typedef S32             (*IntCallback)(SimObject *obj, S32 argc, const char *argv[]);
+typedef F32           (*FloatCallback)(SimObject *obj, S32 argc, const char *argv[]);
+typedef void           (*VoidCallback)(SimObject *obj, S32 argc, const char *argv[]); // We have it return a value so things don't break..
+typedef bool           (*BoolCallback)(SimObject *obj, S32 argc, const char *argv[]);
+>>>>>>> omni_engine
 
 typedef void (*ConsumerCallback)(U32 level, const char *consoleLine);
 /// @}
@@ -373,8 +399,12 @@ namespace Con
       /// 09/27/07 - RDB - 44->45 Patch from Andreas Kirsch: Added opcode to support correct void return
       /// 01/13/09 - TMS - 45->46 Added script assert
       /// 09/07/14 - jamesu - 46->47 64bit support
+<<<<<<< HEAD
       /// 10/14/14 - jamesu - 47->48 Added opcodes to reduce reliance on strings in function calls
       DSOVersion = 48,
+=======
+      DSOVersion = 47,
+>>>>>>> omni_engine
 
       MaxLineLength = 512,  ///< Maximum length of a line of console input.
       MaxDataTypes = 256    ///< Maximum number of registered data types.
@@ -410,6 +440,11 @@ namespace Con
 
    /// Is the console active at this time?
    bool isActive();
+
+   //WLE added some needed functions to the console
+   S32 getFileCRC(const char* filename);
+   bool deleteFile(const char * filename);
+   //WLE End
 
    /// @}
 
@@ -639,6 +674,8 @@ namespace Con
    /// @param  def   Default value to supply if no matching variable is found.
    F32  getFloatVariable(const char* name,F32 def = .0f);
 
+   Point3F getPoint3FVariable(const char *varName, Point3F def = Point3F::Zero);
+
    /// @}
 
    /// @name Global Function Registration
@@ -761,9 +798,29 @@ namespace Con
    /// char* argv[] = {"abs", "-9"};
    /// char* result = execute(2, argv);
    /// @endcode
+<<<<<<< HEAD
    /// NOTE: this function restores the console stack on return.
    ConsoleValueRef execute(S32 argc, const char* argv[]);
    ConsoleValueRef execute(S32 argc, ConsoleValueRef argv[]);
+=======
+   const char *execute(S32 argc, const char* argv[]);
+   const char *executeScript(S32 argc, const char* argv[]);
+
+   /// @see execute(S32 argc, const char* argv[])
+#define ARG const char*
+   const char *executef( ARG);
+   const char *executef( ARG, ARG);
+   const char *executef( ARG, ARG, ARG);
+   const char *executef( ARG, ARG, ARG, ARG);
+   const char *executef( ARG, ARG, ARG, ARG, ARG);
+   const char *executef( ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef( ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef( ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef( ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef( ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+#undef ARG
+
+>>>>>>> omni_engine
 
    /// Call a Torque Script member function of a SimObject from C/C++ code.
    /// @param object    Object on which to execute the method call.
@@ -777,23 +834,51 @@ namespace Con
    /// char* argv[] = {"setMode", "", "2"};
    /// char* result = execute(mysimobject, 3, argv);
    /// @endcode
+<<<<<<< HEAD
    /// NOTE: this function restores the console stack on return.
    ConsoleValueRef execute(SimObject *object, S32 argc, const char* argv[], bool thisCallOnly = false);
    ConsoleValueRef execute(SimObject *object, S32 argc, ConsoleValueRef argv[], bool thisCallOnly = false);
+=======
+   const char *execute(SimObject *object, S32 argc, const char *argv[], bool thisCallOnly = false);
+   const char *executeScript(SimObject *object, S32 argc, const char *argv[], bool thisCallOnly = false);
+
+   /// @see execute(SimObject *, S32 argc, const char *argv[])
+#define ARG const char*
+   const char *executef(SimObject *, ARG);
+   const char *executef(SimObject *, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+   const char *executef(SimObject *, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG, ARG);
+#undef ARG
+>>>>>>> omni_engine
 
    /// Evaluate an arbitrary chunk of code.
    ///
    /// @param  string   Buffer containing code to execute.
    /// @param  echo     Should we echo the string to the console?
    /// @param  fileName Indicate what file this code is coming from; used in error reporting and such.
+<<<<<<< HEAD
    /// NOTE: This function restores the console stack on return.
    ConsoleValueRef evaluate(const char* string, bool echo = false, const char *fileName = NULL);
+=======
+   const char *evaluate(const char* string, bool echo = false, const char *fileName = NULL);
+>>>>>>> omni_engine
 
    /// Evaluate an arbitrary line of script.
    ///
    /// This wraps dVsprintf(), so you can substitute parameters into the code being executed.
+<<<<<<< HEAD
    /// NOTE: This function restores the console stack on return.
    ConsoleValueRef evaluatef(const char* string, ...);
+=======
+   const char *evaluatef(const char* string, ...);
+>>>>>>> omni_engine
 
    /// @}
 
@@ -815,7 +900,12 @@ namespace Con
    char* getArgBuffer(U32 bufferSize);
    char* getFloatArg(F64 arg);
    char* getIntArg  (S32 arg);
+<<<<<<< HEAD
    char* getStringArg( const char* arg );
+=======
+   char* getuIntArg  (U32 arg);
+   char* getStringArg( const char *arg );
+>>>>>>> omni_engine
    char* getStringArg( const String& arg );
    /// @}
 
@@ -852,6 +942,7 @@ namespace Con
    /// @name Dynamic Type System
    /// @{
 
+<<<<<<< HEAD
    void setData(S32 type, void *dptr, S32 index, S32 argc, const char **argv, const EnumTable *tbl = NULL, BitSet32 flag = 0);
    const char *getData(S32 type, void *dptr, S32 index, const EnumTable *tbl = NULL, BitSet32 flag = 0);
    const char *getFormattedData(S32 type, const char *data, const EnumTable *tbl = NULL, BitSet32 flag = 0);
@@ -894,6 +985,23 @@ namespace Con
 	/// }
 };
 
+=======
+   ///
+/*   void registerType( const char *typeName, S32 type, S32 size, GetDataFunction gdf, SetDataFunction sdf, bool isDatablockType = false );
+   void registerType( const char* typeName, S32 type, S32 size, bool isDatablockType = false );
+   void registerTypeGet( S32 type, GetDataFunction gdf );
+   void registerTypeSet( S32 type, SetDataFunction sdf );
+
+   const char *getTypeName(S32 type);
+   bool isDatablockType( S32 type ); */
+
+   void setData(S32 type, void *dptr, S32 index, S32 argc, const char **argv, const EnumTable *tbl = NULL, BitSet32 flag = 0);
+   const char *getData(S32 type, void *dptr, S32 index, const EnumTable *tbl = NULL, BitSet32 flag = 0);
+   const char *getFormattedData(S32 type, const char *data, const EnumTable *tbl = NULL, BitSet32 flag = 0);
+   /// @}
+};
+
+>>>>>>> omni_engine
 extern void expandEscape(char *dest, const char *src);
 extern bool collapseEscape(char *buf);
 extern U32 HashPointer(StringTableEntry ptr);
@@ -1100,9 +1208,15 @@ struct ConsoleDocFragment
    static ConsoleDocFragment* smFirst;
    
    ConsoleDocFragment( const char* text, const char* inClass = NULL, const char* definition = NULL )
+<<<<<<< HEAD
       : mClass( inClass ),
         mDefinition( definition ),
         mText( text ),
+=======
+      : mText( text ),
+        mClass( inClass ),
+        mDefinition( definition ),
+>>>>>>> omni_engine
         mNext( smFirst )
    {
       smFirst = this;
@@ -1163,6 +1277,7 @@ public:
       static ConsoleConstructor cfg_ConsoleFunctionGroup_##groupName##_GroupBegin(NULL,#groupName,usage)
 
 #  define ConsoleFunction(name,returnType,minArgs,maxArgs,usage1) \
+<<<<<<< HEAD
    returnType cf_##name(SimObject *, S32, ConsoleValueRef *argv); \
    ConsoleConstructor cc_##name##_obj(NULL,#name,cf_##name,usage1,minArgs,maxArgs); \
       returnType cf_##name(SimObject *, S32 argc, ConsoleValueRef *argv)
@@ -1171,6 +1286,16 @@ public:
    returnType ctf_##name(SimObject *, S32, ConsoleValueRef *argv); \
    ConsoleConstructor cc_##name##_obj(NULL,#name,ctf_##name,usage1,minArgs,maxArgs, true); \
    returnType ctf_##name(SimObject *, S32 argc, ConsoleValueRef *argv)
+=======
+   returnType cf_##name(SimObject *, S32, const char **argv); \
+   ConsoleConstructor cc_##name##_obj(NULL,#name,cf_##name,usage1,minArgs,maxArgs); \
+      returnType cf_##name(SimObject *, S32 argc, const char **argv)
+
+#  define ConsoleToolFunction(name,returnType,minArgs,maxArgs,usage1) \
+   returnType ctf_##name(SimObject *, S32, const char **argv); \
+   ConsoleConstructor cc_##name##_obj(NULL,#name,ctf_##name,usage1,minArgs,maxArgs, true); \
+   returnType ctf_##name(SimObject *, S32 argc, const char **argv)
+>>>>>>> omni_engine
 
 #  define ConsoleFunctionGroupEnd(groupName) \
       static ConsoleConstructor cfg_##groupName##_GroupEnd(NULL,#groupName,NULL)
@@ -1183,22 +1308,39 @@ public:
    static ConsoleConstructor cc_##className##_##groupName##_GroupBegin(#className,#groupName,usage)
 
 #  define ConsoleMethod(className,name,returnType,minArgs,maxArgs,usage1) \
+<<<<<<< HEAD
    inline returnType cm_##className##_##name(className *, S32, ConsoleValueRef *argv); \
    returnType cm_##className##_##name##_caster(SimObject *object, S32 argc, ConsoleValueRef *argv) { \
+=======
+   inline returnType cm_##className##_##name(className *, S32, const char **argv); \
+   returnType cm_##className##_##name##_caster(SimObject *object, S32 argc, const char **argv) { \
+>>>>>>> omni_engine
          AssertFatal( dynamic_cast<className*>( object ), "Object passed to " #name " is not a " #className "!" ); \
          conmethod_return_##returnType ) cm_##className##_##name(static_cast<className*>(object),argc,argv); \
       };                                                                                              \
       ConsoleConstructor cc_##className##_##name##_obj(#className,#name,cm_##className##_##name##_caster,usage1,minArgs,maxArgs); \
+<<<<<<< HEAD
       inline returnType cm_##className##_##name(className *object, S32 argc, ConsoleValueRef *argv)
 
 #  define ConsoleStaticMethod(className,name,returnType,minArgs,maxArgs,usage1) \
    inline returnType cm_##className##_##name(S32, ConsoleValueRef *); \
    returnType cm_##className##_##name##_caster(SimObject *object, S32 argc, ConsoleValueRef *argv) { \
+=======
+      inline returnType cm_##className##_##name(className *object, S32 argc, const char **argv)
+
+#  define ConsoleStaticMethod(className,name,returnType,minArgs,maxArgs,usage1) \
+   inline returnType cm_##className##_##name(S32, const char **); \
+   returnType cm_##className##_##name##_caster(SimObject *object, S32 argc, const char **argv) { \
+>>>>>>> omni_engine
    conmethod_return_##returnType ) cm_##className##_##name(argc,argv); \
    }; \
    ConsoleConstructor \
    cc_##className##_##name##_obj(#className,#name,cm_##className##_##name##_caster,usage1,minArgs,maxArgs); \
+<<<<<<< HEAD
    inline returnType cm_##className##_##name(S32 argc, ConsoleValueRef *argv)
+=======
+   inline returnType cm_##className##_##name(S32 argc, const char **argv)
+>>>>>>> omni_engine
 
 #  define ConsoleMethodGroupEnd(className, groupName) \
    static ConsoleConstructor cc_##className##_##groupName##_GroupEnd(#className,#groupName,NULL)
@@ -1221,6 +1363,7 @@ public:
 
 // These are identical to what's above, we just want to null out the usage strings.
 #  define ConsoleFunction(name,returnType,minArgs,maxArgs,usage1)                   \
+<<<<<<< HEAD
       static returnType c##name(SimObject *, S32, ConsoleValueRef*);                   \
       static ConsoleConstructor g##name##obj(NULL,#name,c##name,"",minArgs,maxArgs);\
       static returnType c##name(SimObject *, S32 argc, ConsoleValueRef *argv)
@@ -1233,20 +1376,46 @@ public:
 #  define ConsoleMethod(className,name,returnType,minArgs,maxArgs,usage1)                             \
       static inline returnType c##className##name(className *, S32, ConsoleValueRef *argv);               \
       static returnType c##className##name##caster(SimObject *object, S32 argc, ConsoleValueRef *argv) {  \
+=======
+      static returnType c##name(SimObject *, S32, const char **);                   \
+      static ConsoleConstructor g##name##obj(NULL,#name,c##name,"",minArgs,maxArgs);\
+      static returnType c##name(SimObject *, S32 argc, const char **argv)
+
+#  define ConsoleToolFunction(name,returnType,minArgs,maxArgs,usage1)                   \
+   static returnType c##name(SimObject *, S32, const char **);                   \
+   static ConsoleConstructor g##name##obj(NULL,#name,c##name,"",minArgs,maxArgs, true);\
+   static returnType c##name(SimObject *, S32 argc, const char **argv)
+
+#  define ConsoleMethod(className,name,returnType,minArgs,maxArgs,usage1)                             \
+      static inline returnType c##className##name(className *, S32, const char **argv);               \
+      static returnType c##className##name##caster(SimObject *object, S32 argc, const char **argv) {  \
+>>>>>>> omni_engine
          conmethod_return_##returnType ) c##className##name(static_cast<className*>(object),argc,argv);              \
       };                                                                                              \
       static ConsoleConstructor                                                                       \
          className##name##obj(#className,#name,c##className##name##caster,"",minArgs,maxArgs);        \
+<<<<<<< HEAD
       static inline returnType c##className##name(className *object, S32 argc, ConsoleValueRef *argv)
 
 #  define ConsoleStaticMethod(className,name,returnType,minArgs,maxArgs,usage1)                       \
       static inline returnType c##className##name(S32, ConsoleValueRef*);                                \
       static returnType c##className##name##caster(SimObject *object, S32 argc, ConsoleValueRef *argv) {  \
+=======
+      static inline returnType c##className##name(className *object, S32 argc, const char **argv)
+
+#  define ConsoleStaticMethod(className,name,returnType,minArgs,maxArgs,usage1)                       \
+      static inline returnType c##className##name(S32, const char **);                                \
+      static returnType c##className##name##caster(SimObject *object, S32 argc, const char **argv) {  \
+>>>>>>> omni_engine
          conmethod_return_##returnType ) c##className##name(argc,argv);                                                        \
       };                                                                                              \
       static ConsoleConstructor                                                                       \
          className##name##obj(#className,#name,c##className##name##caster,"",minArgs,maxArgs);        \
+<<<<<<< HEAD
       static inline returnType c##className##name(S32 argc, ConsoleValueRef *argv)
+=======
+      static inline returnType c##className##name(S32 argc, const char **argv)
+>>>>>>> omni_engine
 
 #define ConsoleDoc( text )
 

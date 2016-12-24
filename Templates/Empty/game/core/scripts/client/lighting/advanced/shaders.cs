@@ -141,7 +141,11 @@ new CustomMaterial( AL_PointLightMaterial )
    
    sampler["prePassBuffer"] = "#prepass";
    sampler["shadowMap"] = "$dynamiclight";
+<<<<<<< HEAD
    sampler["cookieMap"] = "$dynamiclightmask";
+=======
+   sampler["cookieTex"] = "$dynamiclightmask";
+>>>>>>> omni_engine
    
    target = "lightinfo";
    
@@ -172,7 +176,11 @@ new CustomMaterial( AL_SpotLightMaterial )
    
    sampler["prePassBuffer"] = "#prepass";
    sampler["shadowMap"] = "$dynamiclight";
+<<<<<<< HEAD
    sampler["cookieMap"] = "$dynamiclightmask";
+=======
+   sampler["cookieTex"] = "$dynamiclightmask";
+>>>>>>> omni_engine
    
    target = "lightinfo";
    

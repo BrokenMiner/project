@@ -74,15 +74,23 @@ RenderParticleMgr::RenderParticleMgr()
 {
    // Render particles at 1/4 resolution
    mTargetSizeType = WindowSizeScaled;
+<<<<<<< HEAD
    mTargetScale.set(0.5f, 0.5f);
+=======
+   mTargetScale.set(0.25f, 0.25f);
+>>>>>>> omni_engine
 
    // We use the target chain like a texture pool, not like a swap chain
    if(!RenderToSingleTarget)
       setTargetChainLength(5);
    else
       mOffscreenSystems.setSize(1);
+<<<<<<< HEAD
    
    notifyType( RenderPassManager::RIT_Particle );
+=======
+
+>>>>>>> omni_engine
    LightManager::smActivateSignal.notify( this, &RenderParticleMgr::_onLMActivate );
 }
 
@@ -378,7 +386,6 @@ void RenderParticleMgr::renderInstance(ParticleRenderInst *ri, SceneRenderState 
    // Draw system path, or draw composite path
    if(ri->systemState == PSS_DrawComplete)
       return;
-   
    if(ri->systemState != PSS_AwaitingCompositeDraw)
    {
       // Set proper stateblock, and update state
@@ -387,7 +394,7 @@ void RenderParticleMgr::renderInstance(ParticleRenderInst *ri, SceneRenderState 
          GFX->setStateBlock( _getOffscreenStateBlock(ri) );
          ri->systemState = PSS_AwaitingCompositeDraw;
          mParticleShaderConsts.mShaderConsts->setSafe( mParticleShaderConsts.mModelViewProjSC, 
-            *ri->modelViewProj * mOffscreenSystems[ri->targetIndex].clipMatrix );
+           *ri->modelViewProj * mOffscreenSystems[ri->targetIndex].clipMatrix );
       }
       else
       {
@@ -399,7 +406,67 @@ void RenderParticleMgr::renderInstance(ParticleRenderInst *ri, SceneRenderState 
          mParticleShaderConsts.mShaderConsts->setSafe( mParticleShaderConsts.mModelViewProjSC, *ri->modelViewProj );
       }
 
+<<<<<<< HEAD
       renderParticle(ri, state);
+=======
+      // We want to turn everything into variation on a pre-multiplied alpha blend
+      F32 alphaFactor = 0.0f, alphaScale = 1.0f;
+      switch(ri->blendStyle)
+      {
+         // SrcAlpha, InvSrcAlpha
+      case ParticleRenderInst::BlendNormal:
+         alphaFactor = 1.0f;
+         break;
+
+         // SrcAlpha, One
+      case ParticleRenderInst::BlendAdditive:
+         alphaFactor = 1.0f;
+         alphaScale = 0.0f;
+         break;
+
+         // SrcColor, One
+      case ParticleRenderInst::BlendGreyscale:
+         alphaFactor = -1.0f;
+         alphaScale = 0.0f;
+         break;
+      }
+      mParticleShaderConsts.mShaderConsts->setSafe( mParticleShaderConsts.mAlphaFactorSC, alphaFactor );
+      mParticleShaderConsts.mShaderConsts->setSafe( mParticleShaderConsts.mAlphaScaleSC, alphaScale );
+
+      mParticleShaderConsts.mShaderConsts->setSafe( mParticleShaderConsts.mFSModelViewProjSC, *ri->modelViewProj  );
+      mParticleShaderConsts.mShaderConsts->setSafe( mParticleShaderConsts.mOneOverFarSC, 1.0f / state->getFarPlane() );     
+
+      if ( mParticleShaderConsts.mOneOverSoftnessSC->isValid() )
+      {
+         F32 oneOverSoftness = 1.0f;
+         if ( ri->softnessDistance > 0.0f )
+            oneOverSoftness = 1.0f / ( ri->softnessDistance / state->getFarPlane() );
+         mParticleShaderConsts.mShaderConsts->set( mParticleShaderConsts.mOneOverSoftnessSC, oneOverSoftness );
+      }
+
+      GFX->setShader( mParticleShader );
+      GFX->setShaderConstBuffer( mParticleShaderConsts.mShaderConsts );
+
+      GFX->setTexture( 0, ri->diffuseTex );
+
+      // Set up the prepass texture.
+      if ( mParticleShaderConsts.mPrePassTargetParamsSC->isValid() )
+      {
+         GFXTextureObject *texObject = mPrepassTarget ? mPrepassTarget->getTexture(0) : NULL;
+         GFX->setTexture( 1, texObject );
+
+         Point4F rtParams( 0.0f, 0.0f, 1.0f, 1.0f );
+         if ( texObject )
+            ScreenSpace::RenderTargetParameters(texObject->getSize(), mPrepassTarget->getViewport(), rtParams);
+
+         mParticleShaderConsts.mShaderConsts->set( mParticleShaderConsts.mPrePassTargetParamsSC, rtParams );
+      }
+
+      GFX->setPrimitiveBuffer( *ri->primBuff );
+      GFX->setVertexBuffer( *ri->vertBuff );
+
+      GFX->drawIndexedPrimitive( GFXTriangleList, 0, 0, ri->count * 4, 0, ri->count * 2 );
+>>>>>>> omni_engine
    }
    else if(ri->systemState == PSS_AwaitingCompositeDraw)
    {
@@ -420,7 +487,11 @@ void RenderParticleMgr::renderInstance(ParticleRenderInst *ri, SceneRenderState 
       // Set offscreen texture
       Point4F rtParams;
       GFXTextureObject *particleSource = mNamedTarget.getTexture();
+<<<<<<< HEAD
       GFX->setTexture( mParticleCompositeShaderConsts.mSamplerColorSource->getSamplerRegister(), particleSource );
+=======
+      GFX->setTexture( 0, particleSource );
+>>>>>>> omni_engine
       if(particleSource)
       {
          ScreenSpace::RenderTargetParameters(particleSource->getSize(), mNamedTarget.getViewport(), rtParams);
@@ -429,7 +500,11 @@ void RenderParticleMgr::renderInstance(ParticleRenderInst *ri, SceneRenderState 
 
       // And edges
       GFXTextureObject *texObject = mEdgeTarget ? mEdgeTarget->getTexture() : NULL;
+<<<<<<< HEAD
       GFX->setTexture( mParticleCompositeShaderConsts.mSamplerEdgeSource->getSamplerRegister(), texObject );
+=======
+      GFX->setTexture( 1, texObject );
+>>>>>>> omni_engine
       if(texObject)
       {
          ScreenSpace::RenderTargetParameters(texObject->getSize(), mEdgeTarget->getViewport(), rtParams);
@@ -707,8 +782,13 @@ GFXStateBlockRef RenderParticleMgr::_getHighResStateBlock(ParticleRenderInst *ri
 GFXStateBlockRef RenderParticleMgr::_getMixedResStateBlock(ParticleRenderInst *ri)
 {
    const U8 blendStyle = ri->blendStyle;
+<<<<<<< HEAD
    if ( mMixedResBlocks[blendStyle].isValid() )
       return mMixedResBlocks[blendStyle];
+=======
+   if ( mHighResBlocks[blendStyle].isValid() )
+      return mHighResBlocks[blendStyle];
+>>>>>>> omni_engine
 
    GFXStateBlockDesc d;
 
@@ -772,8 +852,13 @@ GFXStateBlockRef RenderParticleMgr::_getMixedResStateBlock(ParticleRenderInst *r
    // Prepass sampler
    d.samplers[1] = GFXSamplerStateDesc::getClampPoint();
 
+<<<<<<< HEAD
    mMixedResBlocks[blendStyle] = GFX->createStateBlock(d);
    return mMixedResBlocks[blendStyle];
+=======
+   mHighResBlocks[blendStyle] = GFX->createStateBlock(d);
+   return mHighResBlocks[blendStyle];
+>>>>>>> omni_engine
 }
 
 GFXStateBlockRef RenderParticleMgr::_getCompositeStateBlock(ParticleRenderInst *ri)

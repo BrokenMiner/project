@@ -81,7 +81,11 @@ class DInputDevice : public InputDevice
       // Hack for POV
       S32 mPrevPOVPos;
 
+<<<<<<< HEAD
       U32 mObjBufferSize;                     // size of objBuffer*
+=======
+      U64 mObjBufferSize;                     // size of objBuffer*
+>>>>>>> omni_engine
       U32 mObjCount;                          // number of objects on this device
       U32 mObjEnumCount;                      // used during enumeration ONLY
       U32 mObjBufferOfs;                      // used during enumeration ONLY

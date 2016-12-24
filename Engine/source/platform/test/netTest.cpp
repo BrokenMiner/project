@@ -25,6 +25,7 @@
 #include "platform/platformNet.h"
 #include "core/util/journal/process.h"
 
+<<<<<<< HEAD
 struct TcpHandle
 {
    NetSocket mSocket;
@@ -71,13 +72,64 @@ struct TcpHandle
 TEST(Net, TCPRequest)
 {
    TcpHandle handler;
+=======
+TEST(Net, TCPRequest)
+{
+   struct handle
+   {
+      NetSocket mSocket;
+      S32 mDataReceived;
+
+      void notify(NetSocket sock, U32 state) 
+      {
+         // Only consider our own socket.
+         if(mSocket != sock)
+            return;
+
+         // Ok - what's the state? We do some dumb responses to given states
+         // in order to fulfill the request.
+         if(state == Net::Connected)
+         {
+            U8 reqBuffer[] = {
+               "GET / HTTP/1.0\nUser-Agent: Torque/1.0\n\n"
+            };
+
+            Net::Error e = Net::sendtoSocket(mSocket, reqBuffer, sizeof(reqBuffer));
+
+            ASSERT_EQ(Net::NoError, e)
+               << "Got an error sending our HTTP request!";
+         }
+         else
+         {
+            Process::requestShutdown();
+            mSocket = NULL;
+            ASSERT_EQ(Net::Disconnected, state)
+               << "Ended with a network error!";
+         }
+      }
+
+      void receive(NetSocket sock, RawData incomingData)
+      {
+         // Only consider our own socket.
+         if(mSocket != sock)
+            return;
+
+         mDataReceived += incomingData.size;
+      }
+   } handler;
+>>>>>>> omni_engine
 
    handler.mSocket = InvalidSocket;
    handler.mDataReceived = 0;
 
    // Hook into the signals.
+<<<<<<< HEAD
    Net::smConnectionNotify .notify(&handler, &TcpHandle::notify);
    Net::smConnectionReceive.notify(&handler, &TcpHandle::receive);
+=======
+   Net::smConnectionNotify. notify(&handler, &handle::notify);
+   Net::smConnectionReceive.notify(&handler, &handle::receive);
+>>>>>>> omni_engine
 
    // Open a TCP connection to garagegames.com
    handler.mSocket = Net::openConnectTo("72.246.107.193:80");
@@ -85,13 +137,19 @@ TEST(Net, TCPRequest)
    while(Process::processEvents() && (Platform::getRealMilliseconds() < limit) ) {}
 
    // Unhook from the signals.
+<<<<<<< HEAD
    Net::smConnectionNotify .remove(&handler, &TcpHandle::notify);
    Net::smConnectionReceive.remove(&handler, &TcpHandle::receive);
+=======
+   Net::smConnectionNotify. remove(&handler, &handle::notify);
+   Net::smConnectionReceive.remove(&handler, &handle::receive);
+>>>>>>> omni_engine
 
    EXPECT_GT(handler.mDataReceived, 0)
       << "Didn't get any data back!";
 }
 
+<<<<<<< HEAD
 struct JournalHandle
 {
    NetSocket mSocket;
@@ -160,6 +218,74 @@ struct JournalHandle
 TEST(Net, JournalTCPRequest)
 {
    JournalHandle handler;
+=======
+TEST(Net, JournalTCPRequest)
+{
+   struct handle
+   {
+      NetSocket mSocket;
+      S32 mDataReceived;
+
+      void notify(NetSocket sock, U32 state)
+      {
+         // Only consider our own socket.
+         if(mSocket != sock)
+            return;
+
+         // Ok - what's the state? We do some dumb responses to given states
+         // in order to fulfill the request.
+         if(state == Net::Connected)
+         {
+            U8 reqBuffer[] = {
+               "GET / HTTP/1.0\nUser-Agent: Torque/1.0\n\n"
+            };
+
+            Net::Error e = Net::sendtoSocket(mSocket, reqBuffer, sizeof(reqBuffer));
+
+            ASSERT_EQ(Net::NoError, e)
+               << "Got an error sending our HTTP request!";
+         }
+         else
+         {
+            Process::requestShutdown();
+            mSocket = NULL;
+            ASSERT_EQ(Net::Disconnected, state)
+               << "Ended with a network error!";
+         }
+      }
+
+      void receive(NetSocket sock, RawData incomingData)
+      {
+         // Only consider our own socket.
+         if(mSocket != sock)
+            return;
+         mDataReceived += incomingData.size;
+      }
+
+      void makeRequest()
+      {
+         mSocket = InvalidSocket;
+         mDataReceived = 0;
+
+         // Hook into the signals.
+         Net::smConnectionNotify. notify(this, &handle::notify);
+         Net::smConnectionReceive.notify(this, &handle::receive);
+
+         // Open a TCP connection to garagegames.com
+         mSocket = Net::openConnectTo("72.246.107.193:80");
+
+         // Let the callbacks enable things to process.
+         while(Process::processEvents()) {}
+
+         // Unhook from the signals.
+         Net::smConnectionNotify. remove(this, &handle::notify);
+         Net::smConnectionReceive.remove(this, &handle::receive);
+
+         EXPECT_GT(mDataReceived, 0)
+            << "Didn't get any data back!";
+      }
+   } handler;
+>>>>>>> omni_engine
 
    Journal::Record("journalTCP.jrn");
    ASSERT_TRUE(Journal::IsRecording());

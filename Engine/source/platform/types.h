@@ -1,5 +1,6 @@
 //-----------------------------------------------------------------------------
 // Copyright (c) 2012 GarageGames, LLC
+// Copyright (c) 2014 WinterLeaft Entertainment
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -54,6 +55,7 @@ struct EmptyType {};                ///< "Null" type used by templates
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef char           UTF8;        ///< Compiler independent 8  bit Unicode encoded character
+<<<<<<< HEAD
 
 #if defined(_MSC_VER) && defined(__clang__)
 // Clang's MSVC compatibility mode doesn't currently support /Zc:wchar_t-,
@@ -65,6 +67,9 @@ typedef wchar_t        UTF16;
 typedef unsigned short UTF16;       ///< Compiler independent 16 bit Unicode encoded character
 #endif
 
+=======
+typedef unsigned short UTF16;       ///< Compiler independent 16 bit Unicode encoded character
+>>>>>>> omni_engine
 typedef unsigned int   UTF32;       ///< Compiler independent 32 bit Unicode encoded character
 
 typedef const char* StringTableEntry;

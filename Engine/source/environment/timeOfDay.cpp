@@ -60,6 +60,11 @@ ConsoleDocClass( TimeOfDay,
    "@ingroup enviroMisc"
 );
 
+IMPLEMENT_CALLBACK(TimeOfDay, onTimeEvent, void, (const char* identifier, const char* currentTime, const char* currentElevation), (identifier,  currentTime,  currentElevation), "");
+IMPLEMENT_CALLBACK(TimeOfDay, onAnimateStart, void, (), (), "");
+IMPLEMENT_CALLBACK(TimeOfDay, onAnimateDone, void, (), (), "");
+IMPLEMENT_CALLBACK(TimeOfDay, onAdd, void, (), (), "");
+
 TimeOfDay::TimeOfDay() 
    :  mElevation( 0.0f ),
       mAzimuth( 0.0f ),
@@ -194,7 +199,11 @@ bool TimeOfDay::onAdd()
       NetConnection::smGhostAlwaysDone.notify( this, &TimeOfDay::_onGhostAlwaysDone );
 
    if ( isServerObject() )   
+<<<<<<< HEAD
       Con::executef( this, "onAdd" );   
+=======
+   { onAdd_callback(); }
+>>>>>>> omni_engine
 
    setProcessTick( true );
 
@@ -293,7 +302,12 @@ void TimeOfDay::processTick( const Move *move )
       _updateTimeEvents();
 
       if ( !mAnimate && isServerObject() )
+<<<<<<< HEAD
          Con::executef( this, "onAnimateDone" );
+=======
+      { onAnimateDone_callback(); }
+         
+>>>>>>> omni_engine
    }
    else if ( mPlay )
    {
@@ -679,7 +693,11 @@ void TimeOfDay::_onTimeEvent( const String &identifier )
 
    String strCurrentElevation = String::ToString( "%g", elevation );
 
+<<<<<<< HEAD
    Con::executef( this, "onTimeEvent", identifier.c_str(), strCurrentTime.c_str(), strCurrentElevation.c_str() );
+=======
+   onTimeEvent_callback( identifier.c_str(), strCurrentTime.c_str(), strCurrentElevation.c_str() );
+>>>>>>> omni_engine
 }
 
 void TimeOfDay::animate( F32 time, F32 speed )
@@ -708,7 +726,11 @@ void TimeOfDay::animate( F32 time, F32 speed )
 
    if ( isServerObject() )
    {
+<<<<<<< HEAD
       Con::executef( this, "onAnimateStart" );
+=======
+      onAnimateStart_callback();
+>>>>>>> omni_engine
       setMaskBits( AnimateMask );
    }
 }
@@ -743,3 +765,113 @@ DefineEngineMethod( TimeOfDay, animate, void, ( F32 elevation, F32 degreesPerSec
 {
    object->animate( elevation, degreesPerSecond );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTimeOfDay_addTimeOfDayEvent(char * x__object, F32 elevation, char * x__identifier)
+{
+TimeOfDay* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+const char* identifier = (const char*)x__identifier;
+{
+   object->addTimeEvent( elevation, identifier );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTimeOfDay_animate(char * x__object, F32 elevation, F32 degreesPerSecond)
+{
+TimeOfDay* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->animate( elevation, degreesPerSecond );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTimeOfDay_setDayLength(char * x__object, F32 seconds)
+{
+TimeOfDay* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   if ( seconds > 0.0f )
+      object->setDayLength( seconds );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTimeOfDay_setPlay(char * x__object, bool enabled)
+{
+TimeOfDay* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setPlay( enabled );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnTimeOfDay_setTimeOfDay(char * x__object, F32 time)
+{
+TimeOfDay* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->setTimeOfDay( time );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

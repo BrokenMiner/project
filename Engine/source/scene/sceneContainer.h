@@ -303,7 +303,11 @@ class SceneContainer
       void _findSpecialObjects( const Vector< SceneObject* >& vector, U32 mask, FindCallback, void *key = NULL );
       void _findSpecialObjects( const Vector< SceneObject* >& vector, const Box3F &box, U32 mask, FindCallback callback, void *key = NULL );   
 
+<<<<<<< HEAD
       static void getBinRange( const F32 min, const F32 max, U32& minBin, U32& maxBin );
+=======
+      static void getBinRange( const F64 min, const F64 max, U32& minBin, U32& maxBin );
+>>>>>>> omni_engine
 };
 
 //-----------------------------------------------------------------------------

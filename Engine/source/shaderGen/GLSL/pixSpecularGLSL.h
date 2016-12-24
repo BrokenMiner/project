@@ -77,4 +77,8 @@ public:
    }
 };
 
+<<<<<<< HEAD
 #endif // _PIXSPECULAR_HLSL_H_
+=======
+#endif // _PIXSPECULAR_HLSL_H_
+>>>>>>> omni_engine

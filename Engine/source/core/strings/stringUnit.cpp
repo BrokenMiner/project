@@ -179,7 +179,11 @@ namespace StringUnit
 
    const char* removeUnit(const char *string, U32 index, const char *set)
    {
+<<<<<<< HEAD
       U32 sz;
+=======
+      U64 sz;
+>>>>>>> omni_engine
       const char *start = string;
       AssertFatal( dStrlen(string) + 1 < sizeof( _returnBuffer ), "Size of returned string too large for return buffer" );
 

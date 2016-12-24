@@ -30,7 +30,11 @@
 #ifndef _SCENEPOLYHEDRALOBJECT_H_
 #include "scene/mixin/scenePolyhedralObject.h"
 #endif
+<<<<<<< HEAD
 #include "scene/mixin/scenePolyhedralObject.impl.h"
+=======
+
+>>>>>>> omni_engine
 
 ///
 class ScenePolyhedralSpace : public ScenePolyhedralObject< SceneSpace >

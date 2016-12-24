@@ -39,9 +39,15 @@ const F32 Float_Inf = std::numeric_limits< F32 >::infinity();
 
 // The tools prefer to allow the CPU time to process
 #ifndef TORQUE_TOOLS
+<<<<<<< HEAD
 S32 sgBackgroundProcessSleepTime = 25;
 #else
 S32 sgBackgroundProcessSleepTime = 200;
+=======
+S32 sgBackgroundProcessSleepTime = 1;// 25; //WLE - Newer computers can handle no timeout on out of focus.
+#else
+S32 sgBackgroundProcessSleepTime = 1;//200;//WLE - Newer computers can handle no timeout on out of focus.
+>>>>>>> omni_engine
 #endif
 S32 sgTimeManagerProcessInterval = 1;
 

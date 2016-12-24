@@ -33,7 +33,11 @@
 #if defined(TORQUE_OS_LINUX) || defined(TORQUE_OS_OSX) || defined(TORQUE_OS_XENON) || defined(TORQUE_OS_PS3)
 
 // Consoles don't need this
+<<<<<<< HEAD
 #if defined(TORQUE_OS_XENON) || defined(TORQUE_OS_PS3)
+=======
+#if defined(TORQUE_OS_XENON) || defined(TORQUE_OS_PS3) || defined(TORQUE_CPU_X86_64)
+>>>>>>> omni_engine
 namespace CPUInfo 
 {
 
@@ -422,6 +426,7 @@ next:
          EConfig StatusFlag = CONFIG_UserConfigIssue;
 
          g_s3Levels[0] = 0;
+		 TotAvailLogical = 1;
          TotAvailCore = 1;
          PhysicalNum  = 1;
          

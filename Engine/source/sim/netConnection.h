@@ -431,6 +431,9 @@ public:
       HashTableSize = 127,
    };
 
+   
+   DECLARE_CALLBACK( void, onGhostAlwaysObjectsReceived, () );
+
    void sendDisconnectPacket(const char *reason);
 
    virtual bool canRemoteCreate();
@@ -818,7 +821,23 @@ public:
    /// Some configuration values.
    enum GhostConstants
    {
+<<<<<<< HEAD
       GhostIdBitSize = 18, //262,144 ghosts
+=======
+//Winterleaf Entertainment
+/*
+Little note here, we aren't building a game, we are building a world editor, and since each edit is a ghost
+we need the ability to have alot of ghosts.  Since ghosts never update, they will only send a update once
+to a single player during the lifetime of the session.
+
+So for the default setting 12-3 = 9, and 9 can be stored in a 4 bit uint(0-15)
+So for the new setting, 18-3=15, and 15 can also be stored in a 4 bit uint(0-15) thus no changes need to 
+be made to the GhostIndexbitSize You can calculate it by Ciel(Log(GhostIdBitSize)/Log(2))
+
+*/
+      //GhostIdBitSize = 12, // This is 4096 max ghosts													//Winterleaf Entertainment L.L.C. 2013 Copyright
+      GhostIdBitSize = 18, //This expands it to 262,144  18-3 = 15										//Winterleaf Entertainment L.L.C. 2013 Copyright
+>>>>>>> omni_engine
       MaxGhostCount = 1 << GhostIdBitSize, //4096,
       GhostLookupTableSize = 1 << GhostIdBitSize, //4096
       GhostIndexBitSize = 4 // number of bits GhostIdBitSize-3 fits into

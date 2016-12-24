@@ -153,6 +153,7 @@ class GuiRolloutCtrl : public GuiTickCtrl
 
       // Sizing Animation Functions
       void animateTo( S32 height );
+      virtual void processTick();
 
       void collapse() { animateTo( mHeader.extent.y ); }
       void expand() { animateTo( mExpanded.extent.y ); }

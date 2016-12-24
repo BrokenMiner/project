@@ -56,18 +56,64 @@ void WinConsole::destroy()
    WindowsConsole = NULL;
 }
 
+static void ResConBufAndWindow(HANDLE hConsole, SHORT xWinSize, SHORT yWinSize)
+{
+	CONSOLE_SCREEN_BUFFER_INFO consbbuf;
+	BOOL isSuccess;
+	SMALL_RECT smrWindowRect;
+	COORD coordCharScreen;
+
+	isSuccess = GetConsoleScreenBufferInfo(hConsole, &consbbuf);
+	coordCharScreen = GetLargestConsoleWindowSize(hConsole);
+
+	smrWindowRect.Right = (SHORT) (min(xWinSize, coordCharScreen.X) - 1);
+	smrWindowRect.Bottom = (SHORT) (min(yWinSize, coordCharScreen.Y) - 1);
+	smrWindowRect.Left = smrWindowRect.Top = (SHORT) 0;
+
+	coordCharScreen.X = xWinSize;
+	coordCharScreen.Y = yWinSize;
+
+	if ((DWORD_PTR) consbbuf.dwSize.X * consbbuf.dwSize.Y > 
+		(DWORD_PTR) xWinSize * yWinSize)
+	{
+		isSuccess = SetConsoleWindowInfo(hConsole, TRUE, &smrWindowRect);
+		isSuccess = SetConsoleScreenBufferSize(hConsole, coordCharScreen);
+		isSuccess = SetConsoleWindowInfo(hConsole, TRUE, &smrWindowRect);
+		isSuccess = SetConsoleScreenBufferSize(hConsole, coordCharScreen);
+	}
+
+	if ((DWORD_PTR) consbbuf.dwSize.X * consbbuf.dwSize.Y < 
+		(DWORD_PTR) xWinSize * yWinSize)
+	{
+		isSuccess = SetConsoleScreenBufferSize(hConsole, coordCharScreen);
+		isSuccess = SetConsoleWindowInfo(hConsole, TRUE, &smrWindowRect);
+	}
+
+	return;
+}
+
 void WinConsole::enable(bool enabled)
 {
    winConsoleEnabled = enabled;
    if(winConsoleEnabled)
    {
+	  //crappy console
       AllocConsole();
+	  
+	  //Resize Console
+	  HANDLE hConsOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	  ResConBufAndWindow(hConsOut, 120, 60);
+
       const char *title = Con::getVariable("Con::WindowTitle");
       if (title && *title)
       {
 #ifdef UNICODE
          UTF16 buf[512];
+<<<<<<< HEAD
          convertUTF8toUTF16((UTF8 *)title, buf);
+=======
+         convertUTF8toUTF16((UTF8 *)title, buf, sizeof(buf));
+>>>>>>> omni_engine
          SetConsoleTitle(buf);
 #else
          SetConsoleTitle(title);
@@ -147,7 +193,11 @@ void WinConsole::printf(const char *s, ...)
    // Axe the color characters.
    Con::stripColorChars(buffer);
    // Print it.
+<<<<<<< HEAD
    WriteFile(stdOut, buffer, strlen(buffer), &bytes, NULL);
+=======
+   WriteFile(stdOut, buffer, (DWORD)strlen(buffer), &bytes, NULL);
+>>>>>>> omni_engine
    FlushFileBuffers( stdOut );
 }
 
@@ -339,3 +389,70 @@ void WinConsole::process()
       }
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_enableWinConsole(bool flag)
+{
+{
+   WindowsConsole->enable(flag);
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

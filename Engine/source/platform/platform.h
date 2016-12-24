@@ -53,6 +53,8 @@
 /// Global processor identifiers.
 ///
 /// @note These enums must be globally scoped so that they work with the inline assembly
+
+//Dushan - all this is crap
 enum ProcessorType
 {
    // x86
@@ -216,7 +218,11 @@ namespace Platform
    bool excludeOtherInstances(const char *string);
    bool checkOtherInstances(const char *string);
    void restartInstance();
+<<<<<<< HEAD
    void postQuitMessage(const S32 in_quitVal);
+=======
+   void postQuitMessage(const U32 in_quitVal);
+>>>>>>> omni_engine
    void forceShutdown(S32 returnValue);
 
    // Debug
@@ -355,6 +361,8 @@ namespace Platform
    bool closeSplashWindow();
 
    void openFolder( const char* path );
+
+   void selectFile( const char* path );
 
    // Open file at the OS level, according to registered file-types.
    void openFile( const char* path );
@@ -523,7 +531,11 @@ extern void* dRealloc_r(void* in_pResize, dsize_t in_size, const char*, const ds
 extern void* dRealMalloc(dsize_t);
 extern void  dRealFree(void*);
 
+<<<<<<< HEAD
 extern void *dMalloc_aligned(dsize_t in_size, S32 alignment);
+=======
+extern void *dMalloc_aligned(dsize_t in_size, intptr_t alignment);
+>>>>>>> omni_engine
 extern void dFree_aligned(void *);
 
 

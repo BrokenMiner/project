@@ -23,6 +23,17 @@
 #include <dae/domAny.h>
 #include <dae/daeUtils.h>
 
+//Dushan
+//http://blogs.msdn.com/b/vcblog/archive/2013/06/28/c-11-14-stl-features-fixes-and-breaking-changes-in-vs-2013.aspx
+//C++11/14 STL Features, Fixes, And Breaking Changes In VS 2013
+#if _MSC_VER > 1700
+#include <algorithm>
+#endif
+
+#if _MSC_VER >= 1800
+#define max(a,b)    (((a) > (b)) ? (a) : (b))  
+#endif
+
 using namespace std;
 
 daeElement* daeElement::simpleAdd(daeString name, int index) {
@@ -469,7 +480,15 @@ namespace { // Utility functions
 		int result = 0;
 		for (size_t i = 0; i < tokens.size(); i++) {
 			int tokenLength = int(tokens[i].length() > 0 ? tokens[i].length()+2 : 0);
+<<<<<<< HEAD
 			result = max(tokenLength, result);
+=======
+#if _MSC_VER < 1800
+			result = std::max(tokenLength, result);
+#else
+			result = max(tokenLength, result);
+#endif
+>>>>>>> omni_engine
 		}
 		return result;
 	}

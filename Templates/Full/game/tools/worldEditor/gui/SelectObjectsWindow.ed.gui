@@ -16,6 +16,9 @@
    canSaveDynamicFields = "1";
 
    new GuiWindowCtrl(ESelectObjectsWindow) {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+      AllowPopWindow = "1";
+//Copyright Winterleaf Entertainment L.L.C. 2013
       text = "Select Objects";
       resizeWidth = "0";
       resizeHeight = "0";

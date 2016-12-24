@@ -64,7 +64,11 @@ public:
    static bool processEvents();
 
    /// Ask the processEvents() function to shutdown.
+<<<<<<< HEAD
    static void requestShutdown(S32 status = 0);
+=======
+   static void requestShutdown();
+>>>>>>> omni_engine
 
 
    static void notifyInit(Delegate<bool()> del, F32 order = PROCESS_DEFAULT_ORDER) 

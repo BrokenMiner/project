@@ -32,8 +32,16 @@
 #include "console/compiler.h"
 #include "console/engineAPI.h"
 
+<<<<<<< HEAD
 //#define DEBUG_SPEW
 
+=======
+#include "OMNI/Omni.h"
+
+//#define DEBUG_SPEW
+
+
+>>>>>>> omni_engine
 #define ST_INIT_SIZE 15
 
 static char scratchBuffer[1024];
@@ -125,6 +133,61 @@ static S32 QSORT_CALLBACK varCompare(const void* a,const void* b)
    return dStricmp( (*((Dictionary::Entry **) a))->name, (*((Dictionary::Entry **) b))->name );
 }
 
+
+void Dictionary::exportVariablesAsSettings( const char *varString, const char *fileName, bool append )
+	{
+		///WLE Vince
+	if (Winterleaf_EngineCallback::mWLE_ExportVariablesAsSettings == 0)
+		return;
+
+	const char *searchStr = varString;
+	Vector<Entry *> sortList(__FILE__, __LINE__);
+
+   for(S32 i = 0; i < hashTable->size;i ++)
+   {
+      Entry *walk = hashTable->data[i];
+      while(walk)
+      {
+         if(FindMatch::isMatch((char *) searchStr, (char *) walk->name))
+            sortList.push_back(walk);
+
+         walk = walk->nextEntry;
+      }
+   }
+
+   if(!sortList.size())
+      return;
+
+   dQsort((void *) &sortList[0], sortList.size(), sizeof(Entry *), varCompare);
+
+   Vector<Entry *>::iterator s;
+   char expandBuffer[1024];
+   char value[1024];
+
+   for(s = sortList.begin(); s != sortList.end(); s++)
+   {
+      switch((*s)->type)
+      {
+         case Entry::TypeInternalInt:
+            dSprintf(value, sizeof(value), "%d", (*s)->ival);
+			Winterleaf_EngineCallback::mWLE_ExportVariablesAsSettings(fileName,(*s)->name,value,append);
+            break;
+         case Entry::TypeInternalFloat:
+			dSprintf(value, sizeof(value), "%g", (*s)->fval);
+			Winterleaf_EngineCallback::mWLE_ExportVariablesAsSettings(fileName,(*s)->name,value,append);
+            break;
+         default:
+            expandEscape(expandBuffer, (*s)->getStringValue());
+			dSprintf(value, sizeof(value), "%s", expandBuffer);
+			Winterleaf_EngineCallback::mWLE_ExportVariablesAsSettings(fileName,(*s)->name,value,append);
+            break;
+      }
+	  if (!append)
+		  append = true;
+   }
+}
+
+
 void Dictionary::exportVariables(const char *varString, const char *fileName, bool append)
 {
    const char *searchStr = varString;
@@ -167,6 +230,7 @@ void Dictionary::exportVariables(const char *varString, const char *fileName, bo
 
    for(s = sortList.begin(); s != sortList.end(); s++)
    {
+<<<<<<< HEAD
       switch((*s)->value.type)
       {
          case ConsoleValue::TypeInternalInt:
@@ -174,6 +238,15 @@ void Dictionary::exportVariables(const char *varString, const char *fileName, bo
             break;
          case ConsoleValue::TypeInternalFloat:
             dSprintf(buffer, sizeof(buffer), "%s = %g;%s", (*s)->name, (*s)->value.fval, cat);
+=======
+      switch((*s)->type)
+      {
+         case Entry::TypeInternalInt:
+            dSprintf(buffer, sizeof(buffer), "%s = %d;%s", (*s)->name, (*s)->ival, cat);
+            break;
+         case Entry::TypeInternalFloat:
+            dSprintf(buffer, sizeof(buffer), "%s = %g;%s", (*s)->name, (*s)->fval, cat);
+>>>>>>> omni_engine
             break;
          default:
             expandEscape(expandBuffer, (*s)->getStringValue());
@@ -227,6 +300,7 @@ void Dictionary::exportVariables( const char *varString, Vector<String> *names, 
 
       if ( values )
       {
+<<<<<<< HEAD
          switch ( (*s)->value.type )
          {
          case ConsoleValue::TypeInternalInt:
@@ -234,6 +308,15 @@ void Dictionary::exportVariables( const char *varString, Vector<String> *names, 
             break;
          case ConsoleValue::TypeInternalFloat:
             values->push_back( String::ToString( (*s)->value.fval ) );         
+=======
+         switch ( (*s)->type )
+         {
+         case Entry::TypeInternalInt:
+            values->push_back( String::ToString( (*s)->ival ) );         
+            break;
+         case Entry::TypeInternalFloat:
+            values->push_back( String::ToString( (*s)->fval ) );         
+>>>>>>> omni_engine
             break;
          default:         
             expandEscape( expandBuffer, (*s)->getStringValue() );
@@ -307,7 +390,11 @@ Dictionary::Entry *Dictionary::add(StringTableEntry name)
          for( Entry* entry = hashTable->data[ i ]; entry != NULL; )
          {
             Entry* next = entry->nextEntry;
+<<<<<<< HEAD
             U32 index = HashPointer( entry->name ) % newTableSize;
+=======
+            S32 index = HashPointer( entry->name ) % newTableSize;
+>>>>>>> omni_engine
             
             entry->nextEntry = newTableData[ index ];
             newTableData[ index ] = entry;
@@ -330,7 +417,11 @@ Dictionary::Entry *Dictionary::add(StringTableEntry name)
 
    ret = hashTable->mChunker.alloc();
    constructInPlace( ret, name );
+<<<<<<< HEAD
    U32 idx = HashPointer(name) % hashTable->size;
+=======
+   S32 idx = HashPointer(name) % hashTable->size;
+>>>>>>> omni_engine
    ret->nextEntry = hashTable->data[idx];
    hashTable->data[idx] = ret;
    
@@ -454,7 +545,11 @@ char *typeValueEmpty = "";
 Dictionary::Entry::Entry(StringTableEntry in_name)
 {
    name = in_name;
+<<<<<<< HEAD
    value.type = ConsoleValue::TypeInternalString;
+=======
+   type = TypeInternalString;
+>>>>>>> omni_engine
    notify = NULL;
    nextEntry = NULL;
    mUsage = NULL;
@@ -462,12 +557,25 @@ Dictionary::Entry::Entry(StringTableEntry in_name)
 
    // NOTE: This is data inside a nameless
    // union, so we don't need to init the rest.
+<<<<<<< HEAD
    value.init();
+=======
+   ival = 0;
+   fval = 0;
+   sval = typeValueEmpty;
+   bufferLen = 0;
+>>>>>>> omni_engine
 }
 
 Dictionary::Entry::~Entry()
 {
+<<<<<<< HEAD
    value.cleanup();
+=======
+   if (  type <= TypeInternalString &&
+         sval != typeValueEmpty )
+      dFree(sval);
+>>>>>>> omni_engine
 
    if ( notify )
       delete notify;
@@ -492,11 +600,23 @@ const char *Dictionary::getVariable(StringTableEntry name, bool *entValid)
    return "";
 }
 
+<<<<<<< HEAD
 void ConsoleValue::setStringValue(const char * value)
 {
    if (value == NULL) value = typeValueEmpty;
 
    if(type <= ConsoleValue::TypeInternalString)
+=======
+void Dictionary::Entry::setStringValue(const char * value)
+{
+   if( mIsConstant )
+   {
+      Con::errorf( "Cannot assign value to constant '%s'.", name );
+      return;
+   }
+
+   if(type <= TypeInternalString)
+>>>>>>> omni_engine
    {
       // Let's not remove empty-string-valued global vars from the dict.
       // If we remove them, then they won't be exported, and sometimes
@@ -542,10 +662,19 @@ void ConsoleValue::setStringValue(const char * value)
          ival = 0;
       }
 
+<<<<<<< HEAD
       // may as well pad to the next cache line
       U32 newLen = ((stringLen + 1) + 15) & ~15;
 	  
       if(bufferLen == 0)
+=======
+      type = TypeInternalString;
+
+      // may as well pad to the next cache line
+      U32 newLen = ((stringLen + 1) + 15) & ~15;
+      
+      if(sval == typeValueEmpty)
+>>>>>>> omni_engine
          sval = (char *) dMalloc(newLen);
       else if(newLen > bufferLen)
          sval = (char *) dRealloc(sval, newLen);
@@ -557,6 +686,7 @@ void ConsoleValue::setStringValue(const char * value)
    }
    else
       Con::setData(type, dataPtr, 0, 1, &value, enumTable);      
+<<<<<<< HEAD
 }
 
 
@@ -666,6 +796,12 @@ F32 Dictionary::getFloatVariable(StringTableEntry name, bool *entValid)
       *entValid = false;
 
    return 0;
+=======
+
+   // Fire off the notification if we have one.
+   if ( notify )
+      notify->trigger();
+>>>>>>> omni_engine
 }
 
 void Dictionary::setVariable(StringTableEntry name, const char *value)
@@ -692,19 +828,32 @@ Dictionary::Entry* Dictionary::addVariable(  const char *name,
 
    Entry *ent = add(StringTable->insert(name));
    
+<<<<<<< HEAD
    if (  ent->value.type <= ConsoleValue::TypeInternalString &&
          ent->value.bufferLen > 0 )
       dFree(ent->value.sval);
 
    ent->value.type = type;
    ent->value.dataPtr = dataPtr;
+=======
+   if (  ent->type <= Entry::TypeInternalString &&
+         ent->sval != typeValueEmpty )
+      dFree(ent->sval);
+
+   ent->type = type;
+   ent->dataPtr = dataPtr;
+>>>>>>> omni_engine
    ent->mUsage = usage;
    
    // Fetch enum table, if any.
    
    ConsoleBaseType* conType = ConsoleBaseType::getType( type );
    AssertFatal( conType, "Dictionary::addVariable - invalid console type" );
+<<<<<<< HEAD
    ent->value.enumTable = conType->getEnumTable();
+=======
+   ent->enumTable = conType->getEnumTable();
+>>>>>>> omni_engine
    
    return ent;
 }
@@ -726,7 +875,11 @@ void Dictionary::addVariableNotify( const char *name, const Con::NotifyDelegate 
     return;
 
    if ( !ent->notify )
+<<<<<<< HEAD
       ent->notify = new Entry::NotifySignal();
+=======
+    ent->notify = new Entry::NotifySignal();
+>>>>>>> omni_engine
 
    ent->notify->notify( callback );
 }
@@ -872,12 +1025,24 @@ DefineEngineFunction(backtrace, void, ( ),,
 
    for(U32 i = 0; i < gEvalState.getStackDepth(); i++)
    {
+<<<<<<< HEAD
       if(gEvalState.stack[i]->scopeNamespace && gEvalState.stack[i]->scopeNamespace->mEntryList->mPackage)  
          totalSize += dStrlen(gEvalState.stack[i]->scopeNamespace->mEntryList->mPackage) + 2;  
       if(gEvalState.stack[i]->scopeName)  
       totalSize += dStrlen(gEvalState.stack[i]->scopeName) + 3;
       if(gEvalState.stack[i]->scopeNamespace && gEvalState.stack[i]->scopeNamespace->mName)
          totalSize += dStrlen(gEvalState.stack[i]->scopeNamespace->mName) + 2;
+=======
+   //WLE - Vince Cleaned up some extra calls.
+      Dictionary* mStack = gEvalState.stack[i];
+      Namespace* mNamespace = mStack->scopeNamespace;
+      if(mNamespace && mNamespace->mEntryList->mPackage)  
+         totalSize += dStrlen(mNamespace->mEntryList->mPackage) + 2;  
+      if(mStack->scopeName)  
+         totalSize += dStrlen(mStack->scopeName) + 3;
+      if(mNamespace && mNamespace->mName)
+         totalSize += dStrlen(mNamespace->mName) + 2;
+>>>>>>> omni_engine
    }
 
    char *buf = Con::getReturnBuffer(totalSize);
@@ -924,7 +1089,11 @@ void Namespace::Entry::clear()
    // Clean up usage strings generated for script functions.
    if( ( mType == Namespace::Entry::ConsoleFunctionType ) && mUsage )
    {
+<<<<<<< HEAD
       dFree(mUsage);
+=======
+      delete mUsage;
+>>>>>>> omni_engine
       mUsage = NULL;
    }
 }
@@ -950,7 +1119,11 @@ Namespace::~Namespace()
    clearEntries();
    if( mUsage && mCleanUpUsage )
    {
+<<<<<<< HEAD
       dFree(mUsage);
+=======
+      delete mUsage;
+>>>>>>> omni_engine
       mUsage = NULL;
       mCleanUpUsage = false;
    }
@@ -1380,6 +1553,7 @@ void Namespace::markGroup(const char* name, const char* usage)
 
 extern S32 executeBlock(StmtNode *block, ExprEvalState *state);
 
+<<<<<<< HEAD
 ConsoleValueRef Namespace::Entry::execute(S32 argc, ConsoleValueRef *argv, ExprEvalState *state)
 {
    STR.clearFunctionOffset();
@@ -1394,6 +1568,16 @@ ConsoleValueRef Namespace::Entry::execute(S32 argc, ConsoleValueRef *argv, ExprE
       {
          return ConsoleValueRef();
       }
+=======
+const char *Namespace::Entry::execute(S32 argc, const char **argv, ExprEvalState *state)
+{
+   if(mType == ConsoleFunctionType)
+   {
+      if(mFunctionOffset)
+         return mCode->exec(mFunctionOffset, argv[0], mNamespace, argc, argv, false, mPackage);
+      else
+         return "";
+>>>>>>> omni_engine
    }
 
 #ifndef TORQUE_DEBUG
@@ -1402,7 +1586,11 @@ ConsoleValueRef Namespace::Entry::execute(S32 argc, ConsoleValueRef *argv, ExprE
    if(mToolOnly && ! Con::isCurrentScriptToolScript())
    {
       Con::errorf(ConsoleLogEntry::Script, "%s::%s - attempting to call tools only function from outside of tools", mNamespace->mName, mFunctionName);
+<<<<<<< HEAD
       return ConsoleValueRef();
+=======
+      return "";
+>>>>>>> omni_engine
    }
 #endif
 
@@ -1410,13 +1598,18 @@ ConsoleValueRef Namespace::Entry::execute(S32 argc, ConsoleValueRef *argv, ExprE
    {
       Con::warnf(ConsoleLogEntry::Script, "%s::%s - wrong number of arguments.", mNamespace->mName, mFunctionName);
       Con::warnf(ConsoleLogEntry::Script, "usage: %s", mUsage);
+<<<<<<< HEAD
       return ConsoleValueRef();
+=======
+      return "";
+>>>>>>> omni_engine
    }
 
    static char returnBuffer[32];
    switch(mType)
    {
       case StringCallbackType:
+<<<<<<< HEAD
          return ConsoleValueRef::fromValue(CSTK.pushStackString(cb.mStringCallbackFunc(state->thisObject, argc, argv)));
       case IntCallbackType:
 		 return ConsoleValueRef::fromValue(CSTK.pushUINT((U32)cb.mBoolCallbackFunc(state->thisObject, argc, argv)));
@@ -1430,6 +1623,27 @@ ConsoleValueRef Namespace::Entry::execute(S32 argc, ConsoleValueRef *argv, ExprE
    }
    
    return ConsoleValueRef();
+=======
+         return cb.mStringCallbackFunc(state->thisObject, argc, argv);
+      case IntCallbackType:
+         dSprintf(returnBuffer, sizeof(returnBuffer), "%d",
+            cb.mIntCallbackFunc(state->thisObject, argc, argv));
+         return returnBuffer;
+      case FloatCallbackType:
+         dSprintf(returnBuffer, sizeof(returnBuffer), "%g",
+            cb.mFloatCallbackFunc(state->thisObject, argc, argv));
+         return returnBuffer;
+      case VoidCallbackType:
+         cb.mVoidCallbackFunc(state->thisObject, argc, argv);
+         return "";
+      case BoolCallbackType:
+         dSprintf(returnBuffer, sizeof(returnBuffer), "%d",
+            (U32)cb.mBoolCallbackFunc(state->thisObject, argc, argv));
+         return returnBuffer;
+   }
+
+   return "";
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -1983,3 +2197,163 @@ DefineEngineFunction(getPackageList, const char*, (),,
 
    return returnBuffer;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_activatePackage(char * x__packageName)
+{
+String packageName = String( x__packageName);
+{
+   StringTableEntry name = StringTable->insert(packageName.c_str());
+   Namespace::activatePackage(name);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_backtrace()
+{
+{
+   U32 totalSize = 1;
+   for(U32 i = 0; i < gEvalState.getStackDepth(); i++)
+   {
+         Dictionary* mStack = gEvalState.stack[i];
+      Namespace* mNamespace = mStack->scopeNamespace;
+      if(mNamespace && mNamespace->mEntryList->mPackage)  
+         totalSize += dStrlen(mNamespace->mEntryList->mPackage) + 2;  
+      if(mStack->scopeName)  
+         totalSize += dStrlen(mStack->scopeName) + 3;
+      if(mNamespace && mNamespace->mName)
+         totalSize += dStrlen(mNamespace->mName) + 2;
+   }
+   char *buf = Con::getReturnBuffer(totalSize);
+   buf[0] = 0;
+   for(U32 i = 0; i < gEvalState.getStackDepth(); i++)
+   {
+      dStrcat(buf, "->");
+      
+      if(gEvalState.stack[i]->scopeNamespace && gEvalState.stack[i]->scopeNamespace->mEntryList->mPackage)  
+      {  
+         dStrcat(buf, "[");  
+         dStrcat(buf, gEvalState.stack[i]->scopeNamespace->mEntryList->mPackage);  
+         dStrcat(buf, "]");  
+      }  
+      if(gEvalState.stack[i]->scopeNamespace && gEvalState.stack[i]->scopeNamespace->mName)
+      {
+         dStrcat(buf, gEvalState.stack[i]->scopeNamespace->mName);
+         dStrcat(buf, "::");
+      }
+      if(gEvalState.stack[i]->scopeName)  
+         dStrcat(buf, gEvalState.stack[i]->scopeName);
+   }
+   Con::printf("BackTrace: %s", buf);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_deactivatePackage(char * x__packageName)
+{
+String packageName = String( x__packageName);
+{
+   StringTableEntry name = StringTable->insert(packageName.c_str());
+   Namespace::deactivatePackage(name);
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fn_getPackageList(char* retval)
+{
+dSprintf(retval,16384,"");
+const char* wle_returnObject;
+{
+   if( Namespace::getActivePackagesCount() == 0 )
+      {wle_returnObject ="";
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+      dsize_t buffersize = 0;
+   for( U32 i = 0; i < Namespace::getActivePackagesCount(); ++i )
+   {
+      buffersize += dStrlen(Namespace::getActivePackage(i)) + 1;
+   }
+   U32 maxBufferSize = buffersize + 1;
+   char* returnBuffer = Con::getReturnBuffer(maxBufferSize);
+   U32 returnLen = 0;
+   for( U32 i = 0; i < Namespace::getActivePackagesCount(); ++i )
+   {
+      dSprintf(returnBuffer + returnLen, maxBufferSize - returnLen, "%s ", Namespace::getActivePackage(i));
+      returnLen = dStrlen(returnBuffer);
+   }
+      if (returnLen > 0 && returnBuffer[returnLen - 1] == ' ')
+      returnBuffer[returnLen - 1] = '\0';
+   {wle_returnObject =returnBuffer;
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fn_isPackage(char * x__identifier)
+{
+String identifier = String( x__identifier);
+bool wle_returnObject;
+{
+   StringTableEntry name = StringTable->insert(identifier.c_str());
+   {wle_returnObject =Namespace::isPackage(name);
+return (S32)(wle_returnObject);}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

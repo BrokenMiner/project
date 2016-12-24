@@ -76,7 +76,30 @@ class WorldEditor : public EditTSCtrl
          Point3F p2;
       };
 
+<<<<<<< HEAD
       void ignoreObjClass(U32 argc, ConsoleValueRef* argv);
+=======
+	  DECLARE_CALLBACK( void, onSelect, (const char* idString) );
+	  DECLARE_CALLBACK( void, onUnSelect, (const char* idString) );
+	  DECLARE_CALLBACK( void, onClearSelection, () );
+	  DECLARE_CALLBACK( void, onSelectionCentroidChanged, () );
+	  DECLARE_CALLBACK( void, onWorldEditorUndo, () );
+	  DECLARE_CALLBACK( void, onSelectionSetChanged, () );
+	  DECLARE_CALLBACK( void, onMultiSelect, (const char* idString, const char* addToSelection) );
+
+	  
+	  DECLARE_CALLBACK( StringTableEntry, getNewObjectGroup, () );
+	  DECLARE_CALLBACK( void, onStartSelection, ());
+	  DECLARE_CALLBACK( void, onEndSelection, ());
+	  
+	  
+	  
+	  
+
+	  
+
+      void ignoreObjClass(U32 argc, const char** argv);
+>>>>>>> omni_engine
       void clearIgnoreList();
 
       static bool setObjectsUseBoxCenter( void *object, const char *index, const char *data ) { static_cast<WorldEditor*>(object)->setObjectsUseBoxCenter( dAtob( data ) ); return false; };
@@ -92,6 +115,7 @@ class WorldEditor : public EditTSCtrl
       S32 getSelectionSize();
       S32 getSelectObject(S32 index);	
       const Point3F& getSelectionCentroid();
+      const char* getSelectionCentroidText();
       const Box3F& getSelectionBounds();
       Point3F getSelectionExtent();
       F32 getSelectionRadius();

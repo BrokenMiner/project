@@ -109,7 +109,7 @@ function Weapon::onInventory(%this, %obj, %amount)
 // Weapon Image Class
 //-----------------------------------------------------------------------------
 
-function WeaponImage::onMount(%this, %obj, %slot)
+function WeaponImage::onImageMount(%this, %obj, %slot)
 {
    // Images assume a false ammo state on load.  We need to
    // set the state according to the current inventory.

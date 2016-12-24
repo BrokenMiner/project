@@ -35,12 +35,16 @@
 #include "scene/reflectionManager.h"
 #include "postFx/postEffectManager.h"
 #include "gfx/gfxTransformSaver.h"
+<<<<<<< HEAD
 #include "gfx/gfxDrawUtil.h"
 #include "gfx/gfxDebugEvent.h"
 
 GFXTextureObject *gLastStereoTexture = NULL;
 
 #define TS_OVERLAY_SCREEN_WIDTH 0.75
+=======
+
+>>>>>>> omni_engine
 
 IMPLEMENT_CONOBJECT( GuiTSCtrl );
 
@@ -66,6 +70,7 @@ ImplementEnumType( GuiTSRenderStyles,
 	{ GuiTSCtrl::RenderStyleStandard,         "standard"              },
 	{ GuiTSCtrl::RenderStyleStereoSideBySide, "stereo side by side"   },
 EndImplementEnumType;
+
 
 //-----------------------------------------------------------------------------
 
@@ -158,9 +163,20 @@ GuiTSCtrl::GuiTSCtrl()
    mLastCameraQuery.farPlane = 10.0f;
    mLastCameraQuery.nearPlane = 0.01f;
 
+<<<<<<< HEAD
    mLastCameraQuery.projectionOffset = Point2F::Zero;
    mLastCameraQuery.hasFovPort = false;
    mLastCameraQuery.hasStereoTargets = false;
+=======
+   mLastCameraQuery.frustumOffset = Point4F::Zero;
+   mForceFrustumOffset = Point4F::Zero;
+   mForceAspect = 0.0f;
+   mCameraRoll = 0.0f;
+   mEnableAugmentations = false;
+
+   mLastCameraQuery.projectionOffset = Point2F::Zero;
+   mLastCameraQuery.eyeOffset = Point3F::Zero;
+>>>>>>> omni_engine
 
    mLastCameraQuery.ortho = false;
 }
@@ -176,6 +192,16 @@ void GuiTSCtrl::initPersistFields()
       addField("forceFOV",   TypeF32, Offset(mForceFOV,   GuiTSCtrl),
          "The vertical field of view in degrees or zero to use the normal camera FOV." );
          
+      addField("forceFrustumOffset",   TypePoint4F, Offset(mForceFrustumOffset,   GuiTSCtrl),
+         "." );
+      addField("forceAspect",   TypeF32, Offset(mForceAspect,   GuiTSCtrl),
+         "." );
+      addField("cameraRoll",   TypeF32, Offset(mCameraRoll,   GuiTSCtrl),
+         "." );
+      addField("enableAugmentations",   TypeBool, Offset(mEnableAugmentations,   GuiTSCtrl),
+         "." );
+	  
+
    endGroup( "Camera" );
    
    addGroup( "Rendering" );
@@ -370,6 +396,7 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
       return;
    }
 
+<<<<<<< HEAD
    GFXTargetRef origTarget = GFX->getActiveRenderTarget();
 
    // Set up the appropriate render style
@@ -377,10 +404,17 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
    Point2F prevProjectionOffset = GFX->getCurrentProjectionOffset();
    Point2I renderSize = getExtent();
 
+=======
+   // Set up the appropriate render style
+   U32 prevRenderStyle = GFX->getCurrentRenderStyle();
+   Point2F prevProjectionOffset = GFX->getCurrentProjectionOffset();
+   Point3F prevEyeOffset = GFX->getStereoEyeOffset();
+>>>>>>> omni_engine
    if(mRenderStyle == RenderStyleStereoSideBySide)
    {
       GFX->setCurrentRenderStyle(GFXDevice::RS_StereoSideBySide);
       GFX->setCurrentProjectionOffset(mLastCameraQuery.projectionOffset);
+<<<<<<< HEAD
       GFX->setStereoEyeOffsets(mLastCameraQuery.eyeOffset);
 
       if (!mLastCameraQuery.hasStereoTargets)
@@ -434,10 +468,36 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
          renderSize = mLastCameraQuery.stereoViewports[0].extent;
          renderingToTarget = true;
       }
+=======
+      GFX->setStereoEyeOffset(mLastCameraQuery.eyeOffset);
+>>>>>>> omni_engine
    }
    else
    {
       GFX->setCurrentRenderStyle(GFXDevice::RS_Standard);
+   }
+
+   if(mEnableAugmentations)
+   {
+       if(mForceFOV != 0.0)
+          mLastCameraQuery.fov = mDegToRad(mForceFOV);
+    
+       if(mForceFrustumOffset.z != 0.0f && mForceFrustumOffset.w != 0.0f)
+          mLastCameraQuery.frustumOffset = mForceFrustumOffset;
+    
+       if(mCameraRoll != 0.0)
+       {
+          if(mCameraRoll == -90.0f)
+          {
+             Point3F vec, vec2;
+             mLastCameraQuery.cameraMatrix.getColumn(0, &vec);
+             mLastCameraQuery.cameraMatrix.getColumn(2, &vec2);
+             vec2.neg();
+     
+             mLastCameraQuery.cameraMatrix.setColumn(0, vec2);
+             mLastCameraQuery.cameraMatrix.setColumn(2, vec);
+          }
+       }
    }
 
    if ( mReflectPriority > 0 )
@@ -462,6 +522,7 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
       mLastCameraQuery.cameraMatrix.mul(rotMat);
    }
 
+<<<<<<< HEAD
    Frustum frustum;
    if(mRenderStyle == RenderStyleStereoSideBySide)
    {
@@ -493,6 +554,43 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
       F32 hscale = wwidth * 2.0f / renderWidth;
       F32 vscale = wheight * 2.0f / renderHeight;
 
+=======
+   // set up the camera and viewport stuff:
+   F32 wwidth;
+   F32 wheight;
+   F32 renderWidth = (mRenderStyle == RenderStyleStereoSideBySide) ? F32(getWidth())*0.5f : F32(getWidth());
+   F32 renderHeight = F32(getHeight());
+   F32 aspectRatio = renderWidth / renderHeight;
+   
+   // Use the FOV to calculate the viewport height scale
+   // then generate the width scale from the aspect ratio.
+   if(!mLastCameraQuery.ortho)
+   {
+      wheight = mLastCameraQuery.nearPlane * mTan(mLastCameraQuery.fov / 2.0f);
+      wwidth = aspectRatio * wheight;
+   }
+   else
+   {
+      wheight = mLastCameraQuery.fov;
+      wwidth = aspectRatio * wheight;
+   }
+
+   F32 hscale = wwidth * 2.0f / renderWidth;
+   F32 vscale = wheight * 2.0f / renderHeight;
+
+   Frustum frustum;
+   if(mRenderStyle == RenderStyleStereoSideBySide)
+   {
+      F32 left = 0.0f * hscale - wwidth;
+      F32 right = renderWidth * hscale - wwidth;
+      F32 top = wheight - vscale * 0.0f;
+      F32 bottom = wheight - vscale * renderHeight;
+
+      frustum.set( mLastCameraQuery.ortho, left, right, top, bottom, mLastCameraQuery.nearPlane, mLastCameraQuery.farPlane );
+   }
+   else
+   {
+>>>>>>> omni_engine
       F32 left = (updateRect.point.x - offset.x) * hscale - wwidth;
       F32 right = (updateRect.point.x + updateRect.extent.x - offset.x) * hscale - wwidth;
       F32 top = wheight - vscale * (updateRect.point.y - offset.y);
@@ -508,6 +606,7 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
       gScreenShot->tileFrustum( frustum );      
       GFX->setViewMatrix(MatrixF::Identity);
    }
+<<<<<<< HEAD
       
    RectI tempRect = updateRect;
    
@@ -529,6 +628,26 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
    // Clear the zBuffer so GUI doesn't hose object rendering accidentally
    GFX->clear( GFXClearZBuffer , ColorI(20,20,20), 1.0f, 0 );
    //GFX->clear( GFXClearTarget, ColorI(255,0,0), 1.0f, 0);
+=======
+
+   if(mLastCameraQuery.frustumOffset.z != 0.0f && mLastCameraQuery.frustumOffset.w != 0.0f)
+   {
+      frustum.offsetFrustum(mLastCameraQuery.frustumOffset);
+      GFX->setViewMatrix(MatrixF::Identity);
+   }
+      
+   RectI tempRect = updateRect;
+   
+#ifdef TORQUE_OS_MAC
+   Point2I screensize = getRoot()->getWindowSize();
+   tempRect.point.y = screensize.y - (tempRect.point.y + tempRect.extent.y);
+#endif
+
+   GFX->setViewport( tempRect );
+
+   // Clear the zBuffer so GUI doesn't hose object rendering accidentally
+   GFX->clear( GFXClearZBuffer , ColorI(20,20,20), 1.0f, 0 );
+>>>>>>> omni_engine
 
    GFX->setFrustum( frustum );
    if(mLastCameraQuery.ortho)
@@ -540,7 +659,11 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
    // We're going to be displaying this render at size of this control in
    // pixels - let the scene know so that it can calculate e.g. reflections
    // correctly for that final display result.
+<<<<<<< HEAD
    gClientSceneGraph->setDisplayTargetResolution(renderSize);
+=======
+   gClientSceneGraph->setDisplayTargetResolution(getExtent());
+>>>>>>> omni_engine
 
    // Set the GFX world matrix to the world-to-camera transform, but don't 
    // change the cameraMatrix in mLastCameraQuery. This is because 
@@ -662,6 +785,7 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
    saver.restore();
 
    // Restore the render style and any stereo parameters
+<<<<<<< HEAD
    GFX->setActiveRenderTarget(origTarget);
    GFX->setCurrentRenderStyle(prevRenderStyle);
    GFX->setCurrentProjectionOffset(prevProjectionOffset);
@@ -672,15 +796,24 @@ void GuiTSCtrl::onRender(Point2I offset, const RectI &updateRect)
       GFX->setClipRect(updateRect);
       GFX->getDrawUtil()->drawBitmapStretch(gLastStereoTexture, updateRect);
    }
+=======
+   GFX->setCurrentRenderStyle(prevRenderStyle);
+   GFX->setCurrentProjectionOffset(prevProjectionOffset);
+   GFX->setStereoEyeOffset(prevEyeOffset);
+>>>>>>> omni_engine
 
    // Allow subclasses to render 2D elements.
    GFX->setClipRect(updateRect);
    renderGui( offset, updateRect );
 
+<<<<<<< HEAD
    if (shouldRenderChildControls())
    {
       renderChildControls(offset, updateRect);
    }
+=======
+   renderChildControls(offset, updateRect);
+>>>>>>> omni_engine
    smFrameCount++;
 }
 
@@ -705,16 +838,50 @@ void GuiTSCtrl::drawLine( Point3F p0, Point3F p1, const ColorI &color, F32 width
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void GuiTSCtrl::drawLineList( const Vector<Point3F> &points, const ColorI color, F32 width )
+=======
+void GuiTSCtrl::drawLineList( const Vector<Point3F> &points, const ColorI &color, F32 width )
+>>>>>>> omni_engine
 {
    for ( S32 i = 0; i < points.size() - 1; i++ )
       drawLine( points[i], points[i+1], color, width );
 }
 
+<<<<<<< HEAD
 
 void GuiTSCtrl::setStereoGui(GuiOffscreenCanvas *canvas)
 {
    mStereoGuiTarget = canvas ? canvas->getTarget() : NULL;
+=======
+const char* GuiTSCtrl::getClickVector( Point2I mousePoint )
+{
+	// write world position
+	Point3F camPos;
+	mLastCameraQuery.cameraMatrix.getColumn(3, &camPos);
+	//dSprintf(wp, 32, "%g %g %g", camPos.x, camPos.y, camPos.z);
+
+	char *vec = Con::getArgBuffer(32);
+	Point3F fp(mousePoint.x, mousePoint.y, 1.0);
+	Point3F ray;
+	unproject(fp, &ray);
+	ray -= camPos;
+	ray.normalizeSafe();
+	dSprintf(vec, 32, "%g %g %g", ray.x, ray.y, ray.z);
+
+	return vec;
+}
+
+const char * GuiTSCtrl::getWorldPosition( Point2I mousePoint )
+{
+	// write world position
+	char *wp = Con::getArgBuffer(32);
+	Point3F camPos;
+	mLastCameraQuery.cameraMatrix.getColumn(3, &camPos);
+	dSprintf(wp, 32, "%g %g %g", camPos.x, camPos.y, camPos.z);
+
+	return wp;
+>>>>>>> omni_engine
 }
 
 //=============================================================================
@@ -766,9 +933,177 @@ DefineEngineMethod( GuiTSCtrl, calculateViewDistance, F32, ( F32 radius ),,
    return object->calculateViewDistance( radius );
 }
 
+<<<<<<< HEAD
 DefineEngineMethod( GuiTSCtrl, setStereoGui, void, ( GuiOffscreenCanvas* canvas ),,
    "Sets the current stereo texture to an offscreen canvas\n"
    "@param canvas The desired canvas." )
 {
    object->setStereoGui(canvas);
 }
+=======
+DefineEngineMethod(GuiTSCtrl, getClickVector, const char*, (Point2I mousePoint ),, "")
+{
+	return object->getClickVector(mousePoint);
+}
+
+DefineEngineMethod(GuiTSCtrl, getWorldPosition, const char*, (Point2I mousePoint ),, "")
+{
+	return object->getWorldPosition(mousePoint);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) F32  __cdecl wle_fnGuiTSCtrl_calculateViewDistance(char * x__object, F32 radius)
+{
+GuiTSCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (F32)( 0);
+{
+  return (F32)( object->calculateViewDistance( radius ));
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTSCtrl_getClickVector(char * x__object, char * x__mousePoint,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiTSCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I mousePoint = Point2I();
+sscanf(x__mousePoint,"%i %i",&mousePoint.x,&mousePoint.y);
+const char* wle_returnObject;
+{
+	{wle_returnObject =object->getClickVector(mousePoint);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTSCtrl_getWorldPosition(char * x__object, char * x__mousePoint,  char* retval)
+{
+dSprintf(retval,16384,"");
+GuiTSCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I mousePoint = Point2I();
+sscanf(x__mousePoint,"%i %i",&mousePoint.x,&mousePoint.y);
+const char* wle_returnObject;
+{
+	{wle_returnObject =object->getWorldPosition(mousePoint);
+if (!wle_returnObject) 
+return;
+dSprintf(retval,16384,"%s",wle_returnObject);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTSCtrl_getWorldToScreenScale(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiTSCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2F wle_returnObject;
+{
+   {wle_returnObject =object->getWorldToScreenScale();
+dSprintf(retval,1024,"%f %f ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTSCtrl_project(char * x__object, char * x__worldPosition,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiTSCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F worldPosition = Point3F();
+sscanf(x__worldPosition,"%f %f %f",&worldPosition.x,&worldPosition.y,&worldPosition.z);
+Point3F wle_returnObject;
+{
+   Point3F screenPos;
+   object->project( worldPosition, &screenPos );
+   {wle_returnObject =screenPos;
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiTSCtrl_unproject(char * x__object, char * x__screenPosition,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiTSCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point3F screenPosition = Point3F();
+sscanf(x__screenPosition,"%f %f %f",&screenPosition.x,&screenPosition.y,&screenPosition.z);
+Point3F wle_returnObject;
+{
+   Point3F worldPos;
+   object->unproject( screenPosition, &worldPos );
+   {wle_returnObject =worldPos;
+dSprintf(retval,1024,"%f %f %f ",wle_returnObject.x,wle_returnObject.y,wle_returnObject.z);
+return;
+}
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+
+>>>>>>> omni_engine

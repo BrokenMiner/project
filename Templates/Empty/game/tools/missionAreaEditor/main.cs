@@ -65,6 +65,9 @@ function MissionAreaEditorPlugin::onWorldEditorStartup( %this )
 
 function MissionAreaEditorPlugin::onActivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   MissionAreaEditorPlugin.isActive = true;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    %this.readSettings();
    
    EditorGui.bringToFront( MissionAreaEditorGui );
@@ -87,6 +90,11 @@ function MissionAreaEditorPlugin::onActivated( %this )
 
 function MissionAreaEditorPlugin::onDeactivated( %this )
 {
+//Copyright Winterleaf Entertainment L.L.C. 2013
+   if (!MissionAreaEditorPlugin.isActive)
+      return;
+   MissionAreaEditorPlugin.isActive = false;
+//Copyright Winterleaf Entertainment L.L.C. 2013   
    %this.writeSettings();
    
    MissionAreaEditorGui.setVisible(false);

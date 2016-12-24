@@ -57,7 +57,11 @@ class SimXMLDocument: public SimObject
       // tie in to the script language.  The .cc file has more in depth
       // comments on these.
       //-----------------------------------------------------------------------
+<<<<<<< HEAD
       bool processArguments(S32 argc, ConsoleValueRef *argv);
+=======
+      bool processArguments(S32 argc, const char** argv);
+>>>>>>> omni_engine
       bool onAdd();
       void onRemove();
       static void initPersistFields();

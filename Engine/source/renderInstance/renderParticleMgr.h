@@ -77,9 +77,13 @@ protected:
    // Not only a helper method, but a method for the RenderTranslucentMgr to
    // request a particle system draw
    void renderInstance(ParticleRenderInst *ri, SceneRenderState *state);
+<<<<<<< HEAD
 public:
    void renderParticle(ParticleRenderInst *ri, SceneRenderState *state);
 protected:
+=======
+
+>>>>>>> omni_engine
    bool mOffscreenRenderEnabled;
 
    /// The prepass render target used for the
@@ -137,8 +141,12 @@ protected:
    GFXStateBlockRef mOffscreenBlocks[ParticleRenderInst::BlendStyle_COUNT];
    GFXStateBlockRef mBackbufferBlocks[ParticleRenderInst::BlendStyle_COUNT];
    GFXStateBlockRef mMixedResBlocks[ParticleRenderInst::BlendStyle_COUNT];
+<<<<<<< HEAD
 
 public:
+=======
+   
+>>>>>>> omni_engine
    GFXStateBlockRef _getHighResStateBlock(ParticleRenderInst *ri);
    GFXStateBlockRef _getMixedResStateBlock(ParticleRenderInst *ri);
    GFXStateBlockRef _getOffscreenStateBlock(ParticleRenderInst *ri);

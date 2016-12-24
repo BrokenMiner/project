@@ -119,7 +119,11 @@ private:
 };
 
 // Internal implementations
+<<<<<<< HEAD
 class _GFXGLTextureTargetImpl // TODO OPENGL remove and implement on GFXGLTextureTarget
+=======
+class _GFXGLTextureTargetImpl
+>>>>>>> omni_engine
 {
 public:
    GFXGLTextureTarget* mTarget;
@@ -145,21 +149,60 @@ public:
    virtual void finish();
 };
 
+<<<<<<< HEAD
 _GFXGLTextureTargetFBOImpl::_GFXGLTextureTargetFBOImpl(GFXGLTextureTarget* target)
 {
    mTarget = target;
    glGenFramebuffers(1, &mFramebuffer);
+=======
+// Handy macro for checking the status of a framebuffer.  Framebuffers can fail in 
+// all sorts of interesting ways, these are just the most common.  Further, no existing GL profiling 
+// tool catches framebuffer errors when the framebuffer is created, so we actually need this.
+#define CHECK_FRAMEBUFFER_STATUS()\
+{\
+GLenum status;\
+status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);\
+switch(status) {\
+case GL_FRAMEBUFFER_COMPLETE_EXT:\
+break;\
+case GL_FRAMEBUFFER_UNSUPPORTED_EXT:\
+AssertFatal(false, "Unsupported FBO");\
+break;\
+case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:\
+AssertFatal(false, "Incomplete FBO Attachment");\
+break;\
+case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:\
+AssertFatal(false, "Incomplete FBO dimensions");\
+break;\
+case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:\
+AssertFatal(false, "Incomplete FBO formats");\
+default:\
+/* programming error; will fail on all hardware */\
+AssertFatal(false, "Something really bad happened with an FBO");\
+}\
+}
+
+_GFXGLTextureTargetFBOImpl::_GFXGLTextureTargetFBOImpl(GFXGLTextureTarget* target)
+{
+   mTarget = target;
+   glGenFramebuffersEXT(1, &mFramebuffer);
+>>>>>>> omni_engine
 }
 
 _GFXGLTextureTargetFBOImpl::~_GFXGLTextureTargetFBOImpl()
 {
+<<<<<<< HEAD
    glDeleteFramebuffers(1, &mFramebuffer);
+=======
+   glDeleteFramebuffersEXT(1, &mFramebuffer);
+>>>>>>> omni_engine
 }
 
 void _GFXGLTextureTargetFBOImpl::applyState()
 {   
    // REMINDER: When we implement MRT support, check against GFXGLDevice::getNumRenderTargets()
    
+<<<<<<< HEAD
    PRESERVE_FRAMEBUFFER();
    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
@@ -185,26 +228,57 @@ void _GFXGLTextureTargetFBOImpl::applyState()
          // Clears the texture (note that the binding is irrelevent)
          glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_TEXTURE_2D, 0, 0);
       }
+=======
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mFramebuffer);
+   
+   _GFXGLTargetDesc* color0 = mTarget->getTargetDesc(GFXTextureTarget::Color0);
+   if(color0)
+   {
+      if(color0->getDepth() == 0)
+         glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, color0->getBinding(), color0->getHandle(), color0->getMipLevel());
+      else
+         glFramebufferTexture3DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, color0->getBinding(), color0->getHandle(), color0->getMipLevel(), color0->getZOffset());
+   }
+   else
+   {
+      // Clears the texture (note that the binding is irrelevent)
+      glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0);
+>>>>>>> omni_engine
    }
    
    _GFXGLTargetDesc* depthStecil = mTarget->getTargetDesc(GFXTextureTarget::DepthStencil);
    if(depthStecil)
    {
       // Certain drivers have issues with depth only FBOs.  That and the next two asserts assume we have a color target.
+<<<<<<< HEAD
       AssertFatal(hasColor, "GFXGLTextureTarget::applyState() - Cannot set DepthStencil target without Color0 target!");
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthStecil->getBinding(), depthStecil->getHandle(), depthStecil->getMipLevel());
+=======
+      AssertFatal(color0, "GFXGLTextureTarget::applyState() - Cannot set DepthStencil target without Color0 target!");
+      AssertFatal(depthStecil->getWidth() == color0->getWidth(), "GFXGLTextureTarget::applyState() - DepthStencil and Color0 targets MUST have the same width!");
+      AssertFatal(depthStecil->getHeight() == color0->getHeight(), "GFXGLTextureTarget::applyState() - DepthStencil and Color0 targets MUST have the same height!");
+      glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, depthStecil->getBinding(), depthStecil->getHandle(), depthStecil->getMipLevel());
+>>>>>>> omni_engine
    }
    else
    {
       // Clears the texture (note that the binding is irrelevent)
+<<<<<<< HEAD
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
    }
 
    CHECK_FRAMEBUFFER_STATUS();
+=======
+      glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, 0, 0);
+   }
+   
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+>>>>>>> omni_engine
 }
 
 void _GFXGLTextureTargetFBOImpl::makeActive()
 {
+<<<<<<< HEAD
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     GFXGL->getOpenglCache()->setCacheBinded(GL_FRAMEBUFFER, mFramebuffer);
 
@@ -220,10 +294,15 @@ void _GFXGLTextureTargetFBOImpl::makeActive()
     }
 
     glDrawBuffers( i, draws );
+=======
+   glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, mFramebuffer);
+   glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, mFramebuffer);
+>>>>>>> omni_engine
 }
 
 void _GFXGLTextureTargetFBOImpl::finish()
 {
+<<<<<<< HEAD
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
    GFXGL->getOpenglCache()->setCacheBinded(GL_FRAMEBUFFER, 0);
 
@@ -246,6 +325,67 @@ void _GFXGLTextureTargetFBOImpl::finish()
 
 // Actual GFXGLTextureTarget interface
 GFXGLTextureTarget::GFXGLTextureTarget() : mCopyFboSrc(0), mCopyFboDst(0)
+=======
+   glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, 0);
+   glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 0);
+   
+   _GFXGLTargetDesc* color0 = mTarget->getTargetDesc(GFXTextureTarget::Color0);
+   if(!color0 || !(color0->hasMips()))
+      return;
+   
+   // Generate mips if necessary
+   // Assumes a 2D texture.
+   glActiveTexture(GL_TEXTURE0);
+   PRESERVE_2D_TEXTURE();
+   glBindTexture(GL_TEXTURE_2D, color0->getHandle());
+   glGenerateMipmapEXT(GL_TEXTURE_2D);
+}
+
+// This implementations uses AUX buffers (we should always have at least one) to do render to texture.  It is currently only used when we need access to the windows depth buffer.
+class _GFXGLTextureTargetAUXBufferImpl : public _GFXGLTextureTargetImpl
+{
+public:
+   _GFXGLTextureTargetAUXBufferImpl(GFXGLTextureTarget* target);
+   
+   virtual void applyState();
+   virtual void makeActive();
+   virtual void finish();
+};
+
+_GFXGLTextureTargetAUXBufferImpl::_GFXGLTextureTargetAUXBufferImpl(GFXGLTextureTarget* target)
+{
+   mTarget = target;
+}
+
+void _GFXGLTextureTargetAUXBufferImpl::applyState()
+{
+   
+}
+
+void _GFXGLTextureTargetAUXBufferImpl::makeActive()
+{
+   glDrawBuffer(GL_AUX0);
+   glReadBuffer(GL_AUX0);
+}
+
+void _GFXGLTextureTargetAUXBufferImpl::finish()
+{
+   // Bind the Color0 texture
+   _GFXGLTargetDesc* color0 = mTarget->getTargetDesc(GFXTextureTarget::Color0);
+   
+   glActiveTexture(GL_TEXTURE0);
+   // Assume we're a 2D texture for now.
+   PRESERVE_2D_TEXTURE();
+   glBindTexture(color0->getBinding(), color0->getHandle());
+   glCopyTexSubImage2D(color0->getBinding(), 0, 0, 0, 0, 0, color0->getWidth(), color0->getHeight());
+   
+   glDrawBuffer(GL_BACK);
+   glReadBuffer(GL_BACK);
+}
+
+// Actual GFXGLTextureTarget interface
+GFXGLTextureTarget::GFXGLTextureTarget()
+>>>>>>> omni_engine
 {
    for(U32 i=0; i<MaxRenderSlotId; i++)
       mTargets[i] = NULL;
@@ -253,9 +393,13 @@ GFXGLTextureTarget::GFXGLTextureTarget() : mCopyFboSrc(0), mCopyFboDst(0)
    GFXTextureManager::addEventDelegate( this, &GFXGLTextureTarget::_onTextureEvent );
 
    _impl = new _GFXGLTextureTargetFBOImpl(this);
+<<<<<<< HEAD
     
    glGenFramebuffers(1, &mCopyFboSrc);
    glGenFramebuffers(1, &mCopyFboDst);
+=======
+   _needsAux = false;
+>>>>>>> omni_engine
 }
 
 GFXGLTextureTarget::~GFXGLTextureTarget()
@@ -273,20 +417,33 @@ const Point2I GFXGLTextureTarget::getSize()
 
 GFXFormat GFXGLTextureTarget::getFormat()
 {
+<<<<<<< HEAD
    if(mTargets[Color0].isValid())
       return mTargets[Color0]->getFormat();
 
+=======
+   // TODO: Fix me!
+>>>>>>> omni_engine
    return GFXFormatR8G8B8A8;
 }
 
 void GFXGLTextureTarget::attachTexture( RenderSlot slot, GFXTextureObject *tex, U32 mipLevel/*=0*/, U32 zOffset /*= 0*/ )
 {
+<<<<<<< HEAD
    if( tex == GFXTextureTarget::sDefaultDepthStencil )
       tex = GFXGL->getDefaultDepthTex();
 
    _GFXGLTextureTargetDesc* mTex = static_cast<_GFXGLTextureTargetDesc*>(mTargets[slot].ptr());
    if( (!tex && !mTex) || (mTex && mTex->getTextureObject() == tex) )
       return;
+=======
+   // GFXTextureTarget::sDefaultDepthStencil is a hint that we want the window's depth buffer.
+   if(tex == GFXTextureTarget::sDefaultDepthStencil)
+      _needsAux = true;
+   
+   if(slot == DepthStencil && tex != GFXTextureTarget::sDefaultDepthStencil)
+      _needsAux = false;
+>>>>>>> omni_engine
    
    // Triggers an update when we next render
    invalidateState();
@@ -355,7 +512,14 @@ void GFXGLTextureTarget::applyState()
    // So we don't do this over and over again
    stateApplied();
    
+<<<<<<< HEAD
    if(_impl.isNull())
+=======
+   // Ensure we have the proper implementation (consider changing to an enum?)
+   if(_needsAux && dynamic_cast<_GFXGLTextureTargetAUXBufferImpl*>(_impl.ptr()) == NULL)
+      _impl = new _GFXGLTextureTargetAUXBufferImpl(this);
+   else if(!_needsAux && dynamic_cast<_GFXGLTextureTargetFBOImpl*>(_impl.ptr()) == NULL)
+>>>>>>> omni_engine
       _impl = new _GFXGLTextureTargetFBOImpl(this);
            
    _impl->applyState();
@@ -389,6 +553,7 @@ void GFXGLTextureTarget::resolveTo(GFXTextureObject* obj)
    AssertFatal(dynamic_cast<GFXGLTextureObject*>(obj), "GFXGLTextureTarget::resolveTo - Incorrect type of texture, expected a GFXGLTextureObject");
    GFXGLTextureObject* glTexture = static_cast<GFXGLTextureObject*>(obj);
 
+<<<<<<< HEAD
    if( gglHasExtension(ARB_copy_image) && mTargets[Color0]->isCompatible(glTexture) )
    {
       GLenum binding = mTargets[Color0]->getBinding();      
@@ -412,4 +577,28 @@ void GFXGLTextureTarget::resolveTo(GFXTextureObject* obj)
    
    glBlitFramebuffer(0, 0, mTargets[Color0]->getWidth(), mTargets[Color0]->getHeight(),
       0, 0, glTexture->getWidth(), glTexture->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+=======
+   PRESERVE_FRAMEBUFFER();
+   
+   GLuint dest;
+   GLuint src;
+   
+   glGenFramebuffersEXT(1, &dest);
+   glGenFramebuffersEXT(1, &src);
+   
+   glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, dest);
+   glFramebufferTexture2DEXT(GL_DRAW_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, glTexture->getHandle(), 0);
+   
+   glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, src);
+   glFramebufferTexture2DEXT(GL_READ_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D,mTargets[Color0]->getHandle(), 0);
+   
+   glBlitFramebufferEXT(0, 0, mTargets[Color0]->getWidth(), mTargets[Color0]->getHeight(),
+      0, 0, glTexture->getWidth(), glTexture->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+   
+   glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, 0);
+   glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 0);
+   
+   glDeleteFramebuffersEXT(1, &dest);
+   glDeleteFramebuffersEXT(1, &src);
+>>>>>>> omni_engine
 }

@@ -149,6 +149,8 @@ public:
 
    DECLARE_CONOBJECT( WaterObject );
 
+   S32 currentlyUnderWater;
+
    // ConsoleObject
    static void consoleInit();
    static void initPersistFields();
@@ -157,7 +159,11 @@ public:
    virtual bool onAdd();
    virtual void onRemove();
    virtual void inspectPostApply();
+<<<<<<< HEAD
    virtual bool processArguments(S32 argc, ConsoleValueRef *argv);
+=======
+   virtual bool processArguments(S32 argc, const char **argv);
+>>>>>>> omni_engine
 
    // NetObject
    virtual U32  packUpdate( NetConnection * conn, U32 mask, BitStream *stream );
@@ -177,6 +183,10 @@ public:
    virtual F32 getWaterCoverage( const Box3F &worldBox ) const { return 0.0f; }
    virtual VectorF getFlow( const Point3F &pos ) const { return Point3F::Zero; }
    virtual void updateUnderwaterEffect( SceneRenderState *state );
+
+   //WLE Gee - Had to rework because of second underwater effect.
+   bool processUnderwaterEffect( SceneRenderState *state,PostEffect *effect  );
+
    virtual bool isUnderwater( const Point3F &pnt ) const { return false; }
 
 protected:
@@ -188,7 +198,11 @@ protected:
    void drawUnderwaterFilter( SceneRenderState *state );
 
    virtual void setShaderParams( SceneRenderState *state, BaseMatInstance *mat, const WaterMatParams &paramHandles );
+<<<<<<< HEAD
    PostEffect* getUnderwaterEffect();
+=======
+   void getUnderwaterEffect();
+>>>>>>> omni_engine
 
    bool initMaterial( S32 idx );   
    void cleanupMaterials();
@@ -292,6 +306,9 @@ protected:
    F32 mMiscParamW;   
 
    SimObjectPtr<PostEffect> mUnderwaterPostFx;
+   SimObjectPtr<PostEffect> mTurbulenceFx;
+   SimObjectPtr<PostEffect> mCausticsPFX;
+   SimObjectPtr<PostEffect> mLightRayPostEffectPostFx;
 
    /// A global for enabling wireframe rendering
    /// on all water objects.

@@ -41,7 +41,13 @@ public:
    GuiMissionAreaEditorCtrl();
    virtual ~GuiMissionAreaEditorCtrl();
    
+<<<<<<< HEAD
    DECLARE_CONOBJECT(GuiMissionAreaEditorCtrl);
+=======
+   DECLARE_CONOBJECT(GuiMissionAreaEditorCtrl); 
+
+   DECLARE_CALLBACK( void, onMissionAreaSelected, (const char * missionArea) );
+>>>>>>> omni_engine
 
    // SimObject
    bool onAdd();

@@ -64,11 +64,19 @@ public:
                      const GFXVertexFormat *vertexFormat, 
                      U32 vertexSize, 
                      GFXBufferType bufferType )
+<<<<<<< HEAD
       :  mNumVerts( numVerts ),
          mVertexSize( vertexSize ),
          mBufferType( bufferType ),
          mDevice( device ),
          mVolatileStart( 0 )
+=======
+      :  mDevice( device ),
+         mVolatileStart( 0 ),         
+         mNumVerts( numVerts ),
+         mVertexSize( vertexSize ),
+         mBufferType( bufferType )      
+>>>>>>> omni_engine
    {
       if ( vertexFormat )
       {

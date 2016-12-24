@@ -72,9 +72,14 @@ GuiScrollCtrl::GuiScrollCtrl()
    mAnimating( false ),
    mScrollAnimSpeed( -1 ),
    mScrollTargetPos( -1, -1 ),
+<<<<<<< HEAD
    mChildExt(0, 0),
    mChildPos(0, 0),
    mBaseThumbSize(0)
+=======
+	mChildExt(0, 0),
+	mChildPos(0, 0)
+>>>>>>> omni_engine
 {
    mIsContainer = true;
    setExtent(200,200);
@@ -104,6 +109,15 @@ void GuiScrollCtrl::initPersistFields()
    endGroup( "Scrolling" );
 
    Parent::initPersistFields();
+
+   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+   //  @Copyright start
+
+   removeField( "lockControl" );
+
+   removeField( "moveControl" );
+
+   // @Copyright end
 }
 
 //-----------------------------------------------------------------------------
@@ -1093,9 +1107,14 @@ void GuiScrollCtrl::drawVScrollBar(const Point2I &offset)
     }
 
     // Render Up Arrow.
+<<<<<<< HEAD
     GFXDrawUtil* drawUtil = GFX->getDrawUtil();
     drawUtil->clearBitmapModulation();
     drawUtil->drawBitmapSR(mTextureObject, pos, mBitmapBounds[upArrowBitmap]);
+=======
+    //GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+    GFX->getDrawUtil()->drawBitmapSR( mTextureObject, pos, mBitmapBounds[upArrowBitmap] );
+>>>>>>> omni_engine
 
     // Update Pos.
     pos.y += mBitmapBounds[upArrowBitmap].extent.y;
@@ -1121,8 +1140,13 @@ void GuiScrollCtrl::drawVScrollBar(const Point2I &offset)
     if ( trackRect.extent.y > 0 )
     {
         // Render Track.
+<<<<<<< HEAD
        drawUtil->clearBitmapModulation();
        drawUtil->drawBitmapStretchSR(mTextureObject, trackRect, mBitmapBounds[trackBitmap]);
+=======
+        //GFX->getDrawUtil()->clearBitmapModulation();      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+        GFX->getDrawUtil()->drawBitmapStretchSR( mTextureObject, trackRect, mBitmapBounds[trackBitmap] );
+>>>>>>> omni_engine
     }
 
     // Update Pos.
@@ -1140,8 +1164,13 @@ void GuiScrollCtrl::drawVScrollBar(const Point2I &offset)
     }
 
     // Render Down Arrow.
+<<<<<<< HEAD
     drawUtil->clearBitmapModulation();
     drawUtil->drawBitmapSR(mTextureObject, pos, mBitmapBounds[downArrowBitmap]);
+=======
+    //GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+    GFX->getDrawUtil()->drawBitmapSR( mTextureObject, pos, mBitmapBounds[downArrowBitmap] );
+>>>>>>> omni_engine
 
     // Render the Thumb?
     if ( !mVBarEnabled )
@@ -1166,8 +1195,13 @@ void GuiScrollCtrl::drawVScrollBar(const Point2I &offset)
     }
 
     // Render Thumb Top.
+<<<<<<< HEAD
     drawUtil->clearBitmapModulation();
     drawUtil->drawBitmapSR(mTextureObject, pos, mBitmapBounds[thumbBitmapTop]);
+=======
+    //GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+    GFX->getDrawUtil()->drawBitmapSR( mTextureObject, pos, mBitmapBounds[thumbBitmapTop] );
+>>>>>>> omni_engine
 
     // Update Pos.
     pos.y += mBitmapBounds[thumbBitmapTop].extent.y;
@@ -1182,16 +1216,26 @@ void GuiScrollCtrl::drawVScrollBar(const Point2I &offset)
     if ( thumbRect.extent.y > 0 )
     {
         // Render Track.
+<<<<<<< HEAD
        drawUtil->clearBitmapModulation();
        drawUtil->drawBitmapStretchSR(mTextureObject, thumbRect, mBitmapBounds[thumbBitmapMiddle]);
+=======
+        //GFX->getDrawUtil()->clearBitmapModulation();      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+        GFX->getDrawUtil()->drawBitmapStretchSR( mTextureObject, thumbRect, mBitmapBounds[thumbBitmapMiddle] );
+>>>>>>> omni_engine
     }
 
     // Update Pos.
     pos.y += thumbRect.extent.y;
 
     // Render the Thumb Bottom.
+<<<<<<< HEAD
     drawUtil->clearBitmapModulation();
     drawUtil->drawBitmapSR(mTextureObject, pos, mBitmapBounds[thumbBitmapBottom]);
+=======
+    //GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+    GFX->getDrawUtil()->drawBitmapSR( mTextureObject, pos, mBitmapBounds[thumbBitmapBottom] );
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -1218,9 +1262,14 @@ void GuiScrollCtrl::drawHScrollBar(const Point2I &offset)
     }
 
     // Render Up Arrow.
+<<<<<<< HEAD
     GFXDrawUtil* drawUtil = GFX->getDrawUtil();
     drawUtil->clearBitmapModulation();
     drawUtil->drawBitmapSR(mTextureObject, pos, mBitmapBounds[leftArrowBitmap]);
+=======
+    //GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+    GFX->getDrawUtil()->drawBitmapSR( mTextureObject, pos, mBitmapBounds[leftArrowBitmap] );
+>>>>>>> omni_engine
 
     // Update Pos.
     pos.x += mBitmapBounds[leftArrowBitmap].extent.x;
@@ -1246,8 +1295,13 @@ void GuiScrollCtrl::drawHScrollBar(const Point2I &offset)
     if ( trackRect.extent.x > 0 )
     {
         // Render Track.
+<<<<<<< HEAD
        drawUtil->clearBitmapModulation();
        drawUtil->drawBitmapStretchSR(mTextureObject, trackRect, mBitmapBounds[trackBitmap]);
+=======
+        //GFX->getDrawUtil()->clearBitmapModulation();      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+        GFX->getDrawUtil()->drawBitmapStretchSR( mTextureObject, trackRect, mBitmapBounds[trackBitmap] );
+>>>>>>> omni_engine
     }
 
     // Update Pos.
@@ -1265,8 +1319,13 @@ void GuiScrollCtrl::drawHScrollBar(const Point2I &offset)
     }
 
     // Render Right Arrow.
+<<<<<<< HEAD
     drawUtil->clearBitmapModulation();
     drawUtil->drawBitmapSR(mTextureObject, pos, mBitmapBounds[rightArrowBitmap]);
+=======
+    //GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+    GFX->getDrawUtil()->drawBitmapSR( mTextureObject, pos, mBitmapBounds[rightArrowBitmap] );
+>>>>>>> omni_engine
 
     // Render the Thumb?
     if ( !mHBarEnabled )
@@ -1291,8 +1350,13 @@ void GuiScrollCtrl::drawHScrollBar(const Point2I &offset)
     }
 
     // Render Thumb Left.
+<<<<<<< HEAD
     drawUtil->clearBitmapModulation();
     drawUtil->drawBitmapSR(mTextureObject, pos, mBitmapBounds[thumbBitmapLeft]);
+=======
+    //GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+    GFX->getDrawUtil()->drawBitmapSR( mTextureObject, pos, mBitmapBounds[thumbBitmapLeft] );
+>>>>>>> omni_engine
 
     // Update Pos.
     pos.x += mBitmapBounds[thumbBitmapLeft].extent.x;
@@ -1307,16 +1371,26 @@ void GuiScrollCtrl::drawHScrollBar(const Point2I &offset)
     if ( thumbRect.extent.x > 0 )
     {
         // Render Track.
+<<<<<<< HEAD
        drawUtil->clearBitmapModulation();
        drawUtil->drawBitmapStretchSR(mTextureObject, thumbRect, mBitmapBounds[thumbBitmapMiddle]);
+=======
+        //GFX->getDrawUtil()->clearBitmapModulation();      // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+        GFX->getDrawUtil()->drawBitmapStretchSR( mTextureObject, thumbRect, mBitmapBounds[thumbBitmapMiddle] );
+>>>>>>> omni_engine
     }
 
     // Update Pos.
     pos.x += thumbRect.extent.x;
 
     // Render the Thumb Bottom.
+<<<<<<< HEAD
     drawUtil->clearBitmapModulation();
     drawUtil->drawBitmapSR(mTextureObject, pos, mBitmapBounds[thumbBitmapRight]);
+=======
+    //GFX->getDrawUtil()->clearBitmapModulation();    // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+    GFX->getDrawUtil()->drawBitmapSR( mTextureObject, pos, mBitmapBounds[thumbBitmapRight] );
+>>>>>>> omni_engine
 }
 
 //-----------------------------------------------------------------------------
@@ -1326,7 +1400,11 @@ void GuiScrollCtrl::drawScrollCorner(const Point2I &offset)
    Point2I pos = offset;
    pos.x += mRightArrowRect.point.x + mRightArrowRect.extent.x - 1;
    pos.y += mRightArrowRect.point.y;
+<<<<<<< HEAD
    GFX->getDrawUtil()->clearBitmapModulation();
+=======
+   //GFX->getDrawUtil()->clearBitmapModulation();     // Copyright (C) 2013 WinterLeaf Entertainment LLC.
+>>>>>>> omni_engine
    GFX->getDrawUtil()->drawBitmapSR(mTextureObject, pos, mBitmapBounds[BmpStates * BmpResize]);
 }
 
@@ -1412,3 +1490,144 @@ DefineEngineMethod( GuiScrollCtrl, computeSizes, void, (),,
 {
    object->computeSizes();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------DNTC AUTO-GENERATED---------------//
+#include <vector>
+
+#include <string>
+
+#include "core/strings/stringFunctions.h"
+
+//---------------DO NOT MODIFY CODE BELOW----------//
+
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiScrollCtrl_computeSizes(char * x__object)
+{
+GuiScrollCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->computeSizes();
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiScrollCtrl_getScrollPosition(char * x__object,  char* retval)
+{
+dSprintf(retval,1024,"");
+GuiScrollCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+Point2I wle_returnObject;
+{
+   {wle_returnObject =object->getChildRelPos();
+dSprintf(retval,1024,"%i %i ",wle_returnObject.x,wle_returnObject.y);
+return;
+}
+}
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiScrollCtrl_getScrollPositionX(char * x__object)
+{
+GuiScrollCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getChildRelPos().x);
+};
+}
+extern "C" __declspec(dllexport) S32  __cdecl wle_fnGuiScrollCtrl_getScrollPositionY(char * x__object)
+{
+GuiScrollCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	return (S32)( 0);
+{
+  return (S32)( object->getChildRelPos().y);
+};
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiScrollCtrl_scrollToBottom(char * x__object)
+{
+GuiScrollCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->scrollTo( 0, 0x7FFFFFFF );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiScrollCtrl_scrollToObject(char * x__object, char * x__control)
+{
+GuiScrollCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+GuiControl* control; Sim::findObject(x__control, control ); 
+{
+   if( control )
+      object->scrollToObject( control );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiScrollCtrl_scrollToTop(char * x__object)
+{
+GuiScrollCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+{
+   object->scrollTo( 0, 0 );
+}
+}
+extern "C" __declspec(dllexport) void  __cdecl wle_fnGuiScrollCtrl_setScrollPosition(char * x__object, S32 x, S32 y)
+{
+GuiScrollCtrl* object; Sim::findObject(x__object, object ); 
+if (!object)
+	 return;
+
+{
+   object->scrollTo( x, y );
+}
+}
+//---------------END DNTC AUTO-GENERATED-----------//
+

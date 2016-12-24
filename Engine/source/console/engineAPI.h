@@ -53,10 +53,14 @@
    #include "console/engineStructs.h"
 #endif
 
+<<<<<<< HEAD
 // Needed for the executef macros. Blame GCC.
 #ifndef _SIMEVENTS_H_
 #include "console/simEvents.h"
 #endif
+=======
+#include "OMNI/Omni.h"
+>>>>>>> omni_engine
 
 
 /// @file
@@ -155,6 +159,7 @@ inline const char* EngineMarshallData( U32 value )
 /// Marshal data from native into client form stored directly in
 /// client function invocation vector.
 template< typename T >
+<<<<<<< HEAD
 inline void EngineMarshallData( const T& arg, S32& argc, ConsoleValueRef *argv )
 {
    argv[ argc ] = castConsoleTypeToString( arg );
@@ -188,10 +193,41 @@ inline void EngineMarshallData( const char* arg, S32& argc, ConsoleValueRef *arg
    argc ++;
 }
 inline void EngineMarshallData( char* arg, S32& argc, ConsoleValueRef *argv )
+=======
+inline void EngineMarshallData( const T& arg, S32& argc, const char** argv )
+{
+   argv[ argc ] = Con::getStringArg( castConsoleTypeToString( arg ) );
+   argc ++;
+}
+inline void EngineMarshallData( bool arg, S32& argc, const char** argv )
+{
+   if( arg )
+      argv[ argc ] = "1";
+   else
+      argv[ argc ] = "0";
+   argc ++;
+}
+inline void EngineMarshallData( S32 arg, S32& argc, const char** argv )
+{
+   argv[ argc ] = Con::getIntArg( arg );
+   argc ++;
+}
+inline void EngineMarshallData( U32 arg, S32& argc, const char** argv )
+{
+   EngineMarshallData( S32( arg ), argc, argv );
+}
+inline void EngineMarshallData( F32 arg, S32& argc, const char** argv )
+{
+   argv[ argc ] = Con::getFloatArg( arg );
+   argc ++;
+}
+inline void EngineMarshallData( const char* arg, S32& argc, const char** argv )
+>>>>>>> omni_engine
 {
    argv[ argc ] = arg;
    argc ++;
 }
+<<<<<<< HEAD
 
 template< typename T >
 inline void EngineMarshallData( T* object, S32& argc, ConsoleValueRef *argv )
@@ -203,6 +239,18 @@ template< typename T >
 inline void EngineMarshallData( const T* object, S32& argc, ConsoleValueRef *argv )
 {
    argv[ argc ] = object ? object->getId() : 0;
+=======
+template< typename T >
+inline void EngineMarshallData( T* object, S32& argc, const char** argv )
+{
+   argv[ argc ] = ( object ? object->getIdString() : "0" );
+   argc ++;
+}
+template< typename T >
+inline void EngineMarshallData( const T* object, S32& argc, const char** argv )
+{
+   argv[ argc ] = ( object ? object->getIdString() : "0" );
+>>>>>>> omni_engine
    argc ++;
 }
 
@@ -234,6 +282,7 @@ struct EngineUnmarshallData< S32 >
    }
 };
 template<>
+<<<<<<< HEAD
 struct EngineUnmarshallData< U32 >
 {
    U32 operator()( ConsoleValueRef &ref ) const
@@ -241,6 +290,18 @@ struct EngineUnmarshallData< U32 >
       return (U32)((S32)ref);
    }
 
+=======
+struct EngineUnmarshallData< U8 >
+{
+   U8 operator()( const char* str ) const
+   {
+      return (U8)dAtoi( str );
+   }
+};
+template<>
+struct EngineUnmarshallData< U32 >
+{
+>>>>>>> omni_engine
    U32 operator()( const char* str ) const
    {
       return dAtoui( str );
@@ -260,6 +321,7 @@ struct EngineUnmarshallData< F32 >
    }
 };
 template<>
+<<<<<<< HEAD
 struct EngineUnmarshallData< U8 >
 {
    U8 operator()( ConsoleValueRef &ref ) const
@@ -280,6 +342,10 @@ struct EngineUnmarshallData< const char* >
       return ref.getStringValue();
    }
 
+=======
+struct EngineUnmarshallData< const char* >
+{
+>>>>>>> omni_engine
    const char* operator()( const char* str ) const
    {
       return str;
@@ -301,6 +367,7 @@ struct EngineUnmarshallData< T* >
 template<>
 struct EngineUnmarshallData< void >
 {
+<<<<<<< HEAD
    void operator()( ConsoleValueRef& ) const {}
    void operator()( const char* ) const {}
 };
@@ -315,6 +382,11 @@ struct EngineUnmarshallData< ConsoleValueRef >
    }
 };
 
+=======
+   void operator()( const char* ) const {}
+};
+
+>>>>>>> omni_engine
 /// @}
 
 
@@ -345,6 +417,7 @@ struct _EngineTrampoline< R( A ) >
    struct Args
    {
       char data[ sizeof( typename EngineTypeTraits< A >::ArgumentValueType ) ];
+<<<<<<< HEAD
 
       typename EngineTypeTraits< A >::ValueType a() const
       {
@@ -355,6 +428,16 @@ struct _EngineTrampoline< R( A ) >
    };
 };
 
+=======
+      
+      typename EngineTypeTraits< A >::ValueType a() const
+      {
+         return EngineTypeTraits< A >::ArgumentToValue(
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+   };
+};
+>>>>>>> omni_engine
 template< typename R, typename A, typename B >
 struct _EngineTrampoline< R( A, B ) >
 {
@@ -366,10 +449,15 @@ struct _EngineTrampoline< R( A, B ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -391,10 +479,15 @@ struct _EngineTrampoline< R( A, B, C ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -425,10 +518,15 @@ struct _EngineTrampoline< R( A, B, C, D ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -469,10 +567,15 @@ struct _EngineTrampoline< R( A, B, C, D, E ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -524,10 +627,15 @@ struct _EngineTrampoline< R( A, B, C, D, E, F ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -591,10 +699,15 @@ struct _EngineTrampoline< R( A, B, C, D, E, F, G ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -671,10 +784,15 @@ struct _EngineTrampoline< R( A, B, C, D, E, F, G, H ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -765,10 +883,15 @@ struct _EngineTrampoline< R( A, B, C, D, E, F, G, H, I ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -874,10 +997,15 @@ struct _EngineTrampoline< R( A, B, C, D, E, F, G, H, I, J ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -999,10 +1127,15 @@ struct _EngineTrampoline< R( A, B, C, D, E, F, G, H, I, J, K ) >
       typename EngineTypeTraits< A >::ValueType a() const
       {
          return EngineTypeTraits< A >::ArgumentToValue(
+<<<<<<< HEAD
             *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >
                ( &data[ 0 ] ) ) );
       }
 
+=======
+            *( reinterpret_cast< const typename EngineTypeTraits< A >::ArgumentValueType* >( &data[ 0 ] ) ) );
+      }
+>>>>>>> omni_engine
       typename EngineTypeTraits< B >::ValueType b() const
       {
          return EngineTypeTraits< B >::ArgumentToValue(
@@ -1120,6 +1253,7 @@ struct _EngineTrampoline< R( A, B, C, D, E, F, G, H, I, J, K ) >
    };
 };
 
+<<<<<<< HEAD
 template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J, typename K, typename L >
 struct _EngineTrampoline< R( A, B, C, D, E, F, G, H, I, J, K, L ) >
 {
@@ -1413,6 +1547,117 @@ struct _EngineFunctionTrampoline< R( A, B, C, D, E, F, G, H, I, J, K, L ) > : pu
 
 template< typename T >
 struct _EngineMethodTrampolineBase : public _EngineTrampoline< T > {};
+=======
+template< typename T >
+struct _EngineFunctionTrampolineBase : public _EngineTrampoline< T >
+{
+   typedef T FunctionType;
+};
+
+// Trampolines for any call-ins that aren't methods.
+template< typename T >
+struct _EngineFunctionTrampoline {};
+
+template< typename R >
+struct _EngineFunctionTrampoline< R() > : public _EngineFunctionTrampolineBase< R() >
+{
+   static R jmp( R ( *fn )(), const typename _EngineFunctionTrampolineBase< R() >::Args& args )
+   {
+      return R( fn() );
+   }
+};
+template< typename R, typename A >
+struct _EngineFunctionTrampoline< R( A ) > : public _EngineFunctionTrampolineBase< R( A ) >
+{
+   static R jmp( R ( *fn )( A ), const typename _EngineFunctionTrampolineBase< R( A ) >::Args& args )
+   {
+      return R( fn( args.a() ) );
+   }
+};
+template< typename R, typename A, typename B >
+struct _EngineFunctionTrampoline< R( A, B ) > : public _EngineFunctionTrampolineBase< R( A, B ) >
+{
+   static R jmp( R ( *fn )( A, B ), const typename _EngineFunctionTrampolineBase< R( A, B ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C >
+struct _EngineFunctionTrampoline< R( A, B, C ) > : public _EngineFunctionTrampolineBase< R( A, B, C ) >
+{
+   static R jmp( R ( *fn )( A, B, C ), const typename _EngineFunctionTrampolineBase< R( A, B, C ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C, typename D >
+struct _EngineFunctionTrampoline< R( A, B, C, D ) > : public _EngineFunctionTrampolineBase< R( A, B, C, D ) >
+{
+   static R jmp( R ( *fn )( A, B, C, D ), const typename _EngineFunctionTrampolineBase< R( A, B, C, D ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c(), args.d() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C, typename D, typename E >
+struct _EngineFunctionTrampoline< R( A, B, C, D, E ) > : public _EngineFunctionTrampolineBase< R( A, B, C, D, E ) >
+{
+   static R jmp( R ( *fn )( A, B, C, D, E ), const typename _EngineFunctionTrampolineBase< R( A, B, C, D, E ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c(), args.d(), args.e() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C, typename D, typename E, typename F >
+struct _EngineFunctionTrampoline< R( A, B, C, D, E, F ) > : public _EngineFunctionTrampolineBase< R( A, B, C, D, E, F ) >
+{
+   static R jmp( R ( *fn )( A, B, C, D, E, F ), const typename _EngineFunctionTrampolineBase< R( A, B, C, D, E, F ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c(), args.d(), args.e(), args.f() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G >
+struct _EngineFunctionTrampoline< R( A, B, C, D, E, F, G ) > : public _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G ) >
+{
+   static R jmp( R ( *fn )( A, B, C, D, E, F, G ), const typename _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c(), args.d(), args.e(), args.f(), args.g() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H >
+struct _EngineFunctionTrampoline< R( A, B, C, D, E, F, G, H ) > : public _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G, H ) >
+{
+   static R jmp( R ( *fn )( A, B, C, D, E, F, G, H ), const typename _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G, H ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c(), args.d(), args.e(), args.f(), args.g(), args.h() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I >
+struct _EngineFunctionTrampoline< R( A, B, C, D, E, F, G, H, I ) > : public _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G, H, I ) >
+{
+   static R jmp( R ( *fn )( A, B, C, D, E, F, G, H, I ), const typename _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G, H, I ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c(), args.d(), args.e(), args.f(), args.g(), args.h(), args.i() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J >
+struct _EngineFunctionTrampoline< R( A, B, C, D, E, F, G, H, I, J ) > : public _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G, H, I, J ) >
+{
+   static R jmp( R ( *fn )( A, B, C, D, E, F, G, H, I, J ), const typename _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G, H, I, J ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c(), args.d(), args.e(), args.f(), args.g(), args.h(), args.i(), args.j() ) );
+   }
+};
+template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J, typename K >
+struct _EngineFunctionTrampoline< R( A, B, C, D, E, F, G, H, I, J, K ) > : public _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G, H, I, J, K ) >
+{
+   static R jmp( R ( *fn )( A, B, C, D, E, F, G, H, I, J, K ), const typename _EngineFunctionTrampolineBase< R( A, B, C, D, E, F, G, H, I, J, K ) >::Args& args )
+   {
+      return R( fn( args.a(), args.b(), args.c(), args.d(), args.e(), args.f(), args.g(), args.h(), args.i(), args.j(), args.k() ) );
+   }
+};
+
+template< typename T >
+struct _EngineMethodTrampolineBase : public _EngineTrampoline< T > {};
+>>>>>>> omni_engine
 
 template< typename Frame, typename T >
 struct _EngineMethodTrampoline {};
@@ -1602,6 +1847,13 @@ inline S32 _EngineConsoleThunkReturnValue( S32 value )
 {
    return value;
 }
+
+//WLE - Vince - Why no  U32?
+inline U32 _EngineConsoleThunkReturnValue( U32 value )
+{
+   return value;
+}
+
 inline F32 _EngineConsoleThunkReturnValue( F32 value )
 {
    return value;
@@ -1763,12 +2015,20 @@ struct _EngineConsoleThunk< startArgc, R() >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 0;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )(), const _EngineFunctionDefaultArguments< void() >& )
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )(), const _EngineFunctionDefaultArguments< void() >& )
+>>>>>>> omni_engine
    {
       return _EngineConsoleThunkReturnValue( fn() );
    }
    template< typename Frame >
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( Frame::*fn )() const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType* ) >& )
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )() const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType* ) >& )
+>>>>>>> omni_engine
    {
       return _EngineConsoleThunkReturnValue( ( frame->*fn )() );
    }
@@ -1779,12 +2039,20 @@ struct _EngineConsoleThunk< startArgc, void() >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 0;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )(), const _EngineFunctionDefaultArguments< void() >& )
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )(), const _EngineFunctionDefaultArguments< void() >& )
+>>>>>>> omni_engine
    {
       fn();
    }
    template< typename Frame >
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( Frame::*fn )() const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType* ) >& )
+=======
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )() const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType* ) >& )
+>>>>>>> omni_engine
    {
       return ( frame->*fn )();
    }
@@ -1797,6 +2065,7 @@ struct _EngineConsoleThunk< startArgc, R( A ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 1 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A ), const _EngineFunctionDefaultArguments< void( A ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
@@ -1812,11 +2081,26 @@ struct _EngineConsoleThunk< startArgc, R( A ) >
    }
 };
 
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A ), const _EngineFunctionDefaultArguments< void( A ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+      return _EngineConsoleThunkReturnValue( fn( a ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A >
 struct _EngineConsoleThunk< startArgc, void( A ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 1 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A ), const _EngineFunctionDefaultArguments< void( A ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
@@ -1828,6 +2112,17 @@ struct _EngineConsoleThunk< startArgc, void( A ) >
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
       
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A ), const _EngineFunctionDefaultArguments< void( A ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+      fn( a );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       ( frame->*fn )( a );
    }
 };
@@ -1838,6 +2133,7 @@ struct _EngineConsoleThunk< startArgc, R( A, B ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 2 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B ), const _EngineFunctionDefaultArguments< void( A, B ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
@@ -1855,11 +2151,28 @@ struct _EngineConsoleThunk< startArgc, R( A, B ) >
    }
 };
 
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B ), const _EngineFunctionDefaultArguments< void( A, B ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
+      return _EngineConsoleThunkReturnValue( fn( a, b ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B >
 struct _EngineConsoleThunk< startArgc, void( A, B ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 2 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B ), const _EngineFunctionDefaultArguments< void( A, B ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
@@ -1873,6 +2186,19 @@ struct _EngineConsoleThunk< startArgc, void( A, B ) >
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B ), const _EngineFunctionDefaultArguments< void( A, B ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
+      fn( a, b );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
+>>>>>>> omni_engine
       ( frame->*fn )( a, b );
    }
 };
@@ -1883,6 +2209,7 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 3 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C ), const _EngineFunctionDefaultArguments< void( A, B, C ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
@@ -1902,11 +2229,30 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C ) >
    }
 };
 
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C ), const _EngineFunctionDefaultArguments< void( A, B, C ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
+      C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
+      return _EngineConsoleThunkReturnValue( fn( a, b, c ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
+      C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C >
 struct _EngineConsoleThunk< startArgc, void( A, B, C ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 3 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C ), const _EngineFunctionDefaultArguments< void( A, B, C ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
@@ -1922,6 +2268,21 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C ) >
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C ), const _EngineFunctionDefaultArguments< void( A, B, C ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
+      C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
+      fn( a, b, c );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
+      C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
+>>>>>>> omni_engine
       ( frame->*fn )( a, b, c );
    }
 };
@@ -1932,6 +2293,7 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 4 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C, D ), const _EngineFunctionDefaultArguments< void( A, B, C, D ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
@@ -1953,11 +2315,32 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D ) >
    }
 };
 
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C, D ), const _EngineFunctionDefaultArguments< void( A, B, C, D ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
+      C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
+      D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
+      return _EngineConsoleThunkReturnValue( fn( a, b, c, d ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C, D ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
+      C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
+      D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C, typename D >
 struct _EngineConsoleThunk< startArgc, void( A, B, C, D ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 4 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C, D ), const _EngineFunctionDefaultArguments< void( A, B, C, D ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
@@ -1975,6 +2358,23 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D ) >
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
       
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C, D ), const _EngineFunctionDefaultArguments< void( A, B, C, D ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
+      C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
+      D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
+      fn( a, b, c, d );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C, D ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+      B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
+      C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
+      D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
+>>>>>>> omni_engine
       ( frame->*fn )( a, b, c, d );
    }
 };
@@ -1985,13 +2385,20 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 5 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C, D, E ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C, D, E ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.e ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e ) );
    }
@@ -1999,27 +2406,48 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E ) >
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( Frame::*fn )( A, B, C, D, E ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C, D, E ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.f ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e ) );
    }
 };
 
+=======
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C, typename D, typename E >
 struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 5 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C, D, E ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C, D, E ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.e ) );
+<<<<<<< HEAD
       
       fn( a, b, c, d, e );
    }
@@ -2027,6 +2455,14 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E ) >
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( Frame::*fn )( A, B, C, D, E ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      fn( a, b, c, d, e );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C, D, E ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2042,14 +2478,21 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 6 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C, D, E, F ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C, D, E, F ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.e ) );
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.f ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f ) );
    }
@@ -2057,29 +2500,50 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F ) >
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( Frame::*fn )( A, B, C, D, E, F ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C, D, E, F ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.f ) );
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.g ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f ) );
    }
 };
 
+=======
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C, typename D, typename E, typename F >
 struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 6 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C, D, E, F ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C, D, E, F ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.e ) );
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.f ) );
+<<<<<<< HEAD
       
       fn( a, b, c, d, e, f );
    }
@@ -2087,6 +2551,14 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F ) >
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( Frame::*fn )( A, B, C, D, E, F ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      fn( a, b, c, d, e, f );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C, D, E, F ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2103,15 +2575,22 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 7 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C, D, E, F, G ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C, D, E, F, G ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.e ) );
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.f ) );
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.g ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g ) );
    }
@@ -2119,31 +2598,52 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G ) >
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( Frame::*fn )( A, B, C, D, E, F, G ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C, D, E, F, G ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.f ) );
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.g ) );
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.h ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g ) );
    }
 };
 
+=======
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C, typename D, typename E, typename F, typename G >
 struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 7 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C, D, E, F, G ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C, D, E, F, G ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
       E e = ( startArgc + 4 < argc ? EngineUnmarshallData< E >()( argv[ startArgc + 4 ] ) : E( defaultArgs.e ) );
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.f ) );
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.g ) );
+<<<<<<< HEAD
       
       fn( a, b, c, d, e, f, g );
    }
@@ -2151,6 +2651,14 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G ) >
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( Frame::*fn )( A, B, C, D, E, F, G ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      fn( a, b, c, d, e, f, g );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C, D, E, F, G ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2168,9 +2676,15 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 8 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C, D, E, F, G, H ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C, D, E, F, G, H ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
@@ -2178,6 +2692,7 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H ) >
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.f ) );
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.g ) );
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.h ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g, h ) );
    }
@@ -2185,6 +2700,14 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H ) >
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( Frame::*fn )( A, B, C, D, E, F, G, H ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g, h ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C, D, E, F, G, H ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2192,19 +2715,31 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H ) >
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.g ) );
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.h ) );
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.i ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g, h ) );
    }
 };
 
+=======
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g, h ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H >
 struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 8 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C, D, E, F, G, H ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C, D, E, F, G, H ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
@@ -2212,6 +2747,7 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H ) >
       F f = ( startArgc + 5 < argc ? EngineUnmarshallData< F >()( argv[ startArgc + 5 ] ) : F( defaultArgs.f ) );
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.g ) );
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.h ) );
+<<<<<<< HEAD
       
       fn( a, b, c, d, e, f, g, h );
    }
@@ -2219,6 +2755,14 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H ) >
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( Frame::*fn )( A, B, C, D, E, F, G, H ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      fn( a, b, c, d, e, f, g, h );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C, D, E, F, G, H ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2237,9 +2781,15 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 9 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C, D, E, F, G, H, I ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C, D, E, F, G, H, I ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
@@ -2248,6 +2798,7 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I ) >
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.g ) );
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.h ) );
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.i ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g, h, i ) );
    }
@@ -2255,6 +2806,14 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I ) >
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( Frame::*fn )( A, B, C, D, E, F, G, H, I ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g, h, i ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C, D, E, F, G, H, I ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2263,19 +2822,31 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I ) >
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.h ) );
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.i ) );
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.j ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g, h, i ) );
    }
 };
 
+=======
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g, h, i ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I >
 struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 9 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C, D, E, F, G, H, I ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C, D, E, F, G, H, I ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
@@ -2284,6 +2855,7 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I ) >
       G g = ( startArgc + 6 < argc ? EngineUnmarshallData< G >()( argv[ startArgc + 6 ] ) : G( defaultArgs.g ) );
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.h ) );
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.i ) );
+<<<<<<< HEAD
       
       fn( a, b, c, d, e, f, g, h, i );
    }
@@ -2291,6 +2863,14 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I ) >
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( Frame::*fn )( A, B, C, D, E, F, G, H, I ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      fn( a, b, c, d, e, f, g, h, i );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C, D, E, F, G, H, I ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2310,9 +2890,15 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I, J ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 10 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C, D, E, F, G, H, I, J ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I, J ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C, D, E, F, G, H, I, J ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I, J ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
@@ -2322,6 +2908,7 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I, J ) >
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.h ) );
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.i ) );
       J j = ( startArgc + 9 < argc ? EngineUnmarshallData< J >()( argv[ startArgc + 9 ] ) : J( defaultArgs.j ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g, h, i, j ) );
    }
@@ -2329,6 +2916,14 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I, J ) >
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( Frame::*fn )( A, B, C, D, E, F, G, H, I, J ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I, J ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g, h, i, j ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C, D, E, F, G, H, I, J ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I, J ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2338,19 +2933,31 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I, J ) >
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.i ) );
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.j ) );
       J j = ( startArgc + 9 < argc ? EngineUnmarshallData< J >()( argv[ startArgc + 9 ] ) : J( defaultArgs.k ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g, h, i, j ) );
    }
 };
 
+=======
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g, h, i, j ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J >
 struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 10 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C, D, E, F, G, H, I, J ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I, J ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C, D, E, F, G, H, I, J ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I, J ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
@@ -2360,6 +2967,7 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J ) >
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.h ) );
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.i ) );
       J j = ( startArgc + 9 < argc ? EngineUnmarshallData< J >()( argv[ startArgc + 9 ] ) : J( defaultArgs.j ) );
+<<<<<<< HEAD
       
       fn( a, b, c, d, e, f, g, h, i, j );
    }
@@ -2367,6 +2975,14 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J ) >
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( Frame::*fn )( A, B, C, D, E, F, G, H, I, J ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I, J ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      fn( a, b, c, d, e, f, g, h, i, j );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C, D, E, F, G, H, I, J ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I, J ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2376,20 +2992,32 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J ) >
       H h = ( startArgc + 7 < argc ? EngineUnmarshallData< H >()( argv[ startArgc + 7 ] ) : H( defaultArgs.i ) );
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.j ) );
       J j = ( startArgc + 9 < argc ? EngineUnmarshallData< J >()( argv[ startArgc + 9 ] ) : J( defaultArgs.k ) );
+<<<<<<< HEAD
       
       ( frame->*fn )( a, b, c, d, e, f, g, h, i, j );
    }
 };
 
 
+=======
+      ( frame->*fn )( a, b, c, d, e, f, g, h, i, j );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J, typename K >
 struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I, J, K ) >
 {
    typedef typename _EngineConsoleThunkType< R >::ReturnType ReturnType;
    static const S32 NUM_ARGS = 11 + startArgc;
+<<<<<<< HEAD
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( *fn )( A, B, C, D, E, F, G, H, I, J, K ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I, J, K ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static ReturnType thunk( S32 argc, const char** argv, R ( *fn )( A, B, C, D, E, F, G, H, I, J, K ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I, J, K ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
@@ -2400,6 +3028,7 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I, J, K ) >
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.i ) );
       J j = ( startArgc + 9 < argc ? EngineUnmarshallData< J >()( argv[ startArgc + 9 ] ) : J( defaultArgs.j ) );
       K k = ( startArgc + 10 < argc ? EngineUnmarshallData< K >()( argv[ startArgc + 10 ] ) : K( defaultArgs.k ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g, h, i, j, k ) );
    }
@@ -2407,6 +3036,14 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I, J, K ) >
    static ReturnType thunk( S32 argc, ConsoleValueRef *argv, R ( Frame::*fn )( A, B, C, D, E, F, G, H, I, J, K ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I, J, K ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      return _EngineConsoleThunkReturnValue( fn( a, b, c, d, e, f, g, h, i, j, k ) );
+   }
+   template< typename Frame >
+   static ReturnType thunk( S32 argc, const char** argv, R ( Frame::*fn )( A, B, C, D, E, F, G, H, I, J, K ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I, J, K ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2417,19 +3054,31 @@ struct _EngineConsoleThunk< startArgc, R( A, B, C, D, E, F, G, H, I, J, K ) >
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.j ) );
       J j = ( startArgc + 9 < argc ? EngineUnmarshallData< J >()( argv[ startArgc + 9 ] ) : J( defaultArgs.k ) );
       K k = ( startArgc + 10 < argc ? EngineUnmarshallData< K >()( argv[ startArgc + 10 ] ) : K( defaultArgs.l ) );
+<<<<<<< HEAD
       
       return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g, h, i, j, k ) );
    }
 };
 
+=======
+      return _EngineConsoleThunkReturnValue( ( frame->*fn )( a, b, c, d, e, f, g, h, i, j, k ) );
+   }
+};
+>>>>>>> omni_engine
 template< S32 startArgc, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J, typename K >
 struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K ) >
 {
    typedef void ReturnType;
    static const S32 NUM_ARGS = 11 + startArgc;
+<<<<<<< HEAD
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( *fn )( A, B, C, D, E, F, G, H, I, J, K ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I, J, K ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.a ) );
+=======
+   static void thunk( S32 argc, const char** argv, void ( *fn )( A, B, C, D, E, F, G, H, I, J, K ), const _EngineFunctionDefaultArguments< void( A, B, C, D, E, F, G, H, I, J, K ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.a ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.b ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.c ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.d ) );
@@ -2440,6 +3089,7 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K ) >
       I i = ( startArgc + 8 < argc ? EngineUnmarshallData< I >()( argv[ startArgc + 8 ] ) : I( defaultArgs.i ) );
       J j = ( startArgc + 9 < argc ? EngineUnmarshallData< J >()( argv[ startArgc + 9 ] ) : J( defaultArgs.j ) );
       K k = ( startArgc + 10 < argc ? EngineUnmarshallData< K >()( argv[ startArgc + 10 ] ) : K( defaultArgs.k ) );
+<<<<<<< HEAD
       
       fn( a, b, c, d, e, f, g, h, i, j, k );
    }
@@ -2447,6 +3097,14 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K ) >
    static void thunk( S32 argc, ConsoleValueRef *argv, void ( Frame::*fn )( A, B, C, D, E, F, G, H, I, J, K ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I, J, K ) >& defaultArgs )
    {
       A a = ( startArgc + 0 < argc ? EngineUnmarshallData< A >()( argv[ startArgc + 0 ] ) : A( defaultArgs.b ) );
+=======
+      fn( a, b, c, d, e, f, g, h, i, j, k );
+   }
+   template< typename Frame >
+   static void thunk( S32 argc, const char** argv, void ( Frame::*fn )( A, B, C, D, E, F, G, H, I, J, K ) const, Frame* frame, const _EngineFunctionDefaultArguments< void( typename Frame::ObjectType*, A, B, C, D, E, F, G, H, I, J, K ) >& defaultArgs )
+   {
+      A a = ( startArgc < argc ? EngineUnmarshallData< A >()( argv[ startArgc ] ) : A( defaultArgs.b ) );
+>>>>>>> omni_engine
       B b = ( startArgc + 1 < argc ? EngineUnmarshallData< B >()( argv[ startArgc + 1 ] ) : B( defaultArgs.c ) );
       C c = ( startArgc + 2 < argc ? EngineUnmarshallData< C >()( argv[ startArgc + 2 ] ) : C( defaultArgs.d ) );
       D d = ( startArgc + 3 < argc ? EngineUnmarshallData< D >()( argv[ startArgc + 3 ] ) : D( defaultArgs.e ) );
@@ -2615,7 +3273,11 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K, L 
       ( void* ) &fn ## name,                                                                                                     \
       0                                                                                                                          \
    );                                                                                                                            \
+<<<<<<< HEAD
    static _EngineConsoleThunkType< returnType >::ReturnType _ ## name ## caster( SimObject*, S32 argc, ConsoleValueRef *argv )       \
+=======
+   static _EngineConsoleThunkType< returnType >::ReturnType _ ## name ## caster( SimObject*, S32 argc, const char** argv )       \
+>>>>>>> omni_engine
    {                                                                                                                             \
       return _EngineConsoleThunkType< returnType >::ReturnType( _EngineConsoleThunk< 1, returnType args >::thunk(                \
          argc, argv, &_fn ## name ## impl, _fn ## name ## DefaultArgs                                                            \
@@ -2695,7 +3357,11 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K, L 
       ( void* ) &fn ## className ## _ ## name,                                                                                                  \
       0                                                                                                                                         \
    );                                                                                                                                           \
+<<<<<<< HEAD
    static _EngineConsoleThunkType< returnType >::ReturnType _ ## className ## name ## caster( SimObject* object, S32 argc, ConsoleValueRef *argv )  \
+=======
+   static _EngineConsoleThunkType< returnType >::ReturnType _ ## className ## name ## caster( SimObject* object, S32 argc, const char** argv )  \
+>>>>>>> omni_engine
    {                                                                                                                                            \
       _ ## className ## name ## frame frame;                                                                                                    \
       frame.object = static_cast< className* >( object );                                                                                       \
@@ -2752,7 +3418,11 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K, L 
       ( void* ) &fn ## className ## _ ## name,                                                                                         \
       0                                                                                                                                \
    );                                                                                                                                  \
+<<<<<<< HEAD
    static _EngineConsoleThunkType< returnType >::ReturnType _ ## className ## name ## caster( SimObject*, S32 argc, ConsoleValueRef *argv )\
+=======
+   static _EngineConsoleThunkType< returnType >::ReturnType _ ## className ## name ## caster( SimObject*, S32 argc, const char** argv )\
+>>>>>>> omni_engine
    {                                                                                                                                   \
       return _EngineConsoleThunkType< returnType >::ReturnType( _EngineConsoleThunk< 1, returnType args >::thunk(                      \
          argc, argv, &_fn ## className ## name ## impl, _fn ## className ## name ## DefaultArgs                                        \
@@ -2776,7 +3446,11 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K, L 
 #define DefineConsoleFunction( name, returnType, args, defaultArgs, usage )                                                      \
    static inline returnType _fn ## name ## impl args;                                                                            \
    static _EngineFunctionDefaultArguments< void args > _fn ## name ## DefaultArgs defaultArgs;                                   \
+<<<<<<< HEAD
    static _EngineConsoleThunkType< returnType >::ReturnType _ ## name ## caster( SimObject*, S32 argc, ConsoleValueRef *argv )       \
+=======
+   static _EngineConsoleThunkType< returnType >::ReturnType _ ## name ## caster( SimObject*, S32 argc, const char** argv )       \
+>>>>>>> omni_engine
    {                                                                                                                             \
       return _EngineConsoleThunkType< returnType >::ReturnType( _EngineConsoleThunk< 1, returnType args >::thunk(                \
          argc, argv, &_fn ## name ## impl, _fn ## name ## DefaultArgs                                                            \
@@ -2801,7 +3475,11 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K, L 
    };                                                                                                                                           \
    static _EngineFunctionDefaultArguments< _EngineMethodTrampoline< _ ## className ## name ## frame, void args >::FunctionType >                \
       _fn ## className ## name ## DefaultArgs defaultArgs;                                                                                      \
+<<<<<<< HEAD
    static _EngineConsoleThunkType< returnType >::ReturnType _ ## className ## name ## caster( SimObject* object, S32 argc, ConsoleValueRef *argv )  \
+=======
+   static _EngineConsoleThunkType< returnType >::ReturnType _ ## className ## name ## caster( SimObject* object, S32 argc, const char** argv )  \
+>>>>>>> omni_engine
    {                                                                                                                                            \
       _ ## className ## name ## frame frame;                                                                                                    \
       frame.object = static_cast< className* >( object );                                                                                       \
@@ -2823,7 +3501,11 @@ struct _EngineConsoleThunk< startArgc, void( A, B, C, D, E, F, G, H, I, J, K, L 
 #define DefineConsoleStaticMethod( className, name, returnType, args, defaultArgs, usage )                                             \
    static inline returnType _fn ## className ## name ## impl args;                                                                     \
    static _EngineFunctionDefaultArguments< void args > _fn ## className ## name ## DefaultArgs defaultArgs;                            \
+<<<<<<< HEAD
    static _EngineConsoleThunkType< returnType >::ReturnType _ ## className ## name ## caster( SimObject*, S32 argc, ConsoleValueRef *argv )\
+=======
+   static _EngineConsoleThunkType< returnType >::ReturnType _ ## className ## name ## caster( SimObject*, S32 argc, const char** argv )\
+>>>>>>> omni_engine
    {                                                                                                                                   \
       return _EngineConsoleThunkType< returnType >::ReturnType( _EngineConsoleThunk< 1, returnType args >::thunk(                      \
          argc, argv, &_fn ## className ## name ## impl, _fn ## className ## name ## DefaultArgs                                        \
@@ -3076,6 +3758,7 @@ struct _EngineCallbackHelper
       R call( A a, B b ) const
       {
          typedef R( FunctionType )( EngineObject*, A, B );
+<<<<<<< HEAD
          return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b ) );
       }
       
@@ -4443,10 +5126,139 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          evt->populateArgs(mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b ) );
+      }
+      template< typename R, typename A, typename B, typename C >
+      R call( A a, B b, C c ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D >
+      R call( A a, B b, C c, D d ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E >
+      R call( A a, B b, C c, D d, E e ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D, E );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d, e ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F >
+      R call( A a, B b, C c, D d, E e, F f ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D, E, F );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d, e, f ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G >
+      R call( A a, B b, C c, D d, E e, F f, G g ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D, E, F, G );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d, e, f, g ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D, E, F, G, H );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d, e, f, g, h ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h, I i ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D, E, F, G, H, I );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d, e, f, g, h, i ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h, I i, J j ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D, E, F, G, H, I, J );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d, e, f, g, h, i, j ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J, typename K >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h, I i, J j, K k ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D, E, F, G, H, I, J, K );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d, e, f, g, h, i, j, k ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J, typename K, typename L >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h, I i, J j, K k, L l ) const
+      {
+         typedef R( FunctionType )( EngineObject*, A, B, C, D, E, F, G, H, I, J, K, L l );
+         return R( reinterpret_cast< FunctionType* >( const_cast<void*>(mFn) )( mThis, a, b, c, d, e, f, g, h, i, j, k, l ) );
+      }
+};
+
+// Internal helper for callback support in legacy console system.
+struct _EngineConsoleCallbackHelper
+{
+
+   protected:
+   
+      /// Matches up to storeArgs.
+      static const U32 MAX_ARGUMENTS = 11;
+
+      SimObject* mThis;
+      S32 mArgc;
+      const char* mArgv[ MAX_ARGUMENTS + 2 ];
+      
+      const char* _exec()
+      {
+         if( mThis )
+         {
+            // Cannot invoke callback until object has been registered
+            return mThis->isProperlyAdded() ? Con::execute( mThis, mArgc, mArgv ) : "";
+         }
+         else
+            return Con::execute( mArgc, mArgv );
+      }
+      
+   public:
+
+      _EngineConsoleCallbackHelper( StringTableEntry callbackName, SimObject* pThis )
+         : mThis( pThis ),
+           mArgc( pThis ? 2 : 1 )
+      {
+         mArgv[ 0 ] = callbackName;
+      }
+      
+      template< typename R >
+      R call()
+      {
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A >
+      R call( A a )
+      {
+         EngineMarshallData( a, mArgc, mArgv );
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B >
+      R call( A a, B b )
+      {
+         EngineMarshallData( a, mArgc, mArgv );
+         EngineMarshallData( b, mArgc, mArgv );
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C >
+      R call( A a, B b, C c )
+      {
+         EngineMarshallData( a, mArgc, mArgv );
+         EngineMarshallData( b, mArgc, mArgv );
+         EngineMarshallData( c, mArgc, mArgv );
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D >
+      R call( A a, B b, C c, D d )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
          EngineMarshallData( d, mArgc, mArgv );
+<<<<<<< HEAD
          EngineMarshallData( e, mArgc, mArgv );
          EngineMarshallData( f, mArgc, mArgv );
          EngineMarshallData( g, mArgc, mArgv );
@@ -4467,11 +5279,19 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          CSTK.reserveValues(mArgc+9, mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E >
+      R call( A a, B b, C c, D d, E e )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
          EngineMarshallData( d, mArgc, mArgv );
          EngineMarshallData( e, mArgc, mArgv );
+<<<<<<< HEAD
          EngineMarshallData( f, mArgc, mArgv );
          EngineMarshallData( g, mArgc, mArgv );
          EngineMarshallData( h, mArgc, mArgv );
@@ -4486,12 +5306,20 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          evt->populateArgs(mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F >
+      R call( A a, B b, C c, D d, E e, F f )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
          EngineMarshallData( d, mArgc, mArgv );
          EngineMarshallData( e, mArgc, mArgv );
          EngineMarshallData( f, mArgc, mArgv );
+<<<<<<< HEAD
          EngineMarshallData( g, mArgc, mArgv );
          EngineMarshallData( h, mArgc, mArgv );
          EngineMarshallData( i, mArgc, mArgv );
@@ -4511,6 +5339,13 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          CSTK.reserveValues(mArgc+10, mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G >
+      R call( A a, B b, C c, D d, E e, F f, G g )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
@@ -4518,6 +5353,7 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          EngineMarshallData( e, mArgc, mArgv );
          EngineMarshallData( f, mArgc, mArgv );
          EngineMarshallData( g, mArgc, mArgv );
+<<<<<<< HEAD
          EngineMarshallData( h, mArgc, mArgv );
          EngineMarshallData( i, mArgc, mArgv );
          EngineMarshallData( j, mArgc, mArgv );
@@ -4531,6 +5367,13 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          evt->populateArgs(mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
@@ -4539,6 +5382,7 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          EngineMarshallData( f, mArgc, mArgv );
          EngineMarshallData( g, mArgc, mArgv );
          EngineMarshallData( h, mArgc, mArgv );
+<<<<<<< HEAD
          EngineMarshallData( i, mArgc, mArgv );
          EngineMarshallData( j, mArgc, mArgv );
 
@@ -4557,6 +5401,13 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          CSTK.reserveValues(mArgc+11, mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h, I i )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
@@ -4566,6 +5417,7 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          EngineMarshallData( g, mArgc, mArgv );
          EngineMarshallData( h, mArgc, mArgv );
          EngineMarshallData( i, mArgc, mArgv );
+<<<<<<< HEAD
          EngineMarshallData( j, mArgc, mArgv );
          EngineMarshallData( k, mArgc, mArgv );
 
@@ -4578,6 +5430,13 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          evt->populateArgs(mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h, I i, J j )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
@@ -4588,6 +5447,7 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          EngineMarshallData( h, mArgc, mArgv );
          EngineMarshallData( i, mArgc, mArgv );
          EngineMarshallData( j, mArgc, mArgv );
+<<<<<<< HEAD
          EngineMarshallData( k, mArgc, mArgv );
 
          Sim::postEvent((SimObject*)Sim::getRootGroup(), evt, Sim::getCurrentTime());
@@ -4605,6 +5465,13 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          CSTK.reserveValues(mArgc+12, mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J, typename K >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h, I i, J j, K k )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
@@ -4616,6 +5483,7 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          EngineMarshallData( i, mArgc, mArgv );
          EngineMarshallData( j, mArgc, mArgv );
          EngineMarshallData( k, mArgc, mArgv );
+<<<<<<< HEAD
          EngineMarshallData( l, mArgc, mArgv );
 
          return R( EngineUnmarshallData< R >()( _exec() ) );
@@ -4627,6 +5495,13 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          evt->populateArgs(mArgv);
          mArgv[ 0 ].value->setStackStringValue(mCallbackName);
 
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+      template< typename R, typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I, typename J, typename K, typename L >
+      R call( A a, B b, C c, D d, E e, F f, G g, H h, I i, J j, K k, L l )
+      {
+>>>>>>> omni_engine
          EngineMarshallData( a, mArgc, mArgv );
          EngineMarshallData( b, mArgc, mArgv );
          EngineMarshallData( c, mArgc, mArgv );
@@ -4639,6 +5514,7 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
          EngineMarshallData( j, mArgc, mArgv );
          EngineMarshallData( k, mArgc, mArgv );
          EngineMarshallData( l, mArgc, mArgv );
+<<<<<<< HEAD
 
          Sim::postEvent((SimObject*)Sim::getRootGroup(), evt, Sim::getCurrentTime());
 
@@ -4652,3 +5528,15 @@ template<> struct _EngineConsoleExecCallbackHelper<const char*> : public _BaseEn
 #pragma warning( pop ) // 4510 and 4610
 
 #endif // !_ENGINEAPI_H_
+=======
+         return R( EngineUnmarshallData< R >()( _exec() ) );
+      }
+};
+
+
+// Re-enable some VC warnings we disabled for this file.
+#pragma warning( default : 4510 )
+#pragma warning( default : 4610 )
+
+#endif // !_ENGINEAPI_H_
+>>>>>>> omni_engine

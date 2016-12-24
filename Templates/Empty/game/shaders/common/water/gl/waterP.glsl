@@ -392,5 +392,9 @@ void main()
 
    //return OUT;
    
+<<<<<<< HEAD
    OUT_col = hdrEncode( OUT );
+=======
+   OUT_FragColor0 = hdrEncode( OUT );
+>>>>>>> omni_engine
 }
