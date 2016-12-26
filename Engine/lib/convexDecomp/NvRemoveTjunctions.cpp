@@ -60,17 +60,13 @@ NvRemoveTjunctions.cpp : A code snippet to remove tjunctions from a triangle mes
 #include <vector>
 #ifdef __APPLE__
    #include <ext/hash_map>
-<<<<<<< HEAD
 #elif LINUX
    #include <hash_map>
 #elif _MSC_VER < 1500
    #include <hash_map>
 #elif _MSC_VER > 1800
    #include <unordered_map>
-=======
-#else
-   #include <hash_map>
->>>>>>> omni_engine
+
 #endif
 #include "NvUserMemAlloc.h"
 #include "NvHashMap.h"

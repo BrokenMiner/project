@@ -107,19 +107,19 @@ static int tagcompare(const char *s1, const char *s2, int n){
 char *vorbis_comment_query(vorbis_comment *vc, const char *tag, int count){
   long i;
   int found = 0;
-<<<<<<< HEAD
-  int taglen = strlen(tag)+1; /* +1 for the = we append */
-  char *fulltag = alloca(taglen+ 1);
-
-  strcpy(fulltag, tag);
-  strcat(fulltag, "=");
-
-  for(i=0;i<vc->comments;i++){
-    if(!tagcompare(vc->user_comments[i], fulltag, taglen)){
-      if(count == found)
-        /* We return a pointer to the data, not a copy */
-              return vc->user_comments[i] + taglen;
-=======
+//<<<<<<< HEAD
+//  int taglen = strlen(tag)+1; /* +1 for the = we append */
+//  char *fulltag = alloca(taglen+ 1);
+//
+//  strcpy(fulltag, tag);
+//  strcat(fulltag, "=");
+//
+//  for(i=0;i<vc->comments;i++){
+//    if(!tagcompare(vc->user_comments[i], fulltag, taglen)){
+//      if(count == found)
+//        /* We return a pointer to the data, not a copy */
+//              return vc->user_comments[i] + taglen;
+//=======
   const size_t taglen = strlen(tag)+1; /* +1 for the = we append */
   char *fulltag = (char*)alloca(taglen+ 1);
 
@@ -132,7 +132,7 @@ char *vorbis_comment_query(vorbis_comment *vc, const char *tag, int count){
       if(count == found)
         /* We return a pointer to the data, not a copy */
               return vc->user_comments[i] + (int)taglen;
->>>>>>> omni_engine
+//>>>>>>> omni_engine
       else
         found++;
     }

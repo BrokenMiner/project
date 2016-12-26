@@ -87,11 +87,8 @@ NvSimpleTypes.h : Defines basic data types for integers and floats.
 	typedef float				NxF32;
 	typedef double				NxF64;
 		
-<<<<<<< HEAD
 #elif defined(LINUX)
-=======
-#elif LINUX
->>>>>>> omni_engine
+
 	typedef long long			NxI64;
 	typedef signed int			NxI32;
 	typedef signed short		NxI16;
