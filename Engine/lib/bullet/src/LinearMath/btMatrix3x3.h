@@ -22,7 +22,7 @@ subject to the following restrictions:
 
 #ifdef BT_USE_SSE
 //const __m128 ATTRIBUTE_ALIGNED16(v2220) = {2.0f, 2.0f, 2.0f, 0.0f};
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //const __m128 ATTRIBUTE_ALIGNED16(vMPPP) = {-0.0f, +0.0f, +0.0f, +0.0f};
 #define vMPPP (_mm_set_ps (+0.0f, +0.0f, +0.0f, -0.0f))
 #endif
@@ -32,12 +32,12 @@ subject to the following restrictions:
 #define v0100 (_mm_set_ps(0.0f,0.0f,1.0f,0.0f))
 #define v0010 (_mm_set_ps(0.0f,1.0f,0.0f,0.0f))
 #elif defined(BT_USE_NEON)
-=======
-const __m128 ATTRIBUTE_ALIGNED16(vMPPP) = {-0.0f, +0.0f, +0.0f, +0.0f};
-#endif
-
-#if defined(BT_USE_SSE) || defined(BT_USE_NEON)
->>>>>>> omni_engine
+//=======
+//const __m128 ATTRIBUTE_ALIGNED16(vMPPP) = {-0.0f, +0.0f, +0.0f, +0.0f};
+//#endif
+//
+//#if defined(BT_USE_SSE) || defined(BT_USE_NEON)
+//>>>>>>> omni_engine
 const btSimdFloat4 ATTRIBUTE_ALIGNED16(v1000) = {1.0f, 0.0f, 0.0f, 0.0f};
 const btSimdFloat4 ATTRIBUTE_ALIGNED16(v0100) = {0.0f, 1.0f, 0.0f, 0.0f};
 const btSimdFloat4 ATTRIBUTE_ALIGNED16(v0010) = {0.0f, 0.0f, 1.0f, 0.0f};
@@ -219,11 +219,11 @@ public:
 		btFullAssert(d != btScalar(0.0));
 		btScalar s = btScalar(2.0) / d;
     
-<<<<<<< HEAD
+//<<<<<<< HEAD
     #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
-=======
-    #if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
->>>>>>> omni_engine
+//=======
+//    #if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+//>>>>>>> omni_engine
         __m128	vs, Q = q.get128();
 		__m128i Qi = btCastfTo128i(Q);
         __m128	Y, Z;
@@ -357,11 +357,11 @@ public:
 	* @param m The array to be filled */
 	void getOpenGLSubMatrix(btScalar *m) const 
 	{
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
-=======
-#if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
->>>>>>> omni_engine
+//=======
+//#if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+//>>>>>>> omni_engine
         __m128 v0 = m_el[0].mVec128;
         __m128 v1 = m_el[1].mVec128;
         __m128 v2 = m_el[2].mVec128;    //  x2 y2 z2 w2
@@ -382,11 +382,11 @@ public:
         vm[2] = v2;
 #elif defined(BT_USE_NEON)
         // note: zeros the w channel. We can preserve it at the cost of two more vtrn instructions.
-<<<<<<< HEAD
+//<<<<<<< HEAD
         static const uint32x2_t zMask = (const uint32x2_t) {static_cast<uint32_t>(-1), 0 };
-=======
-        static const uint32x2_t zMask = (const uint32x2_t) {-1, 0 };
->>>>>>> omni_engine
+//=======
+//        static const uint32x2_t zMask = (const uint32x2_t) {-1, 0 };
+//>>>>>>> omni_engine
         float32x4_t *vm = (float32x4_t *)m;
         float32x4x2_t top = vtrnq_f32( m_el[0].mVec128, m_el[1].mVec128 );  // {x0 x1 z0 z1}, {y0 y1 w0 w1}
         float32x2x2_t bl = vtrn_f32( vget_low_f32(m_el[2].mVec128), vdup_n_f32(0.0f) );       // {x2  0 }, {y2 0}
@@ -764,11 +764,11 @@ public:
 SIMD_FORCE_INLINE btMatrix3x3& 
 btMatrix3x3::operator*=(const btMatrix3x3& m)
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
-=======
-#if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
->>>>>>> omni_engine
+//=======
+//#if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+//>>>>>>> omni_engine
     __m128 rv00, rv01, rv02;
     __m128 rv10, rv11, rv12;
     __m128 rv20, rv21, rv22;
@@ -981,11 +981,11 @@ btMatrix3x3::determinant() const
 SIMD_FORCE_INLINE btMatrix3x3 
 btMatrix3x3::absolute() const
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
-=======
-#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
->>>>>>> omni_engine
+//=======
+//#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
+//>>>>>>> omni_engine
     return btMatrix3x3(
             _mm_and_ps(m_el[0].mVec128, btvAbsfMask),
             _mm_and_ps(m_el[1].mVec128, btvAbsfMask),
@@ -1006,11 +1006,11 @@ btMatrix3x3::absolute() const
 SIMD_FORCE_INLINE btMatrix3x3 
 btMatrix3x3::transpose() const 
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
-=======
-#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
->>>>>>> omni_engine
+//=======
+//#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
+//>>>>>>> omni_engine
     __m128 v0 = m_el[0].mVec128;
     __m128 v1 = m_el[1].mVec128;
     __m128 v2 = m_el[2].mVec128;    //  x2 y2 z2 w2
@@ -1029,11 +1029,11 @@ btMatrix3x3::transpose() const
     return btMatrix3x3( v0, v1, v2 );
 #elif defined(BT_USE_NEON)
     // note: zeros the w channel. We can preserve it at the cost of two more vtrn instructions.
-<<<<<<< HEAD
+//<<<<<<< HEAD
     static const uint32x2_t zMask = (const uint32x2_t) {static_cast<uint32_t>(-1), 0 };
-=======
-    static const uint32x2_t zMask = (const uint32x2_t) {-1, 0 };
->>>>>>> omni_engine
+//=======
+//    static const uint32x2_t zMask = (const uint32x2_t) {-1, 0 };
+//>>>>>>> omni_engine
     float32x4x2_t top = vtrnq_f32( m_el[0].mVec128, m_el[1].mVec128 );  // {x0 x1 z0 z1}, {y0 y1 w0 w1}
     float32x2x2_t bl = vtrn_f32( vget_low_f32(m_el[2].mVec128), vdup_n_f32(0.0f) );       // {x2  0 }, {y2 0}
     float32x4_t v0 = vcombine_f32( vget_low_f32(top.val[0]), bl.val[0] );
@@ -1071,11 +1071,11 @@ btMatrix3x3::inverse() const
 SIMD_FORCE_INLINE btMatrix3x3 
 btMatrix3x3::transposeTimes(const btMatrix3x3& m) const
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
-=======
-#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
->>>>>>> omni_engine
+//=======
+//#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
+//>>>>>>> omni_engine
     // zeros w
 //    static const __m128i xyzMask = (const __m128i){ -1ULL, 0xffffffffULL };
     __m128 row = m_el[0].mVec128;
@@ -1097,11 +1097,11 @@ btMatrix3x3::transposeTimes(const btMatrix3x3& m) const
 
 #elif defined BT_USE_NEON
     // zeros w
-<<<<<<< HEAD
+//<<<<<<< HEAD
     static const uint32x4_t xyzMask = (const uint32x4_t){ static_cast<uint32_t>(-1), static_cast<uint32_t>(-1), static_cast<uint32_t>(-1), 0 };
-=======
-    static const uint32x4_t xyzMask = (const uint32x4_t){ -1, -1, -1, 0 };
->>>>>>> omni_engine
+//=======
+//    static const uint32x4_t xyzMask = (const uint32x4_t){ -1, -1, -1, 0 };
+//>>>>>>> omni_engine
     float32x4_t m0 = (float32x4_t) vandq_u32( (uint32x4_t) m.getRow(0).mVec128, xyzMask );
     float32x4_t m1 = (float32x4_t) vandq_u32( (uint32x4_t) m.getRow(1).mVec128, xyzMask );
     float32x4_t m2 = (float32x4_t) vandq_u32( (uint32x4_t) m.getRow(2).mVec128, xyzMask );
@@ -1199,11 +1199,11 @@ operator*(const btMatrix3x3& m, const btVector3& v)
 SIMD_FORCE_INLINE btVector3
 operator*(const btVector3& v, const btMatrix3x3& m)
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
-=======
-#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
->>>>>>> omni_engine
+//=======
+//#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
+//>>>>>>> omni_engine
 
     const __m128 vv = v.mVec128;
 
@@ -1243,11 +1243,11 @@ operator*(const btVector3& v, const btMatrix3x3& m)
 SIMD_FORCE_INLINE btMatrix3x3 
 operator*(const btMatrix3x3& m1, const btMatrix3x3& m2)
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
-=======
-#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
->>>>>>> omni_engine
+//=======
+//#if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
+//>>>>>>> omni_engine
 
     __m128 m10 = m1[0].mVec128;  
     __m128 m11 = m1[1].mVec128;

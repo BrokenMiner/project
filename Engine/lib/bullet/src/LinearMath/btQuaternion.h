@@ -27,7 +27,7 @@ subject to the following restrictions:
 
 #ifdef BT_USE_SSE
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //const __m128 ATTRIBUTE_ALIGNED16(vOnes) = {1.0f, 1.0f, 1.0f, 1.0f};
 #define vOnes (_mm_set_ps(1.0f, 1.0f, 1.0f, 1.0f))
 
@@ -39,13 +39,13 @@ subject to the following restrictions:
 #define vPPPM (_mm_set_ps(-0.0f, +0.0f, +0.0f, +0.0f))
 
 #elif defined(BT_USE_NEON)
-=======
-const __m128 ATTRIBUTE_ALIGNED16(vOnes) = {1.0f, 1.0f, 1.0f, 1.0f};
-
-#endif
-
-#if defined(BT_USE_SSE) || defined(BT_USE_NEON)
->>>>>>> omni_engine
+//=======
+//const __m128 ATTRIBUTE_ALIGNED16(vOnes) = {1.0f, 1.0f, 1.0f, 1.0f};
+//
+//#endif
+//
+//#if defined(BT_USE_SSE) || defined(BT_USE_NEON)
+//>>>>>>> omni_engine
 
 const btSimdFloat4 ATTRIBUTE_ALIGNED16(vQInv) = {-0.0f, -0.0f, -0.0f, +0.0f};
 const btSimdFloat4 ATTRIBUTE_ALIGNED16(vPPPM) = {+0.0f, +0.0f, +0.0f, -0.0f};
@@ -299,11 +299,11 @@ public:
    * @param q The other quaternion */
 	btScalar dot(const btQuaternion& q) const
 	{
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
-=======
-#if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
->>>>>>> omni_engine
+//=======
+//#if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+//>>>>>>> omni_engine
 		__m128	vd;
 		
 		vd = _mm_mul_ps(mVec128, q.mVec128);
@@ -402,11 +402,11 @@ public:
 	{
 		return *this / length();
 	} 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	/**@brief Return the ***half*** angle between this quaternion and the other
-=======
-  /**@brief Return the angle between this quaternion and the other 
->>>>>>> omni_engine
+//=======
+//  /**@brief Return the angle between this quaternion and the other 
+//>>>>>>> omni_engine
    * @param q The other quaternion */
 	btScalar angle(const btQuaternion& q) const 
 	{
@@ -546,11 +546,11 @@ public:
 	  btAssert(magnitude > btScalar(0));
 
     btScalar product = dot(q) / magnitude;
-<<<<<<< HEAD
+//<<<<<<< HEAD
     if (btFabs(product) < btScalar(1))
-=======
-    if (btFabs(product) != btScalar(1))
->>>>>>> omni_engine
+//=======
+//    if (btFabs(product) != btScalar(1))
+//>>>>>>> omni_engine
 		{
       // Take care of long angle case see http://en.wikipedia.org/wiki/Slerp
       const btScalar sign = (product < 0) ? btScalar(-1) : btScalar(1);
@@ -887,11 +887,11 @@ quatRotate(const btQuaternion& rotation, const btVector3& v)
 {
 	btQuaternion q = rotation * v;
 	q *= rotation.inverse();
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined BT_USE_SIMD_VECTOR3 && defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
-=======
-#if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
->>>>>>> omni_engine
+//=======
+//#if defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE)
+//>>>>>>> omni_engine
 	return btVector3(_mm_and_ps(q.get128(), btvFFF0fMask));
 #elif defined(BT_USE_NEON)
     return btVector3((float32x4_t)vandq_s32((int32x4_t)q.get128(), btvFFF0Mask));

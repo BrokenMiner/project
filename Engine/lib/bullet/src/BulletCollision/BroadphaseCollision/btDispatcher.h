@@ -47,12 +47,12 @@ struct btDispatcherInfo
 		m_useEpa(true),
 		m_allowedCcdPenetration(btScalar(0.04)),
 		m_useConvexConservativeDistanceUtil(false),
-<<<<<<< HEAD
-		m_convexConservativeDistanceThreshold(0.0f)
-=======
+//<<<<<<< HEAD
+//		m_convexConservativeDistanceThreshold(0.0f)
+//=======
 		m_convexConservativeDistanceThreshold(0.0f),
 		m_stackAllocator(0)
->>>>>>> omni_engine
+//>>>>>>> omni_engine
 	{
 
 	}
