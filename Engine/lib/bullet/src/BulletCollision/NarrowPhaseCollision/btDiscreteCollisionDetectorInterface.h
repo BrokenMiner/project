@@ -43,12 +43,12 @@ struct btDiscreteCollisionDetectorInterface
 	struct ClosestPointInput
 	{
 		ClosestPointInput()
-<<<<<<< HEAD
-			:m_maximumDistanceSquared(btScalar(BT_LARGE_FLOAT))
-=======
+//<<<<<<< HEAD
+//			:m_maximumDistanceSquared(btScalar(BT_LARGE_FLOAT))
+//=======
 			:m_maximumDistanceSquared(btScalar(BT_LARGE_FLOAT)),
 			m_stackAlloc(0)
->>>>>>> omni_engine
+//>>>>>>> omni_engine
 		{
 		}
 

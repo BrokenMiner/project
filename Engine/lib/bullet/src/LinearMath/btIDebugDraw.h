@@ -193,11 +193,11 @@ class	btIDebugDraw
 		}
 	}
 	virtual void drawSpherePatch(const btVector3& center, const btVector3& up, const btVector3& axis, btScalar radius, 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 		btScalar minTh, btScalar maxTh, btScalar minPs, btScalar maxPs, const btVector3& color, btScalar stepDegrees = btScalar(10.f),bool drawCenter = true)
-=======
-		btScalar minTh, btScalar maxTh, btScalar minPs, btScalar maxPs, const btVector3& color, btScalar stepDegrees = btScalar(10.f))
->>>>>>> omni_engine
+//=======
+//		btScalar minTh, btScalar maxTh, btScalar minPs, btScalar maxPs, const btVector3& color, btScalar stepDegrees = btScalar(10.f))
+//>>>>>>> omni_engine
 	{
 		btVector3 vA[74];
 		btVector3 vB[74];

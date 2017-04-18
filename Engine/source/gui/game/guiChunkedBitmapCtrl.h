@@ -1,3 +1,5 @@
+#include "platform/platform.h"
+
 #include "console/console.h"
 #include "console/consoleTypes.h"
 #include "gfx/bitmap/gBitmap.h"

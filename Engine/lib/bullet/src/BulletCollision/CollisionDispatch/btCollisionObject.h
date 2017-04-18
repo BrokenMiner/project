@@ -92,15 +92,15 @@ protected:
 	int				m_internalType;
 
 	///users can point to their objects, m_userPointer is not used by Bullet, see setUserPointer/getUserPointer
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	union
 	{
 		void*			m_userObjectPointer;
 		int	m_userIndex;
 	};
-=======
-	void*			m_userObjectPointer;
->>>>>>> omni_engine
+//=======
+//	void*			m_userObjectPointer;
+//>>>>>>> omni_engine
 
 	///time of impact calculation
 	btScalar		m_hitFraction; 
@@ -146,12 +146,12 @@ public:
 		CO_GHOST_OBJECT=4,
 		CO_SOFT_BODY=8,
 		CO_HF_FLUID=16,
-<<<<<<< HEAD
+//<<<<<<< HEAD
 		CO_USER_TYPE=32,
 		CO_FEATHERSTONE_LINK=64
-=======
-		CO_USER_TYPE=32
->>>>>>> omni_engine
+//=======
+//		CO_USER_TYPE=32
+//>>>>>>> omni_engine
 	};
 
 	enum AnisotropicFrictionFlags
@@ -455,15 +455,12 @@ public:
 	{
 		return m_userObjectPointer;
 	}
-<<<<<<< HEAD
 
 	int	getUserIndex() const
 	{
 		return m_userIndex;
 	}
-=======
-	
->>>>>>> omni_engine
+
 	///users can point to their objects, userPointer is not used by Bullet
 	void	setUserPointer(void* userPointer)
 	{

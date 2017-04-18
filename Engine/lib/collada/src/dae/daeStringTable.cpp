@@ -58,11 +58,11 @@ void daeStringTable::clear()
 {
 	unsigned int i;
 	for (i=0;i<_stringBuffersList.getCount();i++)
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #if defined(_MSC_VER) && (_MSC_VER <= 1200)
-=======
-#if _MSC_VER <= 1200
->>>>>>> omni_engine
+//=======
+//#if _MSC_VER <= 1200
+//>>>>>>> omni_engine
 		delete [] (char *) _stringBuffersList[i];
 #else
 		delete [] _stringBuffersList[i];
