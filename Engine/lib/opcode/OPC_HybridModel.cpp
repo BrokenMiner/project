@@ -218,11 +218,11 @@ bool HybridModel::Build(const OPCODECREATE& create)
 				Data->mLeaves[Data->mNbLeaves] = *current->GetAABB();
 
 				// Setup leaf data
-<<<<<<< HEAD
-				udword Index = (uintptr_t(current->GetPrimitives()) - uintptr_t(Data->mBase))/sizeof(uintptr_t);
-=======
+//<<<<<<< HEAD
+//				udword Index = (uintptr_t(current->GetPrimitives()) - uintptr_t(Data->mBase))/sizeof(uintptr_t);
+//=======
 				udword Index = (udword(current->GetPrimitives()) - udword(Data->mBase))/sizeof(udword);
->>>>>>> omni_engine
+//>>>>>>> omni_engine
 				Data->mTriangles[Data->mNbLeaves].SetData(current->GetNbPrimitives(), Index);
 
 				Data->mNbLeaves++;

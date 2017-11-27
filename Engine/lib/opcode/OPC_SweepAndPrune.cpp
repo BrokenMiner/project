@@ -173,11 +173,7 @@ bool SAP_PairData::Init(udword nb_objects)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline_ void Remap(SAP_Element*& element, udword delta)
 {
-<<<<<<< HEAD
-    if(element)	element = (SAP_Element*)(element + delta);
-=======
-	if(element)	element = (SAP_Element*)(udword(element) + delta);
->>>>>>> omni_engine
+	if(element)	element = (SAP_Element*)(reinterpret_cast<udword>(element) + delta);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,11 +209,11 @@ SAP_Element* SAP_PairData::GetFreeElem(udword id, SAP_Element* next, udword* rem
 
 			// Remap everything
 			{
-<<<<<<< HEAD
-				udword Delta = uintptr_t(NewElems) - uintptr_t(mElementPool);
-=======
+//<<<<<<< HEAD
+//				udword Delta = uintptr_t(NewElems) - uintptr_t(mElementPool);
+//=======
 				udword Delta = udword(NewElems) - udword(mElementPool);
->>>>>>> omni_engine
+//>>>>>>> omni_engine
 
 				for(udword i=0;i<mNbUsedElements;i++)	Remap(NewElems[i].mNext, Delta);
 				for(udword i=0;i<mNbObjects;i++)		Remap(mArray[i], Delta);
