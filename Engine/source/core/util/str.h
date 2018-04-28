@@ -62,11 +62,7 @@ public:
    String();
    String(const String &str);
    String(const StringChar *str);
-<<<<<<< HEAD
    String(const StringChar *str, SizeType size); ///< Copy from raw data
-=======
-   String(const StringChar *str, SizeType size);
->>>>>>> omni_engine
    String(const UTF16 *str);
    ~String();
 
@@ -181,11 +177,7 @@ public:
    /// @{
 
    static String ToString(const char *format, ...);
-<<<<<<< HEAD
    static String VToString(const char* format, va_list args);
-=======
-   static String VToString(const char* format, void* args);
->>>>>>> omni_engine
 
    static String ToString( bool v );
    static inline String ToString( U32 v ) { return ToString( "%u", v ); }
@@ -254,11 +246,7 @@ public:
          _fixedBuffer[0] = '\0';
       }
 
-<<<<<<< HEAD
       StrFormat(const char *formatStr, va_list args)
-=======
-      StrFormat(const char *formatStr, void *args)
->>>>>>> omni_engine
          :  _dynamicBuffer( NULL ),
             _dynamicSize( 0 ),
             _len( 0 )
@@ -268,13 +256,8 @@ public:
 
       ~StrFormat();
 
-<<<<<<< HEAD
       S32 format( const char *format, va_list args );
       S32 formatAppend( const char *format, va_list args );
-=======
-      S32 format( const char *format, void *args );
-      S32 formatAppend( const char *format, void *args );
->>>>>>> omni_engine
       S32 append(const char * str, S32 len);
       S32 append(const char * str);
 
@@ -310,18 +293,11 @@ private:
    // causes an ambiguous cast compile error.  Making it private is simply
    // more insurance that it isn't used on different compilers.
    // NOTE: disable on GCC since it causes hyper casting to U32 on gcc.
-<<<<<<< HEAD
 #if !defined(TORQUE_COMPILER_GCC) && !defined(__clang__)
    operator const bool() const { return false; }
 #endif
 
-=======
-#ifndef TORQUE_COMPILER_GCC
-   operator const bool() const { return false; }
-#endif
 
-
->>>>>>> omni_engine
    static void copy(StringChar *dst, const StringChar *src, U32 size);
 
    StringData   *_string;
@@ -382,11 +358,7 @@ class StringBuilder
       {
          va_list args;
          va_start(args, fmt);
-<<<<<<< HEAD
          return mFormat.formatAppend(fmt, args);
-=======
-         return mFormat.formatAppend(fmt, &args);
->>>>>>> omni_engine
       }
 };
 

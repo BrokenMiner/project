@@ -47,16 +47,11 @@
 
 #ifndef FASTDELEGATE_H
 #define FASTDELEGATE_H
-<<<<<<< HEAD
+
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER > 1000)
-=======
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
 
->>>>>>> omni_engine
 
 ////////////////////////////////////////////////////////////////////////////////
 //						Configuration options

@@ -42,11 +42,7 @@ typedef unsigned _int64 U64;
 #if _MSC_VER < 1200
    // No support for old compilers
 #  error "VC: Minimum VisualC++ 6.0 or newer required"
-<<<<<<< HEAD
 #else // _MSC_VER >= 1200
-=======
-#else _MSC_VER >= 1200
->>>>>>> omni_engine
 #  define TORQUE_COMPILER_STRING "VisualC++"
 #endif
 
@@ -88,15 +84,10 @@ typedef unsigned _int64 U64;
 #  define TORQUE_CPU_STRING "x86"
 #  define TORQUE_CPU_X86
 #  define TORQUE_LITTLE_ENDIAN
-<<<<<<< HEAD
 #ifndef __clang__ // asm not yet supported with clang
 #  define TORQUE_SUPPORTS_NASM
 #  define TORQUE_SUPPORTS_VC_INLINE_X86_ASM
 #endif
-=======
-#  define TORQUE_SUPPORTS_NASM
-#  define TORQUE_SUPPORTS_VC_INLINE_X86_ASM
->>>>>>> omni_engine
 #elif defined( TORQUE_OS_XENON )
 #  define TORQUE_CPU_STRING "ppc"
 #  define TORQUE_CPU_PPC

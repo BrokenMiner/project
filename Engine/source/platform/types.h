@@ -55,7 +55,6 @@ struct EmptyType {};                ///< "Null" type used by templates
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef char           UTF8;        ///< Compiler independent 8  bit Unicode encoded character
-<<<<<<< HEAD
 
 #if defined(_MSC_VER) && defined(__clang__)
 // Clang's MSVC compatibility mode doesn't currently support /Zc:wchar_t-,
@@ -67,9 +66,6 @@ typedef wchar_t        UTF16;
 typedef unsigned short UTF16;       ///< Compiler independent 16 bit Unicode encoded character
 #endif
 
-=======
-typedef unsigned short UTF16;       ///< Compiler independent 16 bit Unicode encoded character
->>>>>>> omni_engine
 typedef unsigned int   UTF32;       ///< Compiler independent 32 bit Unicode encoded character
 
 typedef const char* StringTableEntry;
