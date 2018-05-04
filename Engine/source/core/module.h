@@ -79,15 +79,9 @@ class Module
          
          Dependency( Mode mode, DependencyType type, Module* parentModule, const char* moduleName )
             : mType( type ),
-<<<<<<< HEAD
               mModuleName( moduleName ),
               mModule( NULL ),
               mNext( mode == ModeInitialize ? parentModule->mInitDependencies : parentModule->mShutdownDependencies )
-=======
-              mNext( mode == ModeInitialize ? parentModule->mInitDependencies : parentModule->mShutdownDependencies ),
-              mModuleName( moduleName ),
-              mModule( NULL )
->>>>>>> omni_engine
          {
             if( mode == ModeInitialize )
                parentModule->mInitDependencies = this;
@@ -147,20 +141,11 @@ class Module
       }
             
       Module()
-<<<<<<< HEAD
          : mIsInitialized( false ),
            mNext( smFirst ),
            mInitDependencies( NULL ),
            mShutdownDependencies( NULL ),
            mOverrides( NULL )
-
-=======
-         : mNext( smFirst ),
-           mInitDependencies( NULL ),
-           mShutdownDependencies( NULL ),
-           mOverrides( NULL ),
-           mIsInitialized( false )
->>>>>>> omni_engine
       {
          smFirst = this;
       }
