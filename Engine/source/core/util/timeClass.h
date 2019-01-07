@@ -79,13 +79,9 @@ public:
    Time operator+(const Time &time) const;
    Time operator-(const Time &time) const;
    S64 operator/(const Time &time) const;
-<<<<<<< HEAD
-   const Time& operator+=(const Time time);
-   const Time& operator-=(const Time time);
-=======
+
    const Time& operator+=(const Time &time);
    const Time& operator-=(const Time &time);
->>>>>>> omni_engine
    
    template<typename T> Time operator*(T scaler) const { return Time(_time * scaler); }
    template<typename T> Time operator/(T scaler) const { return Time(_time / scaler); }

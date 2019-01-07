@@ -183,9 +183,4 @@ public:
    }   
 };
 
-
-<<<<<<< HEAD
 #endif // _SIMOBJECTREF_H_
-=======
-#endif // _SIMOBJECTREF_H_
->>>>>>> omni_engine

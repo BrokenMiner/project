@@ -36,19 +36,13 @@
 // These standard functions are not defined on Win32 and other Microsoft platforms...
 #define strcasecmp   _stricmp
 #define strncasecmp  _strnicmp
-<<<<<<< HEAD
 
 #if _MSC_VER < 1800
 #define strtof       (float)strtod
 #endif // _MSC_VER < 1800
 
 #endif // defined(TORQUE_OS_WIN) || defined(TORQUE_OS_XBOX) || defined(TORQUE_OS_XENON)
-=======
-#endif
-#if (_MSC_VER < 1800) && (defined(TORQUE_OS_WIN) || defined(TORQUE_OS_XBOX) || defined(TORQUE_OS_XENON))
-#define strtof       (float)strtod
-#endif
->>>>>>> omni_engine
+
 
 
 //------------------------------------------------------------------------------
@@ -239,15 +233,11 @@ int dItoa(int n, char s[]);
 // standard I/O functions [defined in platformString.cpp]
 
 extern void   dPrintf(const char *format, ...);
-<<<<<<< HEAD
+
 extern S32    dVprintf(const char *format, va_list arglist);
 extern S32    dSprintf(char *buffer, U32 bufferSize, const char *format, ...);
 extern S32    dVsprintf(char *buffer, U32 bufferSize, const char *format, va_list arglist);
-=======
-extern S32    dVprintf(const char *format, void *arglist);
-extern S32     dSprintf(char *buffer, dsize_t bufferSize, const char *format, ...);
-extern S32     dVsprintf(char *buffer, dsize_t bufferSize, const char *format, void * arglist);
->>>>>>> omni_engine
+
 extern S32    dSscanf(const char *buffer, const char *format, ...);
 
 #endif

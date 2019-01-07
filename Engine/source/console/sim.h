@@ -60,13 +60,6 @@ typedef U32 SimObjectId;
 ///
 /// The RootGroupId is assigned to gRootGroup, in which most SimObjects
 /// are addded as child members. See simManager.cc for details, particularly
-<<<<<<< HEAD
-/// Sim::initRoot() and following.
-enum SimObjectsConstants
-{
-   DataBlockObjectIdFirst = 3,
-   DataBlockObjectIdBitSize = 14,
-=======
 /// Sim::initRoot() and following.1111111111111
 enum SimObjectsConstants
 {
@@ -74,7 +67,6 @@ enum SimObjectsConstants
    //Winterleaf - Since we have expanded the simdictionary it only made since to expand the number of datablocks.
    DataBlockObjectIdBitSize = 14, // - 16384 //DataBlockObjectIdBitSize = 10, //-1023
    //DataBlockObjectIdBitSize = 10,
->>>>>>> omni_engine
    DataBlockObjectIdLast = DataBlockObjectIdFirst + (1 << DataBlockObjectIdBitSize) - 1,
 
    MessageObjectIdFirst = DataBlockObjectIdLast + 1,
@@ -135,7 +127,6 @@ namespace Sim
    SimDataBlockGroup *getDataBlockGroup();
    SimGroup* getRootGroup();
 
-<<<<<<< HEAD
    SimObject* findObject(ConsoleValueRef&);
    SimObject* findObject(SimObjectId);
    SimObject* findObject(const char* name);
@@ -145,11 +136,7 @@ namespace Sim
       t = dynamic_cast<T*>(findObject(ref));
       return t != NULL;
    }
-=======
-   SimObject* findObject(SimObjectId);
-   SimObject* findObject(const char* name);
-   SimObject* findObject(const char* fileName, S32 declarationLine);
->>>>>>> omni_engine
+
    template<class T> inline bool findObject(SimObjectId iD,T*&t)
    {
       t = dynamic_cast<T*>(findObject(iD));
@@ -165,12 +152,8 @@ namespace Sim
                           String spawnDataBlock = String::EmptyString,
                           String spawnName = String::EmptyString,
                           String spawnProperties = String::EmptyString,
-<<<<<<< HEAD
-                          String spawnScript = String::EmptyString);
-=======
                           String spawnScript = String::EmptyString,
 						  String modelName = String::EmptyString);
->>>>>>> omni_engine
 
    void advanceToTime(SimTime time);
    void advanceTime(SimTime delta);
@@ -178,7 +161,6 @@ namespace Sim
    SimTime getTargetTime();
 
    /// a target time of 0 on an event means current event
-<<<<<<< HEAD
    U32 postEvent(SimObject*, SimEvent*, SimTime targetTime);
 
    inline U32 postEvent(SimObjectId iD,SimEvent*evt, SimTime targetTime)
@@ -186,15 +168,6 @@ namespace Sim
       return postEvent(findObject(iD), evt, targetTime);
    }
    inline U32 postEvent(const char *objectName,SimEvent*evt, SimTime targetTime)
-=======
-   U32 postEvent(SimObject*, SimEvent*, U32 targetTime);
-
-   inline U32 postEvent(SimObjectId iD,SimEvent*evt, U32 targetTime)
-   {
-      return postEvent(findObject(iD), evt, targetTime);
-   }
-   inline U32 postEvent(const char *objectName,SimEvent*evt, U32 targetTime)
->>>>>>> omni_engine
    {
       return postEvent(findObject(objectName), evt, targetTime);
    }
