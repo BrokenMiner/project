@@ -174,21 +174,13 @@ inline S64 Time::operator/(const Time &time) const
    return S64(_time / time._time);
 }
 
-<<<<<<< HEAD
-inline const Time& Time::operator+=(const Time time)
-=======
 inline const Time& Time::operator+=(const Time &time)
->>>>>>> omni_engine
 {
    _time += time._time;
    return *this;
 }
 
-<<<<<<< HEAD
-inline const Time& Time::operator-=(const Time time)
-=======
 inline const Time& Time::operator-=(const Time &time)
->>>>>>> omni_engine
 {
    _time -= time._time;
    return *this;

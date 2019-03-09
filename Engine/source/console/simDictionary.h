@@ -122,16 +122,9 @@ class SimNameDictionary
 #else
    StringDictDef root;
 #endif
-<<<<<<< HEAD
 
    void *mutex;
 
-=======
-   void *mutex;
-
-
-
->>>>>>> omni_engine
 public:
    void insert(SimObject* obj);
    void remove(SimObject* obj);

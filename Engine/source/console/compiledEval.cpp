@@ -45,15 +45,11 @@
 #include "materials/materialManager.h"
 #endif
 
-<<<<<<< HEAD
-// Uncomment to optimize function calls at the expense of potential invalid package lookups
-//#define COMPILER_OPTIMIZE_FUNCTION_CALLS
 
-=======
 #include "OMNI/Omni.h"
 // Uncomment to optimize function calls at the expense of potential invalid package lookups
 //#define COMPILER_OPTIMIZE_FUNCTION_CALLS
->>>>>>> omni_engine
+
 using namespace Compiler;
 
 enum EvalConstants {
@@ -222,9 +218,7 @@ namespace Con
       dSprintf(ret, 32, "%d", arg);
       return ret;
    }
-<<<<<<< HEAD
 
-=======
    char *getuIntArg(U32 arg)
    {
       char *ret = STR.getArgBuffer(32);
@@ -232,7 +226,6 @@ namespace Con
       return ret;
    }
    
->>>>>>> omni_engine
    char *getStringArg( const char *arg )
    {
       U32 len = dStrlen( arg ) + 1;

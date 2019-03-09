@@ -53,14 +53,13 @@
    #include "console/engineStructs.h"
 #endif
 
-<<<<<<< HEAD
 // Needed for the executef macros. Blame GCC.
 #ifndef _SIMEVENTS_H_
 #include "console/simEvents.h"
 #endif
-=======
+
 #include "OMNI/Omni.h"
->>>>>>> omni_engine
+
 
 
 /// @file

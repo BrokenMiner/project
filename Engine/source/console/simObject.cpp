@@ -58,11 +58,7 @@ ConsoleDocClass( SimObject,
 
 bool SimObject::smForceId = false;
 SimObjectId SimObject::smForcedId = 0;
-<<<<<<< HEAD
-
-=======
 SimXMLDocument* SimObject::mXMLDocument = NULL;
->>>>>>> omni_engine
 
 namespace Sim
 {
@@ -140,13 +136,6 @@ SimObject::~SimObject()
       objectName,mId));
    AssertFatal(mFlags.test(Added) == 0, "SimObject::object "
       "missing call to SimObject::onRemove");
-<<<<<<< HEAD
-}
-
-//-----------------------------------------------------------------------------
-
-bool SimObject::processArguments(S32 argc, ConsoleValueRef *argv)
-=======
 
    objectcount--;
 }
@@ -160,8 +149,7 @@ DefineEngineFunction( dumpSoCount, void, (),,"")
 
 //-----------------------------------------------------------------------------
 
-bool SimObject::processArguments(S32 argc, const char**argv)
->>>>>>> omni_engine
+bool SimObject::processArguments(S32 argc, ConsoleValueRef *argv)
 {
    return argc == 0;
 }

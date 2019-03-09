@@ -572,17 +572,11 @@ inline MatrixF operator * ( const MatrixF &m1, const MatrixF &m2 )
    return temp;
 }
 
-<<<<<<< HEAD
-inline MatrixF& MatrixF::operator *= ( const MatrixF &m1 )
-{
-   MatrixF tempThis(*this);
-   m_matF_x_matF(tempThis, m1, *this);
-=======
+
 inline MatrixF& MatrixF::operator *= ( const MatrixF &m )
 {
    MatrixF tempThis(*this);
    m_matF_x_matF(tempThis, m, *this);
->>>>>>> omni_engine
    return (*this);
 }
 

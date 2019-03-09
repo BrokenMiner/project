@@ -44,11 +44,11 @@ enum EngineTypeKind
    EngineTypeKindClass           ///< Pointer to opaque EngineObject.
 };
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 DECLARE_ENUM_R( EngineTypeKind );
-=======
-DECLARE_ENUM( EngineTypeKind );
->>>>>>> omni_engine
+//=======
+//DECLARE_ENUM( EngineTypeKind );
+//>>>>>>> omni_engine
 
 /// Flags for an EngineTypeInfo.
 enum EngineTypeFlags
@@ -117,11 +117,7 @@ class EngineEnumTable
       U32 getNumValues() const { return mNumValues; }
       
       /// Get the enum value at the given index.
-<<<<<<< HEAD
-      const Value& operator []( U32 index ) const
-=======
       const Value& operator []( U64 index ) const
->>>>>>> omni_engine
       {
          AssertFatal( index < getNumValues(), "" );
          return mValues[ index ];
@@ -181,13 +177,8 @@ class EngineFieldTable
       /// Construct a field table from a NULL-terminated array of Field
       /// records.
       EngineFieldTable( const Field* fields )
-<<<<<<< HEAD
          : mNumFields( 0 ),
            mFields( fields )
-=======
-         : mFields( fields ),
-           mNumFields( 0 )
->>>>>>> omni_engine
       {
          while( fields[ mNumFields ].getName() )
             mNumFields ++;
@@ -202,11 +193,7 @@ class EngineFieldTable
       U32 getNumFields() const { return mNumFields; }
       
       ///
-<<<<<<< HEAD
-      const Field& operator []( U32 index ) const
-=======
       const Field& operator []( U64 index ) const
->>>>>>> omni_engine
       {
          AssertFatal( index <= getNumFields(), "EngineFieldTable - index out of range" );
          return mFields[ index ];
@@ -293,11 +280,7 @@ class EnginePropertyTable
       U32 getNumProperties() const { return mNumProperties; }
       
       ///
-<<<<<<< HEAD
-      const Property& operator []( U32 index ) const
-=======
       const Property& operator []( U64 index ) const
->>>>>>> omni_engine
       {
          AssertFatal( index <= getNumProperties(), "EnginePropertyTable - index out of range" );
          return mProperties[ index ];
@@ -336,11 +319,7 @@ class EngineArgumentTypeTable
       U32 getNumArguments() const { return mNumArguments; }
       
       /// Get the argument type at the given index.
-<<<<<<< HEAD
-      const EngineTypeInfo* operator []( U32 index ) const
-=======
       const EngineTypeInfo* operator []( U64 index ) const
->>>>>>> omni_engine
       {
          AssertFatal( index <= getNumArguments(), "EngineArgumentTypeTable - Index out of range!" );
          return mArgumentTypes[ index ];

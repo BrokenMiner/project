@@ -33,11 +33,7 @@
    #include "core/bitSet.h"
 #endif
 
-<<<<<<< HEAD
-
-=======
 class SimXMLDocument;   // Copyright (C) 2013 WinterLeaf Entertainment LLC.
->>>>>>> omni_engine
 class Stream;
 class LightManager;
 class SimFieldDictionary;
@@ -373,10 +369,6 @@ class SimObject: public ConsoleObject
       // Object name protected set method
       static bool setProtectedName(void *object, const char *index, const char *data);
 
-<<<<<<< HEAD
-   protected:
-   
-=======
 
    public:		
 	  String      mWLE_OVERRIDE_PROXY_CLASSTYPE;
@@ -384,7 +376,6 @@ class SimObject: public ConsoleObject
    
 		
 
->>>>>>> omni_engine
       /// Id number for this object.
       SimObjectId mId;
       
@@ -393,12 +384,8 @@ class SimObject: public ConsoleObject
       
       static bool          smForceId;   ///< Force a registered object to use the given Id.  Cleared upon use.
       static SimObjectId   smForcedId;  ///< The Id to force upon the object.  Poor object.
-<<<<<<< HEAD
-      
-=======
 	  static SimXMLDocument* mXMLDocument;	///< The XML Document for saving the object attributes.
 
->>>>>>> omni_engine
       /// @name Serialization
       /// @{
       
@@ -445,10 +432,7 @@ class SimObject: public ConsoleObject
       virtual void _onUnselected() {}
    
       /// We can provide more detail, like object name and id.
-<<<<<<< HEAD
       virtual String _getLogMessage(const char* fmt, va_list args) const;
-=======
-      virtual String _getLogMessage(const char* fmt, void* args) const;
 
       bool mEnabled;   ///< Flag used to indicate whether object is enabled or not.
 	  // set enable flag value
@@ -456,7 +440,6 @@ class SimObject: public ConsoleObject
             static_cast<SimObject*>(obj)->setEnabled(dAtob(data)); 
             return false; 
             };
->>>>>>> omni_engine
    
       DEFINE_CREATE_METHOD
       {
@@ -470,22 +453,16 @@ class SimObject: public ConsoleObject
       // EngineObject.
       virtual void _destroySelf();
 
-<<<<<<< HEAD
-   public:
-      
-=======
-	private:
+    private:
 		S32 mWLE_OMNI_ARRAY_POSTION;
 
-   public:
+    public:
 		void setOverrideProxyClasstype(const char* value){ mWLE_OVERRIDE_PROXY_CLASSTYPE = String(StringTable->insert (value));}
 		const char* getOverrideProxyClasstype(){return mWLE_OVERRIDE_PROXY_CLASSTYPE.c_str();}
 		S32 getmWLE_OMNI_ARRAY_POSTION()	{return mWLE_OMNI_ARRAY_POSTION;}
 		void setmWLE_OMNI_ARRAY_POSTION(S32 id) {mWLE_OMNI_ARRAY_POSTION  = id;}
 
       
-
->>>>>>> omni_engine
       /// @name Cloning
       /// @{
       
@@ -610,11 +587,7 @@ class SimObject: public ConsoleObject
       
       virtual ~SimObject();
 
-<<<<<<< HEAD
       virtual bool processArguments(S32 argc, ConsoleValueRef *argv);  ///< Process constructor options. (ie, new SimObject(1,2,3))
-=======
-      virtual bool processArguments(S32 argc, const char **argv);  ///< Process constructor options. (ie, new SimObject(1,2,3))
->>>>>>> omni_engine
 
       /// @}
 
@@ -857,11 +830,7 @@ class SimObject: public ConsoleObject
       ///
       /// @param   stream  Stream for output.
       /// @param   tabStop Indentation level for the fields.
-<<<<<<< HEAD
-      virtual void writeFields(Stream &stream, U32 tabStop);
-=======
-	  virtual void writeFields(Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput = false);  
->>>>>>> omni_engine
+	  virtual void writeFields(Stream &stream, U32 tabStop, /* Copyright (C) 2013 WinterLeaf Entertainment LLC. */bool XMLOutput = false);
 
       virtual bool writeObject(Stream *stream);
       virtual bool readObject(Stream *stream);
@@ -870,11 +839,7 @@ class SimObject: public ConsoleObject
       void setCanSaveDynamicFields( bool bCanSave ) { mCanSaveFieldDictionary	=	bCanSave; }
       
       /// Get whether fields created at runtime should be saved. Default is true.
-<<<<<<< HEAD
-      bool getCanSaveDynamicFields( ) { return mCanSaveFieldDictionary;}
-=======
-      bool getCanSaveDynamicFields( bool bCanSave ) { return mCanSaveFieldDictionary;}
->>>>>>> omni_engine
+      bool getCanSaveDynamicFields( bool bCanSave = false ) { return mCanSaveFieldDictionary;}
 
       /// Return the object that this object is copying fields from.
       SimObject* getCopySource() const { return mCopySource; }
@@ -1069,11 +1034,8 @@ class SimObjectPtr : public WeakRefPtr< T >
 
       ~SimObjectPtr() { set((WeakRefBase::WeakReference*)NULL); }
 
-<<<<<<< HEAD
-      SimObjectPtr<T>& operator=(const SimObjectPtr ref)
-=======
+
       SimObjectPtr<T>& operator=(const SimObjectPtr &ref)
->>>>>>> omni_engine
       {
          set(ref.mReference);
          return *this;
