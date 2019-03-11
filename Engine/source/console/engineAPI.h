@@ -158,7 +158,7 @@ inline const char* EngineMarshallData( U32 value )
 /// Marshal data from native into client form stored directly in
 /// client function invocation vector.
 template< typename T >
-<<<<<<< HEAD
+//<<<<<<< HEAD
 inline void EngineMarshallData( const T& arg, S32& argc, ConsoleValueRef *argv )
 {
    argv[ argc ] = castConsoleTypeToString( arg );
@@ -192,41 +192,41 @@ inline void EngineMarshallData( const char* arg, S32& argc, ConsoleValueRef *arg
    argc ++;
 }
 inline void EngineMarshallData( char* arg, S32& argc, ConsoleValueRef *argv )
-=======
-inline void EngineMarshallData( const T& arg, S32& argc, const char** argv )
-{
-   argv[ argc ] = Con::getStringArg( castConsoleTypeToString( arg ) );
-   argc ++;
-}
-inline void EngineMarshallData( bool arg, S32& argc, const char** argv )
-{
-   if( arg )
-      argv[ argc ] = "1";
-   else
-      argv[ argc ] = "0";
-   argc ++;
-}
-inline void EngineMarshallData( S32 arg, S32& argc, const char** argv )
-{
-   argv[ argc ] = Con::getIntArg( arg );
-   argc ++;
-}
-inline void EngineMarshallData( U32 arg, S32& argc, const char** argv )
-{
-   EngineMarshallData( S32( arg ), argc, argv );
-}
-inline void EngineMarshallData( F32 arg, S32& argc, const char** argv )
-{
-   argv[ argc ] = Con::getFloatArg( arg );
-   argc ++;
-}
-inline void EngineMarshallData( const char* arg, S32& argc, const char** argv )
->>>>>>> omni_engine
+//=======
+//inline void EngineMarshallData( const T& arg, S32& argc, const char** argv )
+//{
+//   argv[ argc ] = Con::getStringArg( castConsoleTypeToString( arg ) );
+//   argc ++;
+//}
+//inline void EngineMarshallData( bool arg, S32& argc, const char** argv )
+//{
+//   if( arg )
+//      argv[ argc ] = "1";
+//   else
+//      argv[ argc ] = "0";
+//   argc ++;
+//}
+//inline void EngineMarshallData( S32 arg, S32& argc, const char** argv )
+//{
+//   argv[ argc ] = Con::getIntArg( arg );
+//   argc ++;
+//}
+//inline void EngineMarshallData( U32 arg, S32& argc, const char** argv )
+//{
+//   EngineMarshallData( S32( arg ), argc, argv );
+//}
+//inline void EngineMarshallData( F32 arg, S32& argc, const char** argv )
+//{
+//   argv[ argc ] = Con::getFloatArg( arg );
+//   argc ++;
+//}
+//inline void EngineMarshallData( const char* arg, S32& argc, const char** argv )
+//>>>>>>> omni_engine
 {
    argv[ argc ] = arg;
    argc ++;
 }
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
 template< typename T >
 inline void EngineMarshallData( T* object, S32& argc, ConsoleValueRef *argv )
@@ -238,18 +238,18 @@ template< typename T >
 inline void EngineMarshallData( const T* object, S32& argc, ConsoleValueRef *argv )
 {
    argv[ argc ] = object ? object->getId() : 0;
-=======
-template< typename T >
-inline void EngineMarshallData( T* object, S32& argc, const char** argv )
-{
-   argv[ argc ] = ( object ? object->getIdString() : "0" );
-   argc ++;
-}
-template< typename T >
-inline void EngineMarshallData( const T* object, S32& argc, const char** argv )
-{
-   argv[ argc ] = ( object ? object->getIdString() : "0" );
->>>>>>> omni_engine
+//=======
+//template< typename T >
+//inline void EngineMarshallData( T* object, S32& argc, const char** argv )
+//{
+//   argv[ argc ] = ( object ? object->getIdString() : "0" );
+//   argc ++;
+//}
+//template< typename T >
+//inline void EngineMarshallData( const T* object, S32& argc, const char** argv )
+//{
+//   argv[ argc ] = ( object ? object->getIdString() : "0" );
+//>>>>>>> omni_engine
    argc ++;
 }
 
@@ -281,7 +281,7 @@ struct EngineUnmarshallData< S32 >
    }
 };
 template<>
-<<<<<<< HEAD
+//<<<<<<< HEAD
 struct EngineUnmarshallData< U32 >
 {
    U32 operator()( ConsoleValueRef &ref ) const
@@ -289,18 +289,18 @@ struct EngineUnmarshallData< U32 >
       return (U32)((S32)ref);
    }
 
-=======
-struct EngineUnmarshallData< U8 >
-{
-   U8 operator()( const char* str ) const
-   {
-      return (U8)dAtoi( str );
-   }
-};
-template<>
-struct EngineUnmarshallData< U32 >
-{
->>>>>>> omni_engine
+//=======
+//struct EngineUnmarshallData< U8 >
+//{
+//   U8 operator()( const char* str ) const
+//   {
+//      return (U8)dAtoi( str );
+//   }
+//};
+//template<>
+//struct EngineUnmarshallData< U32 >
+//{
+//>>>>>>> omni_engine
    U32 operator()( const char* str ) const
    {
       return dAtoui( str );

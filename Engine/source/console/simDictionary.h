@@ -33,7 +33,7 @@
 #include "platform/threads/mutex.h"
 #endif
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #include "torqueConfig.h"
 
 class SimObject;
@@ -66,39 +66,41 @@ typedef std::unordered_map<StringTableEntry, SimObject*, StringTableEntryHash, S
 typedef std::unordered_map<SimObjectId, SimObject*> SimObjectIdDictDef;
 #endif
 
-=======
-#include <string>
-#include <unordered_map>
+//=======
+//#include <string>
+//#include <unordered_map>
+//
+//#include "TorqueConfig.h"
+//
+//
+//class SimObject;
+//
+//#include "core/strings/stringFunctions.h"
+//
+//struct my_hash {
+//	  inline size_t operator()(const char* val) const
+//	  {
+//		return (long)val;
+//	  }
+//	};
+//	 
+//	struct eqstr {
+//	  inline bool operator()(const char *s1, const char *s2) const {
+//	    return dStrcmp(s1, s2) == 0;
+//	  }
+//	};
+//
+//
+//#ifndef USE_CLASSIC_SIMDICTIONARY
+//typedef std::unordered_map<const char * , SimObject*, my_hash, eqstr>  StringDictDef;	
+//typedef std::unordered_map<U32 ,SimObject*> U32DictDef;	
+//#endif
+//
+//
+//
+//>>>>>>> omni_engine
 
-#include "TorqueConfig.h"
 
-
-class SimObject;
-
-#include "core/strings/stringFunctions.h"
-
-struct my_hash {
-	  inline size_t operator()(const char* val) const
-	  {
-		return (long)val;
-	  }
-	};
-	 
-	struct eqstr {
-	  inline bool operator()(const char *s1, const char *s2) const {
-	    return dStrcmp(s1, s2) == 0;
-	  }
-	};
-
-
-#ifndef USE_CLASSIC_SIMDICTIONARY
-typedef std::unordered_map<const char * , SimObject*, my_hash, eqstr>  StringDictDef;	
-typedef std::unordered_map<U32 ,SimObject*> U32DictDef;	
-#endif
-
-
-
->>>>>>> omni_engine
 //----------------------------------------------------------------------------
 /// Map of names to SimObjects
 ///
@@ -106,11 +108,11 @@ typedef std::unordered_map<U32 ,SimObject*> U32DictDef;
 /// for fast removal of an object given object*
 class SimNameDictionary
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
-=======
-#ifdef USE_CLASSIC_SIMDICTIONARY
->>>>>>> omni_engine
+//=======
+//#ifdef USE_CLASSIC_SIMDICTIONARY
+//>>>>>>> omni_engine
    enum
    {
       DefaultTableSize = 29
@@ -136,11 +138,11 @@ public:
 
 class SimManagerNameDictionary
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
-=======
-#ifdef USE_CLASSIC_SIMDICTIONARY
->>>>>>> omni_engine
+//=======
+//#ifdef USE_CLASSIC_SIMDICTIONARY
+//>>>>>>> omni_engine
    enum
    {
       DefaultTableSize = 29
@@ -149,24 +151,13 @@ class SimManagerNameDictionary
    SimObject **hashTable;  // hash the pointers of the names...
    S32 hashTableSize;
    S32 hashEntryCount;
-<<<<<<< HEAD
+
 #else
    StringDictDef root;
 #endif
 
    void *mutex;
 
-=======
-
-   
-#else
-
-   
-   StringDictDef root;
-
-#endif
-   void *mutex;
->>>>>>> omni_engine
 public:
    void insert(SimObject* obj);
    void remove(SimObject* obj);
@@ -183,11 +174,11 @@ public:
 /// for fast removal of an object given object*
 class SimIdDictionary
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #ifndef USE_NEW_SIMDICTIONARY
-=======
-#ifdef USE_CLASSIC_SIMDICTIONARY
->>>>>>> omni_engine
+//=======
+//#ifdef USE_CLASSIC_SIMDICTIONARY
+//>>>>>>> omni_engine
    enum
    {
       DefaultTableSize = 4096,
@@ -195,14 +186,14 @@ class SimIdDictionary
    };
    SimObject *table[DefaultTableSize];
 #else
-<<<<<<< HEAD
+//<<<<<<< HEAD
    SimObjectIdDictDef root;
 #endif
 
-=======
-   U32DictDef root;
-#endif
->>>>>>> omni_engine
+//=======
+//   U32DictDef root;
+//#endif
+//>>>>>>> omni_engine
    void *mutex;
 
 public:
